@@ -11,6 +11,7 @@ import Pecuaria from './pages/Pecuaria'
 import NotFound from './pages/NotFound'
 import Layout from './components/Layout'
 import Login from './pages/Login'
+import Register from './pages/Register'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { AuthProvider } from './contexts/AuthContext'
 import { DatabaseProvider } from './contexts/DatabaseContext'
@@ -41,6 +42,7 @@ const App = () => {
               <Route element={<Layout />}>
                 <Route path="/" element={<Index />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/cadastro" element={<Register />} />
 
                 <Route element={<ProtectedRoute />}>
                   <Route path="/dashboard" element={<Dashboard />} />

@@ -165,6 +165,12 @@ export default function Login() {
           </Form>
         </CardContent>
         <CardFooter className="flex flex-col text-center border-t bg-muted/30 pt-4">
+          <div className="text-sm mb-4">
+            Ainda não tem uma conta?{' '}
+            <Link to="/cadastro" className="font-semibold text-[#1a3c34] hover:underline">
+              Crie uma agora
+            </Link>
+          </div>
           <div className="text-xs text-muted-foreground mb-4 bg-muted p-2 rounded-md">
             Este site é protegido pelo reCAPTCHA v3 e as{' '}
             <a href="#" className="underline hover:text-[#1a3c34]">
