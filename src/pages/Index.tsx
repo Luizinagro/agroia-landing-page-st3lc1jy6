@@ -6,6 +6,7 @@ import { LiveEvent } from '@/components/sections/live-event'
 import { Footer } from '@/components/sections/footer'
 import { Tractor } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Link } from 'react-router-dom'
 import { useScrollAnimation } from '@/hooks/use-scroll-animation' // This import is a dummy, actual hook is use-intersection-observer but we don't need it at page level
 
 const Index = () => {
@@ -29,8 +30,11 @@ const Index = () => {
               Depoimentos
             </a>
           </nav>
-          <Button className="bg-secondary text-primary hover:bg-secondary/90 font-semibold h-9 px-4 hidden sm:flex">
-            Área do Produtor
+          <Button
+            asChild
+            className="bg-secondary text-primary hover:bg-secondary/90 font-semibold h-9 px-4 hidden sm:flex"
+          >
+            <Link to="/dashboard">Área do Produtor</Link>
           </Button>
         </div>
       </header>
