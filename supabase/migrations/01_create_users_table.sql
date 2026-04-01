@@ -1,0 +1,53 @@
+-- Create the users table
+CREATE TABLE IF NOT EXISTS public.users (
+  id UUID REFERENCES auth.users(id) PRIMARY KEY,
+  email TEXT UNIQUE NOT NULL,
+  senha_hash TEXT,
+  nome TEXT NOT NULL,
+  tipo_usuario TEXT NOT NULL,
+  estado TEXT NOT NULL,
+  data_criacao TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  data_trial_expira TIMESTAMP WITH TIME ZONE,
+  plano_ativo TEXT DEFAULT 'Básico Grátis'
+);
+
+-- Enable RLS
+ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
+
+-- Policies
+CREATE POLICY "Users can view own profile" ON public.users FOR SELECT USING (auth.uid() = id);
+CREATE POLICY "Users can update own profile" ON public.users FOR UPDATE USING (auth.uid() = id);
+
+-- Create a trigger to automatically create the profile on signup
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.users (id, email, nome, tipo_usuario, estado, data_trial_expira, plano_ativo)
+  VALUES (
+    new.id,
+    new.email,
+    COALESCE(new.raw_user_meta_data->>'nome', 'Usuário'),
+    COALESCE(new.raw_user_meta_data->>'tipo_usuario', 'Produtor'),
+    COALESCE(new.raw_user_meta_data->>'estado', 'Não Informado'),
+    NOW() + INTERVAL '14 days',
+    'Básico Grátis'
+  );
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
+
+-- Create a function to securely check if a user exists (used for authentication validation)
+CREATE OR REPLACE FUNCTION public.check_user_exists(lookup_email TEXT)
+RETURNS BOOLEAN AS $$
+DECLARE
+  user_exists BOOLEAN;
+BEGIN
+  SELECT EXISTS(SELECT 1 FROM public.users WHERE email = lookup_email) INTO user_exists;
+  RETURN user_exists;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;

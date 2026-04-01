@@ -30,6 +30,7 @@ import {
 } from '@/components/ui/card'
 import { Tractor, ArrowLeft, Loader2, UserPlus } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
+import { supabaseUrl, getSupabaseHeaders } from '@/lib/supabase'
 
 const registerSchema = z
   .object({
@@ -66,42 +67,54 @@ export default function Register() {
   const onSubmit = async (data: RegisterFormValues) => {
     setIsLoading(true)
     try {
-      // Mocking Supabase users table persistence to integrate with AuthContext
-      await new Promise((r) => setTimeout(r, 800))
-      const usersStr = localStorage.getItem('db_users') || '[]'
-      const users = JSON.parse(usersStr)
+      if (!supabaseUrl) {
+        throw new Error('Supabase integration missing. Please set VITE_SUPABASE_URL in .env')
+      }
 
-      if (users.find((u: any) => u.email === data.email)) {
-        toast({
-          title: 'Erro de Cadastro',
-          description: 'Este e-mail já está em uso.',
-          variant: 'destructive',
-        })
+      const authRes = await fetch(`${supabaseUrl}/auth/v1/signup`, {
+        method: 'POST',
+        headers: getSupabaseHeaders(),
+        body: JSON.stringify({
+          email: data.email,
+          password: data.senha,
+          data: {
+            nome: data.nomeCompleto,
+            tipo_usuario: data.tipoUsuario,
+            estado: data.estado,
+          },
+        }),
+      })
+
+      const authData = await authRes.json()
+
+      if (!authRes.ok) {
+        const errorMsg = authData.msg || authData.message || ''
+        if (errorMsg.includes('User already registered') || errorMsg.includes('já está em uso')) {
+          toast({
+            title: 'Erro de Cadastro',
+            description: 'Este e-mail já está em uso.',
+            variant: 'destructive',
+          })
+        } else {
+          toast({
+            title: 'Erro',
+            description: errorMsg || 'Erro ao criar conta no Supabase Auth.',
+            variant: 'destructive',
+          })
+        }
         return
       }
 
-      const trialExpiration = new Date()
-      trialExpiration.setDate(trialExpiration.getDate() + 14)
-
-      users.push({
-        id: Math.random().toString(36).substring(7),
-        ...data,
-        plano: 'Básico Grátis',
-        data_criacao: new Date().toISOString(),
-        data_trial_expira: trialExpiration.toISOString(),
-      })
-      localStorage.setItem('db_users', JSON.stringify(users))
-
       toast({
-        title: 'Conta criada com sucesso!',
-        description: 'Sua avaliação gratuita de 14 dias foi ativada. Faça login agora.',
+        title: 'Sucesso',
+        description: 'Conta criada com sucesso! Faça login agora.',
         className: 'bg-[#1a3c34] text-white border-[#f4d03f]',
       })
       navigate('/login')
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: 'Erro',
-        description: 'Falha ao criar conta no banco de dados.',
+        description: error.message || 'Falha ao processar o cadastro.',
         variant: 'destructive',
       })
     } finally {

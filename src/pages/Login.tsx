@@ -66,19 +66,32 @@ export default function Login() {
 
     setIsLoading(true)
     try {
-      // Simulate reCAPTCHA verification delay
-      await new Promise((r) => setTimeout(r, 600))
-
       await login(data.email, data.senha)
       toast({ title: 'Bem-vindo(a)!', description: 'Login realizado com segurança.' })
       navigate('/dashboard')
-    } catch (error) {
+    } catch (error: any) {
       logSystemEvent('AUTH_ERROR', `Falha de autenticação para ${data.email}`)
-      toast({
-        title: 'Erro de Autenticação',
-        description: 'Credenciais inválidas.',
-        variant: 'destructive',
-      })
+      const msg = error.message
+
+      if (msg === 'E-mail ou senha inválidos') {
+        toast({
+          title: 'Erro de Autenticação',
+          description: 'Invalid email/password',
+          variant: 'destructive',
+        })
+      } else if (msg === 'Usuário não existe no banco de dados') {
+        toast({
+          title: 'Erro de Autenticação',
+          description: 'User does not exist.',
+          variant: 'destructive',
+        })
+      } else {
+        toast({
+          title: 'Erro de Autenticação',
+          description: msg || 'Credenciais inválidas.',
+          variant: 'destructive',
+        })
+      }
     } finally {
       setIsLoading(false)
     }

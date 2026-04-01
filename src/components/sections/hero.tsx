@@ -33,7 +33,7 @@ export function Hero() {
               className="bg-[#f4d03f] text-[#1a3c34] hover:bg-[#f4d03f]/90 border border-[#f4d03f]/20 text-lg px-8 py-6 w-full sm:w-auto shadow-elevation hover:scale-105 transition-transform font-bold"
               aria-label="Iniciar teste grátis de 14 dias"
             >
-              <Link to="/cadastro">Teste Grátis 14 Dias</Link>
+              <Link to="/cadastro">Teste 14 Dias Grátis</Link>
             </Button>
             <Button
               size="lg"

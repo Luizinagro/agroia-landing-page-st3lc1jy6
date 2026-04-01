@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/card'
 import { Tractor, ArrowLeft, Loader2, KeyRound, Mail } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
+import { supabaseUrl, getSupabaseHeaders } from '@/lib/supabase'
 
 const forgotSchema = z.object({
   email: z.string().email('Formato de e-mail inválido.'),
@@ -47,8 +48,15 @@ export default function ForgotPassword() {
   const onSubmit = async (data: ForgotFormValues) => {
     setIsLoading(true)
     try {
-      // Simulate API call for password recovery
-      await new Promise((r) => setTimeout(r, 800))
+      if (supabaseUrl) {
+        await fetch(`${supabaseUrl}/auth/v1/recover`, {
+          method: 'POST',
+          headers: getSupabaseHeaders(),
+          body: JSON.stringify({ email: data.email }),
+        })
+      } else {
+        await new Promise((r) => setTimeout(r, 800))
+      }
       setIsSubmitted(true)
       toast({
         title: 'E-mail enviado!',
