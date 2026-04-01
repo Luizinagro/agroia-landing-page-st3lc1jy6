@@ -29,13 +29,18 @@ const Index = () => {
             <a href="#depoimentos" className="hover:text-secondary transition-colors">
               Depoimentos
             </a>
+            <Link to="/comunidade" className="hover:text-secondary transition-colors text-white">
+              Comunidade
+            </Link>
           </nav>
-          <Button
-            asChild
-            className="bg-secondary text-primary hover:bg-secondary/90 font-semibold h-9 px-4 hidden sm:flex"
-          >
-            <Link to="/dashboard">Área do Produtor</Link>
-          </Button>
+          <div className="hidden sm:flex items-center gap-3">
+            <Button
+              asChild
+              className="bg-secondary text-primary hover:bg-secondary/90 font-semibold h-9 px-4"
+            >
+              <Link to="/dashboard">Área do Produtor</Link>
+            </Button>
+          </div>
         </div>
       </header>
 
