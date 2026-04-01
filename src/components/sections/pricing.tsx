@@ -3,6 +3,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Button } from '@/components/ui/button'
 import { AnimatedSection } from '@/components/animated-section'
 import { cn } from '@/lib/utils'
+import { Link } from 'react-router-dom'
 
 const plans = [
   {
@@ -95,16 +96,17 @@ export function Pricing() {
                 </CardContent>
                 <CardFooter>
                   <Button
+                    asChild
                     className={cn(
-                      'w-full text-primary font-medium transition-colors',
+                      'w-full font-bold transition-colors',
                       plan.highlighted
-                        ? 'bg-secondary hover:bg-secondary/90 text-primary'
-                        : 'bg-secondary/20 hover:bg-secondary/30 text-primary',
+                        ? 'bg-[#f4d03f] hover:bg-[#f4d03f]/90 text-[#1a3c34]'
+                        : 'bg-[#1a3c34] hover:bg-[#1a3c34]/90 text-white',
                     )}
                   >
-                    Escolher Plano
+                    <Link to="/cadastro">Escolher Plano</Link>
                   </Button>
-                </CardFooter>
+                </CardFooter>{' '}
               </Card>
             </AnimatedSection>
           ))}

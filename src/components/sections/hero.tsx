@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { AnimatedSection } from '@/components/animated-section'
+import { Link } from 'react-router-dom'
 
 export function Hero() {
   return (
@@ -27,11 +28,12 @@ export function Hero() {
 
           <div className="pt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button
+              asChild
               size="lg"
-              className="bg-primary text-white hover:bg-primary/90 border border-white/20 text-lg px-8 py-6 w-full sm:w-auto shadow-elevation hover:scale-105 transition-transform"
+              className="bg-[#f4d03f] text-[#1a3c34] hover:bg-[#f4d03f]/90 border border-[#f4d03f]/20 text-lg px-8 py-6 w-full sm:w-auto shadow-elevation hover:scale-105 transition-transform font-bold"
               aria-label="Iniciar teste grátis de 14 dias"
             >
-              Teste Grátis 14 Dias
+              <Link to="/cadastro">Teste Grátis 14 Dias</Link>
             </Button>
             <Button
               size="lg"

@@ -80,17 +80,22 @@ export default function Register() {
         return
       }
 
+      const trialExpiration = new Date()
+      trialExpiration.setDate(trialExpiration.getDate() + 14)
+
       users.push({
         id: Math.random().toString(36).substring(7),
         ...data,
-        plano: 'Gratuito',
+        plano: 'Básico Grátis',
         data_criacao: new Date().toISOString(),
+        data_trial_expira: trialExpiration.toISOString(),
       })
       localStorage.setItem('db_users', JSON.stringify(users))
 
       toast({
-        title: 'Conta criada com sucesso! Faça login agora.',
-        description: 'Redirecionando de forma segura...',
+        title: 'Conta criada com sucesso!',
+        description: 'Sua avaliação gratuita de 14 dias foi ativada. Faça login agora.',
+        className: 'bg-[#1a3c34] text-white border-[#f4d03f]',
       })
       navigate('/login')
     } catch (error) {

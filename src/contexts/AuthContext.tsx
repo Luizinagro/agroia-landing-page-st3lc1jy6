@@ -6,6 +6,7 @@ export type User = {
   senha?: string
   plano: string
   data_criacao: string
+  data_trial_expira?: string
 }
 
 interface AuthContextType {
@@ -13,6 +14,7 @@ interface AuthContextType {
   loading: boolean
   login: (email: string, senha: string) => Promise<void>
   logout: () => void
+  updateUser: (updates: Partial<User>) => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -47,12 +49,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (!found) {
       // Auto-register for demo purposes
+      const trialExp = new Date()
+      trialExp.setDate(trialExp.getDate() + 14)
+
       found = {
         id: Math.random().toString(36).substring(7),
         email,
         senha,
-        plano: 'Pro',
+        plano: 'Básico Grátis',
         data_criacao: new Date().toISOString(),
+        data_trial_expira: trialExp.toISOString(),
       }
       users.push(found)
       localStorage.setItem('db_users', JSON.stringify(users))
@@ -74,8 +80,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null)
   }
 
+  const updateUser = (updates: Partial<User>) => {
+    if (!user) return
+    const updatedUser = { ...user, ...updates }
+    setUser(updatedUser)
+    localStorage.setItem('agroia_session', JSON.stringify(updatedUser))
+
+    // Update in mock DB
+    const usersStr = localStorage.getItem('db_users') || '[]'
+    const users: User[] = JSON.parse(usersStr)
+    const index = users.findIndex((u) => u.id === user.id)
+    if (index !== -1) {
+      users[index] = { ...users[index], ...updates }
+      localStorage.setItem('db_users', JSON.stringify(users))
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, loading, login, logout, updateUser }}>
+      {children}
+    </AuthContext.Provider>
   )
 }
 

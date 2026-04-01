@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard'
 import Community from './pages/Community'
 import Billing from './pages/Billing'
 import Pecuaria from './pages/Pecuaria'
+import PlanSelection from './pages/PlanSelection'
 import NotFound from './pages/NotFound'
 import Layout from './components/Layout'
 import Login from './pages/Login'
@@ -51,6 +52,10 @@ const App = () => {
                   <Route path="/comunidade" element={<Community />} />
                   <Route path="/faturamento" element={<Billing />} />
                   <Route path="/pecuaria" element={<Pecuaria />} />
+                </Route>
+
+                <Route element={<ProtectedRoute requireActive={false} />}>
+                  <Route path="/selecionar-plano" element={<PlanSelection />} />
                 </Route>
 
                 {/* ADD ALL CUSTOM ROUTES MUST BE ADDED HERE */}
