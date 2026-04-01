@@ -109,7 +109,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('sb_access_token', token)
     localStorage.setItem('sb_user_id', userId)
     setUser(u)
-    seedUserData(userId)
   }
 
   const logout = () => {
@@ -158,98 +157,4 @@ export const useAuth = () => {
   const context = useContext(AuthContext)
   if (!context) throw new Error('useAuth must be used within AuthProvider')
   return context
-}
-
-function seedUserData(userId: string) {
-  // Previsoes
-  const previsoes = JSON.parse(localStorage.getItem('db_previsoes') || '[]')
-  previsoes.push({
-    id: Math.random().toString(36).substring(7),
-    user_id: userId,
-    cidade: 'Cascavel - PR',
-    cultura: 'Soja',
-    temperatura: 28,
-    umidade: 65,
-    risco_pragas: 'Baixo',
-    data: new Date().toISOString(),
-  })
-  localStorage.setItem('db_previsoes', JSON.stringify(previsoes))
-
-  // Alertas
-  const alertas = JSON.parse(localStorage.getItem('db_alertas') || '[]')
-  alertas.push(
-    {
-      id: Math.random().toString(36).substring(7),
-      user_id: userId,
-      tipo: 'pest',
-      mensagem: 'Alerta de Ferrugem Asiática na região com alta probabilidade.',
-      data_leitura: null,
-      data_criacao: new Date().toISOString(),
-    },
-    {
-      id: Math.random().toString(36).substring(7),
-      user_id: userId,
-      tipo: 'climate',
-      mensagem: 'Previsão de chuvas fortes nas próximas 48h.',
-      data_leitura: null,
-      data_criacao: new Date().toISOString(),
-    },
-  )
-  localStorage.setItem('db_alertas', JSON.stringify(alertas))
-
-  // Comunidade
-  const posts = JSON.parse(localStorage.getItem('db_comunidade_posts') || '[]')
-  posts.push({
-    id: Math.random().toString(36).substring(7),
-    user_id: userId,
-    titulo: 'Dúvida sobre manejo de pastagem',
-    conteudo: 'Qual a melhor época para iniciar o pastejo rotacionado?',
-    categoria: 'Pecuária',
-    data: 'Hoje',
-  })
-  localStorage.setItem('db_comunidade_posts', JSON.stringify(posts))
-
-  // Animais
-  const animais = JSON.parse(localStorage.getItem('db_pecuaria_animais') || '[]')
-  animais.push({
-    id: Math.random().toString(36).substring(7),
-    user_id: userId,
-    tipo: 'bovino',
-    peso: 450,
-    fase: 'terminacao',
-    racao_recomendada: 'Yara',
-    custo_mensal: 405,
-  })
-  localStorage.setItem('db_pecuaria_animais', JSON.stringify(animais))
-
-  // Produtos (shared)
-  if (!localStorage.getItem('db_marketplace_produtos')) {
-    const produtos = [
-      {
-        id: '1',
-        nome: 'Ração BASF',
-        preco: 'R$ 2.090/ton',
-        markup_10pct: true,
-        estoque: 50,
-        image: 'https://img.usecurling.com/p/400/300?q=animal%20feed',
-      },
-      {
-        id: '2',
-        nome: 'Sementes Monsoy',
-        preco: 'R$ 800/sc',
-        markup_10pct: true,
-        estoque: 200,
-        image: 'https://img.usecurling.com/p/400/300?q=soybean%20seeds',
-      },
-      {
-        id: '3',
-        nome: 'Fertilizante Yara',
-        preco: 'R$ 1.200/ton',
-        markup_10pct: true,
-        estoque: 150,
-        image: 'https://img.usecurling.com/p/400/300?q=fertilizer%20bags',
-      },
-    ]
-    localStorage.setItem('db_marketplace_produtos', JSON.stringify(produtos))
-  }
 }
