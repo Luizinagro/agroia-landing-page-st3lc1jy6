@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import logoUrl from '../assets/generatedimage_1775066037290-99c85.png'
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -10,21 +9,12 @@ export function Header() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="absolute top-0 z-50 w-full bg-transparent">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           <div className="flex items-center">
-            <Link to="/" className="flex items-center gap-3 transition-opacity hover:opacity-90">
-              <img
-                src={logoUrl}
-                alt="AgroIA Official Logo"
-                className="h-[60px] w-[60px] object-contain shrink-0"
-                width={60}
-                height={60}
-              />
-              <span className="text-2xl font-bold tracking-tight text-[#1a3c34] hidden sm:inline-block">
-                AgroIA
-              </span>
+            <Link to="/" className="flex items-center transition-opacity hover:opacity-90">
+              <span className="text-2xl font-bold tracking-tight text-[#1a3c34]">AgroIA</span>
             </Link>
           </div>
 
@@ -76,7 +66,7 @@ export function Header() {
 
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="md:hidden border-t border-border bg-background shadow-lg animate-in slide-in-from-top-2">
+        <div className="md:hidden absolute top-full left-0 w-full bg-background shadow-lg animate-in slide-in-from-top-2 border-t border-border">
           <div className="flex flex-col space-y-2 px-4 pb-6 pt-4">
             <a
               href="#features"
