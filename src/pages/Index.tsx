@@ -1,10 +1,57 @@
-/* Home Page - Replace this page layout, components, content, behavior with what you want and translate to the language of the user */
+import { Hero } from '@/components/sections/hero'
+import { Modules } from '@/components/sections/modules'
+import { Pricing } from '@/components/sections/pricing'
+import { Testimonials } from '@/components/sections/testimonials'
+import { LiveEvent } from '@/components/sections/live-event'
+import { Footer } from '@/components/sections/footer'
+import { Tractor } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { useScrollAnimation } from '@/hooks/use-scroll-animation' // This import is a dummy, actual hook is use-intersection-observer but we don't need it at page level
+
 const Index = () => {
   return (
-    <div className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-6">
-        This is a example page ready to be rewritten with your own content
-      </h1>
+    <div className="min-h-screen bg-background flex flex-col font-sans">
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-50 w-full bg-primary/95 backdrop-blur supports-[backdrop-filter]:bg-primary/80 border-b border-white/10">
+        <div className="container flex h-16 items-center justify-between px-4 md:px-6">
+          <div className="flex items-center gap-2 font-bold text-xl text-white">
+            <Tractor className="w-6 h-6 text-secondary" />
+            <span>AgroIA</span>
+          </div>
+          <nav className="hidden md:flex gap-6 text-sm text-white/80 font-medium">
+            <a href="#modulos" className="hover:text-secondary transition-colors">
+              Módulos
+            </a>
+            <a href="#planos" className="hover:text-secondary transition-colors">
+              Planos
+            </a>
+            <a href="#depoimentos" className="hover:text-secondary transition-colors">
+              Depoimentos
+            </a>
+          </nav>
+          <Button className="bg-secondary text-primary hover:bg-secondary/90 font-semibold h-9 px-4 hidden sm:flex">
+            Área do Produtor
+          </Button>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1">
+        <Hero />
+        <div id="modulos">
+          <Modules />
+        </div>
+        <div id="planos">
+          <Pricing />
+        </div>
+        <div id="depoimentos">
+          <Testimonials />
+        </div>
+        <LiveEvent />
+      </main>
+
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }
