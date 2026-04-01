@@ -39,10 +39,27 @@ export type Animal = {
 export type Produto = {
   id: string
   nome: string
-  preco: string
+  descricao: string
+  preco_base: number
   markup_10pct: boolean
+  preco_final: number
   estoque: number
   image: string
+}
+export type CartItem = {
+  produto: Produto
+  quantidade: number
+}
+export type Pedido = {
+  id: string
+  user_id: string
+  numero_pedido: string
+  data: string
+  produtos: CartItem[]
+  subtotal: number
+  frete: number
+  valor_total: number
+  status: string
 }
 
 interface DatabaseContextType {
@@ -51,10 +68,12 @@ interface DatabaseContextType {
   comunidadePosts: Post[]
   animais: Animal[]
   produtos: Produto[]
+  pedidos: Pedido[]
   loading: boolean
   addAnimal: (animal: Omit<Animal, 'id' | 'user_id'>) => Promise<void>
   addPost: (post: Omit<Post, 'id' | 'user_id'>) => Promise<void>
   dismissAlerta: (id: string) => Promise<void>
+  addPedido: (pedido: Omit<Pedido, 'id' | 'user_id' | 'data' | 'numero_pedido'>) => Promise<void>
 }
 
 const DatabaseContext = createContext<DatabaseContextType | undefined>(undefined)
@@ -67,6 +86,7 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
   const [comunidadePosts, setComunidadePosts] = useState<Post[]>([])
   const [animais, setAnimais] = useState<Animal[]>([])
   const [produtos, setProdutos] = useState<Produto[]>([])
+  const [pedidos, setPedidos] = useState<Pedido[]>([])
 
   const loadData = () => {
     if (!user) {
@@ -75,6 +95,7 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
       setComunidadePosts([])
       setAnimais([])
       setProdutos([])
+      setPedidos([])
       setLoading(false)
       return
     }
@@ -95,10 +116,54 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
       setAnimais(allAnimais.filter((a) => a.user_id === user.id))
 
       // Marketplace has no RLS mentioned to be restricted by user, just global products
-      const allProdutos: Produto[] = JSON.parse(
+      let allProdutos: Produto[] = JSON.parse(
         localStorage.getItem('db_marketplace_produtos') || '[]',
       )
+
+      if (allProdutos.length === 0) {
+        allProdutos = [
+          {
+            id: 'prod-1',
+            nome: 'Ração BASF',
+            descricao:
+              'Ração de alta performance para nutrição bovina de corte, garantindo ganho de peso acelerado.',
+            preco_base: 2090,
+            markup_10pct: true,
+            preco_final: 2299,
+            estoque: 100,
+            image: 'https://img.usecurling.com/p/400/300?q=cattle%20feed',
+          },
+          {
+            id: 'prod-2',
+            nome: 'Sementes Monsoy',
+            descricao:
+              'Sementes de soja com alto vigor e germinação, desenvolvidas para máxima produtividade.',
+            preco_base: 800,
+            markup_10pct: true,
+            preco_final: 880,
+            estoque: 50,
+            image: 'https://img.usecurling.com/p/400/300?q=soybean%20seeds',
+          },
+          {
+            id: 'prod-3',
+            nome: 'Fertilizante Yara',
+            descricao:
+              'Fertilizante NPK equilibrado, ideal para a fase de crescimento de diversas culturas.',
+            preco_base: 1200,
+            markup_10pct: true,
+            preco_final: 1320,
+            estoque: 200,
+            image: 'https://img.usecurling.com/p/400/300?q=fertilizer',
+          },
+        ]
+        localStorage.setItem('db_marketplace_produtos', JSON.stringify(allProdutos))
+      }
       setProdutos(allProdutos)
+
+      const allPedidos: Pedido[] = JSON.parse(
+        localStorage.getItem('db_marketplace_pedidos') || '[]',
+      )
+      setPedidos(allPedidos.filter((p) => p.user_id === user.id))
 
       setLoading(false)
     }, 800)
@@ -141,6 +206,21 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
     setAlertas((prev) => prev.filter((a) => a.id !== id))
   }
 
+  const addPedido = async (pedido: Omit<Pedido, 'id' | 'user_id' | 'data' | 'numero_pedido'>) => {
+    if (!user) return
+    const newPedido: Pedido = {
+      ...pedido,
+      id: Math.random().toString(36).substring(7),
+      user_id: user.id,
+      data: new Date().toISOString(),
+      numero_pedido: Math.floor(10000 + Math.random() * 90000).toString(),
+    }
+    const allPedidos = JSON.parse(localStorage.getItem('db_marketplace_pedidos') || '[]')
+    allPedidos.push(newPedido)
+    localStorage.setItem('db_marketplace_pedidos', JSON.stringify(allPedidos))
+    setPedidos((prev) => [newPedido, ...prev])
+  }
+
   return (
     <DatabaseContext.Provider
       value={{
@@ -149,10 +229,12 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
         comunidadePosts,
         animais,
         produtos,
+        pedidos,
         loading,
         addAnimal,
         addPost,
         dismissAlerta,
+        addPedido,
       }}
     >
       {children}
