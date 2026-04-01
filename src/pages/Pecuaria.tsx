@@ -78,7 +78,7 @@ export default function Pecuaria() {
               value="reproducao"
               className="py-3 text-sm data-[state=active]:bg-agro-green data-[state=active]:text-white rounded-lg transition-all"
             >
-              Reprodução
+              Rebanho
             </TabsTrigger>
           </TabsList>
 
