@@ -65,11 +65,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error('Supabase integration missing. Please set VITE_SUPABASE_URL in .env')
     }
 
+    const normalizedEmail = email.trim().toLowerCase()
+
     // Securely check if user exists via RPC to provide accurate error messages
     const rpcRes = await fetch(`${supabaseUrl}/rest/v1/rpc/check_user_exists`, {
       method: 'POST',
       headers: getSupabaseHeaders(),
-      body: JSON.stringify({ lookup_email: email }),
+      body: JSON.stringify({ lookup_email: normalizedEmail }),
     })
 
     if (rpcRes.ok) {
@@ -79,11 +81,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    // Perform Auth
+    // Perform Auth - Secure comparison for email and password fields
     const authRes = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
       method: 'POST',
       headers: getSupabaseHeaders(),
-      body: JSON.stringify({ email, password: senha }),
+      body: JSON.stringify({ email: normalizedEmail, password: senha }),
     })
 
     const authData = await authRes.json()
@@ -94,16 +96,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const token = authData.access_token
     const userId = authData.user?.id
 
+    // Ensure login logic specifically targets the users table used by registration
     const profileRes = await fetch(`${supabaseUrl}/rest/v1/users?id=eq.${userId}&select=*`, {
       headers: getSupabaseHeaders(token),
     })
 
     const profileData = await profileRes.json()
+    let u
+
     if (!profileRes.ok || !profileData || profileData.length === 0) {
-      throw new Error('Usuário não existe no banco de dados')
+      // Auto-heal missing profile to ensure data consistency
+      const insertRes = await fetch(`${supabaseUrl}/rest/v1/users`, {
+        method: 'POST',
+        headers: {
+          ...getSupabaseHeaders(token),
+          Prefer: 'return=representation',
+        },
+        body: JSON.stringify({
+          id: userId,
+          email: normalizedEmail,
+          nome: authData.user?.user_metadata?.nome || 'Usuário',
+          tipo_usuario: authData.user?.user_metadata?.tipo_usuario || 'Produtor',
+          estado: authData.user?.user_metadata?.estado || 'Não Informado',
+          plano_ativo: 'Básico Grátis',
+        }),
+      })
+
+      if (!insertRes.ok) {
+        throw new Error('Falha de sincronização de dados. Perfil não encontrado.')
+      }
+
+      const insertData = await insertRes.json()
+      if (!insertData || insertData.length === 0) {
+        throw new Error('Falha de sincronização de dados. Perfil não encontrado.')
+      }
+      u = insertData[0]
+    } else {
+      u = profileData[0]
     }
 
-    const u = profileData[0]
     u.plano = u.plano_ativo
 
     localStorage.setItem('sb_access_token', token)

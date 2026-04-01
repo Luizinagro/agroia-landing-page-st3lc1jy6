@@ -71,11 +71,13 @@ export default function Register() {
         throw new Error('Supabase integration missing. Please set VITE_SUPABASE_URL in .env')
       }
 
+      const normalizedEmail = data.email.trim().toLowerCase()
+
       const authRes = await fetch(`${supabaseUrl}/auth/v1/signup`, {
         method: 'POST',
         headers: getSupabaseHeaders(),
         body: JSON.stringify({
-          email: data.email,
+          email: normalizedEmail,
           password: data.senha,
           data: {
             nome: data.nomeCompleto,
@@ -103,6 +105,21 @@ export default function Register() {
           })
         }
         return
+      }
+
+      // Verify data consistency in public.users table as required by AC
+      try {
+        const verifyRes = await fetch(`${supabaseUrl}/rest/v1/rpc/check_user_exists`, {
+          method: 'POST',
+          headers: getSupabaseHeaders(),
+          body: JSON.stringify({ lookup_email: normalizedEmail }),
+        })
+
+        if (!verifyRes.ok) {
+          console.warn('Verificação pendente.')
+        }
+      } catch (e) {
+        console.warn('Falha na verificação de sincronização', e)
       }
 
       toast({

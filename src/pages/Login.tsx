@@ -67,7 +67,11 @@ export default function Login() {
     setIsLoading(true)
     try {
       await login(data.email, data.senha)
-      toast({ title: 'Bem-vindo(a)!', description: 'Login realizado com segurança.' })
+      toast({
+        title: 'Bem-vindo(a)!',
+        description: 'Login realizado com segurança.',
+        className: 'bg-[#1a3c34] text-white border-[#f4d03f]',
+      })
       navigate('/dashboard')
     } catch (error: any) {
       logSystemEvent('AUTH_ERROR', `Falha de autenticação para ${data.email}`)
@@ -75,14 +79,14 @@ export default function Login() {
 
       if (msg === 'E-mail ou senha inválidos') {
         toast({
-          title: 'Erro de Autenticação',
-          description: 'Invalid email/password',
+          title: 'Senha Incorreta',
+          description: 'A senha informada não confere.',
           variant: 'destructive',
         })
       } else if (msg === 'Usuário não existe no banco de dados') {
         toast({
-          title: 'Erro de Autenticação',
-          description: 'User does not exist.',
+          title: 'Usuário não encontrado',
+          description: 'Não encontramos uma conta com este e-mail.',
           variant: 'destructive',
         })
       } else {
