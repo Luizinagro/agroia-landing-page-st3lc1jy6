@@ -28,14 +28,16 @@ export function Hero() {
           <div className="pt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button
               size="lg"
-              className="bg-primary text-white hover:bg-primary/90 border border-white/20 text-lg px-8 py-6 w-full sm:w-auto shadow-elevation"
+              className="bg-primary text-white hover:bg-primary/90 border border-white/20 text-lg px-8 py-6 w-full sm:w-auto shadow-elevation hover:scale-105 transition-transform"
+              aria-label="Iniciar teste grátis de 14 dias"
             >
               Teste Grátis 14 Dias
             </Button>
             <Button
               size="lg"
               variant="outline"
-              className="bg-white/10 text-white hover:bg-white/20 border-white/20 text-lg px-8 py-6 w-full sm:w-auto backdrop-blur-sm"
+              className="bg-white/10 text-white hover:bg-white/20 border-white/20 text-lg px-8 py-6 w-full sm:w-auto backdrop-blur-sm hover:scale-105 transition-transform"
+              aria-label="Falar com consultor comercial"
             >
               Falar com Consultor
             </Button>

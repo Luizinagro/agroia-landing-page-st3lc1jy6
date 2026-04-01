@@ -1,14 +1,32 @@
 import { Link } from 'react-router-dom'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { CalculadoraRacao } from '@/components/pecuaria/CalculadoraRacao'
-import { RastreabilidadeEsg } from '@/components/pecuaria/RastreabilidadeEsg'
-import { MercadoCepea } from '@/components/pecuaria/MercadoCepea'
-import { Reproducao } from '@/components/pecuaria/Reproducao'
 import { Tractor, ArrowLeft } from 'lucide-react'
+import { SEO } from '@/components/SEO'
+import { Suspense, lazy } from 'react'
+import { Skeleton } from '@/components/ui/skeleton'
+
+const CalculadoraRacao = lazy(() =>
+  import('@/components/pecuaria/CalculadoraRacao').then((m) => ({ default: m.CalculadoraRacao })),
+)
+const RastreabilidadeEsg = lazy(() =>
+  import('@/components/pecuaria/RastreabilidadeEsg').then((m) => ({
+    default: m.RastreabilidadeEsg,
+  })),
+)
+const MercadoCepea = lazy(() =>
+  import('@/components/pecuaria/MercadoCepea').then((m) => ({ default: m.MercadoCepea })),
+)
+const Reproducao = lazy(() =>
+  import('@/components/pecuaria/Reproducao').then((m) => ({ default: m.Reproducao })),
+)
 
 export default function Pecuaria() {
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans animate-in fade-in duration-500">
+      <SEO
+        title="Gestão de Pecuária"
+        description="Otimize sua produção, rastreie certificações ESG e acompanhe o mercado em tempo real."
+      />
       <header className="sticky top-0 z-50 w-full bg-agro-green text-white border-b border-white/10 shadow-sm">
         <div className="container flex h-16 items-center px-4 md:px-6">
           <div className="flex items-center gap-2 font-bold text-xl text-agro-yellow">
@@ -69,25 +87,33 @@ export default function Pecuaria() {
               value="calculadora"
               className="m-0 focus-visible:outline-none focus-visible:ring-0"
             >
-              <CalculadoraRacao />
+              <Suspense fallback={<Skeleton className="w-full h-[400px] rounded-xl" />}>
+                <CalculadoraRacao />
+              </Suspense>
             </TabsContent>
             <TabsContent
               value="esg"
               className="m-0 focus-visible:outline-none focus-visible:ring-0"
             >
-              <RastreabilidadeEsg />
+              <Suspense fallback={<Skeleton className="w-full h-[400px] rounded-xl" />}>
+                <RastreabilidadeEsg />
+              </Suspense>
             </TabsContent>
             <TabsContent
               value="cepea"
               className="m-0 focus-visible:outline-none focus-visible:ring-0"
             >
-              <MercadoCepea />
+              <Suspense fallback={<Skeleton className="w-full h-[400px] rounded-xl" />}>
+                <MercadoCepea />
+              </Suspense>
             </TabsContent>
             <TabsContent
               value="reproducao"
               className="m-0 focus-visible:outline-none focus-visible:ring-0"
             >
-              <Reproducao />
+              <Suspense fallback={<Skeleton className="w-full h-[400px] rounded-xl" />}>
+                <Reproducao />
+              </Suspense>
             </TabsContent>
           </div>
         </Tabs>

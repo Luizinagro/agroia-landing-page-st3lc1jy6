@@ -58,7 +58,8 @@ export function Modules() {
                   </CardDescription>
                   <Button
                     variant="ghost"
-                    className="w-full group/btn justify-between text-primary hover:text-primary hover:bg-primary/5"
+                    className="w-full group/btn justify-between text-primary hover:text-primary hover:bg-primary/5 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+                    aria-label={`Saiba mais sobre o módulo ${mod.title}`}
                   >
                     Saiba Mais
                     <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />

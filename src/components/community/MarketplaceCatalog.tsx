@@ -52,7 +52,8 @@ export function MarketplaceCatalog({ onAddToCart }: { onAddToCart: (p: Produto) 
           <div className="relative h-48 overflow-hidden bg-gray-100">
             <img
               src={product.image}
-              alt={product.nome}
+              alt={`Imagem do produto ${product.nome}`}
+              loading="lazy"
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
             {product.markup_10pct && (
@@ -97,8 +98,9 @@ export function MarketplaceCatalog({ onAddToCart }: { onAddToCart: (p: Produto) 
           </CardContent>
           <CardFooter className="pt-0 mt-auto">
             <Button
-              className="w-full bg-[#1a3c34] text-white hover:bg-[#1a3c34]/90 shadow-sm transition-colors group-hover:shadow-md"
+              className="w-full bg-[#1a3c34] text-white hover:bg-[#1a3c34]/90 shadow-sm hover:scale-105 transition-all duration-200 group-hover:shadow-md"
               onClick={() => handleAddToCart(product)}
+              aria-label={`Adicionar ${product.nome} ao carrinho`}
             >
               <ShoppingCart className="w-4 h-4 mr-2" />
               Adicionar ao Carrinho

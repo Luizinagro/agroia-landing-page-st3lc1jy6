@@ -7,6 +7,7 @@ import { LayoutDashboard, ArrowLeft, Tractor, LogOut } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/AuthContext'
+import { SEO } from '@/components/SEO'
 
 const Dashboard = () => {
   const { logout, user } = useAuth()
@@ -18,6 +19,10 @@ const Dashboard = () => {
   }
   return (
     <div className="min-h-screen bg-background text-foreground font-sans flex flex-col">
+      <SEO
+        title="Dashboard"
+        description="Visão geral da propriedade e monitoramento inteligente."
+      />
       <header className="sticky top-0 z-50 w-full bg-primary/95 backdrop-blur supports-[backdrop-filter]:bg-primary/80 border-b border-white/10 shadow-sm">
         <div className="container flex h-16 items-center justify-between px-4 md:px-6">
           <div className="flex items-center gap-4">

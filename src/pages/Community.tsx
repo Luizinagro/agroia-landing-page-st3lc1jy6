@@ -2,14 +2,28 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { MessageSquare, PlayCircle, ShoppingBag, Tractor } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { ForumTab } from '@/components/community/ForumTab'
-import { LiveTab } from '@/components/community/LiveTab'
-import { MarketplaceTab } from '@/components/community/MarketplaceTab'
 import { GamificationCard } from '@/components/community/GamificationCard'
+import { SEO } from '@/components/SEO'
+import { Suspense, lazy } from 'react'
+import { Skeleton } from '@/components/ui/skeleton'
+
+const ForumTab = lazy(() =>
+  import('@/components/community/ForumTab').then((m) => ({ default: m.ForumTab })),
+)
+const LiveTab = lazy(() =>
+  import('@/components/community/LiveTab').then((m) => ({ default: m.LiveTab })),
+)
+const MarketplaceTab = lazy(() =>
+  import('@/components/community/MarketplaceTab').then((m) => ({ default: m.MarketplaceTab })),
+)
 
 export default function Community() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+      <SEO
+        title="Comunidade Agro-Futuro"
+        description="Conecte-se, aprenda e faça negócios com outros produtores na rede AgroIA."
+      />
       <header className="sticky top-0 z-50 w-full bg-[#1a3c34] text-white shadow-md">
         <div className="container flex h-16 items-center justify-between px-4 md:px-6">
           <Link
@@ -69,23 +83,29 @@ export default function Community() {
 
           <TabsContent
             value="forum"
-            className="animate-in fade-in slide-in-from-bottom-4 duration-500"
+            className="animate-in fade-in slide-in-from-bottom-4 duration-500 focus-visible:outline-none"
           >
-            <ForumTab />
+            <Suspense fallback={<Skeleton className="w-full h-[400px] rounded-xl" />}>
+              <ForumTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent
             value="live"
-            className="animate-in fade-in slide-in-from-bottom-4 duration-500"
+            className="animate-in fade-in slide-in-from-bottom-4 duration-500 focus-visible:outline-none"
           >
-            <LiveTab />
+            <Suspense fallback={<Skeleton className="w-full h-[400px] rounded-xl" />}>
+              <LiveTab />
+            </Suspense>
           </TabsContent>
 
           <TabsContent
             value="marketplace"
-            className="animate-in fade-in slide-in-from-bottom-4 duration-500"
+            className="animate-in fade-in slide-in-from-bottom-4 duration-500 focus-visible:outline-none"
           >
-            <MarketplaceTab />
+            <Suspense fallback={<Skeleton className="w-full h-[400px] rounded-xl" />}>
+              <MarketplaceTab />
+            </Suspense>
           </TabsContent>
         </Tabs>
       </main>

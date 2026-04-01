@@ -22,17 +22,29 @@ export function Footer() {
             <h4 className="text-white font-semibold mb-4">Institucional</h4>
             <ul className="space-y-3">
               <li>
-                <a href="#" className="hover:text-secondary transition-colors">
+                <a
+                  href="#"
+                  className="hover:text-secondary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-sm"
+                  aria-label="Página Sobre"
+                >
                   Sobre
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-secondary transition-colors">
+                <a
+                  href="#"
+                  className="hover:text-secondary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-sm"
+                  aria-label="Blog da AgroIA"
+                >
                   Blog
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-secondary transition-colors">
+                <a
+                  href="#"
+                  className="hover:text-secondary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-sm"
+                  aria-label="Parcerias com Cooperativas"
+                >
                   Parcerias Coops
                 </a>
               </li>
@@ -43,17 +55,29 @@ export function Footer() {
             <h4 className="text-white font-semibold mb-4">Suporte & Legal</h4>
             <ul className="space-y-3">
               <li>
-                <a href="#" className="hover:text-secondary transition-colors">
+                <a
+                  href="#"
+                  className="hover:text-secondary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-sm"
+                  aria-label="Entrar em contato"
+                >
                   Contato
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-secondary transition-colors">
+                <a
+                  href="#"
+                  className="hover:text-secondary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-sm"
+                  aria-label="Termos de uso"
+                >
                   Termos
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-secondary transition-colors">
+                <a
+                  href="#"
+                  className="hover:text-secondary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-sm"
+                  aria-label="Política de Privacidade"
+                >
                   Privacidade
                 </a>
               </li>

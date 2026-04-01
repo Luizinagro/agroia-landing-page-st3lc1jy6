@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://agroia-landing-page-a72f6.goskip.app/sitemap.xml
