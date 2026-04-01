@@ -7,9 +7,11 @@ import { Footer } from '@/components/sections/footer'
 import { Tractor } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
-import { useScrollAnimation } from '@/hooks/use-scroll-animation' // This import is a dummy, actual hook is use-intersection-observer but we don't need it at page level
+import { useAuth } from '@/contexts/AuthContext'
 
 const Index = () => {
+  const { user } = useAuth()
+
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
       {/* Sticky Header */}
@@ -41,7 +43,9 @@ const Index = () => {
               asChild
               className="bg-secondary text-primary hover:bg-secondary/90 font-semibold h-9 px-4"
             >
-              <Link to="/dashboard">Área do Produtor</Link>
+              <Link to={user ? '/dashboard' : '/login'}>
+                {user ? 'Área do Produtor' : 'Acessar Sistema'}
+              </Link>
             </Button>
           </div>
         </div>

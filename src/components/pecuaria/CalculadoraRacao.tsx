@@ -10,9 +10,16 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { useDatabase } from '@/contexts/DatabaseContext'
+import { useToast } from '@/hooks/use-toast'
+import { Loader2 } from 'lucide-react'
 
 export function CalculadoraRacao() {
+  const { addAnimal, loading } = useDatabase()
+  const { toast } = useToast()
   const [animalType, setAnimalType] = useState('bovino')
+  const [isSaving, setIsSaving] = useState(false)
   const [weight, setWeight] = useState(450)
   const [phase, setPhase] = useState('terminacao')
 
@@ -24,6 +31,23 @@ export function CalculadoraRacao() {
     const brand = animalType === 'bovino' ? 'Yara' : 'BASF'
     return { quantity, cost, brand }
   }, [animalType, weight, phase])
+
+  const handleSave = async () => {
+    if (!feedResults) return
+    setIsSaving(true)
+    try {
+      await addAnimal({
+        tipo: animalType,
+        peso: weight,
+        fase: phase,
+        racao_recomendada: feedResults.brand,
+        custo_mensal: parseFloat(feedResults.cost),
+      })
+      toast({ title: 'Sucesso', description: 'Dados salvos no banco de dados da sua propriedade.' })
+    } finally {
+      setIsSaving(false)
+    }
+  }
 
   return (
     <Card className="border-agro-green/20 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -87,13 +111,23 @@ export function CalculadoraRacao() {
                 <p className="text-2xl font-bold text-agro-green">R$ {feedResults.cost}</p>
               </div>
             </div>
-            <div className="mt-6 flex flex-wrap items-center gap-2 text-agro-green">
-              <Badge className="bg-agro-yellow text-agro-green hover:bg-agro-yellow/90">
-                Economia de 20% vs. média do mercado
-              </Badge>
-              <span className="text-sm text-muted-foreground">
-                Com base nos dados de mercado da sua região.
-              </span>
+            <div className="mt-6 flex flex-wrap items-center justify-between gap-4 text-agro-green">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge className="bg-agro-yellow text-agro-green hover:bg-agro-yellow/90">
+                  Economia de 20% vs. média do mercado
+                </Badge>
+                <span className="text-sm text-muted-foreground">
+                  Com base nos dados de mercado da sua região.
+                </span>
+              </div>
+              <Button
+                onClick={handleSave}
+                disabled={isSaving || loading}
+                className="bg-agro-green text-white hover:bg-agro-green/90"
+              >
+                {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                Persistir na Base de Dados
+              </Button>
             </div>
           </div>
         )}

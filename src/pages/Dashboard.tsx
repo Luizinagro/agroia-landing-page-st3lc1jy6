@@ -2,11 +2,20 @@ import { MapSection } from '@/components/dashboard/map-section'
 import { AlertsSection } from '@/components/dashboard/alerts-section'
 import { HistoryChart } from '@/components/dashboard/history-chart'
 import { IotConnection } from '@/components/dashboard/iot-connection'
-import { LayoutDashboard, ArrowLeft, Tractor } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { WeatherForecast } from '@/components/dashboard/weather-forecast'
+import { LayoutDashboard, ArrowLeft, Tractor, LogOut } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import { useAuth } from '@/contexts/AuthContext'
 
 const Dashboard = () => {
+  const { logout, user } = useAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
   return (
     <div className="min-h-screen bg-background text-foreground font-sans flex flex-col">
       <header className="sticky top-0 z-50 w-full bg-primary/95 backdrop-blur supports-[backdrop-filter]:bg-primary/80 border-b border-white/10 shadow-sm">
@@ -29,7 +38,18 @@ const Dashboard = () => {
               <span className="sm:hidden">AgroIA</span>
             </div>
           </div>
-          <IotConnection />
+          <div className="flex items-center gap-4">
+            <IotConnection />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
+              className="hidden sm:flex border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Sair
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -52,7 +72,10 @@ const Dashboard = () => {
             style={{ animationDelay: '100ms' }}
           >
             <MapSection />
-            <HistoryChart />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <WeatherForecast />
+              <HistoryChart />
+            </div>
           </div>
           <div className="h-full animate-slide-up" style={{ animationDelay: '200ms' }}>
             <AlertsSection />
