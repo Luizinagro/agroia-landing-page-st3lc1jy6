@@ -136,9 +136,12 @@ export default function Login() {
                   <FormItem>
                     <div className="flex items-center justify-between">
                       <FormLabel>Senha</FormLabel>
-                      <a href="#" className="text-sm font-medium text-[#1a3c34] hover:underline">
+                      <Link
+                        to="/forgot-password"
+                        className="text-sm font-medium text-[#1a3c34] hover:underline decoration-[#f4d03f] decoration-2 transition-all py-2 px-1 -mr-1 rounded-md active:bg-muted"
+                      >
                         Esqueceu a senha?
-                      </a>
+                      </Link>
                     </div>
                     <FormControl>
                       <Input type="password" className="focus-visible:ring-[#1a3c34]" {...field} />
@@ -165,10 +168,12 @@ export default function Login() {
           </Form>
         </CardContent>
         <CardFooter className="flex flex-col text-center border-t bg-muted/30 pt-4">
-          <div className="text-sm mb-4">
-            Ainda não tem uma conta?{' '}
-            <Link to="/cadastro" className="font-semibold text-[#1a3c34] hover:underline">
-              Crie uma agora
+          <div className="text-sm mb-4 w-full">
+            <Link
+              to="/cadastro"
+              className="font-semibold text-[#1a3c34] hover:underline decoration-[#f4d03f] decoration-2 transition-all block py-2 px-4 rounded-md active:bg-muted"
+            >
+              Não tem conta? Criar uma agora
             </Link>
           </div>
           <div className="text-xs text-muted-foreground mb-4 bg-muted p-2 rounded-md">
