@@ -5,9 +5,29 @@ import { ShoppingCart, Info } from 'lucide-react'
 import { useDatabase, Produto } from '@/contexts/DatabaseContext'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { checkRateLimit, logSystemEvent } from '@/lib/security'
+import { useAuth } from '@/contexts/AuthContext'
+import { useToast } from '@/hooks/use-toast'
 
 export function MarketplaceCatalog({ onAddToCart }: { onAddToCart: (p: Produto) => void }) {
   const { produtos, loading } = useDatabase()
+  const { user } = useAuth()
+  const { toast } = useToast()
+
+  const handleAddToCart = (product: Produto) => {
+    const userId = user?.id || 'anonymous'
+    const canAdd = checkRateLimit('api_add_cart', userId, 10, 60 * 1000)
+    if (!canAdd) {
+      toast({
+        title: 'Ação Bloqueada',
+        description: 'Muitas requisições. Aguarde um minuto para adicionar mais itens.',
+        variant: 'destructive',
+      })
+      logSystemEvent('RATE_LIMIT', `Abuso detectado no carrinho pelo usuário`, userId)
+      return
+    }
+    onAddToCart(product)
+  }
 
   const formatPrice = (value: number) =>
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
@@ -78,7 +98,7 @@ export function MarketplaceCatalog({ onAddToCart }: { onAddToCart: (p: Produto) 
           <CardFooter className="pt-0 mt-auto">
             <Button
               className="w-full bg-[#1a3c34] text-white hover:bg-[#1a3c34]/90 shadow-sm transition-colors group-hover:shadow-md"
-              onClick={() => onAddToCart(product)}
+              onClick={() => handleAddToCart(product)}
             >
               <ShoppingCart className="w-4 h-4 mr-2" />
               Adicionar ao Carrinho

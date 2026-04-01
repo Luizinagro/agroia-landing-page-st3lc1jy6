@@ -37,7 +37,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const usersStr = localStorage.getItem('db_users') || '[]'
     const users: User[] = JSON.parse(usersStr)
 
+    const existingUser = users.find((u) => u.email === email)
     let found = users.find((u) => u.email === email && u.senha === senha)
+
+    if (existingUser && !found) {
+      // Email exists but password doesn't match
+      throw new Error('Invalid credentials')
+    }
+
     if (!found) {
       // Auto-register for demo purposes
       found = {
