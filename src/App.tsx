@@ -7,6 +7,7 @@ import Index from './pages/Index'
 import Dashboard from './pages/Dashboard'
 import Community from './pages/Community'
 import Billing from './pages/Billing'
+import Pecuaria from './pages/Pecuaria'
 import NotFound from './pages/NotFound'
 import Layout from './components/Layout'
 
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/comunidade" element={<Community />} />
           <Route path="/faturamento" element={<Billing />} />
+          <Route path="/pecuaria" element={<Pecuaria />} />
           {/* ADD ALL CUSTOM ROUTES MUST BE ADDED HERE */}
         </Route>
         <Route path="*" element={<NotFound />} />
