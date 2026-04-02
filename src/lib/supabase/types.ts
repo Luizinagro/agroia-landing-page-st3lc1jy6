@@ -81,6 +81,38 @@ export type Database = {
         }
         Relationships: []
       }
+      carrinho: {
+        Row: {
+          created_at: string
+          id: string
+          produto_id: string
+          quantidade: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          produto_id: string
+          quantidade?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          produto_id?: string
+          quantidade?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'carrinho_produto_id_fkey'
+            columns: ['produto_id']
+            isOneToOne: false
+            referencedRelation: 'products'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       order_items: {
         Row: {
           id: string
@@ -147,6 +179,42 @@ export type Database = {
         }
         Relationships: []
       }
+      previsoes: {
+        Row: {
+          created_at: string
+          cultura: string
+          data: string
+          id: string
+          preco_atual: number
+          previsao_30d: number | null
+          previsao_60d: number | null
+          quantidade: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          cultura: string
+          data?: string
+          id?: string
+          preco_atual?: number
+          previsao_30d?: number | null
+          previsao_60d?: number | null
+          quantidade?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          cultura?: string
+          data?: string
+          id?: string
+          preco_atual?: number
+          previsao_30d?: number | null
+          previsao_60d?: number | null
+          quantidade?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       price_alerts: {
         Row: {
           commodity: string
@@ -207,6 +275,66 @@ export type Database = {
           name?: string
           price?: number
           stock?: number
+        }
+        Relationships: []
+      }
+      rastreabilidade: {
+        Row: {
+          created_at: string
+          data: string
+          etapa: string
+          id: string
+          responsavel: string | null
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: string
+          etapa: string
+          id?: string
+          responsavel?: string | null
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: string
+          etapa?: string
+          id?: string
+          responsavel?: string | null
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rebanho: {
+        Row: {
+          created_at: string
+          data_entrada: string
+          id: string
+          quantidade: number
+          status: string | null
+          tipo_animal: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data_entrada?: string
+          id?: string
+          quantidade?: number
+          status?: string | null
+          tipo_animal: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data_entrada?: string
+          id?: string
+          quantidade?: number
+          status?: string | null
+          tipo_animal?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -463,6 +591,12 @@ export const Constants = {
 //   data_criacao: timestamp with time zone (not null, default: now())
 //   cultura: text (nullable)
 //   quantidade: numeric (nullable)
+// Table: carrinho
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   produto_id: uuid (not null)
+//   quantidade: numeric (not null, default: 1)
+//   created_at: timestamp with time zone (not null, default: now())
 // Table: order_items
 //   id: uuid (not null, default: gen_random_uuid())
 //   order_id: uuid (not null)
@@ -476,6 +610,16 @@ export const Constants = {
 //   status: text (nullable, default: 'pendente'::text)
 //   created_at: timestamp with time zone (not null, default: now())
 //   delivery_address: text (nullable)
+// Table: previsoes
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   cultura: text (not null)
+//   quantidade: numeric (not null, default: 0)
+//   preco_atual: numeric (not null, default: 0)
+//   previsao_30d: numeric (nullable)
+//   previsao_60d: numeric (nullable)
+//   data: timestamp with time zone (not null, default: now())
+//   created_at: timestamp with time zone (not null, default: now())
 // Table: price_alerts
 //   id: uuid (not null, default: gen_random_uuid())
 //   user_id: uuid (not null)
@@ -492,6 +636,22 @@ export const Constants = {
 //   category: text (nullable)
 //   image_url: text (nullable)
 //   stock: numeric (not null, default: 0)
+//   created_at: timestamp with time zone (not null, default: now())
+// Table: rastreabilidade
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   etapa: text (not null)
+//   data: timestamp with time zone (not null, default: now())
+//   responsavel: text (nullable)
+//   status: text (nullable)
+//   created_at: timestamp with time zone (not null, default: now())
+// Table: rebanho
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   tipo_animal: text (not null)
+//   quantidade: numeric (not null, default: 0)
+//   data_entrada: timestamp with time zone (not null, default: now())
+//   status: text (nullable)
 //   created_at: timestamp with time zone (not null, default: now())
 // Table: user_plans
 //   id: uuid (not null, default: gen_random_uuid())
@@ -523,6 +683,10 @@ export const Constants = {
 // Table: calculos_roi
 //   PRIMARY KEY calculos_roi_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY calculos_roi_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: carrinho
+//   PRIMARY KEY carrinho_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY carrinho_produto_id_fkey: FOREIGN KEY (produto_id) REFERENCES products(id) ON DELETE CASCADE
+//   FOREIGN KEY carrinho_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 // Table: order_items
 //   FOREIGN KEY order_items_order_id_fkey: FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 //   PRIMARY KEY order_items_pkey: PRIMARY KEY (id)
@@ -531,12 +695,21 @@ export const Constants = {
 //   PRIMARY KEY orders_pkey: PRIMARY KEY (id)
 //   CHECK orders_status_check: CHECK ((status = ANY (ARRAY['pendente'::text, 'pago'::text, 'enviado'::text])))
 //   FOREIGN KEY orders_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: previsoes
+//   PRIMARY KEY previsoes_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY previsoes_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 // Table: price_alerts
 //   PRIMARY KEY price_alerts_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY price_alerts_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 // Table: products
 //   CHECK products_category_check: CHECK ((category = ANY (ARRAY['ração'::text, 'fertilizante'::text, 'sementes'::text, 'defensivos'::text])))
 //   PRIMARY KEY products_pkey: PRIMARY KEY (id)
+// Table: rastreabilidade
+//   PRIMARY KEY rastreabilidade_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY rastreabilidade_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: rebanho
+//   PRIMARY KEY rebanho_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY rebanho_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 // Table: user_plans
 //   PRIMARY KEY user_plans_pkey: PRIMARY KEY (id)
 //   CHECK user_plans_plan_name_check: CHECK ((plan_name = ANY (ARRAY['Básico'::text, 'Plantio Solo'::text, 'Pecuário Solo'::text, 'Completo'::text, 'Família Coop'::text])))
@@ -560,6 +733,16 @@ export const Constants = {
 //     USING: (user_id = auth.uid())
 //   Policy "calculos_roi_update" (UPDATE, PERMISSIVE) roles={authenticated}
 //     USING: (user_id = auth.uid())
+// Table: carrinho
+//   Policy "carrinho_delete" (DELETE, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//   Policy "carrinho_insert" (INSERT, PERMISSIVE) roles={authenticated}
+//     WITH CHECK: (user_id = auth.uid())
+//   Policy "carrinho_select" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//   Policy "carrinho_update" (UPDATE, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//     WITH CHECK: (user_id = auth.uid())
 // Table: order_items
 //   Policy "order_items_delete" (DELETE, PERMISSIVE) roles={authenticated}
 //     USING: (order_id IN ( SELECT orders.id    FROM orders   WHERE (orders.user_id = auth.uid())))
@@ -577,6 +760,16 @@ export const Constants = {
 //   Policy "orders_select" (SELECT, PERMISSIVE) roles={authenticated}
 //     USING: (user_id = auth.uid())
 //   Policy "orders_update" (UPDATE, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//     WITH CHECK: (user_id = auth.uid())
+// Table: previsoes
+//   Policy "previsoes_delete" (DELETE, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//   Policy "previsoes_insert" (INSERT, PERMISSIVE) roles={authenticated}
+//     WITH CHECK: (user_id = auth.uid())
+//   Policy "previsoes_select" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//   Policy "previsoes_update" (UPDATE, PERMISSIVE) roles={authenticated}
 //     USING: (user_id = auth.uid())
 //     WITH CHECK: (user_id = auth.uid())
 // Table: price_alerts
@@ -599,6 +792,26 @@ export const Constants = {
 //   Policy "products_update" (UPDATE, PERMISSIVE) roles={authenticated}
 //     USING: true
 //     WITH CHECK: true
+// Table: rastreabilidade
+//   Policy "rastreabilidade_delete" (DELETE, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//   Policy "rastreabilidade_insert" (INSERT, PERMISSIVE) roles={authenticated}
+//     WITH CHECK: (user_id = auth.uid())
+//   Policy "rastreabilidade_select" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//   Policy "rastreabilidade_update" (UPDATE, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//     WITH CHECK: (user_id = auth.uid())
+// Table: rebanho
+//   Policy "rebanho_delete" (DELETE, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//   Policy "rebanho_insert" (INSERT, PERMISSIVE) roles={authenticated}
+//     WITH CHECK: (user_id = auth.uid())
+//   Policy "rebanho_select" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//   Policy "rebanho_update" (UPDATE, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//     WITH CHECK: (user_id = auth.uid())
 // Table: user_plans
 //   Policy "user_plans_delete" (DELETE, PERMISSIVE) roles={authenticated}
 //     USING: (user_id = auth.uid())

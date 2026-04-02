@@ -1,12 +1,14 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { supabase } from '@/lib/supabase/client'
+import { useToast } from '@/hooks/use-toast'
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardFooter,
-} from '@/components/ui/card'
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -18,225 +20,318 @@ import {
   DialogTrigger,
   DialogFooter,
 } from '@/components/ui/dialog'
-import { Tractor, Plus, Edit2, Trash2, Scale, DollarSign, Sprout } from 'lucide-react'
-import { useDatabase, Animal } from '@/contexts/DatabaseContext'
-import { useToast } from '@/hooks/use-toast'
-import { Skeleton } from '@/components/ui/skeleton'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Trash2, Edit2, Plus, Loader2 } from 'lucide-react'
+
+type Rebanho = {
+  id: string
+  user_id: string
+  tipo_animal: string
+  quantidade: number
+  data_entrada: string
+  status: string | null
+  created_at: string
+}
 
 export function Reproducao() {
-  const { animais, addAnimal, updateAnimal, deleteAnimal, loading } = useDatabase()
+  const [rebanho, setRebanho] = useState<Rebanho[]>([])
+  const [loading, setLoading] = useState(true)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
+
+  // Form states
+  const [tipoAnimal, setTipoAnimal] = useState('')
+  const [quantidade, setQuantidade] = useState<number | ''>('')
+  const [dataEntrada, setDataEntrada] = useState('')
+  const [status, setStatus] = useState('Saudável')
+
   const { toast } = useToast()
 
-  const [isOpen, setIsOpen] = useState(false)
-  const [editId, setEditId] = useState<string | null>(null)
-
-  const [tipo, setTipo] = useState('')
-  const [peso, setPeso] = useState(0)
-  const [fase, setFase] = useState('')
-  const [racao_recomendada, setRacao] = useState('')
-  const [custo_mensal, setCusto] = useState(0)
-
-  const resetForm = () => {
-    setTipo('')
-    setPeso(0)
-    setFase('')
-    setRacao('')
-    setCusto(0)
-    setEditId(null)
-  }
-
-  const handleOpenNew = () => {
-    resetForm()
-    setIsOpen(true)
-  }
-
-  const handleOpenEdit = (a: Animal) => {
-    setTipo(a.tipo)
-    setPeso(a.peso)
-    setFase(a.fase)
-    setRacao(a.racao_recomendada)
-    setCusto(a.custo_mensal)
-    setEditId(a.id)
-    setIsOpen(true)
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const fetchRebanho = async () => {
     try {
-      if (editId) {
-        await updateAnimal(editId, { tipo, peso, fase, racao_recomendada, custo_mensal })
-        toast({ title: 'Atualizado', description: 'Registro de rebanho atualizado.' })
-      } else {
-        await addAnimal({ tipo, peso, fase, racao_recomendada, custo_mensal })
-        toast({ title: 'Registrado', description: 'Animal cadastrado no sistema.' })
+      setLoading(true)
+      const { data: userData } = await supabase.auth.getUser()
+      if (!userData.user) return
+
+      const { data, error } = await supabase
+        .from('rebanho')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (error) throw error
+      setRebanho(data || [])
+    } catch (error: any) {
+      console.error('Erro ao buscar rebanho:', error)
+      toast({
+        title: 'Erro',
+        description: 'Não foi possível carregar os dados do rebanho.',
+        variant: 'destructive',
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchRebanho()
+  }, [])
+
+  const handleSave = async () => {
+    try {
+      if (!tipoAnimal || !quantidade || !dataEntrada) {
+        toast({
+          title: 'Campos obrigatórios',
+          description: 'Preencha todos os campos obrigatórios.',
+          variant: 'destructive',
+        })
+        return
       }
-      setIsOpen(false)
-    } catch {
-      toast({ title: 'Erro', description: 'Falha ao salvar o registro.', variant: 'destructive' })
+
+      const { data: userData } = await supabase.auth.getUser()
+      if (!userData.user) throw new Error('Usuário não autenticado')
+
+      const payload = {
+        user_id: userData.user.id,
+        tipo_animal: tipoAnimal,
+        quantidade: Number(quantidade),
+        data_entrada: new Date(`${dataEntrada}T12:00:00Z`).toISOString(),
+        status,
+      }
+
+      if (editingId) {
+        const { error } = await supabase
+          .from('rebanho')
+          .update(payload)
+          .eq('id', editingId)
+          .eq('user_id', userData.user.id)
+
+        if (error) throw error
+        toast({ title: 'Sucesso', description: 'Registro atualizado com sucesso!' })
+      } else {
+        const { error } = await supabase.from('rebanho').insert([payload])
+
+        if (error) throw error
+        toast({ title: 'Sucesso', description: 'Registro criado com sucesso!' })
+      }
+
+      setIsDialogOpen(false)
+      resetForm()
+      fetchRebanho()
+    } catch (error: any) {
+      console.error('Erro ao salvar:', error)
+      toast({
+        title: 'Erro',
+        description: 'Não foi possível salvar o registro.',
+        variant: 'destructive',
+      })
     }
   }
 
   const handleDelete = async (id: string) => {
-    if (confirm('Remover este animal do sistema?')) {
-      await deleteAnimal(id)
-      toast({ title: 'Removido', description: 'Animal deletado do rebanho.' })
+    if (!confirm('Tem certeza que deseja excluir este registro?')) return
+
+    try {
+      const { data: userData } = await supabase.auth.getUser()
+      if (!userData.user) return
+
+      const { error } = await supabase
+        .from('rebanho')
+        .delete()
+        .eq('id', id)
+        .eq('user_id', userData.user.id)
+
+      if (error) throw error
+
+      toast({ title: 'Sucesso', description: 'Registro excluído com sucesso!' })
+      fetchRebanho()
+    } catch (error: any) {
+      console.error('Erro ao deletar:', error)
+      toast({
+        title: 'Erro',
+        description: 'Não foi possível excluir o registro.',
+        variant: 'destructive',
+      })
     }
   }
 
-  if (loading) return <Skeleton className="w-full h-[400px] rounded-xl" />
+  const openEdit = (item: Rebanho) => {
+    setEditingId(item.id)
+    setTipoAnimal(item.tipo_animal)
+    setQuantidade(item.quantidade)
+    const dateStr = item.data_entrada ? item.data_entrada.split('T')[0] : ''
+    setDataEntrada(dateStr)
+    setStatus(item.status || 'Saudável')
+    setIsDialogOpen(true)
+  }
+
+  const resetForm = () => {
+    setEditingId(null)
+    setTipoAnimal('')
+    setQuantidade('')
+    setDataEntrada('')
+    setStatus('Saudável')
+  }
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex justify-between items-center bg-white p-5 rounded-xl border border-agro-green/10 shadow-sm">
+    <div className="space-y-6 bg-card p-6 rounded-xl border shadow-sm">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-xl font-bold text-agro-green flex items-center gap-2">
-            <Tractor className="w-6 h-6 text-agro-yellow" />
-            Gestão de Rebanho
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Controle de peso, custos e fases do seu rebanho.
+          <h2 className="text-2xl font-bold text-agro-green">Gestão de Rebanho</h2>
+          <p className="text-muted-foreground text-sm">
+            Controle a entrada, quantidade e status dos seus animais.
           </p>
         </div>
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+
+        <Dialog
+          open={isDialogOpen}
+          onOpenChange={(open) => {
+            setIsDialogOpen(open)
+            if (!open) resetForm()
+          }}
+        >
           <DialogTrigger asChild>
-            <Button
-              onClick={handleOpenNew}
-              className="bg-agro-green text-agro-yellow font-bold hover:bg-agro-green/90"
-            >
-              <Plus className="w-4 h-4 mr-2" /> Novo Animal
+            <Button className="bg-agro-green hover:bg-agro-green/90 text-white gap-2">
+              <Plus className="w-4 h-4" />
+              Adicionar Lote
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle className="text-agro-green">
-                {editId ? 'Editar Animal' : 'Registrar Novo Animal'}
-              </DialogTitle>
+              <DialogTitle>{editingId ? 'Editar Lote' : 'Novo Lote de Animais'}</DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="tipo">Tipo de Animal</Label>
+                <Input
+                  id="tipo"
+                  placeholder="Ex: Bovino, Suíno, Ave..."
+                  value={tipoAnimal}
+                  onChange={(e) => setTipoAnimal(e.target.value)}
+                />
+              </div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Tipo / ID</Label>
+                <div className="grid gap-2">
+                  <Label htmlFor="qtd">Quantidade</Label>
                   <Input
-                    required
-                    value={tipo}
-                    onChange={(e) => setTipo(e.target.value)}
-                    placeholder="Ex: Matriz, Touro 001"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Fase de Vida</Label>
-                  <Input
-                    required
-                    value={fase}
-                    onChange={(e) => setFase(e.target.value)}
-                    placeholder="Ex: Recria, Terminação"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Peso Atual (kg)</Label>
-                  <Input
+                    id="qtd"
                     type="number"
-                    required
-                    value={peso}
-                    onChange={(e) => setPeso(Number(e.target.value))}
+                    placeholder="Ex: 50"
+                    value={quantidade}
+                    onChange={(e) => setQuantidade(e.target.value ? Number(e.target.value) : '')}
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label>Custo Mensal (R$)</Label>
+                <div className="grid gap-2">
+                  <Label htmlFor="data">Data de Entrada</Label>
                   <Input
-                    type="number"
-                    required
-                    value={custo_mensal}
-                    onChange={(e) => setCusto(Number(e.target.value))}
-                  />
-                </div>
-                <div className="space-y-2 col-span-2">
-                  <Label>Ração Recomendada</Label>
-                  <Input
-                    required
-                    value={racao_recomendada}
-                    onChange={(e) => setRacao(e.target.value)}
+                    id="data"
+                    type="date"
+                    value={dataEntrada}
+                    onChange={(e) => setDataEntrada(e.target.value)}
                   />
                 </div>
               </div>
-              <DialogFooter>
-                <Button type="submit" className="bg-agro-green text-white font-bold">
-                  Salvar Registro
-                </Button>
-              </DialogFooter>
-            </form>
+              <div className="grid gap-2">
+                <Label htmlFor="status">Status</Label>
+                <Select value={status} onValueChange={setStatus}>
+                  <SelectTrigger id="status">
+                    <SelectValue placeholder="Selecione o status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Saudável">Saudável</SelectItem>
+                    <SelectItem value="Em Tratamento">Em Tratamento</SelectItem>
+                    <SelectItem value="Vendido">Vendido</SelectItem>
+                    <SelectItem value="Óbito">Óbito</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                Cancelar
+              </Button>
+              <Button
+                onClick={handleSave}
+                className="bg-agro-green hover:bg-agro-green/90 text-white"
+              >
+                Salvar
+              </Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
 
-      {animais.length === 0 ? (
-        <div className="text-center py-16 bg-white border border-dashed border-agro-green/30 rounded-xl text-muted-foreground">
-          Rebanho vazio. Registre o primeiro animal para acompanhar seu desenvolvimento.
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {animais.map((a) => (
-            <Card
-              key={a.id}
-              className="border-agro-green/10 hover:border-agro-green/40 transition-colors shadow-sm bg-white"
-            >
-              <CardHeader className="pb-3 border-b border-agro-green/5">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-agro-green text-lg">{a.tipo}</CardTitle>
-                    <CardDescription className="font-medium text-agro-green/70">
-                      Fase: {a.fase}
-                    </CardDescription>
-                  </div>
-                  <div className="flex gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 hover:bg-blue-50 text-blue-600"
-                      onClick={() => handleOpenEdit(a)}
+      <div className="rounded-md border overflow-x-auto bg-background">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Tipo de Animal</TableHead>
+              <TableHead>Quantidade</TableHead>
+              <TableHead>Data de Entrada</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="text-right">Ações</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center py-8">
+                  <Loader2 className="w-6 h-6 animate-spin mx-auto text-agro-green" />
+                  <span className="text-sm text-muted-foreground mt-2 block">
+                    Carregando rebanho...
+                  </span>
+                </TableCell>
+              </TableRow>
+            ) : rebanho.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                  Nenhum registro encontrado. Clique em "Adicionar Lote" para começar.
+                </TableCell>
+              </TableRow>
+            ) : (
+              rebanho.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell className="font-medium">{item.tipo_animal}</TableCell>
+                  <TableCell>{item.quantidade}</TableCell>
+                  <TableCell>
+                    {item.data_entrada
+                      ? new Date(item.data_entrada).toLocaleDateString('pt-BR', { timeZone: 'UTC' })
+                      : '-'}
+                  </TableCell>
+                  <TableCell>
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        item.status === 'Saudável'
+                          ? 'bg-green-100 text-green-800'
+                          : item.status === 'Em Tratamento'
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : item.status === 'Vendido'
+                              ? 'bg-blue-100 text-blue-800'
+                              : 'bg-red-100 text-red-800'
+                      }`}
                     >
-                      <Edit2 className="w-4 h-4" />
+                      {item.status}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right space-x-2">
+                    <Button variant="ghost" size="icon" onClick={() => openEdit(item)}>
+                      <Edit2 className="w-4 h-4 text-blue-600" />
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 hover:bg-red-50 text-red-600"
-                      onClick={() => handleDelete(a.id)}
-                    >
-                      <Trash2 className="w-4 h-4" />
+                    <Button variant="ghost" size="icon" onClick={() => handleDelete(item.id)}>
+                      <Trash2 className="w-4 h-4 text-red-600" />
                     </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-4 space-y-3">
-                <div className="flex items-center justify-between text-sm bg-slate-50 p-2 rounded-lg">
-                  <span className="flex items-center gap-2 text-slate-600">
-                    <Scale className="w-4 h-4 text-agro-green" /> Peso Atual
-                  </span>
-                  <span className="font-bold text-agro-green">{a.peso} kg</span>
-                </div>
-                <div className="flex items-center justify-between text-sm bg-slate-50 p-2 rounded-lg">
-                  <span className="flex items-center gap-2 text-slate-600">
-                    <DollarSign className="w-4 h-4 text-red-500" /> Custo Mensal
-                  </span>
-                  <span className="font-bold text-red-600">R$ {a.custo_mensal}</span>
-                </div>
-                <div className="flex items-center justify-between text-sm bg-slate-50 p-2 rounded-lg">
-                  <span className="flex items-center gap-2 text-slate-600">
-                    <Sprout className="w-4 h-4 text-agro-yellow" /> Nutrição
-                  </span>
-                  <span
-                    className="font-medium text-slate-700 truncate max-w-[120px]"
-                    title={a.racao_recomendada}
-                  >
-                    {a.racao_recomendada}
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   )
 }
