@@ -6,11 +6,19 @@ export type User = {
   email: string
   senha_hash?: string
   nome: string
+  name?: string
+  phone?: string
+  address?: string
   tipo_usuario: string
+  user_type?: string
   estado: string
+  status?: string
   data_criacao: string
+  created_at?: string
   data_trial_expira: string
+  trial_expires_at?: string
   plano_ativo: string
+  plan_active?: string
   plano?: string // Alias for compatibility with existing modules
 }
 
