@@ -27,10 +27,15 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter var', 'SF Pro Display', 'system-ui', 'sans-serif'],
-        display: ['SF Pro Display', 'Inter var', 'system-ui', 'sans-serif'],
+        sans: ['Poppins', 'system-ui', 'sans-serif'],
+        display: ['Poppins', 'system-ui', 'sans-serif'],
       },
       colors: {
+        neon: {
+          green: '#00FF94',
+          blue: '#00D1FF',
+          purple: '#B026FF',
+        },
         agro: {
           green: '#1a3c34',
           yellow: '#f4d03f',

@@ -1,64 +1,61 @@
-import { Tractor } from 'lucide-react'
+import { Logo } from '@/components/ui/logo'
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-[#112a24] text-white/80 py-12 border-t border-white/10">
-      <div className="container px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-          <div className="col-span-1 md:col-span-2 space-y-4">
-            <div className="flex items-center gap-2 text-white font-bold text-2xl mb-4">
-              <Tractor className="w-8 h-8 text-secondary" />
-              <span>AgroIA</span>
+    <footer className="bg-[#050A15] text-white/60 py-16 border-t border-white/5 relative overflow-hidden">
+      <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-[#00FF94]/5 to-transparent pointer-events-none" />
+
+      <div className="container relative z-10 px-4 md:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+          <div className="col-span-1 md:col-span-2 space-y-6">
+            <div className="flex items-center gap-3 text-white font-bold text-2xl">
+              <Logo className="w-10 h-10 text-[#00FF94]" />
             </div>
-            <p className="max-w-md text-white/60">
-              Transformando a agricultura brasileira com inteligência artificial hiperlocal,
-              garantindo maior produtividade e adequação às normas globais.
+            <p className="max-w-md text-white/50 leading-relaxed">
+              O ecossistema definitivo para o agronegócio inteligente. Potencializando a produção
+              rural com tecnologia preditiva e rastreabilidade hiperlocal.
             </p>
           </div>
 
           <div>
-            <h4 className="text-white font-semibold mb-4">Institucional</h4>
-            <ul className="space-y-3">
+            <h4 className="text-white font-bold mb-6 tracking-wide">Plataforma</h4>
+            <ul className="space-y-4 font-medium text-sm">
               <li>
                 <a
                   href="#"
-                  className="hover:text-secondary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-sm"
-                  aria-label="Página Sobre"
+                  className="hover:text-[#00FF94] transition-colors focus-visible:outline-none focus-visible:text-[#00FF94]"
                 >
-                  Sobre
+                  Sobre nós
                 </a>
               </li>
               <li>
                 <a
                   href="#"
-                  className="hover:text-secondary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-sm"
-                  aria-label="Blog da AgroIA"
+                  className="hover:text-[#00FF94] transition-colors focus-visible:outline-none focus-visible:text-[#00FF94]"
                 >
-                  Blog
+                  Tecnologia
                 </a>
               </li>
               <li>
                 <a
                   href="#"
-                  className="hover:text-secondary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-sm"
-                  aria-label="Parcerias com Cooperativas"
+                  className="hover:text-[#00FF94] transition-colors focus-visible:outline-none focus-visible:text-[#00FF94]"
                 >
-                  Parcerias Coops
+                  Parceiros
                 </a>
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-white font-semibold mb-4">Suporte & Legal</h4>
-            <ul className="space-y-3">
+            <h4 className="text-white font-bold mb-6 tracking-wide">Legal</h4>
+            <ul className="space-y-4 font-medium text-sm">
               <li>
                 <a
                   href="#"
-                  className="hover:text-secondary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-sm"
-                  aria-label="Entrar em contato"
+                  className="hover:text-[#00FF94] transition-colors focus-visible:outline-none focus-visible:text-[#00FF94]"
                 >
                   Contato
                 </a>
@@ -66,17 +63,15 @@ export function Footer() {
               <li>
                 <a
                   href="#"
-                  className="hover:text-secondary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-sm"
-                  aria-label="Termos de uso"
+                  className="hover:text-[#00FF94] transition-colors focus-visible:outline-none focus-visible:text-[#00FF94]"
                 >
-                  Termos
+                  Termos de Uso
                 </a>
               </li>
               <li>
                 <a
                   href="#"
-                  className="hover:text-secondary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-sm"
-                  aria-label="Política de Privacidade"
+                  className="hover:text-[#00FF94] transition-colors focus-visible:outline-none focus-visible:text-[#00FF94]"
                 >
                   Privacidade
                 </a>
@@ -85,9 +80,13 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/50">
-          <p>© {currentYear} AgroIA Tecnologias Ltda. Todos os direitos reservados.</p>
-          <p>Desenvolvido para as regiões de Cascavel e Toledo - PR</p>
+        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-white/40">
+          <p>© {currentYear} AgroIA. Inovação para o campo.</p>
+          <div className="flex gap-4">
+            <span>Cascavel</span>
+            <span>•</span>
+            <span>Toledo</span>
+          </div>
         </div>
       </div>
     </footer>
