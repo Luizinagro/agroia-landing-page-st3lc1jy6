@@ -1,7 +1,6 @@
 /* Global styles - Theme, font, utilities, animations and global components */
 
-/* CHANGE THE FONT BELOW TO WHATEVER YOU WANT */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -9,114 +8,205 @@
 
 @layer base {
   :root {
-    /* AgroIA Theme */
-    --background: 0 0% 100%;
-    --foreground: 166 39% 10%;
+    --agro-green: #22c55e;
+    --agro-green-hover: #16a34a;
+    --neon-purple: #8b5cf6;
+    --neon-purple-hover: #7c3aed;
+    --premium-gold: #f59e0b;
+    --premium-gold-hover: #d97706;
+    --organic-earth: #92400e;
+    --organic-earth-hover: #b45309;
+    --bg-dark: #111827;
+    --bg-dark-overlay: #0f172a;
+    --bg-light: #f9fafb;
+    --text-primary: #ffffff;
+    --text-secondary: #9ca3af;
+    --text-muted: #6b7280;
+    --error: #ef4444;
+    --success: #10b981;
+    --warning: #fbbf24;
 
-    --card: 0 0% 100%;
-    --card-foreground: 166 39% 10%;
+    --gradient-hero: linear-gradient(135deg, #22c55e 0%, #8b5cf6 50%, #f59e0b 100%);
+    --gradient-cards: linear-gradient(180deg, rgba(34, 197, 94, 0.1) 0%, transparent 100%);
+    --glow-ia: rgba(139, 92, 246, 0.3);
+    --particles-ia: rgba(139, 92, 246, 0.1);
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 166 39% 10%;
-
-    --primary: 166 39% 17%; /* #1a3c34 */
+    /* Map to Shadcn variables */
+    --background: 222.2 47.4% 11.2%; /* #111827 */
+    --foreground: 0 0% 100%;
+    --card: 222.2 47.4% 11.2%;
+    --card-foreground: 0 0% 100%;
+    --popover: 222.2 47.4% 11.2%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 142.1 70.6% 45.3%; /* #22C55E */
     --primary-foreground: 0 0% 100%;
-
-    --secondary: 48 89% 60%; /* #f4d03f */
-    --secondary-foreground: 166 39% 17%;
-
-    --muted: 166 10% 96%;
-    --muted-foreground: 166 10% 40%;
-
-    --accent: 48 89% 60%;
-    --accent-foreground: 166 39% 17%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 166 10% 90%;
-    --input: 166 10% 90%;
-    --ring: 166 39% 17%;
-
+    --secondary: 258.3 89.5% 66.1%; /* #8B5CF6 */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 38 92.4% 50.2%; /* #F59E0B */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%; /* #EF4444 */
+    --destructive-foreground: 0 0% 100%;
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 142.1 70.6% 45.3%;
     --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 222.2 84% 4.9%;
-
-    --sidebar-primary: 222.2 84% 4.9%;
-
+    --sidebar-background: 222.2 47.4% 11.2%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 142.1 70.6% 45.3%;
     --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 215 27.9% 16.9%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 215 27.9% 16.9%;
+    --sidebar-ring: 142.1 70.6% 45.3%;
 
-    --sidebar-accent: 210 40% 98%;
-
-    --sidebar-accent-foreground: 222.2 84% 4.9%;
-
-    --sidebar-border: 214.3 31.8% 91.4%;
-
-    --sidebar-ring: 222.2 84% 4.9%;
-
-    --chart-1: 34 100% 44%;
-    --chart-2: 189 100% 38%;
-    --chart-3: 209 100% 32%;
-    --chart-4: 42 100% 50%;
-    --chart-5: 33 100% 50%;
+    --chart-1: 142.1 70.6% 45.3%;
+    --chart-2: 258.3 89.5% 66.1%;
+    --chart-3: 38 92.4% 50.2%;
+    --chart-4: 25.1 82.5% 31.4%;
+    --chart-5: 0 84.2% 60.2%;
   }
 
   .dark {
-    /* Change the colors to match the design system consistent with the dark mode */
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 84% 4.9%;
-
-    --secondary: 222.2 84% 4.9%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 222.2 84% 4.9%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 222.2 84% 4.9%;
-    --accent-foreground: 210 40% 98%;
-
+    /* Copy the same as above to ensure dark mode is forced */
+    --background: 222.2 47.4% 11.2%;
+    --foreground: 0 0% 100%;
+    --card: 222.2 47.4% 11.2%;
+    --card-foreground: 0 0% 100%;
+    --popover: 222.2 47.4% 11.2%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 142.1 70.6% 45.3%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 258.3 89.5% 66.1%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 38 92.4% 50.2%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 142.1 70.6% 45.3%;
 
-    --border: 222.2 84% 4.9%;
-    --input: 222.2 84% 4.9%;
-    --ring: 214.3 31.8% 91.4%;
-    --sidebar-background: 222.2 84% 4.9%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 222.2 84% 4.9%;
+    --sidebar-background: 222.2 47.4% 11.2%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 142.1 70.6% 45.3%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 222.2 84% 4.9%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 222.2 84% 4.9%;
-    --sidebar-ring: 222.2 84% 4.9%;
-
-    --chart-1: 270 100% 44%;
-    --chart-2: 164 100% 38%;
-    --chart-3: 43 100% 32%;
-    --chart-4: 340 100% 50%;
-    --chart-5: 10 100% 50%;
+    --sidebar-accent: 215 27.9% 16.9%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 215 27.9% 16.9%;
+    --sidebar-ring: 142.1 70.6% 45.3%;
   }
 
-  /* NEVER REMOVE THIS */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #111827;
+    color: #ffffff;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(3rem, 8vw, 5rem);
+    line-height: 1.1;
+    letter-spacing: -0.05em;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: 2.5rem;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+  }
+
+  h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+  }
+
+  /* To cover classes that use these elements implicitly */
+  .text-body,
+  p {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    letter-spacing: 0.025em;
+  }
+
+  label,
+  small,
+  .text-label {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    letter-spacing: 0.025em;
+  }
+
+  .metric,
+  .number-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1.6;
+  }
+
+  section {
+    padding: clamp(4rem, 10vw, 8rem) 0;
+    border-bottom: 1px solid rgba(34, 197, 94, 0.1);
+  }
+
+  /* EXCEPTIONS */
   section[aria-label='Notifications alt+T'] {
     padding: 0 !important;
     margin: 0 !important;
+    border-bottom: none !important;
+  }
+
+  a {
+    color: #22c55e;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  a:hover {
+    color: #8b5cf6;
+  }
+
+  button:focus,
+  a:focus {
+    outline: 3px solid #22c55e;
+    outline-offset: 2px;
   }
 }
 
 @layer utilities {
-  /* KEEP ALL THE ANIMATIONS CLASSES THAT ARE USED BELOW */
   @keyframes accordion-down {
     from {
       height: 0;

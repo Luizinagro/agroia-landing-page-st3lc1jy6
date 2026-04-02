@@ -27,18 +27,36 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Poppins', 'system-ui', 'sans-serif'],
-        display: ['Poppins', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Space Grotesk', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {
-        neon: {
-          green: '#00FF94',
-          blue: '#00D1FF',
-          purple: '#B026FF',
-        },
         agro: {
-          green: '#1a3c34',
-          yellow: '#f4d03f',
+          green: 'var(--agro-green)',
+          'green-hover': 'var(--agro-green-hover)',
+        },
+        neon: {
+          purple: 'var(--neon-purple)',
+          'purple-hover': 'var(--neon-purple-hover)',
+        },
+        premium: {
+          gold: 'var(--premium-gold)',
+          'gold-hover': 'var(--premium-gold-hover)',
+        },
+        organic: {
+          earth: 'var(--organic-earth)',
+          'earth-hover': 'var(--organic-earth-hover)',
+        },
+        bg: {
+          dark: 'var(--bg-dark)',
+          overlay: 'var(--bg-dark-overlay)',
+          light: 'var(--bg-light)',
+        },
+        status: {
+          error: 'var(--error)',
+          success: 'var(--success)',
+          warning: 'var(--warning)',
         },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
@@ -91,6 +109,10 @@ export default {
           5: 'hsl(var(--chart-5))',
         },
       },
+      backgroundImage: {
+        'gradient-hero': 'var(--gradient-hero)',
+        'gradient-cards': 'var(--gradient-cards)',
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
@@ -103,6 +125,7 @@ export default {
       boxShadow: {
         subtle: '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03)',
         elevation: '0 4px 20px rgba(0, 0, 0, 0.05)',
+        'glow-ia': '0 0 20px var(--glow-ia)',
       },
       transitionTimingFunction: {
         apple: 'cubic-bezier(0.42, 0, 0.58, 1)',
