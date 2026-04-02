@@ -9,6 +9,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_forecasts: {
+        Row: {
+          commodity: string
+          created_at: string
+          current_price: number
+          id: string
+          recommendation: string | null
+          trend_data: Json
+        }
+        Insert: {
+          commodity: string
+          created_at?: string
+          current_price?: number
+          id?: string
+          recommendation?: string | null
+          trend_data?: Json
+        }
+        Update: {
+          commodity?: string
+          created_at?: string
+          current_price?: number
+          id?: string
+          recommendation?: string | null
+          trend_data?: Json
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           id: string
@@ -71,6 +98,36 @@ export type Database = {
           id?: string
           status?: string | null
           total_price?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      price_alerts: {
+        Row: {
+          commodity: string
+          condition: string
+          created_at: string
+          id: string
+          is_active: boolean
+          target_price: number
+          user_id: string
+        }
+        Insert: {
+          commodity: string
+          condition: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          target_price: number
+          user_id: string
+        }
+        Update: {
+          commodity?: string
+          condition?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          target_price?: number
           user_id?: string
         }
         Relationships: []
@@ -321,6 +378,13 @@ export const Constants = {
 // --- COLUMN TYPES (actual PostgreSQL types) ---
 // Use this to know the real database type when writing migrations.
 // "string" in TypeScript types above may be uuid, text, varchar, timestamptz, etc.
+// Table: ai_forecasts
+//   id: uuid (not null, default: gen_random_uuid())
+//   commodity: text (not null)
+//   current_price: numeric (not null, default: 0)
+//   trend_data: jsonb (not null, default: '[]'::jsonb)
+//   recommendation: text (nullable)
+//   created_at: timestamp with time zone (not null, default: now())
 // Table: order_items
 //   id: uuid (not null, default: gen_random_uuid())
 //   order_id: uuid (not null)
@@ -334,6 +398,14 @@ export const Constants = {
 //   status: text (nullable, default: 'pendente'::text)
 //   created_at: timestamp with time zone (not null, default: now())
 //   delivery_address: text (nullable)
+// Table: price_alerts
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   commodity: text (not null)
+//   target_price: numeric (not null)
+//   condition: text (not null)
+//   is_active: boolean (not null, default: true)
+//   created_at: timestamp with time zone (not null, default: now())
 // Table: products
 //   id: uuid (not null, default: gen_random_uuid())
 //   name: text (not null)
@@ -363,6 +435,8 @@ export const Constants = {
 //   address: text (nullable)
 
 // --- CONSTRAINTS ---
+// Table: ai_forecasts
+//   PRIMARY KEY ai_forecasts_pkey: PRIMARY KEY (id)
 // Table: order_items
 //   FOREIGN KEY order_items_order_id_fkey: FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 //   PRIMARY KEY order_items_pkey: PRIMARY KEY (id)
@@ -371,6 +445,9 @@ export const Constants = {
 //   PRIMARY KEY orders_pkey: PRIMARY KEY (id)
 //   CHECK orders_status_check: CHECK ((status = ANY (ARRAY['pendente'::text, 'pago'::text, 'enviado'::text])))
 //   FOREIGN KEY orders_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: price_alerts
+//   PRIMARY KEY price_alerts_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY price_alerts_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 // Table: products
 //   CHECK products_category_check: CHECK ((category = ANY (ARRAY['ração'::text, 'fertilizante'::text, 'sementes'::text, 'defensivos'::text])))
 //   PRIMARY KEY products_pkey: PRIMARY KEY (id)
@@ -383,6 +460,11 @@ export const Constants = {
 //   PRIMARY KEY users_pkey: PRIMARY KEY (id)
 
 // --- ROW LEVEL SECURITY POLICIES ---
+// Table: ai_forecasts
+//   Policy "ai_forecasts_insert" (INSERT, PERMISSIVE) roles={authenticated}
+//     WITH CHECK: true
+//   Policy "ai_forecasts_select" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: true
 // Table: order_items
 //   Policy "order_items_delete" (DELETE, PERMISSIVE) roles={authenticated}
 //     USING: (order_id IN ( SELECT orders.id    FROM orders   WHERE (orders.user_id = auth.uid())))
@@ -400,6 +482,16 @@ export const Constants = {
 //   Policy "orders_select" (SELECT, PERMISSIVE) roles={authenticated}
 //     USING: (user_id = auth.uid())
 //   Policy "orders_update" (UPDATE, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//     WITH CHECK: (user_id = auth.uid())
+// Table: price_alerts
+//   Policy "price_alerts_delete" (DELETE, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//   Policy "price_alerts_insert" (INSERT, PERMISSIVE) roles={authenticated}
+//     WITH CHECK: (user_id = auth.uid())
+//   Policy "price_alerts_select" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//   Policy "price_alerts_update" (UPDATE, PERMISSIVE) roles={authenticated}
 //     USING: (user_id = auth.uid())
 //     WITH CHECK: (user_id = auth.uid())
 // Table: products

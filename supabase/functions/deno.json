@@ -1,5 +1,6 @@
 {
   "_versions": {
-    "gemini-forecast": 1
+    "gemini-forecast": 1,
+    "whatsapp-notifications": 1
   }
 }

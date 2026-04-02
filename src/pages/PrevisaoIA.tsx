@@ -13,9 +13,19 @@ import { Label } from '@/components/ui/label'
 import { useToast } from '@/hooks/use-toast'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts'
-import { BrainCircuit, BellRing, RefreshCw, Trash2, Plus, AlertTriangle, Cpu } from 'lucide-react'
+import {
+  BrainCircuit,
+  BellRing,
+  RefreshCw,
+  Trash2,
+  Plus,
+  AlertTriangle,
+  Cpu,
+  MessageCircle,
+} from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { getForecast, getAlerts, createAlert, deleteAlert } from '@/services/aiForecast'
+import { sendWhatsAppNotification } from '@/services/whatsapp'
 import { format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { Badge } from '@/components/ui/badge'
@@ -28,6 +38,7 @@ export default function PrevisaoIA() {
   const [loading, setLoading] = useState(false)
   const { toast } = useToast()
   const { user } = useAuth()
+  const [notifiedAlerts, setNotifiedAlerts] = useState<Set<string>>(new Set())
 
   const [alertTargetPrice, setAlertTargetPrice] = useState('')
   const [alertCondition, setAlertCondition] = useState('above')
@@ -64,6 +75,63 @@ export default function PrevisaoIA() {
       ((a.condition === 'above' && forecast.current_price >= a.target_price) ||
         (a.condition === 'below' && forecast.current_price <= a.target_price)),
   )
+
+  useEffect(() => {
+    if (triggeredAlerts.length > 0 && user && forecast) {
+      triggeredAlerts.forEach(async (alert) => {
+        if (!notifiedAlerts.has(alert.id)) {
+          // Send WhatsApp Notification
+          const { error } = await sendWhatsAppNotification({
+            event_type: 'PRICE_ALERT',
+            user_id: user.id,
+            data: {
+              commodity: alert.commodity,
+              target_price: alert.target_price,
+              current_price: forecast.current_price,
+            },
+          })
+
+          if (!error) {
+            toast({
+              title: 'Notificação WhatsApp Enviada!',
+              description: `Alerta para ${alert.commodity}`,
+            })
+          } else {
+            console.error('WhatsApp Error:', error)
+          }
+
+          setNotifiedAlerts((prev) => new Set(prev).add(alert.id))
+        }
+      })
+    }
+  }, [triggeredAlerts, user, notifiedAlerts, forecast, toast])
+
+  const handleTestRecommendation = async () => {
+    if (!user || !forecast) return
+    toast({ title: 'Enviando notificação WhatsApp...' })
+    const { error, data } = await sendWhatsAppNotification({
+      event_type: 'AI_RECOMMENDATION',
+      user_id: user.id,
+      data: {
+        commodity: forecast.commodity,
+        recommendation: forecast.recommendation,
+      },
+    })
+
+    if (error || data?.results?.[0]?.error) {
+      const errorMsg = error?.message || data?.results?.[0]?.error
+      toast({
+        title: 'Erro ao enviar',
+        description:
+          errorMsg === 'User has no phone number'
+            ? 'Cadastre seu telefone no perfil para receber notificações.'
+            : errorMsg,
+        variant: 'destructive',
+      })
+    } else {
+      toast({ title: 'Notificação enviada com sucesso!' })
+    }
+  }
 
   const handleAddAlert = async () => {
     if (!user) return
@@ -170,12 +238,22 @@ export default function PrevisaoIA() {
           </Card>
 
           <Card className="bg-primary/5 border-primary/20">
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <CardTitle className="flex items-center gap-2 text-primary">
                 <BrainCircuit className="h-5 w-5" /> Recomendação da IA
               </CardTitle>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleTestRecommendation}
+                disabled={!forecast || loading}
+                className="text-xs"
+              >
+                <MessageCircle className="h-4 w-4 mr-2 text-green-600" />
+                Testar WhatsApp
+              </Button>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-4">
               <p className="text-sm leading-relaxed text-muted-foreground">
                 {loading
                   ? 'Analisando cenários...'
