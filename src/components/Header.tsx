@@ -24,13 +24,13 @@ export function Header() {
           <nav className="hidden md:flex items-center gap-8">
             <a
               href="#features"
-              className="text-sm font-bold text-white/80 hover:text-[#8B5CF6] hover:drop-shadow-[0_0_10px_rgba(139,92,246,0.8)] transition-all duration-400"
+              className="text-sm font-bold text-white/80 hover:text-[#00FF41] hover:drop-shadow-[0_0_10px_rgba(0,255,65,0.8)] transition-all duration-400"
             >
               Funcionalidades
             </a>
             <a
               href="#planos"
-              className="text-sm font-bold text-white/80 hover:text-[#8B5CF6] hover:drop-shadow-[0_0_10px_rgba(139,92,246,0.8)] transition-all duration-400"
+              className="text-sm font-bold text-white/80 hover:text-[#00FF41] hover:drop-shadow-[0_0_10px_rgba(0,255,65,0.8)] transition-all duration-400"
             >
               Planos
             </a>
@@ -66,21 +66,21 @@ export function Header() {
           <div className="flex flex-col space-y-2 px-4 pb-6 pt-4">
             <a
               href="#features"
-              className="px-4 py-3 text-base font-bold text-white/80 hover:bg-white/5 hover:text-[#8B5CF6] rounded-lg transition-all duration-400"
+              className="px-4 py-3 text-base font-bold text-white/80 hover:bg-white/5 hover:text-[#00FF41] rounded-lg transition-all duration-400"
               onClick={toggleMenu}
             >
               Funcionalidades
             </a>
             <a
               href="#planos"
-              className="px-4 py-3 text-base font-bold text-white/80 hover:bg-white/5 hover:text-[#8B5CF6] rounded-lg transition-all duration-400"
+              className="px-4 py-3 text-base font-bold text-white/80 hover:bg-white/5 hover:text-[#00FF41] rounded-lg transition-all duration-400"
               onClick={toggleMenu}
             >
               Planos
             </a>
             <Link
               to="/login"
-              className="px-4 py-3 text-base font-bold text-white/80 hover:bg-white/5 hover:text-[#8B5CF6] rounded-lg transition-all duration-400"
+              className="px-4 py-3 text-base font-bold text-white/80 hover:bg-white/5 hover:text-[#00FF41] rounded-lg transition-all duration-400"
               onClick={toggleMenu}
             >
               Login

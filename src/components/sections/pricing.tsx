@@ -56,16 +56,16 @@ export function Pricing() {
   useGsapAnimations(containerRef)
 
   return (
-    <section ref={containerRef} className="py-32 bg-[#050A15] relative overflow-hidden">
+    <section ref={containerRef} className="py-32 bg-[#0A0E27] relative overflow-hidden">
       {/* Background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#22C55E]/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#00FF41]/10 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="container relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-20 gsap-grow">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70 mb-6 tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6 tracking-tight drop-shadow-[0_0_10px_rgba(0,255,65,0.2)]">
             Planos para Escalar sua Produtividade
           </h2>
-          <p className="text-white/50 text-lg md:text-xl font-medium">
+          <p className="text-white/70 text-lg md:text-xl font-medium">
             Escolha o pacote ideal para as necessidades da sua operação. Desbloqueie o poder da IA
             hoje.
           </p>
@@ -78,11 +78,11 @@ export function Pricing() {
                 className={cn(
                   'card-glass w-full relative flex flex-col',
                   plan.highlighted &&
-                    'border-agro-green/50 shadow-[0_0_30px_rgba(34,197,94,0.15)] scale-105 z-10 bg-gradient-to-b from-agro-green/10 to-transparent',
+                    'border-[#00FF41]/50 shadow-[0_0_30px_rgba(0,255,65,0.3)] scale-105 z-10 bg-[#1A1F3A]',
                 )}
               >
                 {plan.highlighted && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-agro-green text-bg-dark px-4 py-1 rounded-full text-xs font-bold tracking-wider uppercase shadow-[0_0_15px_rgba(34,197,94,0.5)]">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#00FF41] text-[#0A0E27] px-4 py-1 rounded-[8px] text-xs font-bold tracking-wider uppercase shadow-[0_0_15px_rgba(0,255,65,0.5)]">
                     Popular
                   </div>
                 )}
@@ -109,9 +109,9 @@ export function Pricing() {
                       >
                         <div
                           className={cn(
-                            'mt-0.5 rounded-full p-1',
+                            'mt-0.5 rounded-[4px] p-1',
                             plan.highlighted
-                              ? 'bg-agro-green/20 text-agro-green'
+                              ? 'bg-[#00FF41]/20 text-[#00FF41]'
                               : 'bg-white/10 text-white',
                           )}
                         >

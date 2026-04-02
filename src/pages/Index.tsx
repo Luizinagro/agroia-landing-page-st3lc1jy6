@@ -29,7 +29,7 @@ const Index = () => {
           <div className="flex items-center gap-6">
             <a
               href="#planos"
-              className="hidden md:block text-sm font-bold text-white/80 hover:text-[#8B5CF6] transition-colors"
+              className="hidden md:block text-sm font-bold text-white/80 hover:text-[#00FF41] transition-colors"
             >
               Planos
             </a>

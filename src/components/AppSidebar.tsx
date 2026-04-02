@@ -74,8 +74,8 @@ export function AppSidebar() {
   return (
     <>
       <Sidebar>
-        <SidebarHeader className="h-16 flex items-center justify-start px-4 border-b border-white/10 bg-[#111827]/40 backdrop-blur-[20px]">
-          <div className="flex items-center gap-2 font-black text-2xl text-agro-green drop-shadow-[0_0_15px_rgba(34,197,94,0.5)]">
+        <SidebarHeader className="h-16 flex items-center justify-start px-4 border-b border-[#00FF41]/20 bg-[#0A0E27]/80 backdrop-blur-[20px]">
+          <div className="flex items-center gap-2 font-black text-2xl text-[#00FF41] drop-shadow-[0_0_15px_rgba(0,255,65,0.5)]">
             <Tractor className="h-8 w-8" />
             <span>AgroIA</span>
           </div>
@@ -92,7 +92,7 @@ export function AppSidebar() {
                     asChild
                     isActive={isActive && allowed}
                     className={cn(
-                      'transition-all duration-400 ease-bounce hover:text-[#8B5CF6] hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.8)]',
+                      'transition-all duration-400 ease-bounce hover:text-[#00FF41] hover:drop-shadow-[0_0_8px_rgba(0,255,65,0.8)]',
                       !allowed
                         ? 'opacity-50 grayscale cursor-not-allowed hover:bg-transparent'
                         : '',

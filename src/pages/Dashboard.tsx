@@ -77,7 +77,7 @@ const Dashboard = () => {
               variant="ghost"
               size="icon"
               asChild
-              className="text-white hover:bg-white/10 hover:text-premium-gold h-9 w-9"
+              className="text-white hover:bg-white/10 hover:text-[#00FF41] h-9 w-9"
             >
               <Link to="/">
                 <ArrowLeft className="w-5 h-5" />
@@ -85,7 +85,7 @@ const Dashboard = () => {
               </Link>
             </Button>
             <div className="flex items-center gap-2 font-bold text-xl text-white">
-              <Tractor className="w-6 h-6 text-premium-gold" />
+              <Tractor className="w-6 h-6 text-[#00FF41]" />
               <span className="hidden sm:inline">AgroIA Dashboard</span>
               <span className="sm:hidden">AgroIA</span>
             </div>
@@ -114,7 +114,7 @@ const Dashboard = () => {
             </div>
             <Button
               asChild
-              className="bg-premium-gold text-bg-dark hover:bg-premium-gold-hover font-bold whitespace-nowrap shadow-sm w-full sm:w-auto text-base"
+              className="bg-[#00FF41] text-[#0A0E27] hover:bg-[#0D5F2F] font-bold whitespace-nowrap shadow-sm w-full sm:w-auto text-base"
             >
               <Link to="/selecionar-plano">Upgrade Agora</Link>
             </Button>
@@ -123,13 +123,13 @@ const Dashboard = () => {
 
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 gsap-grow">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-4">
-              <span className="flex h-2 w-2 rounded-full bg-agro-green animate-pulse"></span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[8px] bg-white/5 border border-[#00FF41]/20 mb-4">
+              <span className="flex h-2 w-2 rounded-full bg-[#00FF41] animate-pulse shadow-[0_0_10px_rgba(0,255,65,0.8)]"></span>
               <span className="text-xs font-semibold text-white/80 uppercase tracking-wider">
                 Sistema Ativo
               </span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white flex items-center gap-3">
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white flex items-center gap-3 drop-shadow-[0_0_10px_rgba(0,255,65,0.2)]">
               Olá, {userName}
             </h1>
             {userEmail && <p className="text-white/50 mt-1 font-medium">{userEmail}</p>}
@@ -142,14 +142,14 @@ const Dashboard = () => {
           <div className="card-glass flex flex-col p-6 min-w-[300px]">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <Star className="w-5 h-5 text-premium-gold" />
+                <Star className="w-5 h-5 text-[#00FF41]" />
                 <span className="text-sm font-semibold uppercase tracking-wider text-white/70">
                   Plano Atual
                 </span>
               </div>
               <Badge
                 variant="outline"
-                className="bg-premium-gold/10 text-premium-gold border-premium-gold/30 font-bold px-3 py-1 text-sm"
+                className="bg-[#00FF41]/10 text-[#00FF41] border-[#00FF41]/30 font-bold px-3 py-1 text-sm rounded-[4px]"
               >
                 {currentPlanName}
               </Badge>
