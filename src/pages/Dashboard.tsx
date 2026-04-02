@@ -19,11 +19,30 @@ import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/contexts/AuthContext'
 import { SEO } from '@/components/SEO'
 import { useSubscription } from '@/hooks/useSubscription'
+import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog'
 
 const Dashboard = () => {
   const { logout, user } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const { plan: userPlan } = useSubscription()
+  const [blockedOpen, setBlockedOpen] = useState(false)
+
+  useEffect(() => {
+    if (location.state?.blockedFeature) {
+      setBlockedOpen(true)
+      window.history.replaceState({}, document.title)
+    }
+  }, [location])
 
   const handleLogout = async () => {
     await logout()
@@ -158,6 +177,30 @@ const Dashboard = () => {
           </div>
         </div>
       </main>
+
+      <Dialog open={blockedOpen} onOpenChange={setBlockedOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Funcionalidade bloqueada</DialogTitle>
+            <DialogDescription>
+              Faça upgrade do seu plano para acessar este recurso e potencializar sua produção.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setBlockedOpen(false)}>
+              Cancelar
+            </Button>
+            <Button
+              onClick={() => {
+                setBlockedOpen(false)
+                navigate('/planos')
+              }}
+            >
+              Fazer Upgrade
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

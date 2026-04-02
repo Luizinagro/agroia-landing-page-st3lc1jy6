@@ -17,7 +17,6 @@ export function useSubscription() {
       }
       try {
         const cleanUserId = String(user.id).trim()
-        console.log('[useSubscription] Buscando permissões para o user_id logado:', cleanUserId)
 
         const { data, error } = await supabase
           .from('user_plans')
@@ -29,7 +28,6 @@ export function useSubscription() {
           console.error('[useSubscription] Erro na consulta do Supabase:', error)
         }
 
-        console.log('[useSubscription] Dados encontrados na tabela user_plans:', data)
         setPlan(data)
       } catch (err) {
         console.error('Error fetching plan:', err)
@@ -41,41 +39,25 @@ export function useSubscription() {
   }, [user?.id, authLoading])
 
   const hasFeature = (feature: string) => {
-    // Use plan from DB, or fallback to user context metadata
-    const userPlanName = user?.plan_active || user?.plano_ativo || 'Básico'
-    const planObj = plan || { plan_name: userPlanName, plan_features: [] }
+    const userPlanName = plan?.plan_name || user?.plan_active || user?.plano_ativo || 'Básico'
 
-    const features =
-      typeof planObj.plan_features === 'string'
-        ? JSON.parse(planObj.plan_features)
-        : planObj.plan_features
+    const basicoFeatures = ['dashboard', 'pecuaria', 'previsao-ia']
+    const soloFeatures = [...basicoFeatures, 'rastreabilidade', 'roi']
+    const completoFeatures = [...soloFeatures, 'loja', 'checkout']
+    const familiaFeatures = [...completoFeatures, 'relatorios']
 
-    // Check JSON features if exists and is array
-    if (features && Array.isArray(features)) {
-      if (features.includes(feature)) return true
+    if (userPlanName === 'Básico') {
+      return basicoFeatures.includes(feature)
     }
-
-    // Fallback based on plan name
-    const planName = planObj.plan_name || 'Básico'
-    if (planName === 'Completo' || planName === 'Família Coop') return true
-
-    if (
-      planName === 'Plantio Solo' &&
-      (feature === 'roi' ||
-        feature === 'loja' ||
-        feature === 'dashboard' ||
-        feature === 'previsao-ia')
-    )
-      return true
-    if (
-      planName === 'Pecuário Solo' &&
-      (feature === 'rastreabilidade' ||
-        feature === 'loja' ||
-        feature === 'dashboard' ||
-        feature === 'pecuaria')
-    )
-      return true
-    if (planName === 'Básico' && feature === 'dashboard') return true
+    if (userPlanName === 'Plantio Solo' || userPlanName === 'Pecuário Solo') {
+      return soloFeatures.includes(feature)
+    }
+    if (userPlanName === 'Completo') {
+      return completoFeatures.includes(feature)
+    }
+    if (userPlanName === 'Família Coop') {
+      return familiaFeatures.includes(feature)
+    }
 
     return false
   }

@@ -26,6 +26,7 @@ import MeusCalculos from './pages/MeusCalculos'
 import Planos from './pages/Planos'
 import Profile from './pages/Profile'
 import PrevisaoIA from './pages/PrevisaoIA'
+import Rastreabilidade from './pages/Rastreabilidade'
 import { FeatureGuard } from './components/FeatureGuard'
 
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
@@ -69,22 +70,61 @@ const App = () => {
                     />
                     <Route path="/comunidade" element={<Community />} />
                     <Route path="/faturamento" element={<Billing />} />
-                    <Route path="/pecuaria" element={<Pecuaria />} />
-                    <Route path="/loja" element={<Store />} />
+                    <Route
+                      path="/pecuaria"
+                      element={
+                        <FeatureGuard feature="pecuaria">
+                          <Pecuaria />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/rastreabilidade"
+                      element={
+                        <FeatureGuard
+                          feature="rastreabilidade"
+                          requiredPlan="Plantio Solo ou Superior"
+                        >
+                          <Rastreabilidade />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/loja"
+                      element={
+                        <FeatureGuard feature="loja" requiredPlan="Completo ou Superior">
+                          <Store />
+                        </FeatureGuard>
+                      }
+                    />
                     <Route
                       path="/checkout"
                       element={
-                        <FeatureGuard feature="loja" requiredPlan="Plantio Solo ou Superior">
+                        <FeatureGuard feature="loja" requiredPlan="Completo ou Superior">
                           <Checkout />
                         </FeatureGuard>
                       }
                     />
-                    <Route path="/roi" element={<CalculadoraRoi />} />
-                    <Route path="/meus-calculos" element={<MeusCalculos />} />
+                    <Route
+                      path="/roi"
+                      element={
+                        <FeatureGuard feature="roi" requiredPlan="Plantio Solo ou Superior">
+                          <CalculadoraRoi />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/meus-calculos"
+                      element={
+                        <FeatureGuard feature="roi" requiredPlan="Plantio Solo ou Superior">
+                          <MeusCalculos />
+                        </FeatureGuard>
+                      }
+                    />
                     <Route
                       path="/previsao-ia"
                       element={
-                        <FeatureGuard feature="previsao-ia" requiredPlan="Plantio Solo ou Superior">
+                        <FeatureGuard feature="previsao-ia">
                           <PrevisaoIA />
                         </FeatureGuard>
                       }
