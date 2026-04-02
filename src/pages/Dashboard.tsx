@@ -7,15 +7,8 @@ import { FeatureCards } from '@/components/dashboard/feature-cards'
 import { NeonParticles } from '@/components/ui/neon-particles'
 import { useGsapAnimations } from '@/hooks/use-gsap-animations'
 import { useRef } from 'react'
-import {
-  LayoutDashboard,
-  ArrowLeft,
-  Tractor,
-  LogOut,
-  AlertTriangle,
-  Calendar,
-  Star,
-} from 'lucide-react'
+import { LayoutDashboard, ArrowLeft, LogOut, AlertTriangle, Calendar, Star } from 'lucide-react'
+import { Logo } from '@/components/ui/logo'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -63,14 +56,23 @@ const Dashboard = () => {
   return (
     <div
       ref={dashboardRef}
-      className="relative min-h-screen bg-background text-foreground font-sans flex flex-col"
+      className="relative min-h-screen bg-[#000000] text-foreground font-sans flex flex-col overflow-hidden"
     >
-      <NeonParticles className="opacity-50" />
+      {/* Satellite Background */}
+      <div
+        className="fixed inset-0 z-0 pointer-events-none opacity-10 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage:
+            'url("https://img.usecurling.com/p/1920/1080?q=farm%20satellite%20dark&color=black")',
+        }}
+      />
+      <div className="fixed inset-0 z-0 pointer-events-none bg-gradient-to-b from-[#000000]/80 to-[#000000] opacity-80" />
+
       <SEO
         title="Dashboard"
-        description="Visão geral da propriedade e monitoramento inteligente."
+        description="Painel central de controle. Visão geral da propriedade, métricas de inteligência artificial e monitoramento de ativos."
       />
-      <header className="navbar-glass !border-b !border-[#1DB954]/20">
+      <header className="navbar-glass !border-b !border-[#1DB954]/20 relative z-10">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-4">
             <Button
@@ -84,8 +86,8 @@ const Dashboard = () => {
                 <span className="sr-only">Voltar</span>
               </Link>
             </Button>
-            <div className="flex items-center gap-2 font-medium text-lg text-[#FFFFFF]">
-              <Tractor className="w-5 h-5 text-[#1DB954]" />
+            <div className="flex items-center gap-2 font-bold text-xl text-[#FFFFFF]">
+              <Logo className="w-8 h-8 text-[#1DB954]" />
               <span className="hidden sm:inline">AgroIA Dashboard</span>
               <span className="sm:hidden">AgroIA</span>
             </div>
@@ -103,7 +105,7 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <main className="flex-1 container mx-auto space-y-8 bg-transparent rounded-xl pt-24 pb-12">
+      <main className="flex-1 container mx-auto space-y-8 bg-transparent rounded-xl pt-24 pb-12 relative z-10">
         {isTrialExpired && (
           <div className="bg-red-950/50 border-l-4 border-red-500 p-4 rounded-lg shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in-down">
             <div className="flex items-center">
@@ -129,11 +131,11 @@ const Dashboard = () => {
                 Sistema Ativo
               </span>
             </div>
-            <h1 className="flex items-center gap-3 text-[#FFFFFF]">Olá, {userName}</h1>
-            {userEmail && <p className="text-[#E0E0E0] mt-1 font-medium">{userEmail}</p>}
-            <p className="text-[#E0E0E0] mt-2 text-base max-w-2xl">
-              Bem-vindo ao centro de comando AgroTech. Monitore suas culturas, preveja cenários com
-              IA e maximize seus lucros.
+            <h1 className="flex items-center gap-3 text-[#FFFFFF] font-bold">Olá, {userName}</h1>
+            {userEmail && <p className="text-[#E0E0E0] mt-1 font-semibold">{userEmail}</p>}
+            <p className="text-[#E0E0E0] mt-2 text-base max-w-2xl font-medium">
+              Centro de comando AgroIA. Monitore a saúde da sua lavoura, acompanhe previsões de IA e
+              tome decisões baseadas em dados em tempo real.
             </p>
           </div>
 

@@ -1,7 +1,6 @@
-import { useRef } from 'react'
-import { useGsapAnimations } from '@/hooks/use-gsap-animations'
-import { Package, Search, Plus, AlertTriangle } from 'lucide-react'
+import { Search, Plus, AlertTriangle } from 'lucide-react'
 import { SEO } from '@/components/SEO'
+import { Logo } from '@/components/ui/logo'
 
 const INSUMOS_MOCK = [
   {
@@ -47,43 +46,46 @@ const INSUMOS_MOCK = [
 ]
 
 export default function Insumos() {
-  const ref = useRef<HTMLDivElement>(null)
-  useGsapAnimations(ref)
-
   return (
-    <div ref={ref} className="min-h-screen bg-background p-4 sm:p-8 pt-24">
-      <SEO title="Estoque de Insumos | AgroIA" description="Gerenciamento de estoque de insumos" />
+    <div className="min-h-screen bg-[#000000] p-4 sm:p-8">
+      <SEO
+        title="Estoque de Insumos | AgroIA"
+        description="Controle total sobre seus insumos. Evite desperdícios e garanta a disponibilidade no momento certo."
+      />
 
-      <div className="container mx-auto">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 gsap-grow">
+      <div className="container mx-auto space-y-8">
+        <div className="flex flex-col md:flex-row items-start justify-between gap-4 bg-[#050505] p-6 rounded-2xl border border-[#1DB954]/20">
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-3 text-white">
-              <Package className="w-8 h-8 text-agro-green" />
+            <h1 className="text-3xl font-bold tracking-tight text-[#FFFFFF] flex items-center gap-3">
+              <Logo className="w-8 h-8 text-[#1DB954]" />
               Estoque de Insumos
             </h1>
-            <p className="text-white/60 mt-2">Gerencie seus produtos, sementes e defensivos.</p>
+            <p className="text-[#E0E0E0] mt-2 text-lg font-medium">
+              Controle total sobre seus insumos. Evite desperdícios e garanta a disponibilidade no
+              momento certo.
+            </p>
           </div>
 
-          <button className="btn-agro-primary px-6 py-3 flex items-center gap-2">
+          <button className="btn-agro-primary font-bold whitespace-nowrap px-6 py-3 flex items-center gap-2">
             <Plus className="w-5 h-5" />
             Novo Insumo
           </button>
         </div>
 
-        <div className="card-glass mb-8 p-4 flex items-center gap-3 gsap-grow">
-          <Search className="w-5 h-5 text-white/50" />
+        <div className="bg-[#050505] border border-[#1DB954]/20 rounded-xl p-4 flex items-center gap-3">
+          <Search className="w-5 h-5 text-[#E0E0E0]" />
           <input
             type="text"
             placeholder="Buscar insumos por nome ou categoria..."
-            className="bg-transparent border-none outline-none text-white w-full placeholder:text-white/30"
+            className="bg-transparent border-none outline-none text-[#FFFFFF] w-full placeholder:text-[#E0E0E0]/50 font-medium"
           />
         </div>
 
-        <div className="grid-responsive gsap-stagger-container">
+        <div className="grid-responsive">
           {INSUMOS_MOCK.map((item) => (
             <div
               key={item.id}
-              className="card-glass p-6 gsap-stagger-item flex flex-col relative overflow-hidden"
+              className="bg-[#050505] border border-[#1DB954]/20 rounded-[16px] p-6 flex flex-col relative overflow-hidden transition-all duration-300 hover:shadow-[0_0_20px_rgba(29,185,84,0.15)]"
             >
               {item.status === 'alerta' && (
                 <div className="absolute top-0 left-0 w-full h-1 bg-yellow-500" />
@@ -96,7 +98,7 @@ export default function Insumos() {
               )}
 
               <div className="flex justify-between items-start mb-4">
-                <span className="text-xs font-bold uppercase tracking-wider text-white/50 bg-white/5 px-3 py-1 rounded-full">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#1DB954] bg-[#1DB954]/10 border border-[#1DB954]/20 px-3 py-1 rounded-full">
                   {item.categoria}
                 </span>
                 {item.status !== 'ok' && (
@@ -106,14 +108,14 @@ export default function Insumos() {
                 )}
               </div>
 
-              <h3 className="text-xl font-bold text-white mb-6">{item.nome}</h3>
+              <h3 className="text-xl font-bold text-[#FFFFFF] mb-6">{item.nome}</h3>
 
               <div className="mt-auto flex items-end justify-between">
                 <div>
-                  <p className="text-sm text-white/50 mb-1">Quantidade em Estoque</p>
-                  <p className="text-3xl font-black text-white">
+                  <p className="text-sm text-[#E0E0E0] font-semibold mb-1">Quantidade em Estoque</p>
+                  <p className="text-3xl font-black text-[#FFFFFF]">
                     {item.qtd}{' '}
-                    <span className="text-base font-normal text-white/50">{item.unidade}</span>
+                    <span className="text-base font-medium text-[#E0E0E0]">{item.unidade}</span>
                   </p>
                 </div>
               </div>

@@ -21,8 +21,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Sprout, Sun, Tractor, Factory, Store, Plus, Calendar, User, Activity } from 'lucide-react'
+import { Sprout, Sun, Tractor, Factory, Store, Plus, Calendar, User } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
+import { Logo } from '@/components/ui/logo'
 
 type Status = 'Concluído' | 'Em Andamento' | 'Pendente'
 type Etapa = 'Plantio' | 'Crescimento' | 'Colheita' | 'Processamento' | 'Venda'
@@ -45,7 +46,7 @@ const ICONS = {
 
 const STATUS_COLORS = {
   Concluído:
-    'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]',
+    'bg-[#1DB954]/10 text-[#1DB954] border-[#1DB954]/20 shadow-[0_0_10px_rgba(29,185,84,0.1)]',
   'Em Andamento':
     'bg-blue-500/10 text-blue-400 border-blue-500/20 shadow-[0_0_10px_rgba(59,130,246,0.1)]',
   Pendente: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
@@ -76,7 +77,6 @@ const Rastreabilidade = () => {
   const [isOpen, setIsOpen] = useState(false)
   const { toast } = useToast()
 
-  // Form state
   const [etapa, setEtapa] = useState<Etapa>('Plantio')
   const [data, setData] = useState('')
   const [responsavel, setResponsavel] = useState('')
@@ -107,7 +107,6 @@ const Rastreabilidade = () => {
       description: 'A nova etapa foi registrada e sincronizada na linha do tempo.',
     })
 
-    // Reset form
     setEtapa('Plantio')
     setData('')
     setResponsavel('')
@@ -115,49 +114,50 @@ const Rastreabilidade = () => {
   }
 
   return (
-    <div className="container mx-auto py-8 space-y-8 animate-fade-in-up">
+    <div className="container mx-auto py-8 space-y-8 bg-[#000000] min-h-screen">
       <SEO
         title="Rastreabilidade | AgroIA"
-        description="Acompanhe a jornada completa da sua produção com transparência."
+        description="Monitoramento completo da cadeia produtiva. Registre cada etapa da sua safra com segurança e transparência."
       />
 
-      <div className="flex flex-col md:flex-row items-start justify-between gap-4 bg-slate-900/30 p-6 rounded-2xl border border-white/5 backdrop-blur-sm">
+      <div className="flex flex-col md:flex-row items-start justify-between gap-4 bg-[#050505] p-6 rounded-2xl border border-[#1DB954]/20">
         <div>
-          <h1 className="text-3xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-blue-500 flex items-center gap-3">
-            <Activity className="w-8 h-8 text-emerald-400" />
+          <h1 className="text-3xl font-bold tracking-tight text-[#FFFFFF] flex items-center gap-3">
+            <Logo className="w-8 h-8 text-[#1DB954]" />
             Rastreabilidade
           </h1>
-          <p className="text-slate-400 mt-2 text-lg">
-            Acompanhe o ciclo de vida da sua produção em tempo real com registros imutáveis.
+          <p className="text-[#E0E0E0] mt-2 text-lg font-medium">
+            Acompanhe o ciclo de vida da sua produção em tempo real com registros imutáveis e
+            padronizados.
           </p>
         </div>
 
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-agro-green hover:bg-agro-green-hover text-white font-bold shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.5)] transition-all duration-400 ease-bounce border-none">
+            <Button className="btn-agro-primary border-none font-bold whitespace-nowrap">
               <Plus className="w-4 h-4 mr-2" />
               Adicionar Etapa
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-bg-dark border border-white/10 text-white sm:max-w-[425px] rounded-[24px]">
+          <DialogContent className="bg-[#050505] border border-[#1DB954]/20 text-[#FFFFFF] sm:max-w-[425px] rounded-[16px]">
             <DialogHeader>
-              <DialogTitle className="text-xl font-bold text-emerald-400">
+              <DialogTitle className="text-xl font-bold text-[#1DB954]">
                 Registrar Nova Etapa
               </DialogTitle>
-              <DialogDescription className="text-slate-400">
+              <DialogDescription className="text-[#E0E0E0] font-medium">
                 Insira os dados da nova fase na jornada do seu produto.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label htmlFor="etapa" className="text-slate-300">
+                <Label htmlFor="etapa" className="text-[#FFFFFF] font-semibold">
                   Etapa Produtiva
                 </Label>
                 <Select value={etapa} onValueChange={(v) => setEtapa(v as Etapa)}>
-                  <SelectTrigger className="bg-slate-900/50 border-slate-700 focus:ring-emerald-500 text-white">
+                  <SelectTrigger className="bg-[#000000] border-[#1DB954]/20 focus:ring-[#1DB954] text-[#FFFFFF]">
                     <SelectValue placeholder="Selecione a etapa" />
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-900 border-slate-800 text-slate-100">
+                  <SelectContent className="bg-[#050505] border-[#1DB954]/20 text-[#FFFFFF]">
                     <SelectItem value="Plantio">Plantio</SelectItem>
                     <SelectItem value="Crescimento">Crescimento</SelectItem>
                     <SelectItem value="Colheita">Colheita</SelectItem>
@@ -167,7 +167,7 @@ const Rastreabilidade = () => {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="data" className="text-slate-300">
+                <Label htmlFor="data" className="text-[#FFFFFF] font-semibold">
                   Data de Registro
                 </Label>
                 <Input
@@ -175,11 +175,11 @@ const Rastreabilidade = () => {
                   type="date"
                   value={data}
                   onChange={(e) => setData(e.target.value)}
-                  className="bg-slate-900/50 border-slate-700 focus-visible:ring-emerald-500 text-white [color-scheme:dark]"
+                  className="bg-[#000000] border-[#1DB954]/20 focus-visible:ring-[#1DB954] text-[#FFFFFF] [color-scheme:dark]"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="responsavel" className="text-slate-300">
+                <Label htmlFor="responsavel" className="text-[#FFFFFF] font-semibold">
                   Responsável Técnico
                 </Label>
                 <Input
@@ -187,18 +187,18 @@ const Rastreabilidade = () => {
                   placeholder="Nome do responsável"
                   value={responsavel}
                   onChange={(e) => setResponsavel(e.target.value)}
-                  className="bg-slate-900/50 border-slate-700 focus-visible:ring-emerald-500 text-white placeholder:text-slate-500"
+                  className="bg-[#000000] border-[#1DB954]/20 focus-visible:ring-[#1DB954] text-[#FFFFFF] placeholder:text-[#E0E0E0]/50"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="status" className="text-slate-300">
+                <Label htmlFor="status" className="text-[#FFFFFF] font-semibold">
                   Status Atual
                 </Label>
                 <Select value={status} onValueChange={(v) => setStatus(v as Status)}>
-                  <SelectTrigger className="bg-slate-900/50 border-slate-700 focus:ring-emerald-500 text-white">
+                  <SelectTrigger className="bg-[#000000] border-[#1DB954]/20 focus:ring-[#1DB954] text-[#FFFFFF]">
                     <SelectValue placeholder="Selecione o status" />
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-900 border-slate-800 text-slate-100">
+                  <SelectContent className="bg-[#050505] border-[#1DB954]/20 text-[#FFFFFF]">
                     <SelectItem value="Concluído">Concluído</SelectItem>
                     <SelectItem value="Em Andamento">Em Andamento</SelectItem>
                     <SelectItem value="Pendente">Pendente</SelectItem>
@@ -210,14 +210,11 @@ const Rastreabilidade = () => {
               <Button
                 variant="ghost"
                 onClick={() => setIsOpen(false)}
-                className="hover:bg-slate-800 text-slate-300 hover:text-white"
+                className="hover:bg-[#1DB954]/10 text-[#E0E0E0] hover:text-[#1DB954] font-semibold"
               >
                 Cancelar
               </Button>
-              <Button
-                onClick={handleAdd}
-                className="bg-agro-green hover:bg-agro-green-hover text-white font-bold"
-              >
+              <Button onClick={handleAdd} className="btn-agro-primary font-bold">
                 Salvar Registro
               </Button>
             </DialogFooter>
@@ -225,60 +222,54 @@ const Rastreabilidade = () => {
         </Dialog>
       </div>
 
-      <div className="relative border-l-2 border-emerald-500/30 ml-4 md:ml-8 space-y-10 pb-12 pt-4">
+      <div className="relative border-l-2 border-[#1DB954]/30 ml-4 md:ml-8 space-y-10 pb-12 pt-4">
         {items.map((item, index) => {
           const Icon = ICONS[item.etapa]
           const isActive = item.status !== 'Pendente'
 
           return (
-            <div
-              key={item.id}
-              className="relative pl-8 md:pl-12 group animate-fade-in"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
+            <div key={item.id} className="relative pl-8 md:pl-12 group">
               {/* Timeline Dot */}
               <div
-                className={`absolute -left-[21px] top-6 bg-[#060d1a] border-2 rounded-full p-2.5 z-10 transition-all duration-500
+                className={`absolute -left-[21px] top-6 bg-[#000000] border-2 rounded-full p-2.5 z-10 transition-all duration-500
                 ${
                   isActive
-                    ? 'border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]'
-                    : 'border-slate-700 shadow-none'
+                    ? 'border-[#1DB954] shadow-[0_0_15px_rgba(29,185,84,0.5)]'
+                    : 'border-[#333333] shadow-none'
                 }`}
               >
-                <Icon className={`w-5 h-5 ${isActive ? 'text-emerald-400' : 'text-slate-500'}`} />
+                <Icon className={`w-5 h-5 ${isActive ? 'text-[#1DB954]' : 'text-[#888888]'}`} />
               </div>
 
               {/* Card */}
               <Card
-                className={`bg-[#0a1120]/80 backdrop-blur-xl border-white/5 overflow-hidden transition-all duration-300
-                ${isActive ? 'hover:shadow-[0_0_30px_rgba(16,185,129,0.08)]' : 'opacity-70'}
+                className={`bg-[#050505] border-[#1DB954]/20 overflow-hidden transition-all duration-300
+                ${isActive ? 'hover:shadow-[0_0_20px_rgba(29,185,84,0.15)]' : 'opacity-70'}
               `}
               >
-                {isActive && (
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-emerald-400 to-blue-500" />
-                )}
+                {isActive && <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#1DB954]" />}
                 <CardContent className="p-6 md:p-8">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div className="space-y-3">
                       <h3
-                        className={`text-2xl font-bold ${isActive ? 'text-white' : 'text-slate-400'}`}
+                        className={`text-2xl font-bold ${isActive ? 'text-[#FFFFFF]' : 'text-[#E0E0E0]'}`}
                       >
                         {item.etapa}
                       </h3>
-                      <div className="flex flex-wrap items-center gap-4 text-sm text-slate-400">
-                        <span className="flex items-center gap-1.5 bg-slate-900/50 px-3 py-1.5 rounded-md border border-white/5">
-                          <Calendar className="w-4 h-4 text-blue-400" />
+                      <div className="flex flex-wrap items-center gap-4 text-sm text-[#E0E0E0] font-medium">
+                        <span className="flex items-center gap-1.5 bg-[#000000] px-3 py-1.5 rounded-md border border-[#1DB954]/10">
+                          <Calendar className="w-4 h-4 text-[#1DB954]" />
                           {item.data}
                         </span>
-                        <span className="flex items-center gap-1.5 bg-slate-900/50 px-3 py-1.5 rounded-md border border-white/5">
-                          <User className="w-4 h-4 text-emerald-400" />
+                        <span className="flex items-center gap-1.5 bg-[#000000] px-3 py-1.5 rounded-md border border-[#1DB954]/10">
+                          <User className="w-4 h-4 text-[#1DB954]" />
                           {item.responsavel}
                         </span>
                       </div>
                     </div>
                     <Badge
                       variant="outline"
-                      className={`px-4 py-1.5 rounded-full text-sm font-semibold tracking-wide ${STATUS_COLORS[item.status]}`}
+                      className={`px-4 py-1.5 rounded-full text-sm font-bold tracking-wide ${STATUS_COLORS[item.status]}`}
                     >
                       {item.status}
                     </Badge>

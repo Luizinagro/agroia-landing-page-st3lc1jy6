@@ -2,7 +2,8 @@ import { useEffect, useState, useMemo } from 'react'
 import { supabase } from '@/lib/supabase/client'
 import { useCart, Product } from '@/contexts/CartContext'
 import { useSubscription } from '@/hooks/useSubscription'
-import { Tag, Filter, PackageSearch } from 'lucide-react'
+import { Filter, PackageSearch } from 'lucide-react'
+import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
@@ -64,18 +65,16 @@ export default function Store() {
   useGsapAnimations(containerRef)
 
   return (
-    <div
-      ref={containerRef}
-      className="container mx-auto py-8 animate-fade-in bg-bg-dark min-h-screen rounded-[24px]"
-    >
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 bg-card/60 backdrop-blur-sm p-6 rounded-[24px] border border-white/5 shadow-sm">
+    <div className="container mx-auto py-8 bg-[#000000] min-h-screen">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 bg-[#050505] p-6 rounded-2xl border border-[#1DB954]/20 shadow-sm">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-2">
-            <Tag className="h-8 w-8 text-premium-gold" />
+          <h1 className="text-3xl font-bold tracking-tight text-[#FFFFFF] flex items-center gap-3">
+            <Logo className="h-8 w-8 text-[#1DB954]" />
             Loja de Insumos
           </h1>
-          <p className="text-muted-foreground mt-1 max-w-xl">
-            Adquira insumos de qualidade premium para impulsionar a sua produção rural.
+          <p className="text-[#E0E0E0] mt-2 text-lg font-medium max-w-xl">
+            Insumos premium para sua lavoura. Adquira sementes, fertilizantes e defensivos com a
+            melhor qualidade do mercado.
           </p>
         </div>
         <CartSheet canBuy={canBuy} planLoading={planLoading} />
@@ -101,16 +100,16 @@ export default function Store() {
       </div>
 
       {loading ? (
-        <div className="grid-responsive gsap-stagger-container">
+        <div className="grid-responsive">
           {[...Array(8)].map((_, i) => (
             <div
               key={i}
-              className="animate-pulse border border-green-100 shadow-sm rounded-xl h-80 bg-white gsap-stagger-item"
+              className="animate-pulse border border-[#1DB954]/20 shadow-sm rounded-[16px] h-80 bg-[#050505]"
             />
           ))}
         </div>
       ) : (
-        <div className="grid-responsive gsap-stagger-container">
+        <div className="grid-responsive">
           {filteredProducts.map((product) => (
             <ProductCard
               key={product.id}
@@ -122,12 +121,10 @@ export default function Store() {
           ))}
 
           {filteredProducts.length === 0 && (
-            <div className="col-span-full py-16 flex flex-col items-center justify-center bg-white rounded-2xl border border-dashed border-green-200 text-center px-4 shadow-sm">
-              <PackageSearch className="h-16 w-16 text-yellow-500 opacity-60 mb-4" />
-              <h3 className="text-xl font-semibold text-green-900 mb-2">
-                Nenhum produto encontrado
-              </h3>
-              <p className="text-green-700/70 max-w-md">
+            <div className="col-span-full py-16 flex flex-col items-center justify-center bg-[#050505] rounded-2xl border border-dashed border-[#1DB954]/20 text-center px-4 shadow-sm">
+              <PackageSearch className="h-16 w-16 text-[#1DB954] opacity-50 mb-4" />
+              <h3 className="text-xl font-bold text-[#FFFFFF] mb-2">Nenhum produto encontrado</h3>
+              <p className="text-[#E0E0E0] max-w-md font-medium">
                 Não há insumos cadastrados nesta categoria no momento.
               </p>
             </div>

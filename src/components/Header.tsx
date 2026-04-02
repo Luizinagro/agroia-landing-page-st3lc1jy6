@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Logo } from '@/components/ui/logo'
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -13,8 +14,12 @@ export function Header() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           <div className="flex items-center">
-            <Link to="/" className="flex items-center transition-opacity hover:opacity-90 group">
-              <span className="text-xl font-medium tracking-tight text-[#FFFFFF] transition-transform duration-300 ease-out">
+            <Link
+              to="/"
+              className="flex items-center gap-2 transition-opacity hover:opacity-90 group"
+            >
+              <Logo className="w-8 h-8 text-[#1DB954]" />
+              <span className="text-xl font-bold tracking-tight text-[#FFFFFF] transition-transform duration-300 ease-out">
                 AgroIA
               </span>
             </Link>

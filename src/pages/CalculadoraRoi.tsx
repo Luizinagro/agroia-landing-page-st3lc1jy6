@@ -148,48 +148,28 @@ export default function CalculadoraRoi() {
   const isProfit = lucroLiquido >= 0
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans animate-in fade-in duration-500">
+    <div className="min-h-screen bg-[#000000] flex flex-col font-sans">
       <SEO
         title="Calculadora de ROI"
-        description="Calcule o retorno sobre investimento da sua safra com base em preços reais."
+        description="Planejamento financeiro estratégico. Simule cenários, calcule margens de lucro e descubra o tempo de retorno do seu investimento."
       />
 
-      <header className="sticky top-0 z-50 w-full bg-[#1a3c34]/95 backdrop-blur supports-[backdrop-filter]:bg-[#1a3c34]/80 border-b border-white/10 shadow-sm">
-        <div className="container flex h-16 items-center px-4 md:px-6 mx-auto">
-          <div className="flex items-center gap-2 font-bold text-xl text-white">
-            <TrendingUp className="w-6 h-6 text-[#f4d03f]" />
-            <span>Calculadora de ROI</span>
-          </div>
-          <nav className="ml-auto flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              asChild
-              className="text-white hover:bg-white/10 hover:text-[#f4d03f]"
-            >
-              <Link to="/dashboard">
-                <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
-              </Link>
-            </Button>
-          </nav>
-        </div>
-      </header>
-
-      <main className="flex-1 container px-4 md:px-6 py-8 mx-auto space-y-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <main className="flex-1 container py-8 mx-auto space-y-8">
+        <div className="flex flex-col md:flex-row items-start justify-between gap-4 bg-[#050505] p-6 rounded-2xl border border-[#1DB954]/20">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900 flex items-center gap-3 mb-2">
-              Projeção Financeira e ROI
+            <h1 className="text-3xl font-bold tracking-tight text-[#FFFFFF] flex items-center gap-3">
+              <Logo className="w-8 h-8 text-[#1DB954]" />
+              Calculadora de ROI
             </h1>
-            <p className="text-slate-500 text-lg max-w-3xl">
-              Simule o retorno dos seus investimentos utilizando estimativas próprias ou cotações de
-              mercado (CEPEA) para soja, milho e trigo.
+            <p className="text-[#E0E0E0] mt-2 text-lg font-medium">
+              Planejamento financeiro estratégico. Simule cenários, calcule margens de lucro e
+              descubra o tempo de retorno do seu investimento.
             </p>
           </div>
           <Button
             onClick={handleSave}
             disabled={isSaving}
-            className="bg-[#1a3c34] hover:bg-[#1a3c34]/90 text-white"
+            className="btn-agro-primary font-bold whitespace-nowrap"
           >
             {isSaving ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -200,24 +180,31 @@ export default function CalculadoraRoi() {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-1 space-y-6">
-            <Card>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-4 space-y-6">
+            <Card className="bg-[#050505] border-[#1DB954]/20">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Calculator className="w-5 h-5" />
+                <CardTitle className="flex items-center gap-2 text-[#FFFFFF] font-bold">
+                  <Calculator className="w-5 h-5 text-[#1DB954]" />
                   Dados da Operação
                 </CardTitle>
-                <CardDescription>Insira os valores ou use as cotações atuais</CardDescription>
+                <CardDescription className="text-[#E0E0E0] font-medium">
+                  Insira os valores ou use as cotações atuais
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="cultura">Cultura Agrícola</Label>
+                  <Label htmlFor="cultura" className="text-[#FFFFFF] font-semibold">
+                    Cultura Agrícola
+                  </Label>
                   <Select value={cultura} onValueChange={setCultura}>
-                    <SelectTrigger id="cultura">
+                    <SelectTrigger
+                      id="cultura"
+                      className="bg-[#000000] border-[#1DB954]/20 text-[#FFFFFF] focus:ring-[#1DB954]"
+                    >
                       <SelectValue placeholder="Selecione a cultura" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-[#050505] border-[#1DB954]/20 text-[#FFFFFF]">
                       <SelectItem value="Outro">Outro / Digitar Manualmente</SelectItem>
                       <SelectItem value="Soja">Soja</SelectItem>
                       <SelectItem value="Milho">Milho</SelectItem>
@@ -227,40 +214,46 @@ export default function CalculadoraRoi() {
                 </div>
 
                 {cultura !== 'Outro' && (
-                  <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
-                    <Label htmlFor="quantidade">Quantidade de Produção (Toneladas)</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="quantidade" className="text-[#FFFFFF] font-semibold">
+                      Quantidade de Produção (Toneladas)
+                    </Label>
                     <Input
                       id="quantidade"
                       type="number"
                       min="0"
                       value={quantidadeToneladas || ''}
                       onChange={(e) => setQuantidadeToneladas(Number(e.target.value))}
+                      className="bg-[#000000] border-[#1DB954]/20 text-[#FFFFFF] focus-visible:ring-[#1DB954]"
                     />
                     {prices[cultura] && (
-                      <p className="text-xs text-slate-500 mt-1 flex items-center gap-1">
-                        <TrendingUp className="w-3 h-3 text-blue-500" />
+                      <p className="text-xs text-[#E0E0E0] mt-1 flex items-center gap-1 font-medium">
+                        <TrendingUp className="w-3 h-3 text-[#1DB954]" />
                         Preço base (CEPEA): {formatCurrency(prices[cultura])} / ton
                       </p>
                     )}
                   </div>
                 )}
 
-                <div className="space-y-2 pt-2 border-t border-slate-100">
-                  <Label htmlFor="custoTotal">Custo Total da Produção (R$)</Label>
+                <div className="space-y-2 pt-2 border-t border-[#1DB954]/20">
+                  <Label htmlFor="custoTotal" className="text-[#FFFFFF] font-semibold">
+                    Custo Total da Produção (R$)
+                  </Label>
                   <Input
                     id="custoTotal"
                     type="number"
                     min="0"
                     value={custoTotal || ''}
                     onChange={(e) => setCustoTotal(Number(e.target.value))}
+                    className="bg-[#000000] border-[#1DB954]/20 text-[#FFFFFF] focus-visible:ring-[#1DB954]"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="receitaEsperada">
+                  <Label htmlFor="receitaEsperada" className="text-[#FFFFFF] font-semibold">
                     Receita Esperada (R$){' '}
                     {cultura !== 'Outro' && quantidadeToneladas > 0 && (
-                      <span className="text-xs text-blue-600 font-normal ml-1">
+                      <span className="text-xs text-[#1DB954] font-medium ml-1">
                         (Auto-calculado)
                       </span>
                     )}
@@ -271,16 +264,19 @@ export default function CalculadoraRoi() {
                     min="0"
                     value={receitaEsperada || ''}
                     onChange={(e) => setReceitaEsperada(Number(e.target.value))}
-                    className={
+                    className={cn(
+                      'bg-[#000000] border-[#1DB954]/20 text-[#FFFFFF] focus-visible:ring-[#1DB954]',
                       cultura !== 'Outro' && quantidadeToneladas > 0
-                        ? 'border-blue-200 bg-blue-50/30'
-                        : ''
-                    }
+                        ? 'border-[#1DB954]/50 bg-[#1DB954]/5'
+                        : '',
+                    )}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="tempoRetorno">Tempo de Retorno (meses)</Label>
+                  <Label htmlFor="tempoRetorno" className="text-[#FFFFFF] font-semibold">
+                    Tempo de Retorno (meses)
+                  </Label>
                   <Input
                     id="tempoRetorno"
                     type="number"
@@ -288,34 +284,37 @@ export default function CalculadoraRoi() {
                     max="120"
                     value={tempoRetorno || ''}
                     onChange={(e) => setTempoRetorno(Number(e.target.value))}
+                    className="bg-[#000000] border-[#1DB954]/20 text-[#FFFFFF] focus-visible:ring-[#1DB954]"
                   />
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-8 space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Card
                 className={cn(
-                  'border-2 transition-colors duration-300',
-                  isProfit ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50',
+                  'border transition-colors duration-300',
+                  isProfit
+                    ? 'border-[#1DB954]/50 bg-[#1DB954]/5'
+                    : 'border-red-500/50 bg-red-500/5',
                 )}
               >
                 <CardContent className="p-4 md:p-6">
                   <div
                     className={cn(
                       'flex items-center gap-2 mb-2',
-                      isProfit ? 'text-green-700' : 'text-red-700',
+                      isProfit ? 'text-[#1DB954]' : 'text-red-500',
                     )}
                   >
                     <DollarSign className="w-5 h-5" />
-                    <h3 className="font-medium">Lucro Líquido</h3>
+                    <h3 className="font-bold">Lucro Líquido</h3>
                   </div>
                   <p
                     className={cn(
                       'text-2xl md:text-3xl font-bold',
-                      isProfit ? 'text-green-700' : 'text-red-700',
+                      isProfit ? 'text-[#1DB954]' : 'text-red-500',
                     )}
                   >
                     {formatCurrency(lucroLiquido)}
@@ -325,24 +324,26 @@ export default function CalculadoraRoi() {
 
               <Card
                 className={cn(
-                  'border-2 transition-colors duration-300',
-                  isProfit ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50',
+                  'border transition-colors duration-300',
+                  isProfit
+                    ? 'border-[#1DB954]/50 bg-[#1DB954]/5'
+                    : 'border-red-500/50 bg-red-500/5',
                 )}
               >
                 <CardContent className="p-4 md:p-6">
                   <div
                     className={cn(
                       'flex items-center gap-2 mb-2',
-                      isProfit ? 'text-green-700' : 'text-red-700',
+                      isProfit ? 'text-[#1DB954]' : 'text-red-500',
                     )}
                   >
                     <Percent className="w-5 h-5" />
-                    <h3 className="font-medium">Margem de Lucro</h3>
+                    <h3 className="font-bold">Margem de Lucro</h3>
                   </div>
                   <p
                     className={cn(
                       'text-2xl md:text-3xl font-bold',
-                      isProfit ? 'text-green-700' : 'text-red-700',
+                      isProfit ? 'text-[#1DB954]' : 'text-red-500',
                     )}
                   >
                     {margemLucro.toFixed(1)}%
@@ -352,24 +353,26 @@ export default function CalculadoraRoi() {
 
               <Card
                 className={cn(
-                  'border-2 transition-colors duration-300',
-                  isProfit ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50',
+                  'border transition-colors duration-300',
+                  isProfit
+                    ? 'border-[#1DB954]/50 bg-[#1DB954]/5'
+                    : 'border-red-500/50 bg-red-500/5',
                 )}
               >
                 <CardContent className="p-4 md:p-6">
                   <div
                     className={cn(
                       'flex items-center gap-2 mb-2',
-                      isProfit ? 'text-green-700' : 'text-red-700',
+                      isProfit ? 'text-[#1DB954]' : 'text-red-500',
                     )}
                   >
                     <TrendingUp className="w-5 h-5" />
-                    <h3 className="font-medium">ROI</h3>
+                    <h3 className="font-bold">ROI</h3>
                   </div>
                   <p
                     className={cn(
                       'text-2xl md:text-3xl font-bold',
-                      isProfit ? 'text-green-700' : 'text-red-700',
+                      isProfit ? 'text-[#1DB954]' : 'text-red-500',
                     )}
                   >
                     {roi.toFixed(1)}%
@@ -377,15 +380,15 @@ export default function CalculadoraRoi() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-white border-slate-200">
+              <Card className="bg-[#050505] border-[#1DB954]/20">
                 <CardContent className="p-4 md:p-6">
-                  <div className="flex items-center gap-2 text-blue-600 mb-2">
+                  <div className="flex items-center gap-2 text-[#E0E0E0] mb-2">
                     <Clock className="w-5 h-5" />
-                    <h3 className="font-medium">Tempo Payback</h3>
+                    <h3 className="font-bold">Tempo Payback</h3>
                   </div>
-                  <p className="text-2xl md:text-3xl font-bold text-slate-900">
+                  <p className="text-2xl md:text-3xl font-bold text-[#FFFFFF]">
                     {payback.toFixed(1)}{' '}
-                    <span className="text-lg font-normal text-slate-500">
+                    <span className="text-lg font-medium text-[#E0E0E0]">
                       {payback === 1 ? 'mês' : 'meses'}
                     </span>
                   </p>
@@ -393,24 +396,26 @@ export default function CalculadoraRoi() {
               </Card>
             </div>
 
-            <Card className="border-slate-200">
+            <Card className="bg-[#050505] border-[#1DB954]/20">
               <CardHeader>
-                <CardTitle>Projeção de Lucro ao Longo do Tempo</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-[#FFFFFF] font-bold">
+                  Projeção de Lucro ao Longo do Tempo
+                </CardTitle>
+                <CardDescription className="text-[#E0E0E0] font-medium">
                   Evolução do saldo acumulado ao longo de {tempoRetorno} meses
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <ChartContainer config={chartConfig} className="h-[350px] w-full">
                   <LineChart data={chartData} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1DB95420" />
                     <XAxis
                       dataKey="mes"
                       tickLine={false}
                       axisLine={false}
                       tickMargin={10}
                       fontSize={12}
-                      tick={{ fill: '#64748b' }}
+                      tick={{ fill: '#E0E0E0' }}
                     />
                     <YAxis
                       tickFormatter={(val) =>
@@ -419,7 +424,7 @@ export default function CalculadoraRoi() {
                       tickLine={false}
                       axisLine={false}
                       fontSize={12}
-                      tick={{ fill: '#64748b' }}
+                      tick={{ fill: '#E0E0E0' }}
                       width={60}
                     />
                     <ChartTooltip content={<ChartTooltipContent />} />

@@ -26,6 +26,7 @@ import { ptBR } from 'date-fns/locale'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
 import { LogOut, User as UserIcon, Package, Calendar } from 'lucide-react'
+import { Logo } from '@/components/ui/logo'
 
 export default function Profile() {
   const { user, updateUser, logout } = useAuth()
@@ -120,13 +121,22 @@ export default function Profile() {
   const trialExpiresAt = user?.trial_expires_at || user?.data_trial_expira
 
   return (
-    <div className="container mx-auto p-4 sm:p-6 lg:p-8 space-y-8 max-w-5xl animate-fade-in-up mt-16 md:mt-20">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-3xl font-bold tracking-tight text-[#1a3c34]">Meu Perfil</h1>
+    <div className="container mx-auto py-8 space-y-8 bg-[#000000] min-h-screen">
+      <div className="flex flex-col md:flex-row items-start justify-between gap-4 bg-[#050505] p-6 rounded-2xl border border-[#1DB954]/20">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-[#FFFFFF] flex items-center gap-3">
+            <Logo className="w-8 h-8 text-[#1DB954]" />
+            Meu Perfil
+          </h1>
+          <p className="text-[#E0E0E0] mt-2 text-lg font-medium">
+            Gerencie suas informações pessoais, configurações de conta e acompanhe o histórico de
+            pedidos na loja.
+          </p>
+        </div>
         <Button
           variant="destructive"
           onClick={handleLogout}
-          className="flex items-center gap-2 shadow-sm"
+          className="font-bold flex items-center gap-2 whitespace-nowrap bg-red-600 hover:bg-red-700 text-white"
         >
           <LogOut className="h-4 w-4" />
           Fazer Logout
@@ -134,49 +144,60 @@ export default function Profile() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="md:col-span-2 border-border/50 shadow-sm">
+        <Card className="md:col-span-2 bg-[#050505] border-[#1DB954]/20">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-[#1a3c34]">
-              <UserIcon className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-[#FFFFFF] font-bold">
+              <UserIcon className="h-5 w-5 text-[#1DB954]" />
               Dados Pessoais
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-[#E0E0E0] font-medium">
               Atualize suas informações de contato e endereço para entregas.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Nome Completo</Label>
+                <Label htmlFor="name" className="text-[#FFFFFF] font-semibold">
+                  Nome Completo
+                </Label>
                 <Input
                   id="name"
+                  className="bg-[#000000] border-[#1DB954]/20 text-[#FFFFFF] focus-visible:ring-[#1DB954]"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Seu nome"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">E-mail</Label>
+                <Label htmlFor="email" className="text-[#FFFFFF] font-semibold">
+                  E-mail
+                </Label>
                 <Input
                   id="email"
                   value={formData.email}
                   disabled
-                  className="bg-muted/50 text-muted-foreground"
+                  className="bg-[#000000] border-[#1DB954]/20 text-[#E0E0E0] opacity-70"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Telefone</Label>
+                <Label htmlFor="phone" className="text-[#FFFFFF] font-semibold">
+                  Telefone
+                </Label>
                 <Input
                   id="phone"
+                  className="bg-[#000000] border-[#1DB954]/20 text-[#FFFFFF] focus-visible:ring-[#1DB954]"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   placeholder="(00) 00000-0000"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="address">Endereço de Entrega</Label>
+                <Label htmlFor="address" className="text-[#FFFFFF] font-semibold">
+                  Endereço de Entrega
+                </Label>
                 <Input
                   id="address"
+                  className="bg-[#000000] border-[#1DB954]/20 text-[#FFFFFF] focus-visible:ring-[#1DB954]"
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                   placeholder="Rua, Número, Bairro, Cidade - UF"
@@ -185,37 +206,35 @@ export default function Profile() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button
-              onClick={handleSave}
-              disabled={loading}
-              className="bg-[#1a3c34] hover:bg-[#1a3c34]/90 text-white shadow-sm transition-all"
-            >
+            <Button onClick={handleSave} disabled={loading} className="btn-agro-primary font-bold">
               {loading ? 'Salvando...' : 'Salvar Alterações'}
             </Button>
           </CardFooter>
         </Card>
 
-        <Card className="border-border/50 shadow-sm">
+        <Card className="bg-[#050505] border-[#1DB954]/20">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-[#1a3c34]">
-              <Calendar className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-[#FFFFFF] font-bold">
+              <Calendar className="h-5 w-5 text-[#1DB954]" />
               Assinatura
             </CardTitle>
-            <CardDescription>Detalhes do seu plano atual.</CardDescription>
+            <CardDescription className="text-[#E0E0E0] font-medium">
+              Detalhes do seu plano atual.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-1">
-              <Label className="text-muted-foreground text-xs uppercase tracking-wider">
+              <Label className="text-[#1DB954] text-xs uppercase tracking-wider font-bold">
                 Plano Ativo
               </Label>
-              <div className="text-2xl font-bold text-[#1a3c34]">{planName}</div>
+              <div className="text-2xl font-bold text-[#FFFFFF]">{planName}</div>
             </div>
             {trialExpiresAt && (
-              <div className="space-y-1 p-3 bg-secondary/30 rounded-lg border border-border/50">
-                <Label className="text-muted-foreground text-xs uppercase tracking-wider">
+              <div className="space-y-1 p-3 bg-[#000000] rounded-lg border border-[#1DB954]/20">
+                <Label className="text-[#1DB954] text-xs uppercase tracking-wider font-bold">
                   Expiração do Trial
                 </Label>
-                <div className="text-sm font-medium text-foreground">
+                <div className="text-sm font-medium text-[#FFFFFF]">
                   {format(new Date(trialExpiresAt), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
                 </div>
               </div>
@@ -224,7 +243,7 @@ export default function Profile() {
           <CardFooter>
             <Button
               variant="outline"
-              className="w-full border-border hover:bg-secondary/50"
+              className="w-full border-[#1DB954]/50 text-[#FFFFFF] hover:bg-[#1DB954]/10 hover:text-[#1DB954] font-bold"
               onClick={() => navigate('/planos')}
             >
               Gerenciar Plano
@@ -233,49 +252,60 @@ export default function Profile() {
         </Card>
       </div>
 
-      <Card className="border-border/50 shadow-sm">
+      <Card className="bg-[#050505] border-[#1DB954]/20">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-[#1a3c34]">
-            <Package className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-[#FFFFFF] font-bold">
+            <Package className="h-5 w-5 text-[#1DB954]" />
             Histórico de Pedidos
           </CardTitle>
-          <CardDescription>Acompanhe suas compras recentes na Loja de Insumos.</CardDescription>
+          <CardDescription className="text-[#E0E0E0] font-medium">
+            Acompanhe suas compras recentes na Loja de Insumos.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {orders.length === 0 ? (
             <div className="text-center py-12 flex flex-col items-center justify-center gap-3">
-              <div className="h-12 w-12 rounded-full bg-secondary/50 flex items-center justify-center">
-                <Package className="h-6 w-6 text-muted-foreground" />
+              <div className="h-12 w-12 rounded-full bg-[#000000] border border-[#1DB954]/20 flex items-center justify-center">
+                <Package className="h-6 w-6 text-[#1DB954]/50" />
               </div>
-              <p className="text-muted-foreground font-medium">Nenhum pedido encontrado.</p>
-              <Button variant="link" className="text-[#1a3c34]" onClick={() => navigate('/loja')}>
+              <p className="text-[#E0E0E0] font-medium">Nenhum pedido encontrado.</p>
+              <Button
+                variant="link"
+                className="text-[#1DB954] font-bold"
+                onClick={() => navigate('/loja')}
+              >
                 Visitar a Loja de Insumos
               </Button>
             </div>
           ) : (
-            <div className="rounded-md border border-border/50 overflow-hidden">
+            <div className="rounded-md border border-[#1DB954]/20 overflow-hidden bg-[#000000]">
               <div className="overflow-x-auto">
                 <Table>
-                  <TableHeader className="bg-secondary/30">
-                    <TableRow>
-                      <TableHead className="font-semibold">Data</TableHead>
-                      <TableHead className="font-semibold">Produtos</TableHead>
-                      <TableHead className="font-semibold text-right">Valor Total</TableHead>
-                      <TableHead className="font-semibold text-center">Status</TableHead>
+                  <TableHeader className="bg-[#050505]">
+                    <TableRow className="border-[#1DB954]/20 hover:bg-transparent">
+                      <TableHead className="font-bold text-[#E0E0E0]">Data</TableHead>
+                      <TableHead className="font-bold text-[#E0E0E0]">Produtos</TableHead>
+                      <TableHead className="font-bold text-[#E0E0E0] text-right">
+                        Valor Total
+                      </TableHead>
+                      <TableHead className="font-bold text-[#E0E0E0] text-center">Status</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {orders.map((order) => (
-                      <TableRow key={order.id} className="hover:bg-secondary/10 transition-colors">
-                        <TableCell className="whitespace-nowrap font-medium text-foreground/80">
+                      <TableRow
+                        key={order.id}
+                        className="border-[#1DB954]/10 hover:bg-[#1DB954]/5 transition-colors"
+                      >
+                        <TableCell className="whitespace-nowrap font-medium text-[#FFFFFF]">
                           {format(new Date(order.created_at), 'dd/MM/yyyy HH:mm')}
                         </TableCell>
-                        <TableCell className="max-w-[200px] sm:max-w-[300px] truncate text-muted-foreground">
+                        <TableCell className="max-w-[200px] sm:max-w-[300px] truncate text-[#E0E0E0] font-medium">
                           {order.order_items
                             ?.map((item: any) => `${item.quantity}x ${item.products?.name}`)
                             .join(', ')}
                         </TableCell>
-                        <TableCell className="text-right font-medium">
+                        <TableCell className="text-right font-bold text-[#FFFFFF]">
                           {new Intl.NumberFormat('pt-BR', {
                             style: 'currency',
                             currency: 'BRL',

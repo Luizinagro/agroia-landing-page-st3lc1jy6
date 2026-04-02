@@ -468,10 +468,9 @@
 
   .card-glass {
     background-color: #000000;
-    border: 1px solid #1db954;
+    border: 1px solid rgba(29, 185, 84, 0.2);
     border-radius: 16px;
     padding: 1.5rem;
-    animation: float-card 3s ease-in-out infinite;
     transition:
       transform 0.3s ease-out,
       box-shadow 0.3s ease-out;

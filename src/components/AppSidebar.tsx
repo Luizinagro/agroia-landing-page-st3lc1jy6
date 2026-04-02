@@ -12,7 +12,6 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useSubscription } from '@/hooks/useSubscription'
 import {
   LogOut,
-  Tractor,
   LineChart,
   ClipboardList,
   Calculator,
@@ -32,6 +31,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
+import { Logo } from '@/components/ui/logo'
 
 export function AppSidebar() {
   const { user, signOut } = useAuth() as any
@@ -75,8 +75,8 @@ export function AppSidebar() {
     <>
       <Sidebar>
         <SidebarHeader className="h-16 flex items-center justify-start px-4 border-b border-[#1DB954]/20 bg-[#000000]">
-          <div className="flex items-center gap-2 font-medium text-xl text-[#FFFFFF]">
-            <Tractor className="h-6 w-6 text-[#1DB954]" />
+          <div className="flex items-center gap-2 font-bold text-xl text-[#FFFFFF]">
+            <Logo className="h-8 w-8 text-[#1DB954]" />
             <span>AgroIA</span>
           </div>
         </SidebarHeader>
