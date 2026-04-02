@@ -22,6 +22,7 @@ import Store from './pages/Store'
 import Checkout from './pages/Checkout'
 import BlockedAccess from './pages/BlockedAccess'
 import CalculadoraRoi from './pages/CalculadoraRoi'
+import Planos from './pages/Planos'
 import { FeatureGuard } from './components/FeatureGuard'
 
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
@@ -84,6 +85,7 @@ const App = () => {
                       }
                     />
                     <Route path="/bloqueado" element={<BlockedAccess />} />
+                    <Route path="/planos" element={<Planos />} />
                   </Route>
 
                   <Route element={<ProtectedRoute requireActive={false} />}>
