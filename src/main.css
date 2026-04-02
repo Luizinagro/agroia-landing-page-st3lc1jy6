@@ -320,6 +320,39 @@
     }
   }
 
+  @keyframes grow {
+    0% {
+      transform: scaleY(0);
+      opacity: 0;
+    }
+    100% {
+      transform: scaleY(1);
+      opacity: 1;
+    }
+  }
+
+  .gsap-grow {
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: top center;
+  }
+
+  .gsap-grow.is-active {
+    animation: grow 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+
+  .gsap-stagger-container {
+    /* Helper class to group staggered items */
+  }
+
+  .gsap-stagger-item {
+    opacity: 0;
+  }
+
+  .gsap-stagger-item.is-active {
+    animation: fade-in-up 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+
   @keyframes float {
     0%,
     100% {

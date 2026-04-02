@@ -31,10 +31,15 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
 import { Plus, Edit2, Trash2, Loader2, Tractor } from 'lucide-react'
+import { useRef } from 'react'
+import { useGsapAnimations } from '@/hooks/use-gsap-animations'
 
 export function Rebanho() {
   const { user } = useAuth() as any
   const [rebanho, setRebanho] = useState<any[]>([])
+
+  const containerRef = useRef<HTMLDivElement>(null)
+  useGsapAnimations(containerRef)
   const [loading, setLoading] = useState(true)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -179,7 +184,10 @@ export function Rebanho() {
   }
 
   return (
-    <Card className="border-t-4 border-t-agro-green shadow-md overflow-hidden bg-background">
+    <Card
+      ref={containerRef}
+      className="border-t-4 border-t-agro-green shadow-md overflow-hidden bg-background gsap-grow"
+    >
       <CardHeader className="bg-muted/30 pb-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
@@ -293,7 +301,7 @@ export function Rebanho() {
                   <TableHead className="text-right pr-6">Ações</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
+              <TableBody className="gsap-stagger-container">
                 {rebanho.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
@@ -305,7 +313,7 @@ export function Rebanho() {
                   </TableRow>
                 ) : (
                   rebanho.map((item) => (
-                    <TableRow key={item.id} className="hover:bg-muted/30 group">
+                    <TableRow key={item.id} className="hover:bg-muted/30 group gsap-stagger-item">
                       <TableCell className="font-mono text-xs text-muted-foreground">
                         #{item.id.substring(0, 6)}
                       </TableCell>

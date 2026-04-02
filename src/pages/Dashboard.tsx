@@ -4,6 +4,9 @@ import { HistoryChart } from '@/components/dashboard/history-chart'
 import { IotConnection } from '@/components/dashboard/iot-connection'
 import { WeatherForecast } from '@/components/dashboard/weather-forecast'
 import { FeatureCards } from '@/components/dashboard/feature-cards'
+import { NeonParticles } from '@/components/ui/neon-particles'
+import { useGsapAnimations } from '@/hooks/use-gsap-animations'
+import { useRef } from 'react'
 import {
   LayoutDashboard,
   ArrowLeft,
@@ -32,6 +35,8 @@ import {
 
 const Dashboard = () => {
   const { logout, user } = useAuth()
+  const dashboardRef = useRef<HTMLDivElement>(null)
+  useGsapAnimations(dashboardRef)
   const navigate = useNavigate()
   const location = useLocation()
   const { plan: userPlan } = useSubscription()
@@ -56,7 +61,11 @@ const Dashboard = () => {
   const userEmail = user?.email || ''
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans flex flex-col">
+    <div
+      ref={dashboardRef}
+      className="relative min-h-screen bg-background text-foreground font-sans flex flex-col"
+    >
+      <NeonParticles className="opacity-50" />
       <SEO
         title="Dashboard"
         description="Visão geral da propriedade e monitoramento inteligente."

@@ -16,7 +16,7 @@ export function ProductCard({
   planLoading: boolean
 }) {
   return (
-    <Card className="group flex flex-col overflow-hidden hover:shadow-xl transition-all duration-300 border-green-100 bg-white">
+    <Card className="group flex flex-col overflow-hidden hover:shadow-xl transition-all duration-300 border-green-100 bg-white gsap-stagger-item">
       <div className="h-52 w-full bg-muted relative overflow-hidden">
         {product.image_url ? (
           <img

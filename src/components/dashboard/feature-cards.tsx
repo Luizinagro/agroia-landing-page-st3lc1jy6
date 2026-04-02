@@ -58,14 +58,14 @@ export const FeatureCards = ({ userPlan, user }: FeatureCardsProps) => {
       <h2 className="text-xl font-bold text-[#1a3c34] flex items-center gap-2">
         Funcionalidades do seu Plano
       </h2>
-      <div className="grid-responsive">
+      <div className="grid-responsive gsap-stagger-container">
         {features.map((feature) => {
           const unlocked = isFeatureUnlocked(feature.id, feature.name)
           return (
             <Card
               key={feature.id}
               className={cn(
-                'relative overflow-hidden transition-all duration-300 hover:shadow-md',
+                'relative overflow-hidden transition-all duration-300 hover:shadow-md gsap-stagger-item',
                 !unlocked && 'opacity-80 grayscale-[0.5]',
               )}
             >

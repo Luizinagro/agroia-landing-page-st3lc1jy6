@@ -12,6 +12,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { LineChart, TrendingUp, TrendingDown, DollarSign, BrainCircuit } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useRef } from 'react'
+import { useGsapAnimations } from '@/hooks/use-gsap-animations'
 
 const mockPrices: Record<string, { current: number; d30: number; d60: number }> = {
   Soja: { current: 2166, d30: 2210, d60: 2280 },
@@ -41,8 +43,11 @@ export default function PrevisaoIA() {
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
 
+  const containerRef = useRef<HTMLDivElement>(null)
+  useGsapAnimations(containerRef)
+
   return (
-    <div className="container mx-auto py-8 space-y-8 animate-fade-in-up">
+    <div ref={containerRef} className="container mx-auto py-8 space-y-8 animate-fade-in-up">
       <div>
         <h1 className="text-3xl font-bold flex items-center gap-2 text-primary">
           <BrainCircuit className="h-8 w-8 text-green-500" /> Previsão IA
@@ -103,8 +108,8 @@ export default function PrevisaoIA() {
                 Resultados para {resultado.quantidade} ton de {resultado.cultura}
               </h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card className="border-primary/20 bg-card/60 backdrop-blur-sm">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 gsap-stagger-container">
+                <Card className="border-primary/20 bg-card/60 backdrop-blur-sm gsap-stagger-item">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-sm font-medium text-muted-foreground flex items-center justify-between">
                       Preço Atual (R$/ton)
@@ -121,7 +126,7 @@ export default function PrevisaoIA() {
                   </CardContent>
                 </Card>
 
-                <Card className="border-primary/20 bg-card/60 backdrop-blur-sm relative overflow-hidden">
+                <Card className="border-primary/20 bg-card/60 backdrop-blur-sm relative overflow-hidden gsap-stagger-item">
                   <div className="absolute top-0 right-0 p-2 opacity-5">
                     <LineChart className="h-16 w-16" />
                   </div>
@@ -158,7 +163,7 @@ export default function PrevisaoIA() {
                   </CardContent>
                 </Card>
 
-                <Card className="border-primary/20 bg-card/60 backdrop-blur-sm relative overflow-hidden">
+                <Card className="border-primary/20 bg-card/60 backdrop-blur-sm relative overflow-hidden gsap-stagger-item">
                   <div className="absolute top-0 right-0 p-2 opacity-5">
                     <LineChart className="h-16 w-16" />
                   </div>
@@ -196,7 +201,7 @@ export default function PrevisaoIA() {
                 </Card>
               </div>
 
-              <Card className="bg-primary/10 border-primary/30 shadow-[0_0_20px_rgba(34,197,94,0.1)]">
+              <Card className="bg-primary/10 border-primary/30 shadow-[0_0_20px_rgba(34,197,94,0.1)] gsap-grow">
                 <CardContent className="p-5">
                   <p className="text-sm text-foreground/90 flex items-start gap-3">
                     <BrainCircuit className="h-6 w-6 text-primary shrink-0 mt-0.5" />

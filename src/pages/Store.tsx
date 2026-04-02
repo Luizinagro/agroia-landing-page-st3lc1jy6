@@ -8,6 +8,8 @@ import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 import { ProductCard } from '@/components/store/ProductCard'
 import { CartSheet } from '@/components/store/CartSheet'
+import { useRef } from 'react'
+import { useGsapAnimations } from '@/hooks/use-gsap-animations'
 
 const CATEGORIES = [
   { id: 'todas', label: 'Todas' },
@@ -58,8 +60,14 @@ export default function Store() {
     return products.filter((p) => p.category === selectedCategory)
   }, [products, selectedCategory])
 
+  const containerRef = useRef<HTMLDivElement>(null)
+  useGsapAnimations(containerRef)
+
   return (
-    <div className="container mx-auto py-8 animate-fade-in bg-bg-dark min-h-screen rounded-[24px]">
+    <div
+      ref={containerRef}
+      className="container mx-auto py-8 animate-fade-in bg-bg-dark min-h-screen rounded-[24px]"
+    >
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 bg-card/60 backdrop-blur-sm p-6 rounded-[24px] border border-white/5 shadow-sm">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-2">
@@ -93,16 +101,16 @@ export default function Store() {
       </div>
 
       {loading ? (
-        <div className="grid-responsive">
+        <div className="grid-responsive gsap-stagger-container">
           {[...Array(8)].map((_, i) => (
             <div
               key={i}
-              className="animate-pulse border border-green-100 shadow-sm rounded-xl h-80 bg-white"
+              className="animate-pulse border border-green-100 shadow-sm rounded-xl h-80 bg-white gsap-stagger-item"
             />
           ))}
         </div>
       ) : (
-        <div className="grid-responsive">
+        <div className="grid-responsive gsap-stagger-container">
           {filteredProducts.map((product) => (
             <ProductCard
               key={product.id}

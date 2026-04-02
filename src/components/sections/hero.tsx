@@ -2,19 +2,32 @@ import { Button } from '@/components/ui/button'
 import { AnimatedSection } from '@/components/animated-section'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
+import { NeonParticles } from '@/components/ui/neon-particles'
+import { useRef } from 'react'
+import { useGsapAnimations } from '@/hooks/use-gsap-animations'
 
 export function Hero() {
-  return (
-    <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden bg-bg-dark pt-20">
-      {/* Abstract Glowing Orbs */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-agro-green/20 rounded-full blur-[120px] mix-blend-screen pointer-events-none animate-float" />
-      <div
-        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neon-purple/20 rounded-full blur-[120px] mix-blend-screen pointer-events-none animate-float"
-        style={{ animationDelay: '2s' }}
-      />
+  const heroRef = useRef<HTMLElement>(null)
+  useGsapAnimations(heroRef)
 
-      {/* Grid Pattern Background */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMWgyMHYyMEgxVjF6IiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiIHN0cm9rZS13aWR0aD0iMSIvPjwvc3ZnPg==')] opacity-50" />
+  return (
+    <section
+      ref={heroRef}
+      className="relative min-h-[100vh] flex items-center justify-center overflow-hidden bg-bg-dark pt-20"
+    >
+      <NeonParticles />
+
+      <div className="absolute inset-0 z-0 pointer-events-none gsap-parallax-hero">
+        {/* Abstract Glowing Orbs */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-agro-green/20 rounded-full blur-[120px] mix-blend-screen animate-float" />
+        <div
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neon-purple/20 rounded-full blur-[120px] mix-blend-screen animate-float"
+          style={{ animationDelay: '2s' }}
+        />
+
+        {/* Grid Pattern Background */}
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMWgyMHYyMEgxVjF6IiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiIHN0cm9rZS13aWR0aD0iMSIvPjwvc3ZnPg==')] opacity-50 bg-fixed" />
+      </div>
 
       {/* Content */}
       <div className="container relative z-10 flex flex-col items-center text-center">
