@@ -1,190 +1,202 @@
-import { useAuth } from '@/contexts/AuthContext'
-import { Button } from '@/components/ui/button'
-import { Check, Tractor, LogOut, AlertCircle } from 'lucide-react'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '@/contexts/AuthContext'
+import { supabase } from '@/lib/supabase/client'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Check, Loader2, Sparkles, Tractor, ArrowRight } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
+import { cn } from '@/lib/utils'
 
-const plans = [
+const PLANS = [
+  {
+    name: 'Básico',
+    price: 'Grátis',
+    period: '',
+    level: 0,
+    features: ['dashboard'],
+    featureLabels: ['Dashboard Básico', 'Suporte Básico'],
+  },
   {
     name: 'Plantio Solo',
-    price: 'R$147',
+    price: 'R$ 147',
     period: '/mês',
-    description: 'Para pequenos produtores',
-    features: ['Previsão IA 92% precisão', 'Alertas de pragas', 'Suporte horário comercial'],
-    highlighted: false,
+    level: 1,
+    features: ['dashboard', 'roi', 'loja'],
+    featureLabels: ['Previsão IA', 'Calculadora de ROI', 'Loja de Insumos'],
+  },
+  {
+    name: 'Pecuário Solo',
+    price: 'R$ 147',
+    period: '/mês',
+    level: 1,
+    features: ['dashboard', 'pecuaria', 'rastreabilidade', 'loja'],
+    featureLabels: ['Rastreabilidade', 'Loja de Insumos', 'Gestão Pecuária'],
   },
   {
     name: 'Completo',
-    price: 'R$347',
+    price: 'R$ 347',
     period: '/mês',
-    description: 'A solução definitiva',
-    features: ['SaaS Faturamento', 'Rastreabilidade ESG', 'Suporte prioritário 24/7'],
-    highlighted: true,
+    level: 2,
+    features: ['dashboard', 'roi', 'loja', 'pecuaria', 'rastreabilidade'],
+    featureLabels: ['Previsão IA', 'Rastreabilidade', 'Calculadora de ROI', 'Loja de Insumos'],
   },
   {
     name: 'Família Coop',
-    price: 'R$747',
+    price: 'R$ 747',
     period: '/mês',
-    description: 'Para grandes grupos',
-    features: ['Até 5 propriedades', 'Relatórios consolidados', 'Consultoria dedicada'],
-    highlighted: false,
+    level: 3,
+    features: ['dashboard', 'roi', 'loja', 'pecuaria', 'rastreabilidade', 'multi_propriedade'],
+    featureLabels: [
+      'Previsão IA',
+      'Rastreabilidade',
+      'Calculadora de ROI',
+      'Loja de Insumos',
+      'Até 5 propriedades',
+    ],
   },
 ]
 
 export default function PlanSelection() {
-  const { user, logout, updateUser } = useAuth()
+  const { user } = useAuth()
   const navigate = useNavigate()
   const { toast } = useToast()
+  const [updating, setUpdating] = useState<string | null>(null)
 
-  const isExpired = user?.data_trial_expira && new Date(user.data_trial_expira) < new Date()
+  const handleSelectPlan = async (selectedPlan: (typeof PLANS)[0]) => {
+    if (!user?.id) return
+    setUpdating(selectedPlan.name)
 
-  const handleSubscribe = (planName: string) => {
-    // Remove expiration to simulate active paid plan
-    updateUser({
-      plano: planName,
-      data_trial_expira: undefined,
-    })
+    try {
+      const { data: existingPlan } = await supabase
+        .from('user_plans')
+        .select('id')
+        .eq('user_id', user.id)
+        .maybeSingle()
 
-    toast({
-      title: 'Plano atualizado com sucesso!',
-      description: `Sua assinatura do plano ${planName} está ativa.`,
-      className: 'bg-[#1a3c34] text-white border-[#f4d03f]',
-    })
+      if (existingPlan?.id) {
+        const { error } = await supabase
+          .from('user_plans')
+          .update({
+            plan_name: selectedPlan.name,
+            plan_features: selectedPlan.features,
+          })
+          .eq('id', existingPlan.id)
+        if (error) throw error
+      } else {
+        const { error } = await supabase.from('user_plans').insert({
+          user_id: user.id,
+          plan_name: selectedPlan.name,
+          plan_features: selectedPlan.features,
+        })
+        if (error) throw error
+      }
 
-    navigate('/dashboard')
+      await supabase.from('users').update({ plan_active: selectedPlan.name }).eq('id', user.id)
+
+      toast({
+        title: 'Plano selecionado com sucesso!',
+        description: `Bem-vindo ao plano ${selectedPlan.name}.`,
+        className: 'bg-[#1a3c34] text-white border-[#f4d03f]',
+      })
+
+      window.location.assign('/dashboard')
+    } catch (error) {
+      console.error(error)
+      toast({
+        title: 'Erro ao selecionar plano',
+        description: 'Não foi possível completar a transação no momento. Tente novamente.',
+        variant: 'destructive',
+      })
+      setUpdating(null)
+    }
   }
 
   return (
-    <div className="min-h-screen bg-[#1a3c34] flex flex-col font-sans selection:bg-[#f4d03f]/30">
-      <header className="border-b border-white/10 bg-[#1a3c34]/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="container flex h-16 items-center justify-between px-4 md:px-6">
-          <div className="flex items-center gap-2 font-bold text-xl text-white">
-            <Tractor className="w-6 h-6 text-[#f4d03f]" />
-            <span>AgroIA</span>
-          </div>
-          <Button
-            variant="ghost"
-            onClick={logout}
-            className="text-white hover:bg-white/10 hover:text-[#f4d03f]"
-          >
-            <LogOut className="w-4 h-4 mr-2" />
-            Sair
-          </Button>
-        </div>
-      </header>
-
-      <main className="flex-1 container px-4 py-12 md:py-24 mx-auto max-w-6xl">
-        <div className="text-center max-w-2xl mx-auto mb-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          {isExpired && (
-            <div className="inline-flex items-center gap-2 bg-[#f4d03f] text-[#1a3c34] px-4 py-2 rounded-full font-bold mb-6 text-sm">
-              <AlertCircle className="w-5 h-5" />
-              Seu período de teste de 14 dias expirou.
+    <div className="min-h-screen bg-slate-50 flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-7xl mx-auto space-y-12 animate-in fade-in duration-500">
+        <div className="text-center space-y-4">
+          <div className="flex justify-center mb-4">
+            <div className="w-16 h-16 bg-[#1a3c34] rounded-2xl flex items-center justify-center shadow-lg transform -rotate-6">
+              <Tractor className="w-8 h-8 text-[#f4d03f] transform rotate-6" />
             </div>
-          )}
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+          </div>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-[#1a3c34] tracking-tight">
             Escolha seu Plano AgroIA
           </h1>
-          <p className="text-white/80 text-lg md:text-xl">
-            Para continuar acessando as ferramentas de IA hiperlocal, previsão de clima e
-            rastreabilidade ESG, selecione um de nossos planos profissionais.
+          <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto">
+            Selecione o plano ideal para iniciar sua jornada e destravar o poder da inteligência
+            artificial na sua propriedade.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {plans.map((plan, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6 items-stretch">
+          {PLANS.map((plan) => (
             <Card
-              key={index}
+              key={plan.name}
               className={cn(
-                'flex flex-col relative transition-all duration-300 animate-in fade-in slide-in-from-bottom-8',
-                plan.highlighted
-                  ? 'border-[#f4d03f] shadow-2xl scale-105 z-10 bg-white'
-                  : 'border-white/10 bg-white/5 hover:border-[#f4d03f]/50 backdrop-blur-sm',
+                'relative flex flex-col h-full bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-slate-200',
+                plan.name === 'Completo'
+                  ? 'border-[#f4d03f] border-2 shadow-lg scale-105 z-10'
+                  : '',
               )}
-              style={{ animationDelay: `${index * 150}ms` }}
             >
-              {plan.highlighted && (
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#f4d03f] text-[#1a3c34] px-4 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase shadow-lg">
-                  Mais Popular
+              {plan.name === 'Completo' && (
+                <div className="absolute top-0 inset-x-0 bg-[#f4d03f] text-[#1a3c34] text-center py-1.5 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5" /> Mais Recomendado
                 </div>
               )}
-              <CardHeader className="text-center pb-4 pt-8">
-                <CardTitle
-                  className={cn(
-                    'text-2xl mb-2',
-                    plan.highlighted ? 'text-[#1a3c34]' : 'text-white',
-                  )}
-                >
-                  {plan.name}
-                </CardTitle>
-                <p
-                  className={cn(
-                    'text-sm mb-6',
-                    plan.highlighted ? 'text-zinc-600' : 'text-white/60',
-                  )}
-                >
-                  {plan.description}
-                </p>
-                <div className="flex items-end justify-center gap-1">
-                  <span
-                    className={cn(
-                      'text-4xl font-bold',
-                      plan.highlighted ? 'text-[#1a3c34]' : 'text-white',
-                    )}
-                  >
-                    {plan.price}
-                  </span>
-                  {plan.period && (
-                    <span
-                      className={cn(
-                        'mb-1.5 font-medium',
-                        plan.highlighted ? 'text-zinc-500' : 'text-white/50',
-                      )}
-                    >
-                      {plan.period}
-                    </span>
-                  )}
+
+              <CardHeader className={cn('pb-4', plan.name === 'Completo' ? 'pt-10' : 'pt-6')}>
+                <CardTitle className="text-xl font-bold text-[#1a3c34]">{plan.name}</CardTitle>
+                <div className="mt-4 flex items-baseline text-4xl font-extrabold text-[#1a3c34]">
+                  {plan.price}
+                  <span className="ml-1 text-sm font-semibold text-slate-500">{plan.period}</span>
                 </div>
               </CardHeader>
-              <CardContent className="flex-1 pt-6">
+
+              <CardContent className="flex-1 pb-6">
                 <ul className="space-y-4">
-                  {plan.features.map((feature, i) => (
-                    <li
-                      key={i}
-                      className={cn(
-                        'flex items-start gap-3 text-sm font-medium',
-                        plan.highlighted ? 'text-zinc-700' : 'text-white/80',
-                      )}
-                    >
-                      <Check
-                        className={cn(
-                          'w-5 h-5 shrink-0 mt-0.5',
-                          plan.highlighted ? 'text-[#1a3c34]' : 'text-[#f4d03f]',
-                        )}
-                      />
-                      <span>{feature}</span>
+                  {plan.featureLabels.map((feat, i) => (
+                    <li key={i} className="flex items-start">
+                      <Check className="h-5 w-5 text-[#4ade80] shrink-0 mr-3 mt-0.5" />
+                      <span className="text-sm font-medium text-slate-700">{feat}</span>
                     </li>
                   ))}
                 </ul>
               </CardContent>
-              <CardFooter className="pt-6 pb-8">
+
+              <CardFooter className="pt-0">
                 <Button
-                  onClick={() => handleSubscribe(plan.name)}
                   className={cn(
-                    'w-full h-12 text-base font-bold transition-all shadow-md',
-                    plan.highlighted
-                      ? 'bg-[#f4d03f] hover:bg-[#f4d03f]/90 text-[#1a3c34] hover:scale-[1.02]'
-                      : 'bg-white hover:bg-white/90 text-[#1a3c34]',
+                    'w-full h-12 text-sm font-bold transition-all',
+                    plan.name === 'Completo'
+                      ? 'bg-[#f4d03f] text-[#1a3c34] hover:bg-[#e3c02f] hover:shadow-md'
+                      : 'bg-[#1a3c34] text-white hover:bg-[#2c5c50]',
                   )}
+                  disabled={updating !== null}
+                  onClick={() => handleSelectPlan(plan)}
                 >
-                  Assinar {plan.name}
+                  {updating === plan.name ? (
+                    <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                  ) : null}
+                  Selecionar Plano <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </CardFooter>
             </Card>
           ))}
         </div>
-      </main>
+
+        <div className="text-center pt-8">
+          <Button
+            variant="ghost"
+            className="text-slate-500 hover:text-[#1a3c34]"
+            onClick={() => navigate('/login')}
+          >
+            Voltar para o Login
+          </Button>
+        </div>
+      </div>
     </div>
   )
 }

@@ -137,30 +137,36 @@ export type Database = {
       }
       users: {
         Row: {
+          address: string | null
           created_at: string | null
           email: string
           id: string
           name: string | null
+          phone: string | null
           plan_active: string | null
           status: string | null
           trial_expires_at: string | null
           user_type: string | null
         }
         Insert: {
+          address?: string | null
           created_at?: string | null
           email: string
           id: string
           name?: string | null
+          phone?: string | null
           plan_active?: string | null
           status?: string | null
           trial_expires_at?: string | null
           user_type?: string | null
         }
         Update: {
+          address?: string | null
           created_at?: string | null
           email?: string
           id?: string
           name?: string | null
+          phone?: string | null
           plan_active?: string | null
           status?: string | null
           trial_expires_at?: string | null
@@ -353,6 +359,8 @@ export const Constants = {
 //   plan_active: text (nullable, default: 'Básico'::text)
 //   created_at: timestamp with time zone (nullable, default: now())
 //   trial_expires_at: timestamp with time zone (nullable, default: (now() + '30 days'::interval))
+//   phone: text (nullable)
+//   address: text (nullable)
 
 // --- CONSTRAINTS ---
 // Table: order_items
