@@ -18,16 +18,27 @@ const Index = () => {
       />
 
       {/* Futuristic Header */}
-      <header className="fixed top-0 z-[100] w-full bg-[#111827]/60 backdrop-blur-[20px] border-b border-white/10 transition-all duration-400 ease-bounce">
+      <header className="navbar-glass">
         <div className="container flex h-20 items-center justify-between">
           <div className="flex items-center gap-2 group cursor-pointer">
-            <Logo className="w-10 h-10 text-[#22C55E] drop-shadow-[0_0_15px_rgba(34,197,94,0.5)] group-hover:scale-110 group-hover:rotate-12 transition-all duration-400 ease-bounce" />
+            <Link to="/">
+              <Logo className="w-10 h-10 text-agro-green drop-shadow-[0_0_15px_rgba(34,197,94,0.5)] group-hover:scale-110 group-hover:rotate-12 transition-all duration-400 ease-bounce" />
+            </Link>
           </div>
 
-          <div className="flex items-center gap-4">
-            <Button asChild className="font-bold h-11 px-8 text-sm md:text-base tracking-wide">
-              <Link to={user ? '/dashboard' : '/login'}>{user ? 'ÁREA DO PRODUTOR' : 'LOGIN'}</Link>
-            </Button>
+          <div className="flex items-center gap-6">
+            <a
+              href="#planos"
+              className="hidden md:block text-sm font-bold text-white/80 hover:text-[#8B5CF6] transition-colors"
+            >
+              Planos
+            </a>
+            <Link
+              to={user ? '/dashboard' : '/login'}
+              className="btn-agro-primary px-8 py-2.5 text-sm md:text-base tracking-wide"
+            >
+              {user ? 'ÁREA DO PRODUTOR' : 'LOGIN'}
+            </Link>
           </div>
         </div>
       </header>

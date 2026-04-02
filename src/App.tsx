@@ -27,6 +27,7 @@ import Planos from './pages/Planos'
 import Profile from './pages/Profile'
 import PrevisaoIA from './pages/PrevisaoIA'
 import Rastreabilidade from './pages/Rastreabilidade'
+import Insumos from './pages/Insumos'
 import { FeatureGuard } from './components/FeatureGuard'
 
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
@@ -94,6 +95,14 @@ const App = () => {
                       element={
                         <FeatureGuard feature="loja" requiredPlan="Completo ou Superior">
                           <Store />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/insumos"
+                      element={
+                        <FeatureGuard feature="loja" requiredPlan="Completo ou Superior">
+                          <Insumos />
                         </FeatureGuard>
                       }
                     />

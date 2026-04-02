@@ -62,44 +62,43 @@ export const FeatureCards = ({ userPlan, user }: FeatureCardsProps) => {
         {features.map((feature) => {
           const unlocked = isFeatureUnlocked(feature.id, feature.name)
           return (
-            <Card
+            <div
               key={feature.id}
               className={cn(
-                'relative overflow-hidden transition-all duration-300 hover:shadow-md gsap-stagger-item',
-                !unlocked && 'opacity-80 grayscale-[0.5]',
+                'card-glass p-6 !rounded-[20px] flex flex-col gsap-stagger-item',
+                !unlocked &&
+                  'opacity-60 grayscale cursor-not-allowed hover:transform-none hover:shadow-none hover:border-white/10',
               )}
             >
-              <CardHeader className="pb-2">
+              <div className="pb-2">
                 <div className="flex justify-between items-start">
                   <div
                     className={cn(
-                      'p-2 rounded-lg',
-                      unlocked ? 'bg-[#1a3c34]/10 text-[#1a3c34]' : 'bg-slate-100 text-slate-400',
+                      'p-3 rounded-xl',
+                      unlocked ? 'bg-agro-green/20 text-agro-green' : 'bg-white/10 text-white/50',
                     )}
                   >
-                    <feature.icon className="w-5 h-5" />
+                    <feature.icon className="w-6 h-6" />
                   </div>
                   {unlocked ? (
-                    <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-none flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3" /> Liberado
+                    <Badge className="bg-agro-green/20 text-agro-green border-agro-green/30 flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" /> Acesso
                     </Badge>
                   ) : (
                     <Badge
-                      variant="secondary"
-                      className="bg-slate-100 text-slate-500 hover:bg-slate-100 flex items-center gap-1"
+                      variant="outline"
+                      className="border-white/20 text-white/50 flex items-center gap-1"
                     >
-                      <Lock className="w-3 h-3" /> Bloqueado
+                      <Lock className="w-3 h-3" /> Upgrade
                     </Badge>
                   )}
                 </div>
-                <CardTitle className="text-base mt-3">{feature.name}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-sm line-clamp-2">
-                  {feature.description}
-                </CardDescription>
-              </CardContent>
-            </Card>
+                <h3 className="text-lg font-bold text-white mt-4">{feature.name}</h3>
+              </div>
+              <div className="mt-2">
+                <p className="text-sm text-white/60 line-clamp-2">{feature.description}</p>
+              </div>
+            </div>
           )
         })}
       </div>

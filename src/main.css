@@ -426,6 +426,57 @@
     transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
 
+  .btn-agro-primary {
+    background-color: #22c55e;
+    color: white;
+    font-weight: 700;
+    border-radius: 20px;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.2);
+  }
+  .btn-agro-primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
+  }
+
+  .btn-agro-secondary {
+    border: 1px solid #8b5cf6;
+    color: #8b5cf6;
+    font-weight: 700;
+    border-radius: 20px;
+    background-color: transparent;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  .btn-agro-secondary:hover {
+    background-color: #8b5cf6;
+    color: white;
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+  }
+
+  .card-glass {
+    backdrop-filter: blur(20px);
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  .card-glass:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 0 30px rgba(34, 197, 94, 0.2);
+    border-color: rgba(34, 197, 94, 0.3);
+  }
+
+  .navbar-glass {
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    backdrop-filter: blur(20px);
+    background-color: rgba(17, 24, 39, 0.6);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.4s ease;
+  }
+
   .duration-400 {
     transition-duration: 400ms;
   }

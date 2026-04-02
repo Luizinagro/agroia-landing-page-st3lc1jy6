@@ -1,70 +1,106 @@
-import { useEffect, RefObject } from 'react'
+import { useEffect } from 'react'
 
-export function useGsapAnimations(containerRef: RefObject<HTMLElement | null>) {
+declare global {
+  interface Window {
+    gsap: any
+    ScrollTrigger: any
+  }
+}
+
+export function useGsapAnimations(ref: React.RefObject<HTMLElement | null>) {
   useEffect(() => {
-    if (!containerRef.current) return
-
-    let ctx: any
-
-    const init = () => {
+    const loadGSAP = async () => {
       if (typeof window === 'undefined') return
-      if (!(window as any).gsap || !(window as any).ScrollTrigger) {
-        setTimeout(init, 200)
-        return
+
+      if (!window.gsap) {
+        await new Promise<void>((resolve) => {
+          const script = document.createElement('script')
+          script.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js'
+          script.onload = () => resolve()
+          document.head.appendChild(script)
+        })
       }
 
-      const gsap = (window as any).gsap
-      const ScrollTrigger = (window as any).ScrollTrigger
-
-      gsap.registerPlugin(ScrollTrigger)
-
-      ctx = gsap.context(() => {
-        const growElements = gsap.utils.toArray('.gsap-grow')
-        growElements.forEach((el: any) => {
-          ScrollTrigger.create({
-            trigger: el,
-            start: 'top 85%',
-            onEnter: () => el.classList.add('is-active'),
-            once: true,
-          })
+      if (!window.ScrollTrigger) {
+        await new Promise<void>((resolve) => {
+          const script2 = document.createElement('script')
+          script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js'
+          script2.onload = () => resolve()
+          document.head.appendChild(script2)
         })
+      }
 
-        const staggerContainers = gsap.utils.toArray('.gsap-stagger-container')
-        staggerContainers.forEach((container: any) => {
-          const items = container.querySelectorAll('.gsap-stagger-item')
-          ScrollTrigger.create({
-            trigger: container,
-            start: 'top 85%',
-            onEnter: () => {
-              items.forEach((item: HTMLElement, i: number) => {
-                item.style.animationDelay = `${i * 0.1}s`
-                item.classList.add('is-active')
-              })
-            },
-            once: true,
-          })
-        })
-
-        const parallaxHero = gsap.utils.toArray('.gsap-parallax-hero')
-        parallaxHero.forEach((hero: any) => {
-          gsap.to(hero, {
-            y: 50,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: hero,
-              start: 'top top',
-              end: 'bottom top',
-              scrub: true,
-            },
-          })
-        })
-      }, containerRef)
+      if (window.gsap && window.ScrollTrigger) {
+        window.gsap.registerPlugin(window.ScrollTrigger)
+        initAnimations()
+      }
     }
 
-    init()
+    const initAnimations = () => {
+      if (!ref.current) return
+      const gsap = window.gsap
+
+      const elements = ref.current.querySelectorAll('.gsap-grow')
+      elements.forEach((el: any) => {
+        gsap.fromTo(
+          el,
+          { scaleY: 0, opacity: 0, transformOrigin: 'bottom center' },
+          {
+            scaleY: 1,
+            opacity: 1,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 85%',
+            },
+          },
+        )
+      })
+
+      const staggers = ref.current.querySelectorAll('.gsap-stagger-container')
+      staggers.forEach((container: any) => {
+        gsap.fromTo(
+          container.querySelectorAll('.gsap-stagger-item'),
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: container,
+              start: 'top 85%',
+            },
+          },
+        )
+      })
+
+      const parallaxHero = ref.current.querySelector('.gsap-parallax-hero')
+      if (parallaxHero) {
+        gsap.to(parallaxHero, {
+          y: 50,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: ref.current,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true,
+          },
+        })
+      }
+    }
+
+    const timeout = setTimeout(() => {
+      loadGSAP()
+    }, 100)
 
     return () => {
-      if (ctx) ctx.revert()
+      clearTimeout(timeout)
+      if (window.ScrollTrigger) {
+        window.ScrollTrigger.getAll().forEach((t: any) => t.kill())
+      }
     }
-  }, [containerRef])
+  }, [ref])
 }

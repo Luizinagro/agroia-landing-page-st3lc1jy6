@@ -70,7 +70,7 @@ const Dashboard = () => {
         title="Dashboard"
         description="Visão geral da propriedade e monitoramento inteligente."
       />
-      <header className="sticky top-0 z-[100] w-full bg-[#111827]/60 backdrop-blur-[20px] border-b border-white/10 shadow-sm transition-all duration-400 ease-bounce">
+      <header className="navbar-glass">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-4">
             <Button
@@ -92,20 +92,18 @@ const Dashboard = () => {
           </div>
           <div className="flex items-center gap-2 sm:gap-4">
             <IotConnection />
-            <Button
-              variant="outline"
-              size="sm"
+            <button
               onClick={handleLogout}
-              className="border-[#8B5CF6]/50"
+              className="btn-agro-secondary px-4 py-2 flex items-center gap-2 text-sm"
             >
-              <LogOut className="w-4 h-4 sm:mr-2" />
+              <LogOut className="w-4 h-4" />
               <span className="hidden sm:inline">Sair</span>
-            </Button>
+            </button>
           </div>
         </div>
       </header>
 
-      <main className="flex-1 container py-8 mx-auto space-y-8 bg-transparent rounded-xl mt-4">
+      <main className="flex-1 container py-8 mx-auto space-y-8 bg-transparent rounded-xl pt-24">
         {isTrialExpired && (
           <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in-down">
             <div className="flex items-center">
@@ -123,62 +121,70 @@ const Dashboard = () => {
           </div>
         )}
 
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 animate-fade-in-down">
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 gsap-grow">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
-              <LayoutDashboard className="w-8 h-8 text-premium-gold" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-4">
+              <span className="flex h-2 w-2 rounded-full bg-agro-green animate-pulse"></span>
+              <span className="text-xs font-semibold text-white/80 uppercase tracking-wider">
+                Sistema Ativo
+              </span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white flex items-center gap-3">
               Olá, {userName}
             </h1>
-            {userEmail && <p className="text-slate-500 mt-1 font-medium">{userEmail}</p>}
-            <p className="text-muted-foreground mt-2 text-lg">
-              Bem-vindo ao seu painel. Monitore suas culturas e acompanhe seus benefícios.
+            {userEmail && <p className="text-white/50 mt-1 font-medium">{userEmail}</p>}
+            <p className="text-white/70 mt-2 text-lg max-w-2xl">
+              Bem-vindo ao centro de comando AgroTech. Monitore suas culturas, preveja cenários com
+              IA e maximize seus lucros.
             </p>
           </div>
 
-          <div className="flex flex-col bg-card p-5 rounded-[24px] border shadow-sm min-w-[280px]">
-            <div className="flex items-center justify-between mb-3">
+          <div className="card-glass flex flex-col p-6 min-w-[300px]">
+            <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Star className="w-5 h-5 text-premium-gold" />
-                <span className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                <span className="text-sm font-semibold uppercase tracking-wider text-white/70">
                   Plano Atual
                 </span>
               </div>
               <Badge
                 variant="outline"
-                className="bg-premium-gold/10 text-premium-gold border-premium-gold/50 font-bold px-3 py-1 text-sm"
+                className="bg-premium-gold/10 text-premium-gold border-premium-gold/30 font-bold px-3 py-1 text-sm"
               >
                 {currentPlanName}
               </Badge>
             </div>
 
-            <div className="flex items-center gap-2 pt-3 border-t border-border">
-              <Calendar className="w-4 h-4 text-muted-foreground" />
-              <span className="text-sm font-medium text-foreground">
+            <div className="flex items-center gap-2 pt-4 border-t border-white/10">
+              <Calendar className="w-4 h-4 text-white/50" />
+              <span className="text-sm font-medium text-white/80">
                 Trial expira em:{' '}
-                {trialDate ? new Date(trialDate).toLocaleDateString('pt-BR') : 'N/A'}
+                <span className="text-white font-bold">
+                  {trialDate ? new Date(trialDate).toLocaleDateString('pt-BR') : 'N/A'}
+                </span>
               </span>
             </div>
 
-            <Button
-              asChild
-              className="mt-4 w-full bg-agro-green text-white hover:bg-agro-green-hover font-semibold shadow-sm"
+            <Link
+              to="/selecionar-plano"
+              className="btn-agro-primary w-full mt-6 py-3 text-center text-sm"
             >
-              <Link to="/selecionar-plano">Fazer Upgrade</Link>
-            </Button>
+              Fazer Upgrade
+            </Link>
           </div>
         </div>
 
         <FeatureCards userPlan={userPlan} user={user} />
 
-        <div className="grid-asymmetric-2">
-          <div className="space-y-8 animate-slide-up" style={{ animationDelay: '100ms' }}>
+        <div className="grid-asymmetric-2 gsap-grow">
+          <div className="space-y-8">
             <MapSection />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <WeatherForecast />
               <HistoryChart />
             </div>
           </div>
-          <div className="h-full animate-slide-up" style={{ animationDelay: '200ms' }}>
+          <div className="h-full">
             <AlertsSection />
           </div>
         </div>

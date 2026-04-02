@@ -1,16 +1,15 @@
 import { Check } from 'lucide-react'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { AnimatedSection } from '@/components/animated-section'
-import { cn } from '@/lib/utils'
 import { Link } from 'react-router-dom'
+import { useRef } from 'react'
+import { useGsapAnimations } from '@/hooks/use-gsap-animations'
+import { cn } from '@/lib/utils'
 
 const plans = [
   {
     name: 'Básico',
     price: 'Grátis',
     description: 'Ideal para começar',
-    features: ['Pecuária Básica', 'Previsão IA (Limitado)'],
+    features: ['Dashboard Básico', 'Pecuária Essencial', 'Previsão IA (Limitado)'],
     highlighted: false,
   },
   {
@@ -18,7 +17,7 @@ const plans = [
     price: 'R$147',
     period: '/mês',
     description: 'Para pequenos produtores',
-    features: ['Pecuária', 'Previsão IA 92% precisão', 'Rastreabilidade', 'Calculadora ROI'],
+    features: ['Tudo do Básico', 'Rastreabilidade', 'Calculadora ROI', 'Alertas de Preço'],
     highlighted: false,
   },
   {
@@ -26,7 +25,7 @@ const plans = [
     price: 'R$197',
     period: '/mês',
     description: 'Foco em rebanhos',
-    features: ['Pecuária Avançada', 'Previsão IA', 'Rastreabilidade', 'Calculadora ROI'],
+    features: ['Gestão de Rebanho', 'Controle Sanitário', 'Rastreabilidade', 'Calculadora ROI'],
     highlighted: false,
   },
   {
@@ -34,7 +33,7 @@ const plans = [
     price: 'R$347',
     period: '/mês',
     description: 'A solução definitiva',
-    features: ['Todas as Funcionalidades', 'Loja de Insumos', 'Suporte Prioritário 24/7'],
+    features: ['Plantio + Pecuária', 'Loja de Insumos', 'Dashboard de Estoque', 'Suporte 24/7'],
     highlighted: true,
   },
   {
@@ -42,19 +41,27 @@ const plans = [
     price: 'R$747',
     period: '/mês',
     description: 'Para grandes grupos',
-    features: ['Tudo do Completo', 'Até 5 Propriedades', 'Relatórios Consolidados'],
+    features: [
+      'Tudo do Completo',
+      'Múltiplas Propriedades',
+      'Relatórios Consolidados',
+      'IA Personalizada',
+    ],
     highlighted: false,
   },
 ]
 
 export function Pricing() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  useGsapAnimations(containerRef)
+
   return (
-    <section className="py-32 bg-[#050A15] relative overflow-hidden">
+    <section ref={containerRef} className="py-32 bg-[#050A15] relative overflow-hidden">
       {/* Background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#00D1FF]/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#22C55E]/10 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="container relative z-10">
-        <AnimatedSection className="text-center max-w-3xl mx-auto mb-20">
+        <div className="text-center max-w-3xl mx-auto mb-20 gsap-grow">
           <h2 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70 mb-6 tracking-tight">
             Planos para Escalar sua Produtividade
           </h2>
@@ -62,30 +69,26 @@ export function Pricing() {
             Escolha o pacote ideal para as necessidades da sua operação. Desbloqueie o poder da IA
             hoje.
           </p>
-        </AnimatedSection>
+        </div>
 
-        <div className="grid-responsive">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 gsap-stagger-container">
           {plans.map((plan, index) => (
-            <AnimatedSection key={index} delay={index * 100} className="flex">
-              <Card
+            <div key={index} className="flex gsap-stagger-item">
+              <div
                 className={cn(
-                  'flex flex-col w-full relative transition-all duration-500 overflow-hidden backdrop-blur-xl',
-                  plan.highlighted
-                    ? 'bg-gradient-to-b from-[#00FF94]/10 to-white/5 border-[#00FF94]/50 shadow-[0_0_30px_rgba(0,255,148,0.15)] scale-105 z-10'
-                    : 'bg-white/5 border-white/10 hover:border-white/20 hover:bg-white/10',
+                  'card-glass w-full relative flex flex-col',
+                  plan.highlighted &&
+                    'border-agro-green/50 shadow-[0_0_30px_rgba(34,197,94,0.15)] scale-105 z-10 bg-gradient-to-b from-agro-green/10 to-transparent',
                 )}
               >
                 {plan.highlighted && (
-                  <>
-                    <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[#00FF94] to-[#00D1FF]" />
-                    <div className="absolute -top-4 right-4 bg-[#00FF94] text-[#050A15] px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase mt-6 shadow-[0_0_15px_rgba(0,255,148,0.5)]">
-                      Popular
-                    </div>
-                  </>
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-agro-green text-bg-dark px-4 py-1 rounded-full text-xs font-bold tracking-wider uppercase shadow-[0_0_15px_rgba(34,197,94,0.5)]">
+                    Popular
+                  </div>
                 )}
 
-                <CardHeader className="text-left pb-6 pt-8">
-                  <CardTitle className="text-2xl mb-2 text-white font-bold">{plan.name}</CardTitle>
+                <div className="text-left pb-6">
+                  <h3 className="text-2xl mb-2 text-white font-bold">{plan.name}</h3>
                   <p className="text-sm text-white/50 mb-6 h-10">{plan.description}</p>
                   <div className="flex items-baseline gap-1">
                     <span className="text-4xl font-extrabold text-white tracking-tight">
@@ -95,9 +98,9 @@ export function Pricing() {
                       <span className="text-white/50 font-medium">{plan.period}</span>
                     )}
                   </div>
-                </CardHeader>
+                </div>
 
-                <CardContent className="flex-1">
+                <div className="flex-1">
                   <ul className="space-y-4">
                     {plan.features.map((feature, i) => (
                       <li
@@ -108,7 +111,7 @@ export function Pricing() {
                           className={cn(
                             'mt-0.5 rounded-full p-1',
                             plan.highlighted
-                              ? 'bg-[#00FF94]/20 text-[#00FF94]'
+                              ? 'bg-agro-green/20 text-agro-green'
                               : 'bg-white/10 text-white',
                           )}
                         >
@@ -118,23 +121,21 @@ export function Pricing() {
                       </li>
                     ))}
                   </ul>
-                </CardContent>
+                </div>
 
-                <CardFooter className="pt-6 pb-8">
-                  <Button
-                    asChild
+                <div className="pt-8 mt-auto">
+                  <Link
+                    to="/cadastro"
                     className={cn(
-                      'w-full font-bold transition-all duration-300 rounded-xl py-6',
-                      plan.highlighted
-                        ? 'bg-[#00FF94] hover:bg-white text-[#050A15] shadow-[0_0_20px_rgba(0,255,148,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]'
-                        : 'bg-white/10 hover:bg-white/20 text-white',
+                      'w-full py-4 flex items-center justify-center text-center',
+                      plan.highlighted ? 'btn-agro-primary' : 'btn-agro-secondary',
                     )}
                   >
-                    <Link to="/cadastro">Assinar Agora</Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-            </AnimatedSection>
+                    Assinar Agora
+                  </Link>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       </div>
