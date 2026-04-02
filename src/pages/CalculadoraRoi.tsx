@@ -1,6 +1,15 @@
 import { useState, useMemo } from 'react'
 import { SEO } from '@/components/SEO'
-import { ArrowLeft, TrendingUp, DollarSign, Clock, Percent, Calculator, Save } from 'lucide-react'
+import {
+  ArrowLeft,
+  TrendingUp,
+  DollarSign,
+  Clock,
+  Percent,
+  Calculator,
+  Save,
+  Loader2,
+} from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -15,6 +24,7 @@ import {
 import { Line, LineChart, CartesianGrid, XAxis, YAxis } from 'recharts'
 import { cn } from '@/lib/utils'
 import { toast } from '@/hooks/use-toast'
+import { supabase } from '@/lib/supabase/client'
 
 const chartConfig = {
   saldo: {
@@ -27,6 +37,7 @@ export default function CalculadoraRoi() {
   const [custoTotal, setCustoTotal] = useState<number>(20000)
   const [receitaEsperada, setReceitaEsperada] = useState<number>(35000)
   const [tempoRetorno, setTempoRetorno] = useState<number>(12)
+  const [isSaving, setIsSaving] = useState(false)
 
   const { lucroLiquido, margemLucro, roi, payback, chartData } = useMemo(() => {
     const custo = custoTotal || 0
@@ -56,11 +67,50 @@ export default function CalculadoraRoi() {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
   }
 
-  const handleSave = () => {
-    toast({
-      title: 'Cálculo Salvo',
-      description: 'O cálculo de ROI foi salvo com sucesso (simulação).',
-    })
+  const handleSave = async () => {
+    setIsSaving(true)
+    try {
+      const {
+        data: { session },
+        error: authError,
+      } = await supabase.auth.getSession()
+
+      if (authError || !session?.user) {
+        toast({
+          title: 'Não autenticado',
+          description: 'Você precisa estar logado para salvar o cálculo.',
+          variant: 'destructive',
+        })
+        setIsSaving(false)
+        return
+      }
+
+      const { error } = await supabase.from('calculos_roi' as any).insert({
+        user_id: session.user.id,
+        custo_producao: custoTotal,
+        receita_esperada: receitaEsperada,
+        tempo_retorno: tempoRetorno,
+        lucro_liquido: lucroLiquido,
+        margem_lucro: margemLucro,
+        roi_percentual: roi,
+        payback_meses: payback,
+      })
+
+      if (error) throw error
+
+      toast({
+        title: 'Cálculo Salvo',
+        description: 'Seu cálculo de ROI foi armazenado no banco de dados com sucesso!',
+      })
+    } catch (error: any) {
+      toast({
+        title: 'Erro ao salvar',
+        description: error.message || 'Ocorreu um erro ao salvar seu cálculo.',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   const isProfit = lucroLiquido >= 0
@@ -104,8 +154,16 @@ export default function CalculadoraRoi() {
               analise a evolução do seu lucro ao longo do tempo.
             </p>
           </div>
-          <Button onClick={handleSave} className="bg-[#1a3c34] hover:bg-[#1a3c34]/90 text-white">
-            <Save className="w-4 h-4 mr-2" />
+          <Button
+            onClick={handleSave}
+            disabled={isSaving}
+            className="bg-[#1a3c34] hover:bg-[#1a3c34]/90 text-white"
+          >
+            {isSaving ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Save className="w-4 h-4 mr-2" />
+            )}
             Salvar Cálculo
           </Button>
         </div>
