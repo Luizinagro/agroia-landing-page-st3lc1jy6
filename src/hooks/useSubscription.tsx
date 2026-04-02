@@ -1,0 +1,65 @@
+import { useState, useEffect } from 'react'
+import { supabase } from '@/lib/supabase/client'
+import { useAuth } from '@/contexts/AuthContext'
+
+export function useSubscription() {
+  const { user } = useAuth()
+  const [plan, setPlan] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchPlan() {
+      if (!user?.id) {
+        setLoading(false)
+        return
+      }
+      try {
+        const { data } = await supabase
+          .from('user_plans')
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle()
+        setPlan(data)
+      } catch (err) {
+        console.error('Error fetching plan:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchPlan()
+  }, [user?.id])
+
+  const hasFeature = (feature: string) => {
+    // Use plan from DB, or fallback to user context metadata
+    const userPlanName = user?.plan_active || user?.plano_ativo || 'Básico'
+    const planObj = plan || { plan_name: userPlanName, plan_features: [] }
+
+    // Check JSON features if exists and is array
+    if (planObj.plan_features && Array.isArray(planObj.plan_features)) {
+      if (planObj.plan_features.includes(feature)) return true
+    }
+
+    // Fallback based on plan name
+    const planName = planObj.plan_name || 'Básico'
+    if (planName === 'Completo' || planName === 'Família Coop') return true
+
+    if (
+      planName === 'Plantio Solo' &&
+      (feature === 'roi' || feature === 'loja' || feature === 'dashboard')
+    )
+      return true
+    if (
+      planName === 'Pecuário Solo' &&
+      (feature === 'rastreabilidade' ||
+        feature === 'loja' ||
+        feature === 'dashboard' ||
+        feature === 'pecuaria')
+    )
+      return true
+    if (planName === 'Básico' && feature === 'dashboard') return true
+
+    return false
+  }
+
+  return { plan, loading, hasFeature }
+}

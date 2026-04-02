@@ -18,31 +18,12 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/contexts/AuthContext'
 import { SEO } from '@/components/SEO'
-import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase/client'
+import { useSubscription } from '@/hooks/useSubscription'
 
 const Dashboard = () => {
   const { logout, user } = useAuth()
   const navigate = useNavigate()
-  const [userPlan, setUserPlan] = useState<any>(null)
-
-  useEffect(() => {
-    const fetchPlan = async () => {
-      if (!user?.id) return
-      try {
-        const { data } = await supabase
-          .from('user_plans')
-          .select('*')
-          .eq('user_id', user.id)
-          .maybeSingle()
-
-        if (data) setUserPlan(data)
-      } catch (err) {
-        console.error('Error fetching plan:', err)
-      }
-    }
-    fetchPlan()
-  }, [user?.id])
+  const { plan: userPlan } = useSubscription()
 
   const handleLogout = () => {
     logout()

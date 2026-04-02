@@ -4,6 +4,7 @@ import { Tractor, ArrowLeft } from 'lucide-react'
 import { SEO } from '@/components/SEO'
 import { Suspense, lazy } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
+import { FeatureGuard } from '@/components/FeatureGuard'
 
 const CalculadoraRacao = lazy(() =>
   import('@/components/pecuaria/CalculadoraRacao').then((m) => ({ default: m.CalculadoraRacao })),
@@ -96,7 +97,9 @@ export default function Pecuaria() {
               className="m-0 focus-visible:outline-none focus-visible:ring-0"
             >
               <Suspense fallback={<Skeleton className="w-full h-[400px] rounded-xl" />}>
-                <RastreabilidadeEsg />
+                <FeatureGuard feature="rastreabilidade" requiredPlan="Pecuário Solo ou Superior">
+                  <RastreabilidadeEsg />
+                </FeatureGuard>
               </Suspense>
             </TabsContent>
             <TabsContent

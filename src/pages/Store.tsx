@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase/client'
 import { useCart, Product } from '@/contexts/CartContext'
 import { Button } from '@/components/ui/button'
+import { useSubscription } from '@/hooks/useSubscription'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { ShoppingCart, Plus, Minus, Trash2, Tag, ArrowRight, PackageSearch } from 'lucide-react'
 import {
@@ -23,6 +24,8 @@ export default function Store() {
   const { items, addItem, removeItem, updateQuantity, total } = useCart()
   const navigate = useNavigate()
   const { toast } = useToast()
+  const { hasFeature, loading: planLoading } = useSubscription()
+  const canBuy = hasFeature('loja')
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -178,9 +181,15 @@ export default function Store() {
                     <span>Total Estimado</span>
                     <span className="text-green-700">R$ {total.toFixed(2)}</span>
                   </div>
+                  {!planLoading && !canBuy && (
+                    <div className="text-center text-sm text-red-600 font-medium bg-red-50 p-2 rounded-md">
+                      Você precisa fazer upgrade para comprar
+                    </div>
+                  )}
                   <Button
                     size="lg"
                     className="w-full bg-green-600 hover:bg-green-700 text-white shadow-md font-semibold text-md"
+                    disabled={!planLoading && !canBuy}
                     onClick={() => {
                       document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
                       navigate('/checkout')
@@ -267,14 +276,23 @@ export default function Store() {
                   )}
                 </div>
               </CardContent>
-              <CardFooter className="p-5 pt-0 mt-auto">
+              <CardFooter className="p-5 pt-0 mt-auto flex-col gap-2">
+                {!planLoading && !canBuy && (
+                  <div className="w-full text-center text-xs text-red-600 font-medium mb-1">
+                    Você precisa fazer upgrade para comprar
+                  </div>
+                )}
                 <Button
                   className="w-full bg-green-600 hover:bg-green-700 text-white font-medium shadow-sm group-hover:shadow transition-all"
                   onClick={() => handleAddToCart(product)}
-                  disabled={product.stock === 0}
+                  disabled={product.stock === 0 || (!planLoading && !canBuy)}
                 >
                   <ShoppingCart className="mr-2 h-4 w-4" />
-                  {product.stock === 0 ? 'Indisponível' : 'Adicionar ao Carrinho'}
+                  {product.stock === 0
+                    ? 'Indisponível'
+                    : canBuy || planLoading
+                      ? 'Adicionar ao Carrinho'
+                      : 'Upgrade Necessário'}
                 </Button>
               </CardFooter>
             </Card>

@@ -20,6 +20,9 @@ import { DatabaseProvider } from './contexts/DatabaseContext'
 import { CartProvider } from './contexts/CartContext'
 import Store from './pages/Store'
 import Checkout from './pages/Checkout'
+import BlockedAccess from './pages/BlockedAccess'
+import CalculadoraRoi from './pages/CalculadoraRoi'
+import { FeatureGuard } from './components/FeatureGuard'
 
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
@@ -52,12 +55,35 @@ const App = () => {
                   <Route path="/forgot-password" element={<ForgotPassword />} />
 
                   <Route element={<ProtectedRoute />}>
-                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route
+                      path="/dashboard"
+                      element={
+                        <FeatureGuard feature="dashboard" requiredPlan="Básico">
+                          <Dashboard />
+                        </FeatureGuard>
+                      }
+                    />
                     <Route path="/comunidade" element={<Community />} />
                     <Route path="/faturamento" element={<Billing />} />
                     <Route path="/pecuaria" element={<Pecuaria />} />
                     <Route path="/loja" element={<Store />} />
-                    <Route path="/checkout" element={<Checkout />} />
+                    <Route
+                      path="/checkout"
+                      element={
+                        <FeatureGuard feature="loja" requiredPlan="Plantio Solo ou Superior">
+                          <Checkout />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/roi"
+                      element={
+                        <FeatureGuard feature="roi" requiredPlan="Plantio Solo ou Superior">
+                          <CalculadoraRoi />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route path="/bloqueado" element={<BlockedAccess />} />
                   </Route>
 
                   <Route element={<ProtectedRoute requireActive={false} />}>

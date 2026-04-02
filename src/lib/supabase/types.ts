@@ -51,6 +51,7 @@ export type Database = {
       orders: {
         Row: {
           created_at: string
+          delivery_address: string | null
           id: string
           status: string | null
           total_price: number
@@ -58,6 +59,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          delivery_address?: string | null
           id?: string
           status?: string | null
           total_price?: number
@@ -65,6 +67,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          delivery_address?: string | null
           id?: string
           status?: string | null
           total_price?: number
@@ -324,6 +327,7 @@ export const Constants = {
 //   total_price: numeric (not null, default: 0)
 //   status: text (nullable, default: 'pendente'::text)
 //   created_at: timestamp with time zone (not null, default: now())
+//   delivery_address: text (nullable)
 // Table: products
 //   id: uuid (not null, default: gen_random_uuid())
 //   name: text (not null)
