@@ -135,9 +135,7 @@
     font-weight: 400;
     font-size: clamp(2rem, 6vw, 3.5rem);
     line-height: 1.2;
-    letter-spacing: -0.02em;
     color: #ffffff;
-    margin-bottom: 1.5rem;
   }
 
   h2 {
@@ -146,7 +144,6 @@
     font-size: 1.75rem;
     line-height: 1.3;
     color: #ffffff;
-    margin-bottom: 1.5rem;
   }
 
   h3 {
@@ -155,12 +152,12 @@
     font-size: 1.5rem;
     line-height: 1.3;
     color: #ffffff;
-    margin-bottom: 1.5rem;
   }
 
   /* To cover classes that use these elements implicitly */
   .text-body,
-  p {
+  p,
+  body {
     font-family: 'Inter', sans-serif;
     font-weight: 400;
     font-size: 1rem;
@@ -178,8 +175,9 @@
 
   .metric,
   .number-text,
-  .font-mono {
-    font-family: 'Inter', sans-serif;
+  .font-mono,
+  .numbers {
+    font-family: 'Inter', sans-serif !important;
     font-weight: 500;
     font-size: 1.25rem;
     line-height: 1.6;
@@ -419,16 +417,35 @@
     transition-timing-function: ease-out;
   }
 
+  @keyframes float-card {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-float-card {
+    animation: float-card 3s ease-in-out infinite;
+  }
+
   .btn-agro-primary {
     background-color: #1db954;
     color: #000000;
     font-weight: 500;
     border-radius: 12px;
     padding: 0.75rem 1.5rem;
-    transition: opacity 0.3s ease-out;
+    transition:
+      transform 0.3s ease-out,
+      box-shadow 0.3s ease-out,
+      opacity 0.3s ease-out;
   }
   .btn-agro-primary:hover {
-    opacity: 0.85;
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(29, 185, 84, 0.4);
+    opacity: 0.9;
   }
 
   .btn-agro-secondary {
@@ -438,9 +455,14 @@
     border-radius: 12px;
     padding: 0.75rem 1.5rem;
     background-color: transparent;
-    transition: background-color 0.3s ease-out;
+    transition:
+      transform 0.3s ease-out,
+      box-shadow 0.3s ease-out,
+      background-color 0.3s ease-out;
   }
   .btn-agro-secondary:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(29, 185, 84, 0.4);
     background-color: rgba(29, 185, 84, 0.1);
   }
 
@@ -449,13 +471,16 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     padding: 1.5rem;
+    animation: float-card 3s ease-in-out infinite;
     transition:
       border-color 0.3s ease-out,
-      background-color 0.3s ease-out;
+      background-color 0.3s ease-out,
+      box-shadow 0.3s ease-out;
   }
   .card-glass:hover {
     border-color: rgba(29, 185, 84, 0.4);
     background-color: #181818;
+    box-shadow: 0 0 20px rgba(29, 185, 84, 0.4);
   }
 
   .navbar-glass {
