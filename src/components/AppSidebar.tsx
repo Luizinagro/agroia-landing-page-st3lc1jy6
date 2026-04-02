@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
+import { cn } from '@/lib/utils'
 
 export function AppSidebar() {
   const { user, signOut } = useAuth() as any
@@ -69,8 +70,8 @@ export function AppSidebar() {
   return (
     <>
       <Sidebar>
-        <SidebarHeader className="h-16 flex items-center justify-start px-4 border-b">
-          <div className="flex items-center gap-2 font-bold text-xl text-primary">
+        <SidebarHeader className="h-16 flex items-center justify-start px-4 border-b border-white/10 bg-[#111827]/40 backdrop-blur-[20px]">
+          <div className="flex items-center gap-2 font-bold text-xl text-[#22C55E] drop-shadow-[0_0_10px_rgba(34,197,94,0.3)]">
             <Tractor className="h-6 w-6" />
             <span>AgroIA</span>
           </div>
@@ -86,9 +87,12 @@ export function AppSidebar() {
                   <SidebarMenuButton
                     asChild
                     isActive={isActive && allowed}
-                    className={
-                      !allowed ? 'opacity-50 grayscale cursor-not-allowed hover:bg-transparent' : ''
-                    }
+                    className={cn(
+                      'transition-all duration-400 ease-bounce hover:text-[#8B5CF6] hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.8)]',
+                      !allowed
+                        ? 'opacity-50 grayscale cursor-not-allowed hover:bg-transparent'
+                        : '',
+                    )}
                     onClick={(e) => handleNavigation(e, item.path, item.feature)}
                   >
                     <Link to={allowed ? item.path : '#'}>

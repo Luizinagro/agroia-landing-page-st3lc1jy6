@@ -9,12 +9,14 @@ export function Header() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
   return (
-    <header className="fixed top-0 z-50 w-full bg-[#111827]/80 backdrop-blur-md border-b border-white/10 transition-all duration-400 ease-bounce">
+    <header className="fixed top-0 z-[100] w-full bg-[#111827]/60 backdrop-blur-[20px] border-b border-white/10 transition-all duration-400 ease-bounce">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           <div className="flex items-center">
             <Link to="/" className="flex items-center transition-opacity hover:opacity-90">
-              <span className="text-2xl font-bold tracking-tight text-white">AgroIA</span>
+              <span className="text-2xl font-bold tracking-tight text-[#22C55E] drop-shadow-[0_0_10px_rgba(34,197,94,0.3)]">
+                AgroIA
+              </span>
             </Link>
           </div>
 
@@ -22,31 +24,29 @@ export function Header() {
           <nav className="hidden md:flex items-center gap-8">
             <a
               href="#features"
-              className="text-sm font-semibold text-white/80 hover:text-agro-green transition-colors"
+              className="text-sm font-semibold text-white/80 hover:text-[#8B5CF6] hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.8)] transition-all duration-400"
             >
               Features
             </a>
             <a
               href="#modules"
-              className="text-sm font-semibold text-white/80 hover:text-agro-green transition-colors"
+              className="text-sm font-semibold text-white/80 hover:text-[#8B5CF6] hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.8)] transition-all duration-400"
             >
               Modules
             </a>
             <a
               href="#pricing"
-              className="text-sm font-semibold text-white/80 hover:text-agro-green transition-colors"
+              className="text-sm font-semibold text-white/80 hover:text-[#8B5CF6] hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.8)] transition-all duration-400"
             >
               Pricing
             </a>
             <a
               href="#testimonials"
-              className="text-sm font-semibold text-white/80 hover:text-agro-green transition-colors"
+              className="text-sm font-semibold text-white/80 hover:text-[#8B5CF6] hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.8)] transition-all duration-400"
             >
               Testimonials
             </a>
-            <Button className="bg-agro-green text-white hover:bg-agro-green-hover h-10 px-6 font-semibold shadow-sm">
-              Get Started
-            </Button>
+            <Button>Get Started</Button>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -70,36 +70,34 @@ export function Header() {
           <div className="flex flex-col space-y-2 px-4 pb-6 pt-4">
             <a
               href="#features"
-              className="px-4 py-3 text-base font-semibold text-white/80 hover:bg-white/10 hover:text-white rounded-lg transition-colors"
+              className="px-4 py-3 text-base font-semibold text-white/80 hover:bg-white/10 hover:text-[#8B5CF6] hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.8)] rounded-lg transition-all duration-400"
               onClick={toggleMenu}
             >
               Features
             </a>
             <a
               href="#modules"
-              className="px-4 py-3 text-base font-semibold text-white/80 hover:bg-white/10 hover:text-white rounded-lg transition-colors"
+              className="px-4 py-3 text-base font-semibold text-white/80 hover:bg-white/10 hover:text-[#8B5CF6] hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.8)] rounded-lg transition-all duration-400"
               onClick={toggleMenu}
             >
               Modules
             </a>
             <a
               href="#pricing"
-              className="px-4 py-3 text-base font-semibold text-white/80 hover:bg-white/10 hover:text-white rounded-lg transition-colors"
+              className="px-4 py-3 text-base font-semibold text-white/80 hover:bg-white/10 hover:text-[#8B5CF6] hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.8)] rounded-lg transition-all duration-400"
               onClick={toggleMenu}
             >
               Pricing
             </a>
             <a
               href="#testimonials"
-              className="px-4 py-3 text-base font-semibold text-white/80 hover:bg-white/10 hover:text-white rounded-lg transition-colors"
+              className="px-4 py-3 text-base font-semibold text-white/80 hover:bg-white/10 hover:text-[#8B5CF6] hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.8)] rounded-lg transition-all duration-400"
               onClick={toggleMenu}
             >
               Testimonials
             </a>
             <div className="px-4 pt-4 pb-2">
-              <Button className="w-full bg-agro-green text-white hover:bg-agro-green-hover h-12 text-lg font-semibold shadow-sm">
-                Get Started
-              </Button>
+              <Button className="w-full h-12 text-lg">Get Started</Button>
             </div>
           </div>
         </div>

@@ -10,13 +10,16 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
-        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+        default:
+          'bg-[#22C55E] text-white shadow-[0_10px_30px_rgba(34,197,94,0.3)] hover:bg-[#16A34A] hover:scale-105 hover:shadow-[0_10px_40px_rgba(34,197,94,0.5)]',
+        destructive:
+          'bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:scale-105',
         outline:
-          'border border-input bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground',
-        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-        ghost: 'text-foreground hover:bg-accent hover:text-accent-foreground',
-        link: 'text-foreground underline-offset-4 hover:underline',
+          'border-2 border-[#8B5CF6] text-[#8B5CF6] bg-transparent hover:bg-[#8B5CF6] hover:text-white hover:shadow-[0_0_20px_rgba(139,92,246,0.6)] hover:scale-105',
+        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80 hover:scale-105',
+        ghost:
+          'text-foreground hover:text-[#8B5CF6] hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.8)]',
+        link: 'text-[#8B5CF6] underline-offset-4 hover:underline hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.8)]',
       },
       size: {
         default: 'h-10 px-4 py-2',

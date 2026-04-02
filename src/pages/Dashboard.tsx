@@ -61,7 +61,7 @@ const Dashboard = () => {
         title="Dashboard"
         description="Visão geral da propriedade e monitoramento inteligente."
       />
-      <header className="sticky top-0 z-50 w-full bg-[#111827]/80 backdrop-blur-md border-b border-white/10 shadow-sm transition-all duration-400 ease-bounce">
+      <header className="sticky top-0 z-[100] w-full bg-[#111827]/60 backdrop-blur-[20px] border-b border-white/10 shadow-sm transition-all duration-400 ease-bounce">
         <div className="container flex h-16 items-center justify-between px-4 md:px-6">
           <div className="flex items-center gap-4">
             <Button
@@ -87,7 +87,7 @@ const Dashboard = () => {
               variant="outline"
               size="sm"
               onClick={handleLogout}
-              className="border-white/20 bg-white/10 text-white hover:bg-white/20 hover:text-white transition-colors"
+              className="border-[#8B5CF6]/50"
             >
               <LogOut className="w-4 h-4 sm:mr-2" />
               <span className="hidden sm:inline">Sair</span>
@@ -96,7 +96,7 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <main className="flex-1 container px-4 md:px-6 py-8 max-w-7xl mx-auto space-y-8 bg-slate-50/50 dark:bg-transparent rounded-xl mt-4">
+      <main className="flex-1 container px-4 md:px-6 py-8 max-w-7xl mx-auto space-y-8 bg-transparent rounded-xl mt-4">
         {isTrialExpired && (
           <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in-down">
             <div className="flex items-center">
