@@ -45,9 +45,14 @@ export function useSubscription() {
     const userPlanName = user?.plan_active || user?.plano_ativo || 'Básico'
     const planObj = plan || { plan_name: userPlanName, plan_features: [] }
 
+    const features =
+      typeof planObj.plan_features === 'string'
+        ? JSON.parse(planObj.plan_features)
+        : planObj.plan_features
+
     // Check JSON features if exists and is array
-    if (planObj.plan_features && Array.isArray(planObj.plan_features)) {
-      if (planObj.plan_features.includes(feature)) return true
+    if (features && Array.isArray(features)) {
+      if (features.includes(feature)) return true
     }
 
     // Fallback based on plan name
