@@ -61,7 +61,10 @@ export function useSubscription() {
 
     if (
       planName === 'Plantio Solo' &&
-      (feature === 'roi' || feature === 'loja' || feature === 'dashboard')
+      (feature === 'roi' ||
+        feature === 'loja' ||
+        feature === 'dashboard' ||
+        feature === 'previsao-ia')
     )
       return true
     if (
