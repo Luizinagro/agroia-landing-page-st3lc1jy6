@@ -1,115 +1,55 @@
 import { useState } from 'react'
-import { useCart } from '@/contexts/CartContext'
-import { supabase } from '@/lib/supabase/client'
 import { useNavigate } from 'react-router-dom'
+import { useCart } from '@/contexts/CartContext'
+import { useAuth } from '@/contexts/AuthContext'
+import { supabase } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/hooks/use-toast'
-import { ArrowLeft, CheckCircle2, ShoppingCart, MapPin } from 'lucide-react'
+import { CheckCircle2, ShoppingBag, ArrowLeft, Loader2, Package } from 'lucide-react'
+import { Separator } from '@/components/ui/separator'
 
 export default function Checkout() {
   const { items, total, clearCart } = useCart()
-  const navigate = useNavigate()
+  const { user } = useAuth()
   const { toast } = useToast()
+  const navigate = useNavigate()
 
   const [address, setAddress] = useState('')
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
 
-  if (items.length === 0 && !success) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] p-6 text-center animate-fade-in">
-        <div className="bg-muted p-6 rounded-full mb-6">
-          <ShoppingCart className="h-16 w-16 text-muted-foreground opacity-50" />
-        </div>
-        <h2 className="text-2xl font-bold mb-2">Seu Carrinho está Vazio</h2>
-        <p className="text-muted-foreground mb-8 max-w-md">
-          Você precisa adicionar produtos ao carrinho antes de prosseguir para o checkout.
-        </p>
-        <Button
-          size="lg"
-          onClick={() => navigate('/loja')}
-          className="bg-green-600 hover:bg-green-700"
-        >
-          Explorar a Loja
-        </Button>
-      </div>
-    )
-  }
-
-  if (success) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] p-6 text-center animate-fade-in">
-        <div className="bg-green-100 p-6 rounded-full mb-6">
-          <CheckCircle2 className="h-20 w-20 text-green-600" />
-        </div>
-        <h2 className="text-3xl font-bold text-green-900 mb-2">Pedido Confirmado!</h2>
-        <p className="text-muted-foreground mb-8 max-w-md">
-          Seu pedido foi recebido com sucesso e em breve começará a ser processado. Agradecemos a
-          preferência!
-        </p>
-        <Button
-          size="lg"
-          onClick={() => navigate('/loja')}
-          variant="outline"
-          className="border-green-600 text-green-700 hover:bg-green-50"
-        >
-          Continuar Comprando
-        </Button>
-      </div>
-    )
-  }
-
-  const handleConfirmOrder = async (e: React.FormEvent) => {
+  const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!user) {
+      toast({
+        title: 'Atenção',
+        description: 'Você precisa estar logado para finalizar a compra.',
+        variant: 'destructive',
+      })
+      return
+    }
+    if (items.length === 0) return
 
     setLoading(true)
     try {
-      const { data: authData } = await supabase.auth.getUser()
-      const currentUser = authData.user
-
-      if (!currentUser) {
-        toast({
-          title: 'Acesso Restrito',
-          description: 'Você precisa estar logado para finalizar a compra.',
-          variant: 'destructive',
-        })
-        navigate('/login')
-        return
-      }
-
-      if (!address.trim()) {
-        toast({
-          title: 'Atenção',
-          description: 'Informe o endereço de entrega completo.',
-          variant: 'destructive',
-        })
-        return
-      }
-
+      // Create the order
       const { data: order, error: orderError } = await supabase
         .from('orders')
         .insert({
-          user_id: currentUser.id,
+          user_id: user.id,
           total_price: total,
+          delivery_address: address || null,
           status: 'pendente',
-          delivery_address: address,
-        } as any)
+        })
         .select()
         .single()
 
       if (orderError) throw orderError
 
+      // Insert all items from cart into order_items
       const orderItems = items.map((item) => ({
         order_id: order.id,
         product_id: item.id,
@@ -121,14 +61,19 @@ export default function Checkout() {
 
       if (itemsError) throw itemsError
 
-      clearCart()
+      // Clear the cart completely (local and supabase)
+      await clearCart()
+
       setSuccess(true)
-      toast({ title: 'Sucesso', description: 'Seu pedido foi realizado!' })
-    } catch (error: any) {
-      console.error('Checkout error:', error)
       toast({
-        title: 'Erro ao confirmar pedido',
-        description: 'Ocorreu um problema de comunicação com o servidor.',
+        title: 'Pedido realizado com sucesso!',
+        description: 'Sua solicitação de compra foi registrada no sistema.',
+      })
+    } catch (error) {
+      console.error('Error on checkout:', error)
+      toast({
+        title: 'Erro ao processar',
+        description: 'Não foi possível finalizar seu pedido. Tente novamente mais tarde.',
         variant: 'destructive',
       })
     } finally {
@@ -136,114 +81,162 @@ export default function Checkout() {
     }
   }
 
+  if (success) {
+    return (
+      <div className="container max-w-2xl mx-auto p-4 md:p-8 pt-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="flex flex-col items-center text-center bg-white p-8 sm:p-12 rounded-3xl shadow-sm border">
+          <div className="w-24 h-24 bg-green-50 text-green-600 rounded-full flex items-center justify-center mb-6 shadow-inner">
+            <CheckCircle2 className="w-12 h-12" />
+          </div>
+          <h1 className="text-3xl font-bold text-slate-900 mb-3 tracking-tight">
+            Pedido Confirmado!
+          </h1>
+          <p className="text-slate-600 mb-8 max-w-md text-lg">
+            Sua intenção de compra foi registrada com sucesso. Em breve a equipe AgroIA entrará em
+            contato para organizar o pagamento e a entrega.
+          </p>
+          <div className="flex gap-4">
+            <Button
+              onClick={() => navigate('/dashboard')}
+              variant="outline"
+              size="lg"
+              className="font-medium"
+            >
+              Ir para Dashboard
+            </Button>
+            <Button
+              onClick={() => navigate('/loja')}
+              size="lg"
+              className="bg-green-600 hover:bg-green-700 font-medium"
+            >
+              <ShoppingBag className="mr-2 h-5 w-5" />
+              Nova Compra
+            </Button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="container mx-auto p-4 md:p-8 max-w-5xl animate-fade-in-up">
+    <div className="container max-w-5xl mx-auto p-4 md:p-8 animate-in fade-in duration-500">
       <Button
         variant="ghost"
-        className="mb-6 -ml-4 text-muted-foreground hover:text-foreground"
         onClick={() => navigate('/loja')}
+        className="mb-6 -ml-4 text-muted-foreground hover:text-foreground font-medium"
       >
-        <ArrowLeft className="mr-2 h-4 w-4" />
-        Voltar para a Loja
+        <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para a Loja
       </Button>
 
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-green-900">Finalizar Compra</h1>
-        <p className="text-muted-foreground mt-1">
-          Revise seu pedido e informe o endereço para entrega.
-        </p>
-      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        <div className="lg:col-span-3 space-y-6">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
+              Finalizar Compra
+            </h1>
+            <p className="text-slate-500">
+              Confirme seus dados para registrar o pedido no sistema.
+            </p>
+          </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-6">
           <Card className="border-border/50 shadow-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-green-600" />
-                Endereço de Entrega
+            <CardHeader className="bg-slate-50/50 border-b">
+              <CardTitle className="text-lg flex items-center gap-2 text-slate-800">
+                <Package className="h-5 w-5 text-green-600" />
+                Dados de Entrega
               </CardTitle>
-              <CardDescription>Para onde devemos enviar seus insumos?</CardDescription>
             </CardHeader>
-            <CardContent>
-              <form id="checkout-form" onSubmit={handleConfirmOrder}>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="address">Endereço Completo</Label>
-                    <Input
-                      id="address"
-                      placeholder="Ex: Fazenda Boa Esperança, BR-163 km 45, Zona Rural, Sinop - MT, CEP 78550-000"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      required
-                      className="bg-background"
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Inclua referências para facilitar a entrega rural se necessário.
-                    </p>
-                  </div>
+            <CardContent className="pt-6">
+              <form id="checkout-form" onSubmit={handleCheckout} className="space-y-4">
+                <div className="space-y-3">
+                  <Label htmlFor="address" className="text-slate-700 font-medium">
+                    Endereço Completo
+                  </Label>
+                  <Input
+                    id="address"
+                    placeholder="Ex: Fazenda Boa Vista, Rodovia BR-116 Km 42 - Zona Rural"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    className="h-12 text-base"
+                    required
+                  />
+                  <p className="text-xs text-slate-500 ml-1">
+                    Informe o local exato onde os insumos deverão ser entregues.
+                  </p>
                 </div>
               </form>
             </CardContent>
           </Card>
         </div>
 
-        <div className="space-y-6">
-          <Card className="border-border/50 shadow-sm sticky top-24">
-            <CardHeader className="bg-muted/30 pb-4 border-b">
-              <CardTitle>Resumo do Pedido</CardTitle>
+        <div className="lg:col-span-2">
+          <Card className="bg-slate-50 border-border shadow-md sticky top-6">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl text-slate-800">Resumo do Pedido</CardTitle>
             </CardHeader>
-            <CardContent className="pt-6 space-y-4">
-              <div className="space-y-4 max-h-[40vh] overflow-y-auto pr-2">
-                {items.map((item) => (
-                  <div key={item.id} className="flex gap-3 text-sm">
-                    <div className="h-12 w-12 bg-muted rounded overflow-hidden flex-shrink-0 border">
-                      {item.image_url ? (
-                        <img
-                          src={item.image_url}
-                          alt={item.name}
-                          className="h-full w-full object-cover"
-                        />
-                      ) : (
-                        <div className="h-full w-full flex items-center justify-center text-[10px] text-muted-foreground bg-gray-50">
-                          Sem img
+            <CardContent className="space-y-5">
+              {items.length === 0 ? (
+                <div className="text-center py-8 px-4 border border-dashed rounded-lg bg-white">
+                  <ShoppingBag className="h-10 w-10 text-slate-300 mx-auto mb-3" />
+                  <p className="text-slate-500 font-medium">Seu carrinho está vazio.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {items.map((item) => (
+                    <div key={item.id} className="flex justify-between items-start text-sm">
+                      <div className="flex gap-3">
+                        <div className="h-12 w-12 bg-white rounded border flex items-center justify-center overflow-hidden flex-shrink-0">
+                          {item.image_url ? (
+                            <img
+                              src={item.image_url}
+                              alt={item.name}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <Package className="h-5 w-5 text-slate-300" />
+                          )}
                         </div>
-                      )}
+                        <div className="flex flex-col">
+                          <span className="font-medium text-slate-800 line-clamp-2 leading-tight pr-4">
+                            {item.name}
+                          </span>
+                          <span className="text-slate-500 mt-1">Qtd: {item.quantity}</span>
+                        </div>
+                      </div>
+                      <span className="font-bold text-slate-700 whitespace-nowrap">
+                        R$ {(item.price * item.quantity).toFixed(2)}
+                      </span>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-foreground truncate">{item.name}</p>
-                      <p className="text-muted-foreground text-xs">Qtd: {item.quantity}</p>
-                    </div>
-                    <div className="font-medium whitespace-nowrap text-right">
-                      R$ {(item.price * item.quantity).toFixed(2)}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <Separator />
-              <div className="space-y-1.5 text-sm">
-                <div className="flex justify-between text-muted-foreground">
+                  ))}
+                </div>
+              )}
+
+              <Separator className="bg-slate-200" />
+
+              <div className="space-y-2 text-sm text-slate-600">
+                <div className="flex justify-between">
                   <span>Subtotal</span>
                   <span>R$ {total.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-muted-foreground">
+                <div className="flex justify-between">
                   <span>Frete</span>
-                  <span>A combinar</span>
+                  <span className="text-green-600 font-medium">A combinar</span>
                 </div>
               </div>
-              <Separator />
-              <div className="flex justify-between font-bold text-lg text-green-800 pt-2">
-                <span>Total Estimado</span>
-                <span>R$ {total.toFixed(2)}</span>
+
+              <div className="flex justify-between items-center font-bold text-xl pt-2">
+                <span className="text-slate-900">Total</span>
+                <span className="text-green-700">R$ {total.toFixed(2)}</span>
               </div>
             </CardContent>
-            <CardFooter className="bg-muted/30 pt-4 border-t">
+            <CardFooter className="pt-2">
               <Button
-                form="checkout-form"
                 type="submit"
-                size="lg"
-                className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold"
-                disabled={loading}
+                form="checkout-form"
+                className="w-full h-14 text-lg bg-green-600 hover:bg-green-700 text-white shadow-md transition-all"
+                disabled={items.length === 0 || loading}
               >
+                {loading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
                 {loading ? 'Processando...' : 'Confirmar Pedido'}
               </Button>
             </CardFooter>
