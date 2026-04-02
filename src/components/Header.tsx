@@ -9,12 +9,12 @@ export function Header() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
   return (
-    <header className="fixed top-0 z-[100] w-full bg-black/80 backdrop-blur-md border-b border-white/5 transition-all duration-300 ease-out">
+    <header className="fixed top-0 z-[100] w-full bg-[#000000] border-b border-[#1DB954]/20 transition-all duration-300 ease-out">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           <div className="flex items-center">
             <Link to="/" className="flex items-center transition-opacity hover:opacity-90 group">
-              <span className="text-xl font-medium tracking-tight text-[#1DB954] transition-transform duration-300 ease-out">
+              <span className="text-xl font-medium tracking-tight text-[#FFFFFF] transition-transform duration-300 ease-out">
                 AgroIA
               </span>
             </Link>
@@ -62,7 +62,7 @@ export function Header() {
 
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-[#121212] shadow-lg animate-in slide-in-from-top-2 border-b border-white/5">
+        <div className="md:hidden absolute top-full left-0 w-full bg-[#000000] shadow-lg animate-in slide-in-from-top-2 border-b border-[#1DB954]/20">
           <div className="flex flex-col space-y-2 px-4 pb-6 pt-4">
             <a
               href="#features"

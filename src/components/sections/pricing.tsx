@@ -75,21 +75,21 @@ export function Pricing() {
             <div key={index} className="flex gsap-stagger-item">
               <div
                 className={cn(
-                  'card-glass w-full relative flex flex-col',
-                  plan.highlighted && 'border-[#1DB954]/40 z-10 bg-[#121212] scale-[1.02]',
+                  'card-glass w-full relative flex flex-col bg-[#000000] border border-[#1DB954]',
+                  plan.highlighted && 'z-10 scale-[1.02] shadow-[0_0_20px_rgba(29,185,84,0.4)]',
                 )}
               >
                 {plan.highlighted && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#1DB954] text-black px-4 py-1 rounded-[12px] text-xs font-medium tracking-wider uppercase">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#1DB954] text-[#000000] px-4 py-1 rounded-[12px] text-xs font-medium tracking-wider uppercase">
                     POPULAR
                   </div>
                 )}
 
                 <div className="text-left pb-6">
-                  <h3 className="text-xl mb-2 text-white font-medium">{plan.name}</h3>
+                  <h3 className="text-xl mb-2 text-[#FFFFFF] font-medium">{plan.name}</h3>
                   <p className="text-sm text-[#E0E0E0] mb-6 h-10">{plan.description}</p>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-medium text-white tracking-tight">
+                    <span className="text-3xl font-medium text-[#FFFFFF] tracking-tight">
                       {plan.price}
                     </span>
                     {plan.period && <span className="text-[#E0E0E0]">{plan.period}</span>}
@@ -100,14 +100,7 @@ export function Pricing() {
                   <ul className="space-y-4">
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-start gap-3 text-sm text-[#E0E0E0]">
-                        <div
-                          className={cn(
-                            'mt-0.5 rounded-[4px] p-1',
-                            plan.highlighted
-                              ? 'bg-[#1DB954]/10 text-[#1DB954]'
-                              : 'bg-white/5 text-white',
-                          )}
-                        >
+                        <div className="mt-0.5 rounded-[4px] p-1 bg-[#1DB954]/10 text-[#1DB954]">
                           <Check className="w-3 h-3" strokeWidth={3} />
                         </div>
                         <span>{feature}</span>

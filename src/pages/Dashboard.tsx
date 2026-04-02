@@ -70,21 +70,21 @@ const Dashboard = () => {
         title="Dashboard"
         description="Visão geral da propriedade e monitoramento inteligente."
       />
-      <header className="navbar-glass">
+      <header className="navbar-glass !border-b !border-[#1DB954]/20">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
               size="icon"
               asChild
-              className="text-[#E0E0E0] hover:bg-white/5 hover:text-[#1DB954] h-9 w-9"
+              className="text-[#E0E0E0] hover:bg-[#1DB954]/10 hover:text-[#1DB954] h-9 w-9"
             >
               <Link to="/">
                 <ArrowLeft className="w-5 h-5" />
                 <span className="sr-only">Voltar</span>
               </Link>
             </Button>
-            <div className="flex items-center gap-2 font-medium text-lg text-white">
+            <div className="flex items-center gap-2 font-medium text-lg text-[#FFFFFF]">
               <Tractor className="w-5 h-5 text-[#1DB954]" />
               <span className="hidden sm:inline">AgroIA Dashboard</span>
               <span className="sm:hidden">AgroIA</span>
@@ -123,21 +123,21 @@ const Dashboard = () => {
 
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 gsap-grow">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[12px] bg-white/5 border border-white/10 mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[12px] bg-[#1DB954]/5 border border-[#1DB954]/20 mb-4">
               <span className="flex h-2 w-2 rounded-full bg-[#1DB954] animate-pulse"></span>
               <span className="text-xs font-medium text-[#E0E0E0] uppercase tracking-wider">
                 Sistema Ativo
               </span>
             </div>
-            <h1 className="flex items-center gap-3">Olá, {userName}</h1>
+            <h1 className="flex items-center gap-3 text-[#FFFFFF]">Olá, {userName}</h1>
             {userEmail && <p className="text-[#E0E0E0] mt-1 font-medium">{userEmail}</p>}
-            <p className="text-[#A0A0A0] mt-2 text-base max-w-2xl">
+            <p className="text-[#E0E0E0] mt-2 text-base max-w-2xl">
               Bem-vindo ao centro de comando AgroTech. Monitore suas culturas, preveja cenários com
               IA e maximize seus lucros.
             </p>
           </div>
 
-          <div className="card-glass flex flex-col p-6 min-w-[300px]">
+          <div className="card-glass flex flex-col p-6 min-w-[300px] bg-[#000000] border-[#1DB954]">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Star className="w-5 h-5 text-[#1DB954]" />
@@ -153,11 +153,11 @@ const Dashboard = () => {
               </Badge>
             </div>
 
-            <div className="flex items-center gap-2 pt-4 border-t border-white/10">
-              <Calendar className="w-4 h-4 text-white/50" />
-              <span className="text-sm font-medium text-white/80">
+            <div className="flex items-center gap-2 pt-4 border-t border-[#1DB954]/20">
+              <Calendar className="w-4 h-4 text-[#E0E0E0]" />
+              <span className="text-sm font-medium text-[#E0E0E0]">
                 Trial expira em:{' '}
-                <span className="text-white font-bold">
+                <span className="text-[#FFFFFF] font-bold">
                   {trialDate ? new Date(trialDate).toLocaleDateString('pt-BR') : 'N/A'}
                 </span>
               </span>

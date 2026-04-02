@@ -16,11 +16,13 @@ export function Hero() {
     >
       <NeonParticles className="z-0" />
 
-      <div className="absolute inset-0 z-0 pointer-events-none gsap-parallax-hero bg-gradient-hero bg-cover bg-center bg-fixed">
+      <div className="absolute inset-0 z-0 pointer-events-none gsap-parallax-hero">
+        <div className="absolute inset-0 bg-[url('https://img.usecurling.com/p/1920/1080?q=satellite%20farm')] bg-cover bg-center opacity-20 mix-blend-overlay" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#000000]/80 via-[#000000]/60 to-[#000000]" />
         {/* Abstract Glowing Orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#1DB954]/5 rounded-full blur-[120px] mix-blend-screen animate-float" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#1DB954]/10 rounded-full blur-[120px] mix-blend-screen animate-float" />
         <div
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#1DB954]/5 rounded-full blur-[120px] mix-blend-screen animate-float"
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#1DB954]/10 rounded-full blur-[120px] mix-blend-screen animate-float"
           style={{ animationDelay: '2s' }}
         />
       </div>
@@ -28,14 +30,14 @@ export function Hero() {
       {/* Content */}
       <div className="container relative z-10 flex flex-col items-center text-center">
         <AnimatedSection className="max-w-5xl space-y-8 flex flex-col items-center gsap-grow">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-[12px] bg-white/5 border border-white/10 backdrop-blur-md mb-4 animate-fade-in-down">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-[12px] bg-[#1DB954]/5 border border-[#1DB954]/20 backdrop-blur-md mb-4 animate-fade-in-down">
             <span className="flex h-2 w-2 rounded-full bg-[#1DB954] animate-pulse"></span>
             <span className="text-sm font-medium text-[#E0E0E0] tracking-wide">
               Agro IA Dashboard
             </span>
           </div>
 
-          <h1 className="text-white pb-2">
+          <h1 className="text-[#FFFFFF] pb-2 font-normal">
             Agro IA: Inteligência <br className="hidden md:block" /> Artificial Agronômica
           </h1>
 
@@ -57,7 +59,7 @@ export function Hero() {
               onClick={() => {
                 document.getElementById('planos')?.scrollIntoView({ behavior: 'smooth' })
               }}
-              className="btn-agro-secondary w-full sm:w-auto px-10 py-4 text-base flex items-center justify-center backdrop-blur-md"
+              className="btn-agro-secondary w-full sm:w-auto px-10 py-4 text-base flex items-center justify-center backdrop-blur-md bg-[#000000]"
             >
               Conheça os Planos
             </button>

@@ -18,11 +18,12 @@ const Index = () => {
       />
 
       {/* Futuristic Header */}
-      <header className="navbar-glass">
+      <header className="navbar-glass !border-b !border-[#1DB954]/20">
         <div className="container flex h-20 items-center justify-between">
           <div className="flex items-center gap-2 group cursor-pointer">
-            <Link to="/">
-              <Logo className="w-8 h-8 text-agro-green transition-transform duration-300 ease-out" />
+            <Link to="/" className="flex items-center gap-2">
+              <Logo className="w-8 h-8 text-[#FFFFFF] transition-transform duration-300 ease-out" />
+              <span className="text-xl font-medium text-[#FFFFFF]">AgroIA</span>
             </Link>
           </div>
 

@@ -65,9 +65,9 @@ export const FeatureCards = ({ userPlan, user }: FeatureCardsProps) => {
             <div
               key={feature.id}
               className={cn(
-                'card-glass p-6 !rounded-[20px] flex flex-col gsap-stagger-item',
+                'card-glass p-6 flex flex-col gsap-stagger-item',
                 !unlocked &&
-                  'opacity-60 grayscale cursor-not-allowed hover:transform-none hover:shadow-none hover:border-white/10',
+                  'opacity-60 grayscale cursor-not-allowed hover:transform-none hover:shadow-none hover:border-[#1DB954]',
               )}
             >
               <div className="pb-2">
@@ -75,28 +75,30 @@ export const FeatureCards = ({ userPlan, user }: FeatureCardsProps) => {
                   <div
                     className={cn(
                       'p-3 rounded-xl',
-                      unlocked ? 'bg-agro-green/20 text-agro-green' : 'bg-white/10 text-white/50',
+                      unlocked
+                        ? 'bg-[#1DB954]/20 text-[#1DB954]'
+                        : 'bg-[#E0E0E0]/10 text-[#E0E0E0]',
                     )}
                   >
                     <feature.icon className="w-6 h-6" />
                   </div>
                   {unlocked ? (
-                    <Badge className="bg-agro-green/20 text-agro-green border-agro-green/30 flex items-center gap-1">
+                    <Badge className="bg-[#1DB954]/20 text-[#1DB954] border-[#1DB954]/30 flex items-center gap-1">
                       <CheckCircle2 className="w-3 h-3" /> Acesso
                     </Badge>
                   ) : (
                     <Badge
                       variant="outline"
-                      className="border-white/20 text-white/50 flex items-center gap-1"
+                      className="border-[#E0E0E0]/20 text-[#E0E0E0] flex items-center gap-1"
                     >
                       <Lock className="w-3 h-3" /> Upgrade
                     </Badge>
                   )}
                 </div>
-                <h3 className="text-lg font-bold text-white mt-4">{feature.name}</h3>
+                <h3 className="text-lg font-medium text-[#FFFFFF] mt-4">{feature.name}</h3>
               </div>
               <div className="mt-2">
-                <p className="text-sm text-white/60 line-clamp-2">{feature.description}</p>
+                <p className="text-sm text-[#E0E0E0] line-clamp-2">{feature.description}</p>
               </div>
             </div>
           )

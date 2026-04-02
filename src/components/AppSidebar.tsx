@@ -74,9 +74,9 @@ export function AppSidebar() {
   return (
     <>
       <Sidebar>
-        <SidebarHeader className="h-16 flex items-center justify-start px-4 border-b border-white/5 bg-[#121212]">
-          <div className="flex items-center gap-2 font-medium text-xl text-[#1DB954]">
-            <Tractor className="h-6 w-6" />
+        <SidebarHeader className="h-16 flex items-center justify-start px-4 border-b border-[#1DB954]/20 bg-[#000000]">
+          <div className="flex items-center gap-2 font-medium text-xl text-[#FFFFFF]">
+            <Tractor className="h-6 w-6 text-[#1DB954]" />
             <span>AgroIA</span>
           </div>
         </SidebarHeader>
