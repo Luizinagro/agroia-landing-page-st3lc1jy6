@@ -176,15 +176,15 @@ const Dashboard = () => {
 
         <FeatureCards userPlan={userPlan} user={user} />
 
-        <div className="grid-asymmetric-2 gsap-grow">
-          <div className="space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 gsap-grow">
+          <div className="lg:col-span-8 space-y-8">
             <MapSection />
             <div className="grid-responsive">
               <WeatherForecast />
               <HistoryChart />
             </div>
           </div>
-          <div className="h-full">
+          <div className="lg:col-span-4 h-full">
             <AlertsSection />
           </div>
         </div>

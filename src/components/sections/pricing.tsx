@@ -57,6 +57,7 @@ export function Pricing() {
 
   return (
     <section ref={containerRef} className="relative overflow-hidden bg-[#0A0E27]">
+      <div className="absolute inset-0 z-0 pointer-events-none bg-[url('https://img.usecurling.com/p/1920/1080?q=agriculture')] bg-cover bg-center opacity-10 mix-blend-overlay" />
       {/* Background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#00FF41]/10 rounded-full blur-[150px] pointer-events-none" />
 
@@ -83,7 +84,7 @@ export function Pricing() {
               >
                 {plan.highlighted && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#00FF41] text-[#0A0E27] px-4 py-1 rounded-[8px] text-xs font-bold tracking-wider uppercase shadow-[0_0_15px_rgba(0,255,65,0.5)]">
-                    Popular
+                    POPULAR
                   </div>
                 )}
 

@@ -16,7 +16,7 @@ export function Hero() {
     >
       <NeonParticles className="z-0" />
 
-      <div className="absolute inset-0 z-0 pointer-events-none gsap-parallax-hero bg-gradient-hero bg-cover bg-center bg-fixed mix-blend-overlay">
+      <div className="absolute inset-0 z-0 pointer-events-none gsap-parallax-hero bg-gradient-hero bg-cover bg-center bg-fixed">
         {/* Abstract Glowing Orbs */}
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#00FF41]/20 rounded-full blur-[120px] mix-blend-screen animate-float" />
         <div
@@ -36,10 +36,10 @@ export function Hero() {
           </div>
 
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white pb-2 drop-shadow-[0_0_20px_rgba(0,255,65,0.4)]">
-            Agro IA: Revolução <br className="hidden md:block" /> Agronômica com IA
+            Agro IA: Inteligência <br className="hidden md:block" /> Artificial Agronômica
           </h1>
 
-          <p className="text-lg md:text-2xl text-white/70 max-w-3xl mx-auto font-medium leading-relaxed drop-shadow-md">
+          <p className="text-lg md:text-2xl text-[#9CA3AF] max-w-3xl mx-auto font-medium leading-relaxed drop-shadow-md">
             O primeiro sistema operacional inteligente para o campo. Maximize seus lucros com IA
             hiperlocal, previsão de 92% e rastreabilidade total.
           </p>

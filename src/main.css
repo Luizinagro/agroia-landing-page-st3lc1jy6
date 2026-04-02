@@ -64,7 +64,7 @@
     --ring: 135 100% 50%;
     --radius: 0.5rem; /* 8px */
 
-    --sidebar-background: 231 59% 10%;
+    --sidebar-background: 231 38% 16%;
     --sidebar-foreground: 0 0% 100%;
     --sidebar-primary: 135 100% 50%;
     --sidebar-primary-foreground: 231 59% 10%;
@@ -102,7 +102,7 @@
     --input: 231 38% 16%;
     --ring: 135 100% 50%;
 
-    --sidebar-background: 231 59% 10%;
+    --sidebar-background: 231 38% 16%;
     --sidebar-foreground: 0 0% 100%;
     --sidebar-primary: 135 100% 50%;
     --sidebar-primary-foreground: 231 59% 10%;
