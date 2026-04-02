@@ -115,7 +115,7 @@ const Rastreabilidade = () => {
   }
 
   return (
-    <div className="container mx-auto p-4 md:p-6 space-y-8 animate-fade-in-up">
+    <div className="container mx-auto py-8 space-y-8 animate-fade-in-up">
       <SEO
         title="Rastreabilidade | AgroIA"
         description="Acompanhe a jornada completa da sua produção com transparência."

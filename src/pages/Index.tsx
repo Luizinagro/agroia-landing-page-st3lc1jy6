@@ -19,7 +19,7 @@ const Index = () => {
 
       {/* Futuristic Header */}
       <header className="fixed top-0 z-[100] w-full bg-[#111827]/60 backdrop-blur-[20px] border-b border-white/10 transition-all duration-400 ease-bounce">
-        <div className="container flex h-20 items-center justify-between px-4 md:px-6">
+        <div className="container flex h-20 items-center justify-between">
           <div className="flex items-center gap-2 group cursor-pointer">
             <Logo className="w-10 h-10 text-[#22C55E] drop-shadow-[0_0_15px_rgba(34,197,94,0.5)] group-hover:scale-110 group-hover:rotate-12 transition-all duration-400 ease-bounce" />
           </div>

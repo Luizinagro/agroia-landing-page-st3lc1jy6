@@ -29,7 +29,7 @@ export default function Pecuaria() {
         description="Otimize sua produção, rastreie certificações ESG e acompanhe o mercado em tempo real."
       />
       <header className="sticky top-0 z-50 w-full bg-[#111827]/80 backdrop-blur-md text-white border-b border-white/10 shadow-sm transition-all duration-400 ease-bounce">
-        <div className="container flex h-16 items-center px-4 md:px-6">
+        <div className="container flex h-16 items-center">
           <div className="flex items-center gap-2 font-bold text-xl text-agro-yellow">
             <Tractor className="w-6 h-6" />
             <span>AgroIA Pecuária</span>
@@ -45,7 +45,7 @@ export default function Pecuaria() {
         </div>
       </header>
 
-      <main className="flex-1 container px-4 md:px-6 py-8 mx-auto max-w-6xl">
+      <main className="flex-1 container py-8 mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight text-agro-green mb-2">
             Gestão de Pecuária

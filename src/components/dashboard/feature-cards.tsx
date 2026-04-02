@@ -58,7 +58,7 @@ export const FeatureCards = ({ userPlan, user }: FeatureCardsProps) => {
       <h2 className="text-xl font-bold text-[#1a3c34] flex items-center gap-2">
         Funcionalidades do seu Plano
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid-responsive">
         {features.map((feature) => {
           const unlocked = isFeatureUnlocked(feature.id, feature.name)
           return (

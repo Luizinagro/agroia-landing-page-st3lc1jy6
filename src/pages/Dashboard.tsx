@@ -62,7 +62,7 @@ const Dashboard = () => {
         description="Visão geral da propriedade e monitoramento inteligente."
       />
       <header className="sticky top-0 z-[100] w-full bg-[#111827]/60 backdrop-blur-[20px] border-b border-white/10 shadow-sm transition-all duration-400 ease-bounce">
-        <div className="container flex h-16 items-center justify-between px-4 md:px-6">
+        <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
@@ -96,7 +96,7 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <main className="flex-1 container px-4 md:px-6 py-8 max-w-7xl mx-auto space-y-8 bg-transparent rounded-xl mt-4">
+      <main className="flex-1 container py-8 mx-auto space-y-8 bg-transparent rounded-xl mt-4">
         {isTrialExpired && (
           <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in-down">
             <div className="flex items-center">
@@ -161,11 +161,8 @@ const Dashboard = () => {
 
         <FeatureCards userPlan={userPlan} user={user} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div
-            className="lg:col-span-2 space-y-8 animate-slide-up"
-            style={{ animationDelay: '100ms' }}
-          >
+        <div className="grid-asymmetric-2">
+          <div className="space-y-8 animate-slide-up" style={{ animationDelay: '100ms' }}>
             <MapSection />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <WeatherForecast />

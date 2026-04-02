@@ -59,7 +59,7 @@ export default function Store() {
   }, [products, selectedCategory])
 
   return (
-    <div className="container mx-auto p-4 md:p-8 animate-fade-in bg-bg-dark min-h-screen rounded-[24px]">
+    <div className="container mx-auto py-8 animate-fade-in bg-bg-dark min-h-screen rounded-[24px]">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 bg-card/60 backdrop-blur-sm p-6 rounded-[24px] border border-white/5 shadow-sm">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-2">
@@ -93,7 +93,7 @@ export default function Store() {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid-responsive">
           {[...Array(8)].map((_, i) => (
             <div
               key={i}
@@ -102,7 +102,7 @@ export default function Store() {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid-responsive">
           {filteredProducts.map((product) => (
             <ProductCard
               key={product.id}

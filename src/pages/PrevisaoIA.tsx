@@ -42,7 +42,7 @@ export default function PrevisaoIA() {
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8 animate-fade-in-up">
+    <div className="container mx-auto py-8 space-y-8 animate-fade-in-up">
       <div>
         <h1 className="text-3xl font-bold flex items-center gap-2 text-primary">
           <BrainCircuit className="h-8 w-8 text-green-500" /> Previsão IA
@@ -52,8 +52,8 @@ export default function PrevisaoIA() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <Card className="lg:col-span-1 border-white/5 bg-card/60 backdrop-blur-md shadow-lg shadow-primary/5">
+      <div className="grid-asymmetric-2">
+        <Card className="border-white/5 bg-card/60 backdrop-blur-md shadow-lg shadow-primary/5">
           <CardHeader>
             <CardTitle>Consultar Previsão</CardTitle>
             <CardDescription>Insira os dados da sua produção</CardDescription>
@@ -95,7 +95,7 @@ export default function PrevisaoIA() {
           </CardContent>
         </Card>
 
-        <div className="lg:col-span-2">
+        <div>
           {resultado ? (
             <div className="space-y-6 animate-fade-in">
               <h2 className="text-xl font-semibold border-b border-primary/10 pb-2 flex items-center gap-2">

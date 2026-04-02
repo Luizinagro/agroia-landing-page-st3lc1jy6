@@ -53,7 +53,7 @@ export function Pricing() {
       {/* Background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#00D1FF]/10 rounded-full blur-[150px] pointer-events-none" />
 
-      <div className="container relative z-10 px-4 md:px-6">
+      <div className="container relative z-10">
         <AnimatedSection className="text-center max-w-3xl mx-auto mb-20">
           <h2 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70 mb-6 tracking-tight">
             Planos para Escalar sua Produtividade
@@ -64,7 +64,7 @@ export function Pricing() {
           </p>
         </AnimatedSection>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 xl:gap-8">
+        <div className="grid-responsive">
           {plans.map((plan, index) => (
             <AnimatedSection key={index} delay={index * 100} className="flex">
               <Card

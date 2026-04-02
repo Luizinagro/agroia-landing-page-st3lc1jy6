@@ -17,7 +17,7 @@ export function Hero() {
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMWgyMHYyMEgxVjF6IiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiIHN0cm9rZS13aWR0aD0iMSIvPjwvc3ZnPg==')] opacity-50" />
 
       {/* Content */}
-      <div className="container relative z-10 px-4 md:px-6 flex flex-col items-center text-center">
+      <div className="container relative z-10 flex flex-col items-center text-center">
         <AnimatedSection className="max-w-5xl space-y-8 flex flex-col items-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-[20px] bg-white/5 border border-white/10 backdrop-blur-md mb-4 animate-fade-in-down">
             <span className="flex h-2 w-2 rounded-full bg-agro-green animate-pulse"></span>

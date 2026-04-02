@@ -6,6 +6,17 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .container {
+    width: 100% !important;
+    max-width: 1400px !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+    padding-right: clamp(1.5rem, 5vw, 6rem) !important;
+    padding-left: clamp(1.5rem, 5vw, 6rem) !important;
+  }
+}
+
 @layer base {
   :root {
     --agro-green: #22c55e;
@@ -384,5 +395,53 @@
 
   .duration-400 {
     transition-duration: 400ms;
+  }
+
+  .grid-responsive {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  @media (min-width: 640px) {
+    .grid-responsive {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .grid-responsive {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2.5rem;
+    }
+  }
+
+  .grid-asymmetric {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  @media (min-width: 640px) {
+    .grid-asymmetric {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .grid-asymmetric {
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 2.5rem;
+    }
+  }
+
+  .grid-asymmetric-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  @media (min-width: 1024px) {
+    .grid-asymmetric-2 {
+      grid-template-columns: 1fr 2fr;
+      gap: 2.5rem;
+    }
   }
 }
