@@ -22,6 +22,7 @@ import Store from './pages/Store'
 import Checkout from './pages/Checkout'
 import BlockedAccess from './pages/BlockedAccess'
 import CalculadoraRoi from './pages/CalculadoraRoi'
+import MeusCalculos from './pages/MeusCalculos'
 import Planos from './pages/Planos'
 import Profile from './pages/Profile'
 import PrevisaoIA from './pages/PrevisaoIA'
@@ -83,6 +84,14 @@ const App = () => {
                       element={
                         <FeatureGuard feature="roi" requiredPlan="Plantio Solo ou Superior">
                           <CalculadoraRoi />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/meus-calculos"
+                      element={
+                        <FeatureGuard feature="roi" requiredPlan="Plantio Solo ou Superior">
+                          <MeusCalculos />
                         </FeatureGuard>
                       }
                     />
