@@ -24,6 +24,7 @@ import BlockedAccess from './pages/BlockedAccess'
 import CalculadoraRoi from './pages/CalculadoraRoi'
 import Planos from './pages/Planos'
 import Profile from './pages/Profile'
+import PrevisaoIA from './pages/PrevisaoIA'
 import { FeatureGuard } from './components/FeatureGuard'
 
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
@@ -82,6 +83,14 @@ const App = () => {
                       element={
                         <FeatureGuard feature="roi" requiredPlan="Plantio Solo ou Superior">
                           <CalculadoraRoi />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/previsao-ia"
+                      element={
+                        <FeatureGuard feature="previsao-ia" requiredPlan="Plantio Solo ou Superior">
+                          <PrevisaoIA />
                         </FeatureGuard>
                       }
                     />
