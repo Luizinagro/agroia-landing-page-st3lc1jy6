@@ -17,8 +17,8 @@ const RastreabilidadeEsg = lazy(() =>
 const MercadoCepea = lazy(() =>
   import('@/components/pecuaria/MercadoCepea').then((m) => ({ default: m.MercadoCepea })),
 )
-const Reproducao = lazy(() =>
-  import('@/components/pecuaria/Reproducao').then((m) => ({ default: m.Reproducao })),
+const Rebanho = lazy(() =>
+  import('@/components/pecuaria/Rebanho').then((m) => ({ default: m.Rebanho })),
 )
 
 export default function Pecuaria() {
@@ -76,7 +76,7 @@ export default function Pecuaria() {
               Mercado CEPEA
             </TabsTrigger>
             <TabsTrigger
-              value="reproducao"
+              value="rebanho"
               className="py-3 text-sm data-[state=active]:bg-agro-green data-[state=active]:text-white rounded-lg transition-all"
             >
               Rebanho
@@ -111,11 +111,11 @@ export default function Pecuaria() {
               </Suspense>
             </TabsContent>
             <TabsContent
-              value="reproducao"
+              value="rebanho"
               className="m-0 focus-visible:outline-none focus-visible:ring-0"
             >
               <Suspense fallback={<Skeleton className="w-full h-[400px] rounded-xl" />}>
-                <Reproducao />
+                <Rebanho />
               </Suspense>
             </TabsContent>
           </div>
