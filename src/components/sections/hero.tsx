@@ -8,8 +8,8 @@ export function Hero() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img
-          src="https://img.usecurling.com/p/1920/1080?q=drone%20farm&color=green"
-          alt="Drone view of a farm in Cascavel"
+          src="https://img.usecurling.com/p/1920/1080?q=agriculture%20plantation%20field&color=green"
+          alt="Visão de uma plantação agrícola"
           className="w-full h-full object-cover opacity-40"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-primary/60 via-primary/40 to-primary/90" />
