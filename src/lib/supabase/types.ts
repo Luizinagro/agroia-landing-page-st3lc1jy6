@@ -153,3 +153,42 @@ export const Constants = {
 // IMPORTANT: The TypeScript types above map UUID, TEXT, VARCHAR all to "string".
 // Use the COLUMN TYPES section below to know the real PostgreSQL type for each column.
 // Always use the correct PostgreSQL type when writing SQL migrations.
+
+// --- DATABASE FUNCTIONS ---
+// FUNCTION handle_new_user()
+//   CREATE OR REPLACE FUNCTION public.handle_new_user()
+//    RETURNS trigger
+//    LANGUAGE plpgsql
+//    SECURITY DEFINER
+//    SET search_path TO 'public'
+//   AS $function$
+//   BEGIN
+//     INSERT INTO public.users (
+//       id,
+//       email,
+//       nome,
+//       tipo_usuario,
+//       estado,
+//       plano_ativo,
+//       data_criacao,
+//       data_trial_expira
+//     )
+//     VALUES (
+//       NEW.id,
+//       COALESCE(NEW.email, ''),
+//       COALESCE(NEW.raw_user_meta_data->>'nome', NEW.raw_user_meta_data->>'name', 'Usuário'),
+//       'produtor',
+//       'ativo',
+//       'Básico',
+//       NOW(),
+//       NOW() + INTERVAL '30 days'
+//     )
+//     ON CONFLICT (id) DO NOTHING;
+//
+//     RETURN NEW;
+//   EXCEPTION WHEN OTHERS THEN
+//     -- Fallback to ensure auth.users insert doesn't fail even if public.users insert fails
+//     RETURN NEW;
+//   END;
+//   $function$
+//
