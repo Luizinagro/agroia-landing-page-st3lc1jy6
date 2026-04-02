@@ -14,11 +14,19 @@ export function useSubscription() {
         return
       }
       try {
-        const { data } = await supabase
+        console.log('[useSubscription] Buscando permissões para o user_id logado:', user.id)
+
+        const { data, error } = await supabase
           .from('user_plans')
           .select('*')
           .eq('user_id', user.id)
           .maybeSingle()
+
+        if (error) {
+          console.error('[useSubscription] Erro na consulta do Supabase:', error)
+        }
+
+        console.log('[useSubscription] Dados encontrados na tabela user_plans:', data)
         setPlan(data)
       } catch (err) {
         console.error('Error fetching plan:', err)
