@@ -9,7 +9,39 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      users: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          name: string | null
+          plan_active: string | null
+          status: string | null
+          trial_expires_at: string | null
+          user_type: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id: string
+          name?: string | null
+          plan_active?: string | null
+          status?: string | null
+          trial_expires_at?: string | null
+          user_type?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          name?: string | null
+          plan_active?: string | null
+          status?: string | null
+          trial_expires_at?: string | null
+          user_type?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -154,6 +186,32 @@ export const Constants = {
 // Use the COLUMN TYPES section below to know the real PostgreSQL type for each column.
 // Always use the correct PostgreSQL type when writing SQL migrations.
 
+// --- COLUMN TYPES (actual PostgreSQL types) ---
+// Use this to know the real database type when writing migrations.
+// "string" in TypeScript types above may be uuid, text, varchar, timestamptz, etc.
+// Table: users
+//   id: uuid (not null)
+//   email: text (not null)
+//   name: text (nullable)
+//   user_type: text (nullable, default: 'produtor'::text)
+//   status: text (nullable, default: 'ativo'::text)
+//   plan_active: text (nullable, default: 'Básico'::text)
+//   created_at: timestamp with time zone (nullable, default: now())
+//   trial_expires_at: timestamp with time zone (nullable, default: (now() + '30 days'::interval))
+
+// --- CONSTRAINTS ---
+// Table: users
+//   FOREIGN KEY users_id_fkey: FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE
+//   PRIMARY KEY users_pkey: PRIMARY KEY (id)
+
+// --- ROW LEVEL SECURITY POLICIES ---
+// Table: users
+//   Policy "Users can read own data" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = id)
+//   Policy "Users can update own data" (UPDATE, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = id)
+//     WITH CHECK: (auth.uid() = id)
+
 // --- DATABASE FUNCTIONS ---
 // FUNCTION handle_new_user()
 //   CREATE OR REPLACE FUNCTION public.handle_new_user()
@@ -166,17 +224,17 @@ export const Constants = {
 //     INSERT INTO public.users (
 //       id,
 //       email,
-//       nome,
-//       tipo_usuario,
-//       estado,
-//       plano_ativo,
-//       data_criacao,
-//       data_trial_expira
+//       name,
+//       user_type,
+//       status,
+//       plan_active,
+//       created_at,
+//       trial_expires_at
 //     )
 //     VALUES (
 //       NEW.id,
 //       COALESCE(NEW.email, ''),
-//       COALESCE(NEW.raw_user_meta_data->>'nome', NEW.raw_user_meta_data->>'name', 'Usuário'),
+//       COALESCE(NEW.raw_user_meta_data->>'name', NEW.raw_user_meta_data->>'nome', 'Usuário'),
 //       'produtor',
 //       'ativo',
 //       'Básico',
