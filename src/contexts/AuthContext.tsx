@@ -99,64 +99,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Ensure login logic specifically targets the users table used by registration, querying by ID
     let u = null
 
-    // Attempt to fetch profile up to 3 times to account for trigger delay during registration
-    for (let i = 0; i < 3; i++) {
-      const profileRes = await fetch(`${supabaseUrl}/rest/v1/users?id=eq.${userId}&select=*`, {
-        headers: getSupabaseHeaders(token),
-      })
+    const profileRes = await fetch(`${supabaseUrl}/rest/v1/users?id=eq.${userId}&select=*`, {
+      headers: getSupabaseHeaders(token),
+    })
 
-      if (profileRes.ok) {
-        const data = await profileRes.json()
-        if (data && data.length > 0) {
-          u = data[0]
-          break
-        }
+    if (profileRes.ok) {
+      const data = await profileRes.json()
+      if (data && data.length > 0) {
+        u = data[0]
       }
-
-      if (i < 2) await new Promise((res) => setTimeout(res, 1000))
     }
 
     if (!u) {
-      // Auto-heal missing profile to ensure data consistency via Edge RPC Function
-      const syncRes = await fetch(`${supabaseUrl}/rest/v1/rpc/sync_user_profile`, {
-        method: 'POST',
-        headers: getSupabaseHeaders(token),
-        body: JSON.stringify({
-          user_id: userId,
-          user_email: normalizedEmail,
-          user_nome: authData.user?.user_metadata?.nome || 'Usuário',
-          user_tipo: authData.user?.user_metadata?.tipo_usuario || 'Produtor',
-          user_estado: authData.user?.user_metadata?.estado || 'Não Informado',
-        }),
-      })
-
-      if (!syncRes.ok) {
-        // Try one last time to fetch the user by ID just in case it was created concurrently
-        const fallbackRes = await fetch(`${supabaseUrl}/rest/v1/users?id=eq.${userId}&select=*`, {
-          headers: getSupabaseHeaders(token),
-        })
-
-        if (fallbackRes.ok) {
-          const fallbackData = await fallbackRes.json()
-          if (fallbackData && fallbackData.length > 0) {
-            u = fallbackData[0]
-          }
-        }
-
-        if (!u) {
-          throw new Error(
-            'Erro de autentificação, falha na sincronização de dados. Perfil não encontrado.',
-          )
-        }
-      } else {
-        const syncedData = await syncRes.json()
-        if (!syncedData) {
-          throw new Error(
-            'Erro de autentificação, falha na sincronização de dados. Perfil não encontrado.',
-          )
-        }
-        u = syncedData
-      }
+      throw new Error('Perfil não encontrado')
     }
 
     u.plano = u.plano_ativo
