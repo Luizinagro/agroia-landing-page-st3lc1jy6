@@ -9,6 +9,129 @@ export type Database = {
   }
   public: {
     Tables: {
+      order_items: {
+        Row: {
+          id: string
+          order_id: string
+          product_id: string
+          quantity: number
+          unit_price: number
+        }
+        Insert: {
+          id?: string
+          order_id: string
+          product_id: string
+          quantity?: number
+          unit_price?: number
+        }
+        Update: {
+          id?: string
+          order_id?: string
+          product_id?: string
+          quantity?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'order_items_order_id_fkey'
+            columns: ['order_id']
+            isOneToOne: false
+            referencedRelation: 'orders'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'order_items_product_id_fkey'
+            columns: ['product_id']
+            isOneToOne: false
+            referencedRelation: 'products'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string
+          id: string
+          status: string | null
+          total_price: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          status?: string | null
+          total_price?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          status?: string | null
+          total_price?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          name: string
+          price: number
+          stock: number
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          price?: number
+          stock?: number
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          price?: number
+          stock?: number
+        }
+        Relationships: []
+      }
+      user_plans: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          plan_features: Json | null
+          plan_name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          plan_features?: Json | null
+          plan_name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          plan_features?: Json | null
+          plan_name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           created_at: string | null
@@ -189,6 +312,34 @@ export const Constants = {
 // --- COLUMN TYPES (actual PostgreSQL types) ---
 // Use this to know the real database type when writing migrations.
 // "string" in TypeScript types above may be uuid, text, varchar, timestamptz, etc.
+// Table: order_items
+//   id: uuid (not null, default: gen_random_uuid())
+//   order_id: uuid (not null)
+//   product_id: uuid (not null)
+//   quantity: numeric (not null, default: 1)
+//   unit_price: numeric (not null, default: 0)
+// Table: orders
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   total_price: numeric (not null, default: 0)
+//   status: text (nullable, default: 'pendente'::text)
+//   created_at: timestamp with time zone (not null, default: now())
+// Table: products
+//   id: uuid (not null, default: gen_random_uuid())
+//   name: text (not null)
+//   description: text (nullable)
+//   price: numeric (not null, default: 0)
+//   category: text (nullable)
+//   image_url: text (nullable)
+//   stock: numeric (not null, default: 0)
+//   created_at: timestamp with time zone (not null, default: now())
+// Table: user_plans
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   plan_name: text (not null)
+//   plan_features: jsonb (nullable, default: '[]'::jsonb)
+//   expires_at: timestamp with time zone (nullable)
+//   created_at: timestamp with time zone (not null, default: now())
 // Table: users
 //   id: uuid (not null)
 //   email: text (not null)
@@ -200,11 +351,65 @@ export const Constants = {
 //   trial_expires_at: timestamp with time zone (nullable, default: (now() + '30 days'::interval))
 
 // --- CONSTRAINTS ---
+// Table: order_items
+//   FOREIGN KEY order_items_order_id_fkey: FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+//   PRIMARY KEY order_items_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY order_items_product_id_fkey: FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
+// Table: orders
+//   PRIMARY KEY orders_pkey: PRIMARY KEY (id)
+//   CHECK orders_status_check: CHECK ((status = ANY (ARRAY['pendente'::text, 'pago'::text, 'enviado'::text])))
+//   FOREIGN KEY orders_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: products
+//   CHECK products_category_check: CHECK ((category = ANY (ARRAY['ração'::text, 'fertilizante'::text, 'sementes'::text, 'defensivos'::text])))
+//   PRIMARY KEY products_pkey: PRIMARY KEY (id)
+// Table: user_plans
+//   PRIMARY KEY user_plans_pkey: PRIMARY KEY (id)
+//   CHECK user_plans_plan_name_check: CHECK ((plan_name = ANY (ARRAY['Básico'::text, 'Plantio Solo'::text, 'Pecuário Solo'::text, 'Completo'::text, 'Família Coop'::text])))
+//   FOREIGN KEY user_plans_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 // Table: users
 //   FOREIGN KEY users_id_fkey: FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE
 //   PRIMARY KEY users_pkey: PRIMARY KEY (id)
 
 // --- ROW LEVEL SECURITY POLICIES ---
+// Table: order_items
+//   Policy "order_items_delete" (DELETE, PERMISSIVE) roles={authenticated}
+//     USING: (order_id IN ( SELECT orders.id    FROM orders   WHERE (orders.user_id = auth.uid())))
+//   Policy "order_items_insert" (INSERT, PERMISSIVE) roles={authenticated}
+//     WITH CHECK: (order_id IN ( SELECT orders.id    FROM orders   WHERE (orders.user_id = auth.uid())))
+//   Policy "order_items_select" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (order_id IN ( SELECT orders.id    FROM orders   WHERE (orders.user_id = auth.uid())))
+//   Policy "order_items_update" (UPDATE, PERMISSIVE) roles={authenticated}
+//     USING: (order_id IN ( SELECT orders.id    FROM orders   WHERE (orders.user_id = auth.uid())))
+// Table: orders
+//   Policy "orders_delete" (DELETE, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//   Policy "orders_insert" (INSERT, PERMISSIVE) roles={authenticated}
+//     WITH CHECK: (user_id = auth.uid())
+//   Policy "orders_select" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//   Policy "orders_update" (UPDATE, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//     WITH CHECK: (user_id = auth.uid())
+// Table: products
+//   Policy "products_delete" (DELETE, PERMISSIVE) roles={authenticated}
+//     USING: true
+//   Policy "products_insert" (INSERT, PERMISSIVE) roles={authenticated}
+//     WITH CHECK: true
+//   Policy "products_select" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: true
+//   Policy "products_update" (UPDATE, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
+// Table: user_plans
+//   Policy "user_plans_delete" (DELETE, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//   Policy "user_plans_insert" (INSERT, PERMISSIVE) roles={authenticated}
+//     WITH CHECK: (user_id = auth.uid())
+//   Policy "user_plans_select" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//   Policy "user_plans_update" (UPDATE, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//     WITH CHECK: (user_id = auth.uid())
 // Table: users
 //   Policy "Users can read own data" (SELECT, PERMISSIVE) roles={authenticated}
 //     USING: (auth.uid() = id)

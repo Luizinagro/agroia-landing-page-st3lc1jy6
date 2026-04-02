@@ -3,6 +3,7 @@ import { AlertsSection } from '@/components/dashboard/alerts-section'
 import { HistoryChart } from '@/components/dashboard/history-chart'
 import { IotConnection } from '@/components/dashboard/iot-connection'
 import { WeatherForecast } from '@/components/dashboard/weather-forecast'
+import { FeatureCards } from '@/components/dashboard/feature-cards'
 import {
   LayoutDashboard,
   ArrowLeft,
@@ -14,21 +15,45 @@ import {
 } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/contexts/AuthContext'
 import { SEO } from '@/components/SEO'
+import { useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabase/client'
 
 const Dashboard = () => {
   const { logout, user } = useAuth()
   const navigate = useNavigate()
+  const [userPlan, setUserPlan] = useState<any>(null)
+
+  useEffect(() => {
+    const fetchPlan = async () => {
+      if (!user?.id) return
+      try {
+        const { data } = await supabase
+          .from('user_plans')
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle()
+
+        if (data) setUserPlan(data)
+      } catch (err) {
+        console.error('Error fetching plan:', err)
+      }
+    }
+    fetchPlan()
+  }, [user?.id])
 
   const handleLogout = () => {
     logout()
     navigate('/login')
   }
 
-  const isTrialExpired = user?.data_trial_expira
-    ? new Date() > new Date(user.data_trial_expira)
-    : false
+  const trialDate = userPlan?.expires_at || user?.trial_expires_at || user?.data_trial_expira
+  const isTrialExpired = trialDate ? new Date() > new Date(trialDate) : false
+  const currentPlanName = userPlan?.plan_name || user?.plan_active || user?.plano_ativo || 'Básico'
+  const userName = user?.name || user?.nome || 'Agricultor'
+  const userEmail = user?.email || ''
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans flex flex-col">
@@ -77,54 +102,64 @@ const Dashboard = () => {
             <div className="flex items-center">
               <AlertTriangle className="h-6 w-6 text-red-600 mr-3 shrink-0" />
               <p className="text-red-800 font-medium text-base sm:text-lg">
-                Seu trial expirou. Escolha um plano pago
+                Seu trial expirou. Escolha um plano pago para continuar tendo acesso.
               </p>
             </div>
             <Button
               asChild
               className="bg-[#f4d03f] text-[#1a3c34] hover:bg-[#f4d03f]/90 font-bold whitespace-nowrap shadow-sm w-full sm:w-auto text-base"
             >
-              <Link to="/selecionar-plano">Upgrade</Link>
+              <Link to="/selecionar-plano">Upgrade Agora</Link>
             </Button>
           </div>
         )}
 
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 animate-fade-in-down">
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 animate-fade-in-down">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-[#1a3c34] flex items-center gap-3">
               <LayoutDashboard className="w-8 h-8 text-[#f4d03f]" />
-              Olá, {user?.nome || 'Agricultor'}
+              Olá, {userName}
             </h1>
+            {userEmail && <p className="text-slate-500 mt-1 font-medium">{userEmail}</p>}
             <p className="text-muted-foreground mt-2 text-lg">
-              Bem-vindo ao seu painel. Monitore suas culturas e receba alertas inteligentes em tempo
-              real.
+              Bem-vindo ao seu painel. Monitore suas culturas e acompanhe seus benefícios.
             </p>
           </div>
 
-          {user && (
-            <div className="flex flex-col bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm min-w-[260px]">
-              <div className="flex items-center gap-2 mb-2">
+          <div className="flex flex-col bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm min-w-[280px]">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
                 <Star className="w-5 h-5 text-[#f4d03f]" />
                 <span className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   Plano Atual
                 </span>
               </div>
-              <p className="text-xl font-bold text-[#1a3c34] dark:text-white mb-4">
-                {user.plano_ativo || user.plano || 'N/A'}
-              </p>
-
-              <div className="flex items-center gap-2 pt-4 border-t border-slate-100 dark:border-slate-700">
-                <Calendar className="w-4 h-4 text-slate-400" />
-                <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
-                  Válido até:{' '}
-                  {user.data_trial_expira
-                    ? new Date(user.data_trial_expira).toLocaleDateString('pt-BR')
-                    : 'N/A'}
-                </span>
-              </div>
+              <Badge
+                variant="outline"
+                className="bg-[#f4d03f]/10 text-[#1a3c34] border-[#f4d03f]/50 font-bold px-3 py-1 text-sm"
+              >
+                {currentPlanName}
+              </Badge>
             </div>
-          )}
+
+            <div className="flex items-center gap-2 pt-3 border-t border-slate-100 dark:border-slate-700">
+              <Calendar className="w-4 h-4 text-slate-400" />
+              <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                Trial expira em:{' '}
+                {trialDate ? new Date(trialDate).toLocaleDateString('pt-BR') : 'N/A'}
+              </span>
+            </div>
+
+            <Button
+              asChild
+              className="mt-4 w-full bg-[#1a3c34] text-white hover:bg-[#1a3c34]/90 font-semibold shadow-sm"
+            >
+              <Link to="/selecionar-plano">Fazer Upgrade</Link>
+            </Button>
+          </div>
         </div>
+
+        <FeatureCards userPlan={userPlan} user={user} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div
