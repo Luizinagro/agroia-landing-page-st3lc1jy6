@@ -44,11 +44,10 @@ export function useGsapAnimations(ref: React.RefObject<HTMLElement | null>) {
       elements.forEach((el: any) => {
         gsap.fromTo(
           el,
-          { scaleY: 0, opacity: 0, transformOrigin: 'bottom center' },
+          { opacity: 0 },
           {
-            scaleY: 1,
             opacity: 1,
-            duration: 0.8,
+            duration: 0.5,
             ease: 'power2.out',
             scrollTrigger: {
               trigger: el,
@@ -62,11 +61,10 @@ export function useGsapAnimations(ref: React.RefObject<HTMLElement | null>) {
       staggers.forEach((container: any) => {
         gsap.fromTo(
           container.querySelectorAll('.gsap-stagger-item'),
-          { opacity: 0, y: 20 },
+          { opacity: 0 },
           {
             opacity: 1,
-            y: 0,
-            duration: 0.6,
+            duration: 0.5,
             stagger: 0.1,
             ease: 'power2.out',
             scrollTrigger: {
@@ -80,7 +78,7 @@ export function useGsapAnimations(ref: React.RefObject<HTMLElement | null>) {
       const parallaxHero = ref.current.querySelector('.gsap-parallax-hero')
       if (parallaxHero) {
         gsap.to(parallaxHero, {
-          y: 50,
+          y: 20,
           ease: 'none',
           scrollTrigger: {
             trigger: ref.current,

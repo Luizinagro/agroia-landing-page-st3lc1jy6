@@ -10,7 +10,7 @@ export function NeonParticles({ className }: { className?: string }) {
     if (!ctx) return
 
     const particles: { x: number; y: number; vx: number; vy: number; size: number }[] = []
-    const numParticles = 50
+    const numParticles = 20
 
     const resize = () => {
       if (canvas.parentElement) {
@@ -28,8 +28,8 @@ export function NeonParticles({ className }: { className?: string }) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
+        vx: (Math.random() - 0.5) * 0.2,
+        vy: (Math.random() - 0.5) * 0.2,
         size: Math.random() * 2 + 1,
       })
     }
@@ -38,7 +38,7 @@ export function NeonParticles({ className }: { className?: string }) {
 
     const render = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-      ctx.fillStyle = 'rgba(139, 92, 246, 0.3)'
+      ctx.fillStyle = 'rgba(0, 255, 65, 0.15)'
 
       particles.forEach((p) => {
         p.x += p.vx
