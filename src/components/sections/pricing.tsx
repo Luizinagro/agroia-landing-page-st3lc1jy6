@@ -56,7 +56,7 @@ export function Pricing() {
   useGsapAnimations(containerRef)
 
   return (
-    <section ref={containerRef} className="py-32 bg-[#0A0E27] relative overflow-hidden">
+    <section ref={containerRef} className="relative overflow-hidden bg-[#0A0E27]">
       {/* Background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#00FF41]/10 rounded-full blur-[150px] pointer-events-none" />
 
@@ -71,7 +71,7 @@ export function Pricing() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 gsap-stagger-container">
+        <div className="grid-responsive gsap-stagger-container">
           {plans.map((plan, index) => (
             <div key={index} className="flex gsap-stagger-item">
               <div

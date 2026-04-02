@@ -103,7 +103,7 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <main className="flex-1 container py-8 mx-auto space-y-8 bg-transparent rounded-xl pt-24">
+      <main className="flex-1 container mx-auto space-y-8 bg-transparent rounded-xl pt-24 pb-12">
         {isTrialExpired && (
           <div className="bg-red-950/50 border-l-4 border-red-500 p-4 rounded-lg shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in-down">
             <div className="flex items-center">
@@ -179,7 +179,7 @@ const Dashboard = () => {
         <div className="grid-asymmetric-2 gsap-grow">
           <div className="space-y-8">
             <MapSection />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid-responsive">
               <WeatherForecast />
               <HistoryChart />
             </div>
