@@ -50,7 +50,7 @@ export default {
         },
         bg: {
           dark: 'var(--bg-dark)',
-          overlay: 'var(--bg-dark-overlay)',
+          overlay: '#000000',
           light: 'var(--bg-light)',
         },
         status: {
@@ -123,6 +123,7 @@ export default {
         height: 'height',
       },
       transitionDuration: {
+        '300': '300ms',
         '400': '400ms',
       },
       boxShadow: {
@@ -132,7 +133,7 @@ export default {
       },
       transitionTimingFunction: {
         apple: 'cubic-bezier(0.42, 0, 0.58, 1)',
-        bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+        bounce: 'ease-out',
       },
     },
   },

@@ -22,7 +22,7 @@ const Index = () => {
         <div className="container flex h-20 items-center justify-between">
           <div className="flex items-center gap-2 group cursor-pointer">
             <Link to="/">
-              <Logo className="w-10 h-10 text-agro-green drop-shadow-[0_0_15px_rgba(34,197,94,0.5)] group-hover:scale-110 group-hover:rotate-12 transition-all duration-400 ease-bounce" />
+              <Logo className="w-10 h-10 text-agro-green drop-shadow-[0_0_15px_rgba(34,197,94,0.5)] group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 ease-out" />
             </Link>
           </div>
 

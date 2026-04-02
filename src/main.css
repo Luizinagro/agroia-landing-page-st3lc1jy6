@@ -20,15 +20,15 @@
 @layer base {
   :root {
     --agro-green: #00ff41;
-    --agro-green-hover: #0d5f2f;
+    --agro-green-hover: #00ff41;
     --neon-purple: #00ff41;
-    --neon-purple-hover: #0d5f2f;
+    --neon-purple-hover: #00ff41;
     --premium-gold: #00ff41;
-    --premium-gold-hover: #0d5f2f;
-    --organic-earth: #0d5f2f;
+    --premium-gold-hover: #00ff41;
+    --organic-earth: #1a1f3a;
     --organic-earth-hover: #0a0e27;
     --bg-dark: #0a0e27;
-    --bg-dark-overlay: #1a1f3a;
+    --bg-dark-overlay: #000000;
     --bg-light: #1a1f3a;
     --text-primary: #ffffff;
     --text-secondary: #9ca3af;
@@ -177,7 +177,8 @@
   }
 
   .metric,
-  .number-text {
+  .number-text,
+  .font-mono {
     font-family: 'Courier New', monospace;
     font-weight: 700;
     font-size: 1.25rem;
@@ -419,7 +420,7 @@
   }
 
   .ease-bounce {
-    transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition-timing-function: ease-out;
   }
 
   .btn-agro-primary {
@@ -427,14 +428,14 @@
     color: var(--bg-dark);
     font-weight: 700;
     border-radius: 8px;
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: all 0.3s ease-out;
     box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
   }
   .btn-agro-primary:hover {
     transform: scale(1.02);
     box-shadow: 0 0 30px rgba(0, 255, 65, 0.8);
-    background-color: var(--agro-green-hover);
-    color: #ffffff;
+    background-color: var(--agro-green);
+    color: var(--bg-dark);
   }
 
   .btn-agro-secondary {
@@ -443,15 +444,15 @@
     font-weight: 700;
     border-radius: 8px;
     background-color: transparent;
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: all 0.3s ease-out;
     box-shadow: 0 0 10px rgba(0, 255, 65, 0.2);
   }
   .btn-agro-secondary:hover {
-    background-color: var(--agro-green-hover);
-    color: white;
+    background-color: var(--agro-green);
+    color: var(--bg-dark);
     box-shadow: 0 0 25px rgba(0, 255, 65, 0.6);
     transform: scale(1.02);
-    border-color: var(--agro-green-hover);
+    border-color: var(--agro-green);
   }
 
   .card-glass {
@@ -459,7 +460,7 @@
     background-color: #1a1f3a;
     border: 1px solid rgba(0, 255, 65, 0.2);
     border-radius: 12px;
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: all 0.3s ease-out;
   }
   .card-glass:hover {
     transform: translateY(-8px);
@@ -475,11 +476,11 @@
     backdrop-filter: blur(20px);
     background-color: rgba(10, 14, 39, 0.8);
     border-bottom: 1px solid rgba(0, 255, 65, 0.2);
-    transition: all 0.4s ease;
+    transition: all 0.3s ease-out;
   }
 
-  .duration-400 {
-    transition-duration: 400ms;
+  .duration-300 {
+    transition-duration: 300ms;
   }
 
   .grid-responsive {

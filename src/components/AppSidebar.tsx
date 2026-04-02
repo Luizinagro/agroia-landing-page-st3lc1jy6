@@ -92,7 +92,7 @@ export function AppSidebar() {
                     asChild
                     isActive={isActive && allowed}
                     className={cn(
-                      'transition-all duration-400 ease-bounce hover:text-[#00FF41] hover:drop-shadow-[0_0_8px_rgba(0,255,65,0.8)]',
+                      'transition-all duration-300 ease-out hover:text-[#00FF41] hover:drop-shadow-[0_0_8px_rgba(0,255,65,0.8)]',
                       !allowed
                         ? 'opacity-50 grayscale cursor-not-allowed hover:bg-transparent'
                         : '',

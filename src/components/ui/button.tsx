@@ -6,17 +6,18 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[8px] text-sm font-bold ring-offset-background transition-all duration-400 ease-bounce active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[8px] text-sm font-bold ring-offset-background transition-all duration-300 ease-out active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
         default:
-          'bg-[#00FF41] text-[#0A0E27] shadow-[0_0_20px_rgba(0,255,65,0.4)] hover:bg-[#0D5F2F] hover:text-white hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(0,255,65,0.8)]',
+          'bg-[#00FF41] text-[#0A0E27] shadow-[0_0_20px_rgba(0,255,65,0.4)] hover:bg-[#00FF41] hover:text-[#0A0E27] hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(0,255,65,0.8)]',
         destructive:
           'bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:scale-[1.02]',
         outline:
-          'border border-[#00FF41] text-[#00FF41] bg-transparent hover:bg-[#0D5F2F] hover:text-white hover:shadow-[0_0_25px_rgba(0,255,65,0.6)] hover:scale-[1.02] hover:border-[#0D5F2F]',
-        secondary: 'bg-[#1A1F3A] text-white hover:bg-[#0D5F2F] hover:scale-[1.02]',
+          'border border-[#00FF41] text-[#00FF41] bg-transparent hover:bg-[#00FF41] hover:text-[#0A0E27] hover:shadow-[0_0_25px_rgba(0,255,65,0.6)] hover:scale-[1.02] hover:border-[#00FF41]',
+        secondary:
+          'bg-[#1A1F3A] text-white hover:bg-[#00FF41] hover:text-[#0A0E27] hover:scale-[1.02]',
         ghost:
           'text-foreground hover:text-[#00FF41] hover:drop-shadow-[0_0_8px_rgba(0,255,65,0.8)]',
         link: 'text-[#00FF41] underline-offset-4 hover:underline hover:drop-shadow-[0_0_8px_rgba(0,255,65,0.8)]',

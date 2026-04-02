@@ -105,16 +105,16 @@ const Dashboard = () => {
 
       <main className="flex-1 container py-8 mx-auto space-y-8 bg-transparent rounded-xl pt-24">
         {isTrialExpired && (
-          <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in-down">
+          <div className="bg-red-950/50 border-l-4 border-red-500 p-4 rounded-lg shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in-down">
             <div className="flex items-center">
-              <AlertTriangle className="h-6 w-6 text-red-600 mr-3 shrink-0" />
-              <p className="text-red-800 font-medium text-base sm:text-lg">
+              <AlertTriangle className="h-6 w-6 text-red-500 mr-3 shrink-0" />
+              <p className="text-red-200 font-medium text-base sm:text-lg">
                 Seu trial expirou. Escolha um plano pago para continuar tendo acesso.
               </p>
             </div>
             <Button
               asChild
-              className="bg-[#00FF41] text-[#0A0E27] hover:bg-[#0D5F2F] font-bold whitespace-nowrap shadow-sm w-full sm:w-auto text-base"
+              className="bg-[#00FF41] text-[#0A0E27] hover:bg-[#00FF41] font-bold whitespace-nowrap shadow-sm w-full sm:w-auto text-base transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(0,255,65,0.8)]"
             >
               <Link to="/selecionar-plano">Upgrade Agora</Link>
             </Button>
