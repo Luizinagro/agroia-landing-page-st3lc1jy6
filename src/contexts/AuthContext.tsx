@@ -96,41 +96,55 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const token = authData.access_token
     const userId = authData.user?.id
 
-    // Ensure login logic specifically targets the users table used by registration
-    const profileRes = await fetch(`${supabaseUrl}/rest/v1/users?id=eq.${userId}&select=*`, {
-      headers: getSupabaseHeaders(token),
-    })
+    // Ensure login logic specifically targets the users table used by registration, querying by email as requested
+    const profileRes = await fetch(
+      `${supabaseUrl}/rest/v1/users?email=eq.${encodeURIComponent(normalizedEmail)}&select=*`,
+      {
+        headers: getSupabaseHeaders(token),
+      },
+    )
 
-    const profileData = await profileRes.json()
+    let profileData = null
+    try {
+      profileData = await profileRes.json()
+    } catch (e) {
+      // Handle parsing error silently
+    }
+
     let u
 
     if (!profileRes.ok || !profileData || profileData.length === 0) {
-      // Auto-heal missing profile to ensure data consistency
-      const insertRes = await fetch(`${supabaseUrl}/rest/v1/users`, {
+      // Auto-heal missing profile to ensure data consistency via Edge RPC Function
+      const syncRes = await fetch(`${supabaseUrl}/rest/v1/rpc/sync_user_profile`, {
         method: 'POST',
-        headers: {
-          ...getSupabaseHeaders(token),
-          Prefer: 'return=representation',
-        },
+        headers: getSupabaseHeaders(token),
         body: JSON.stringify({
-          id: userId,
-          email: normalizedEmail,
-          nome: authData.user?.user_metadata?.nome || 'Usuário',
-          tipo_usuario: authData.user?.user_metadata?.tipo_usuario || 'Produtor',
-          estado: authData.user?.user_metadata?.estado || 'Não Informado',
-          plano_ativo: 'Básico Grátis',
+          user_id: userId,
+          user_email: normalizedEmail,
+          user_nome: authData.user?.user_metadata?.nome || 'Usuário',
+          user_tipo: authData.user?.user_metadata?.tipo_usuario || 'Produtor',
+          user_estado: authData.user?.user_metadata?.estado || 'Não Informado',
         }),
       })
 
-      if (!insertRes.ok) {
-        throw new Error('Falha de sincronização de dados. Perfil não encontrado.')
+      if (!syncRes.ok) {
+        // Try one last time to fetch the user by ID just in case it was created concurrently
+        const fallbackRes = await fetch(`${supabaseUrl}/rest/v1/users?id=eq.${userId}&select=*`, {
+          headers: getSupabaseHeaders(token),
+        })
+        const fallbackData = await fallbackRes.json()
+        if (fallbackRes.ok && fallbackData && fallbackData.length > 0) {
+          u = fallbackData[0]
+        } else {
+          throw new Error('Falha de sincronização de dados. Perfil não encontrado.')
+        }
+      } else {
+        const syncedData = await syncRes.json()
+        if (!syncedData) {
+          throw new Error('Falha de sincronização de dados. Perfil não encontrado.')
+        }
+        u = syncedData
       }
-
-      const insertData = await insertRes.json()
-      if (!insertData || insertData.length === 0) {
-        throw new Error('Falha de sincronização de dados. Perfil não encontrado.')
-      }
-      u = insertData[0]
     } else {
       u = profileData[0]
     }

@@ -32,7 +32,12 @@ BEGIN
     COALESCE(new.raw_user_meta_data->>'estado', 'Não Informado'),
     NOW() + INTERVAL '14 days',
     'Básico Grátis'
-  );
+  )
+  ON CONFLICT (id) DO UPDATE SET
+    email = EXCLUDED.email,
+    nome = COALESCE(public.users.nome, EXCLUDED.nome),
+    tipo_usuario = COALESCE(public.users.tipo_usuario, EXCLUDED.tipo_usuario),
+    estado = COALESCE(public.users.estado, EXCLUDED.estado);
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -57,5 +62,38 @@ BEGIN
   END IF;
 
   RETURN user_exists;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Expose an RPC edge function replacement for manual sync if trigger fails
+CREATE OR REPLACE FUNCTION public.sync_user_profile(
+  user_id UUID,
+  user_email TEXT,
+  user_nome TEXT,
+  user_tipo TEXT,
+  user_estado TEXT
+)
+RETURNS JSON AS $$
+DECLARE
+  result_record RECORD;
+BEGIN
+  INSERT INTO public.users (id, email, nome, tipo_usuario, estado, data_trial_expira, plano_ativo)
+  VALUES (
+    user_id,
+    user_email,
+    COALESCE(user_nome, 'Usuário'),
+    COALESCE(user_tipo, 'Produtor'),
+    COALESCE(user_estado, 'Não Informado'),
+    NOW() + INTERVAL '14 days',
+    'Básico Grátis'
+  )
+  ON CONFLICT (id) DO UPDATE SET
+    email = EXCLUDED.email,
+    nome = COALESCE(public.users.nome, EXCLUDED.nome),
+    tipo_usuario = COALESCE(public.users.tipo_usuario, EXCLUDED.tipo_usuario),
+    estado = COALESCE(public.users.estado, EXCLUDED.estado)
+  RETURNING * INTO result_record;
+  
+  RETURN row_to_json(result_record);
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
