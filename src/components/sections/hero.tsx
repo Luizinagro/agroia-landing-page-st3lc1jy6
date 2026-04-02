@@ -5,11 +5,11 @@ import { ArrowRight } from 'lucide-react'
 
 export function Hero() {
   return (
-    <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden bg-[#050A15] pt-20">
-      {/* Abstract Glowing Orbs (Vercel/Stripe style) */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#00FF94]/20 rounded-full blur-[120px] mix-blend-screen pointer-events-none animate-float" />
+    <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden bg-bg-dark pt-20">
+      {/* Abstract Glowing Orbs */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-agro-green/20 rounded-full blur-[120px] mix-blend-screen pointer-events-none animate-float" />
       <div
-        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#00D1FF]/20 rounded-full blur-[120px] mix-blend-screen pointer-events-none animate-float"
+        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neon-purple/20 rounded-full blur-[120px] mix-blend-screen pointer-events-none animate-float"
         style={{ animationDelay: '2s' }}
       />
 
@@ -19,8 +19,8 @@ export function Hero() {
       {/* Content */}
       <div className="container relative z-10 px-4 md:px-6 flex flex-col items-center text-center">
         <AnimatedSection className="max-w-5xl space-y-8 flex flex-col items-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-4 animate-fade-in-down">
-            <span className="flex h-2 w-2 rounded-full bg-[#00FF94] animate-pulse"></span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-[20px] bg-white/5 border border-white/10 backdrop-blur-md mb-4 animate-fade-in-down">
+            <span className="flex h-2 w-2 rounded-full bg-agro-green animate-pulse"></span>
             <span className="text-sm font-semibold text-white/90 tracking-wide">
               Tecnologia de Ponta para o Agronegócio
             </span>
@@ -28,7 +28,7 @@ export function Hero() {
 
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-white/50 pb-2">
             O Futuro da Safra com <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00FF94] to-[#00D1FF] drop-shadow-[0_0_30px_rgba(0,255,148,0.3)]">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-agro-green to-neon-purple drop-shadow-[0_0_30px_rgba(34,197,94,0.3)]">
               IA Hiperlocal
             </span>
           </h1>
@@ -42,7 +42,7 @@ export function Hero() {
             <Button
               asChild
               size="lg"
-              className="w-full sm:w-auto bg-[#00FF94] text-[#050A15] hover:bg-white hover:text-[#050A15] text-lg px-10 py-8 rounded-full shadow-[0_0_30px_rgba(0,255,148,0.3)] hover:shadow-[0_0_40px_rgba(255,255,255,0.5)] transition-all duration-500 font-bold group"
+              className="w-full sm:w-auto bg-agro-green text-white hover:bg-agro-green-hover text-lg px-10 py-8 shadow-[0_0_30px_rgba(34,197,94,0.3)] hover:shadow-[0_0_40px_rgba(34,197,94,0.5)] font-bold group"
             >
               <Link to="/cadastro">
                 Comece Agora
@@ -55,7 +55,7 @@ export function Hero() {
               onClick={() => {
                 document.getElementById('planos')?.scrollIntoView({ behavior: 'smooth' })
               }}
-              className="w-full sm:w-auto bg-white/5 text-white border-white/10 hover:bg-white/10 hover:text-white text-lg px-10 py-8 rounded-full backdrop-blur-md transition-all duration-300 font-bold"
+              className="w-full sm:w-auto bg-white/5 text-white border-white/10 hover:bg-white/10 hover:text-white text-lg px-10 py-8 backdrop-blur-md font-bold"
             >
               Conheça os Planos
             </Button>

@@ -24,19 +24,19 @@ export default function Community() {
         title="Comunidade Agro-Futuro"
         description="Conecte-se, aprenda e faça negócios com outros produtores na rede AgroIA."
       />
-      <header className="sticky top-0 z-50 w-full bg-[#1a3c34] text-white shadow-md">
+      <header className="sticky top-0 z-50 w-full bg-[#111827]/80 backdrop-blur-md border-b border-white/10 shadow-md transition-all duration-400 ease-bounce">
         <div className="container flex h-16 items-center justify-between px-4 md:px-6">
           <Link
             to="/"
             className="flex items-center gap-2 font-bold text-xl hover:opacity-90 transition-opacity"
           >
-            <Tractor className="w-6 h-6 text-[#f4d03f]" />
+            <Tractor className="w-6 h-6 text-premium-gold" />
             <span>AgroIA</span>
           </Link>
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
-              className="text-white hover:text-[#f4d03f] hover:bg-white/10 hidden sm:flex"
+              className="text-white hover:text-premium-gold hover:bg-white/10 hidden sm:flex"
               asChild
             >
               <Link to="/dashboard">Voltar ao Dashboard</Link>
@@ -48,7 +48,7 @@ export default function Community() {
       <main className="flex-1 container mx-auto px-4 py-8 max-w-6xl">
         <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
-            <h1 className="text-3xl font-bold text-[#1a3c34]">Comunidade Agro-Futuro</h1>
+            <h1 className="text-3xl font-bold text-white">Comunidade Agro-Futuro</h1>
             <p className="text-muted-foreground mt-1">
               Conecte-se, aprenda e faça negócios com outros produtores.
             </p>
@@ -60,21 +60,21 @@ export default function Community() {
           <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent mb-6 overflow-x-auto flex-nowrap [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             <TabsTrigger
               value="forum"
-              className="data-[state=active]:border-b-2 data-[state=active]:border-[#1a3c34] data-[state=active]:text-[#1a3c34] data-[state=active]:shadow-none rounded-none px-6 py-3 text-base font-medium text-gray-500 bg-transparent whitespace-nowrap transition-colors"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-agro-green data-[state=active]:text-agro-green data-[state=active]:shadow-none rounded-none px-6 py-3 text-base font-medium text-muted-foreground bg-transparent whitespace-nowrap transition-colors"
             >
               <MessageSquare className="w-4 h-4 mr-2" />
               Fórum
             </TabsTrigger>
             <TabsTrigger
               value="live"
-              className="data-[state=active]:border-b-2 data-[state=active]:border-[#1a3c34] data-[state=active]:text-[#1a3c34] data-[state=active]:shadow-none rounded-none px-6 py-3 text-base font-medium text-gray-500 bg-transparent whitespace-nowrap transition-colors"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-agro-green data-[state=active]:text-agro-green data-[state=active]:shadow-none rounded-none px-6 py-3 text-base font-medium text-muted-foreground bg-transparent whitespace-nowrap transition-colors"
             >
               <PlayCircle className="w-4 h-4 mr-2" />
               Próxima Live
             </TabsTrigger>
             <TabsTrigger
               value="marketplace"
-              className="data-[state=active]:border-b-2 data-[state=active]:border-[#1a3c34] data-[state=active]:text-[#1a3c34] data-[state=active]:shadow-none rounded-none px-6 py-3 text-base font-medium text-gray-500 bg-transparent whitespace-nowrap transition-colors"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-agro-green data-[state=active]:text-agro-green data-[state=active]:shadow-none rounded-none px-6 py-3 text-base font-medium text-muted-foreground bg-transparent whitespace-nowrap transition-colors"
             >
               <ShoppingBag className="w-4 h-4 mr-2" />
               Marketplace

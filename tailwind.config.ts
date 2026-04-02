@@ -122,6 +122,9 @@ export default {
         width: 'width',
         height: 'height',
       },
+      transitionDuration: {
+        '400': '400ms',
+      },
       boxShadow: {
         subtle: '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03)',
         elevation: '0 4px 20px rgba(0, 0, 0, 0.05)',
@@ -129,6 +132,7 @@ export default {
       },
       transitionTimingFunction: {
         apple: 'cubic-bezier(0.42, 0, 0.58, 1)',
+        bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
       },
     },
   },

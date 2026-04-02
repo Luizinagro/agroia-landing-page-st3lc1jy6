@@ -116,10 +116,11 @@ export default function Register() {
     }
   }
 
-  const messageClass = 'text-[#1a3c34] bg-[#f4d03f]/40 px-2 py-1 rounded text-xs mt-1 inline-block'
+  const messageClass =
+    'text-destructive bg-destructive/10 px-2 py-1 rounded text-xs mt-1 inline-block'
 
   return (
-    <div className="min-h-screen bg-[#1a3c34] flex flex-col justify-center items-center p-4 selection:bg-[#f4d03f]/30 font-sans">
+    <div className="min-h-screen bg-bg-dark flex flex-col justify-center items-center p-4 selection:bg-agro-green/30 font-sans">
       <Link
         to="/"
         className="absolute top-6 left-6 text-white/70 hover:text-white flex items-center gap-2 transition-colors"
@@ -128,16 +129,16 @@ export default function Register() {
       </Link>
 
       <div className="mb-6 flex flex-col items-center mt-12 sm:mt-8">
-        <div className="w-16 h-16 bg-[#f4d03f] rounded-2xl flex items-center justify-center mb-4 shadow-lg">
-          <Tractor className="w-8 h-8 text-[#1a3c34]" />
+        <div className="w-16 h-16 bg-premium-gold rounded-[24px] flex items-center justify-center mb-4 shadow-lg">
+          <Tractor className="w-8 h-8 text-bg-dark" />
         </div>
         <h1 className="text-3xl font-bold text-white">Criar Conta</h1>
       </div>
 
       <Card className="w-full max-w-md border-white/10 shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500 mb-8">
         <CardHeader className="space-y-1 text-center pb-4">
-          <CardTitle className="text-2xl text-[#1a3c34] flex items-center justify-center gap-2">
-            Novo Usuário <UserPlus className="w-5 h-5 text-[#1a3c34]" />
+          <CardTitle className="text-2xl text-white flex items-center justify-center gap-2">
+            Novo Usuário <UserPlus className="w-5 h-5 text-white" />
           </CardTitle>
           <CardDescription>Preencha os dados para acessar a plataforma AgroIA.</CardDescription>
         </CardHeader>
@@ -153,7 +154,7 @@ export default function Register() {
                     <FormControl>
                       <Input
                         placeholder="João da Silva"
-                        className="focus-visible:ring-[#1a3c34]"
+                        className="focus-visible:ring-agro-green bg-background/50"
                         {...field}
                       />
                     </FormControl>
@@ -171,7 +172,7 @@ export default function Register() {
                       <Input
                         type="email"
                         placeholder="joao@fazenda.com"
-                        className="focus-visible:ring-[#1a3c34]"
+                        className="focus-visible:ring-agro-green bg-background/50"
                         {...field}
                       />
                     </FormControl>
@@ -188,7 +189,7 @@ export default function Register() {
                       <FormLabel>Tipo</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
-                          <SelectTrigger className="focus-visible:ring-[#1a3c34]">
+                          <SelectTrigger className="focus-visible:ring-agro-green bg-background/50">
                             <SelectValue placeholder="Selecione" />
                           </SelectTrigger>
                         </FormControl>
@@ -209,7 +210,7 @@ export default function Register() {
                       <FormLabel>Estado</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
-                          <SelectTrigger className="focus-visible:ring-[#1a3c34]">
+                          <SelectTrigger className="focus-visible:ring-agro-green bg-background/50">
                             <SelectValue placeholder="Selecione" />
                           </SelectTrigger>
                         </FormControl>
@@ -234,7 +235,7 @@ export default function Register() {
                         <Input
                           type="password"
                           placeholder="••••••••"
-                          className="focus-visible:ring-[#1a3c34]"
+                          className="focus-visible:ring-agro-green bg-background/50"
                           {...field}
                         />
                       </FormControl>
@@ -252,7 +253,7 @@ export default function Register() {
                         <Input
                           type="password"
                           placeholder="••••••••"
-                          className="focus-visible:ring-[#1a3c34]"
+                          className="focus-visible:ring-agro-green bg-background/50"
                           {...field}
                         />
                       </FormControl>
@@ -263,13 +264,12 @@ export default function Register() {
               </div>
               <Button
                 type="submit"
-                className="w-full bg-[#1a3c34] text-white hover:bg-[#1a3c34]/90 h-11 text-base mt-4 transition-all"
+                className="w-full bg-agro-green text-white hover:bg-agro-green-hover h-11 text-base mt-4 transition-all"
                 disabled={isLoading || !form.formState.isValid}
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin text-[#f4d03f]" /> Criando
-                    conta...
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin text-white" /> Criando conta...
                   </>
                 ) : (
                   'Criar Conta'
@@ -281,7 +281,7 @@ export default function Register() {
         <CardFooter className="flex justify-center border-t bg-muted/30 pt-4">
           <div className="text-sm text-muted-foreground">
             Já tem uma conta?{' '}
-            <Link to="/login" className="font-semibold text-[#1a3c34] hover:underline">
+            <Link to="/login" className="font-semibold text-agro-green hover:underline">
               Faça login
             </Link>
           </div>

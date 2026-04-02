@@ -53,7 +53,7 @@ export default function PrevisaoIA() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <Card className="lg:col-span-1 border-primary/20 bg-card/60 backdrop-blur-md shadow-lg shadow-primary/5">
+        <Card className="lg:col-span-1 border-white/5 bg-card/60 backdrop-blur-md shadow-lg shadow-primary/5">
           <CardHeader>
             <CardTitle>Consultar Previsão</CardTitle>
             <CardDescription>Insira os dados da sua produção</CardDescription>
@@ -86,7 +86,7 @@ export default function PrevisaoIA() {
             </div>
 
             <Button
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_15px_rgba(34,197,94,0.3)] transition-all"
+              className="w-full bg-agro-green hover:bg-agro-green-hover text-white shadow-[0_0_15px_rgba(34,197,94,0.3)] transition-all duration-400 ease-bounce"
               onClick={handleBuscarPreco}
               disabled={isLoading || !quantidade}
             >

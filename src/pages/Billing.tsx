@@ -6,7 +6,7 @@ import { BillingProjections } from '@/components/billing/BillingProjections'
 
 export default function Billing() {
   return (
-    <div className="min-h-screen bg-agro-green text-white font-sans selection:bg-agro-yellow/30">
+    <div className="min-h-screen bg-bg-dark text-white font-sans selection:bg-agro-green/30">
       <main className="container mx-auto px-4 py-8 md:py-12 max-w-6xl">
         <header className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-6">
           <div>
@@ -18,7 +18,7 @@ export default function Billing() {
             </p>
           </div>
 
-          <div className="inline-flex items-center gap-2 text-sm text-agro-yellow/90 bg-white/5 px-4 py-2 rounded-full border border-white/10 shadow-sm animate-pulse w-fit">
+          <div className="inline-flex items-center gap-2 text-sm text-premium-gold bg-white/5 px-4 py-2 rounded-[20px] border border-white/10 shadow-sm animate-pulse w-fit">
             <CloudOff className="w-4 h-4" />
             <span className="font-medium">Sincronizar quando conectar</span>
           </div>
@@ -28,19 +28,19 @@ export default function Billing() {
           <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 bg-white/5 p-1 border border-white/10 h-auto md:h-12 mb-8 rounded-xl gap-1">
             <TabsTrigger
               value="notas"
-              className="rounded-lg data-[state=active]:bg-agro-yellow data-[state=active]:text-agro-green py-2.5 text-white/80 transition-all"
+              className="rounded-[20px] data-[state=active]:bg-agro-green data-[state=active]:text-white py-2.5 text-white/80 transition-all"
             >
               Notas Fiscais
             </TabsTrigger>
             <TabsTrigger
               value="relatorios"
-              className="rounded-lg data-[state=active]:bg-agro-yellow data-[state=active]:text-agro-green py-2.5 text-white/80 transition-all"
+              className="rounded-[20px] data-[state=active]:bg-agro-green data-[state=active]:text-white py-2.5 text-white/80 transition-all"
             >
               Relatórios Fiscais
             </TabsTrigger>
             <TabsTrigger
               value="projecoes"
-              className="rounded-lg data-[state=active]:bg-agro-yellow data-[state=active]:text-agro-green py-2.5 text-white/80 transition-all"
+              className="rounded-[20px] data-[state=active]:bg-agro-green data-[state=active]:text-white py-2.5 text-white/80 transition-all"
             >
               Projeções Financeiras
             </TabsTrigger>

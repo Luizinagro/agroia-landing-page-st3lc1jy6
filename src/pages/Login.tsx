@@ -96,7 +96,7 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-[#1a3c34] flex flex-col justify-center items-center p-4 selection:bg-[#f4d03f]/30 font-sans">
+    <div className="min-h-screen bg-bg-dark flex flex-col justify-center items-center p-4 selection:bg-agro-green/30 font-sans">
       <Link
         to="/"
         className="absolute top-6 left-6 text-white/70 hover:text-white flex items-center gap-2 transition-colors"
@@ -105,8 +105,8 @@ export default function Login() {
       </Link>
 
       <div className="mb-8 flex flex-col items-center">
-        <div className="w-16 h-16 bg-[#f4d03f] rounded-2xl flex items-center justify-center mb-4 shadow-lg">
-          <Tractor className="w-8 h-8 text-[#1a3c34]" />
+        <div className="w-16 h-16 bg-premium-gold rounded-[24px] flex items-center justify-center mb-4 shadow-lg">
+          <Tractor className="w-8 h-8 text-bg-dark" />
         </div>
         <h1 className="text-3xl font-bold text-white">AgroIA</h1>
         <p className="text-white/60 mt-2">Plataforma Inteligente para o Agronegócio</p>
@@ -114,8 +114,8 @@ export default function Login() {
 
       <Card className="w-full max-w-md border-white/10 shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl text-[#1a3c34] flex items-center justify-center gap-2">
-            Acesso Seguro <ShieldCheck className="w-5 h-5 text-[#1a3c34]" />
+          <CardTitle className="text-2xl text-white flex items-center justify-center gap-2">
+            Acesso Seguro <ShieldCheck className="w-5 h-5 text-white" />
           </CardTitle>
           <CardDescription>Entre com suas credenciais protegidas de ponta a ponta.</CardDescription>
         </CardHeader>
@@ -132,11 +132,11 @@ export default function Login() {
                       <Input
                         type="email"
                         placeholder="produtor@fazenda.com"
-                        className="focus-visible:ring-[#1a3c34]"
+                        className="focus-visible:ring-agro-green bg-background/50"
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className="text-[#1a3c34] bg-[#f4d03f]/40 px-2 py-1 rounded text-xs mt-1 inline-block" />
+                    <FormMessage className="text-destructive bg-destructive/10 px-2 py-1 rounded text-xs mt-1 inline-block" />
                   </FormItem>
                 )}
               />
@@ -149,26 +149,30 @@ export default function Login() {
                       <FormLabel>Senha</FormLabel>
                       <Link
                         to="/forgot-password"
-                        className="text-sm font-medium text-[#1a3c34] hover:underline decoration-[#f4d03f] decoration-2 transition-all py-2 px-1 -mr-1 rounded-md active:bg-muted"
+                        className="text-sm font-medium text-agro-green hover:underline decoration-agro-green decoration-2 transition-all py-2 px-1 -mr-1 rounded-md active:bg-muted"
                       >
                         Esqueceu a senha?
                       </Link>
                     </div>
                     <FormControl>
-                      <Input type="password" className="focus-visible:ring-[#1a3c34]" {...field} />
+                      <Input
+                        type="password"
+                        className="focus-visible:ring-agro-green bg-background/50"
+                        {...field}
+                      />
                     </FormControl>
-                    <FormMessage className="text-[#1a3c34] bg-[#f4d03f]/40 px-2 py-1 rounded text-xs mt-1 inline-block" />
+                    <FormMessage className="text-destructive bg-destructive/10 px-2 py-1 rounded text-xs mt-1 inline-block" />
                   </FormItem>
                 )}
               />
               <Button
                 type="submit"
-                className="w-full bg-[#1a3c34] text-white hover:bg-[#1a3c34]/90 h-11 text-lg font-medium transition-all"
+                className="w-full bg-agro-green text-white hover:bg-agro-green-hover h-11 text-lg font-medium transition-all"
                 disabled={isLoading || !form.formState.isValid}
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin text-[#f4d03f]" />
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin text-white" />
                     Autenticando...
                   </>
                 ) : (
@@ -182,18 +186,18 @@ export default function Login() {
           <div className="text-sm mb-4 w-full">
             <Link
               to="/cadastro"
-              className="font-semibold text-[#1a3c34] hover:underline decoration-[#f4d03f] decoration-2 transition-all block py-2 px-4 rounded-md active:bg-muted"
+              className="font-semibold text-agro-green hover:underline decoration-agro-green decoration-2 transition-all block py-2 px-4 rounded-md active:bg-muted"
             >
               Não tem conta? Criar uma agora
             </Link>
           </div>
           <div className="text-xs text-muted-foreground mb-4 bg-muted p-2 rounded-md">
             Este site é protegido pelo reCAPTCHA v3 e as{' '}
-            <a href="#" className="underline hover:text-[#1a3c34]">
+            <a href="#" className="underline hover:text-agro-green">
               Políticas de Privacidade
             </a>{' '}
             e{' '}
-            <a href="#" className="underline hover:text-[#1a3c34]">
+            <a href="#" className="underline hover:text-agro-green">
               Termos de Serviço
             </a>{' '}
             do Google se aplicam.

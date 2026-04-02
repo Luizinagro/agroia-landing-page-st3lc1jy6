@@ -28,7 +28,7 @@ export default function Pecuaria() {
         title="Gestão de Pecuária"
         description="Otimize sua produção, rastreie certificações ESG e acompanhe o mercado em tempo real."
       />
-      <header className="sticky top-0 z-50 w-full bg-agro-green text-white border-b border-white/10 shadow-sm">
+      <header className="sticky top-0 z-50 w-full bg-[#111827]/80 backdrop-blur-md text-white border-b border-white/10 shadow-sm transition-all duration-400 ease-bounce">
         <div className="container flex h-16 items-center px-4 md:px-6">
           <div className="flex items-center gap-2 font-bold text-xl text-agro-yellow">
             <Tractor className="w-6 h-6" />

@@ -11,23 +11,23 @@ const Index = () => {
   const { user } = useAuth()
 
   return (
-    <div className="min-h-screen bg-[#050A15] text-white flex flex-col font-sans selection:bg-[#00FF94]/30">
+    <div className="min-h-screen bg-bg-dark text-white flex flex-col font-sans selection:bg-agro-green/30">
       <SEO
         title="AgroIA | O Futuro do Campo"
         description="Transforme sua Safra com IA Hiperlocal. Previsão 92% precisa e rastreabilidade."
       />
 
       {/* Futuristic Header */}
-      <header className="fixed top-0 z-50 w-full bg-[#050A15]/60 backdrop-blur-xl border-b border-white/5 transition-all duration-300">
+      <header className="fixed top-0 z-50 w-full bg-[#111827]/80 backdrop-blur-md border-b border-white/10 transition-all duration-400 ease-bounce">
         <div className="container flex h-20 items-center justify-between px-4 md:px-6">
           <div className="flex items-center gap-2 group cursor-pointer">
-            <Logo className="w-10 h-10 text-[#00FF94] drop-shadow-[0_0_15px_rgba(0,255,148,0.5)] group-hover:scale-110 group-hover:rotate-12 transition-all duration-500" />
+            <Logo className="w-10 h-10 text-agro-green drop-shadow-[0_0_15px_rgba(34,197,94,0.5)] group-hover:scale-110 group-hover:rotate-12 transition-all duration-400 ease-bounce" />
           </div>
 
           <div className="flex items-center gap-4">
             <Button
               asChild
-              className="bg-[#00FF94] text-[#050A15] hover:bg-[#00FF94]/90 hover:shadow-[0_0_20px_rgba(0,255,148,0.4)] hover:-translate-y-0.5 transition-all duration-300 font-bold rounded-full h-11 px-8 text-sm md:text-base tracking-wide"
+              className="bg-agro-green text-white hover:bg-agro-green-hover hover:shadow-[0_0_20px_rgba(34,197,94,0.4)] hover:-translate-y-0.5 font-bold h-11 px-8 text-sm md:text-base tracking-wide"
             >
               <Link to={user ? '/dashboard' : '/login'}>{user ? 'ÁREA DO PRODUTOR' : 'LOGIN'}</Link>
             </Button>

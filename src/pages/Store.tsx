@@ -59,14 +59,14 @@ export default function Store() {
   }, [products, selectedCategory])
 
   return (
-    <div className="container mx-auto p-4 md:p-8 animate-fade-in bg-slate-50/50 min-h-screen rounded-xl">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 bg-gradient-to-r from-green-50 to-yellow-50 p-6 rounded-2xl border border-green-100 shadow-sm">
+    <div className="container mx-auto p-4 md:p-8 animate-fade-in bg-bg-dark min-h-screen rounded-[24px]">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 bg-card/60 backdrop-blur-sm p-6 rounded-[24px] border border-white/5 shadow-sm">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-green-900 flex items-center gap-2">
-            <Tag className="h-8 w-8 text-yellow-600" />
+          <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-2">
+            <Tag className="h-8 w-8 text-premium-gold" />
             Loja de Insumos
           </h1>
-          <p className="text-green-800/80 mt-1 max-w-xl">
+          <p className="text-muted-foreground mt-1 max-w-xl">
             Adquira insumos de qualidade premium para impulsionar a sua produção rural.
           </p>
         </div>
@@ -74,16 +74,16 @@ export default function Store() {
       </div>
 
       <div className="flex items-center gap-2 mb-8 overflow-x-auto pb-2 scrollbar-hide">
-        <Filter className="h-5 w-5 text-green-700 mr-2 shrink-0" />
+        <Filter className="h-5 w-5 text-agro-green mr-2 shrink-0" />
         {CATEGORIES.map((cat) => (
           <Button
             key={cat.id}
             variant={selectedCategory === cat.id ? 'default' : 'outline'}
             className={cn(
-              'rounded-full whitespace-nowrap font-medium transition-all',
+              'rounded-[20px] whitespace-nowrap font-medium transition-all duration-400 ease-bounce',
               selectedCategory === cat.id
-                ? 'bg-green-700 hover:bg-green-800 text-white border-green-700 shadow-md'
-                : 'bg-white text-green-800 border-green-200 hover:bg-yellow-50 hover:text-yellow-900 hover:border-yellow-300',
+                ? 'bg-agro-green hover:bg-agro-green-hover text-white border-agro-green shadow-md'
+                : 'bg-transparent text-foreground border-border hover:bg-accent hover:text-accent-foreground',
             )}
             onClick={() => setSelectedCategory(cat.id)}
           >

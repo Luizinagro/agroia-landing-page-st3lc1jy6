@@ -61,14 +61,14 @@ const Dashboard = () => {
         title="Dashboard"
         description="Visão geral da propriedade e monitoramento inteligente."
       />
-      <header className="sticky top-0 z-50 w-full bg-[#1a3c34]/95 backdrop-blur supports-[backdrop-filter]:bg-[#1a3c34]/80 border-b border-white/10 shadow-sm">
+      <header className="sticky top-0 z-50 w-full bg-[#111827]/80 backdrop-blur-md border-b border-white/10 shadow-sm transition-all duration-400 ease-bounce">
         <div className="container flex h-16 items-center justify-between px-4 md:px-6">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
               size="icon"
               asChild
-              className="text-white hover:bg-white/10 hover:text-[#f4d03f] h-9 w-9"
+              className="text-white hover:bg-white/10 hover:text-premium-gold h-9 w-9"
             >
               <Link to="/">
                 <ArrowLeft className="w-5 h-5" />
@@ -76,7 +76,7 @@ const Dashboard = () => {
               </Link>
             </Button>
             <div className="flex items-center gap-2 font-bold text-xl text-white">
-              <Tractor className="w-6 h-6 text-[#f4d03f]" />
+              <Tractor className="w-6 h-6 text-premium-gold" />
               <span className="hidden sm:inline">AgroIA Dashboard</span>
               <span className="sm:hidden">AgroIA</span>
             </div>
@@ -107,7 +107,7 @@ const Dashboard = () => {
             </div>
             <Button
               asChild
-              className="bg-[#f4d03f] text-[#1a3c34] hover:bg-[#f4d03f]/90 font-bold whitespace-nowrap shadow-sm w-full sm:w-auto text-base"
+              className="bg-premium-gold text-bg-dark hover:bg-premium-gold-hover font-bold whitespace-nowrap shadow-sm w-full sm:w-auto text-base"
             >
               <Link to="/selecionar-plano">Upgrade Agora</Link>
             </Button>
@@ -116,8 +116,8 @@ const Dashboard = () => {
 
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 animate-fade-in-down">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-[#1a3c34] flex items-center gap-3">
-              <LayoutDashboard className="w-8 h-8 text-[#f4d03f]" />
+            <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+              <LayoutDashboard className="w-8 h-8 text-premium-gold" />
               Olá, {userName}
             </h1>
             {userEmail && <p className="text-slate-500 mt-1 font-medium">{userEmail}</p>}
@@ -126,25 +126,25 @@ const Dashboard = () => {
             </p>
           </div>
 
-          <div className="flex flex-col bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm min-w-[280px]">
+          <div className="flex flex-col bg-card p-5 rounded-[24px] border shadow-sm min-w-[280px]">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <Star className="w-5 h-5 text-[#f4d03f]" />
-                <span className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <Star className="w-5 h-5 text-premium-gold" />
+                <span className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                   Plano Atual
                 </span>
               </div>
               <Badge
                 variant="outline"
-                className="bg-[#f4d03f]/10 text-[#1a3c34] border-[#f4d03f]/50 font-bold px-3 py-1 text-sm"
+                className="bg-premium-gold/10 text-premium-gold border-premium-gold/50 font-bold px-3 py-1 text-sm"
               >
                 {currentPlanName}
               </Badge>
             </div>
 
-            <div className="flex items-center gap-2 pt-3 border-t border-slate-100 dark:border-slate-700">
-              <Calendar className="w-4 h-4 text-slate-400" />
-              <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
+            <div className="flex items-center gap-2 pt-3 border-t border-border">
+              <Calendar className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm font-medium text-foreground">
                 Trial expira em:{' '}
                 {trialDate ? new Date(trialDate).toLocaleDateString('pt-BR') : 'N/A'}
               </span>
@@ -152,7 +152,7 @@ const Dashboard = () => {
 
             <Button
               asChild
-              className="mt-4 w-full bg-[#1a3c34] text-white hover:bg-[#1a3c34]/90 font-semibold shadow-sm"
+              className="mt-4 w-full bg-agro-green text-white hover:bg-agro-green-hover font-semibold shadow-sm"
             >
               <Link to="/selecionar-plano">Fazer Upgrade</Link>
             </Button>

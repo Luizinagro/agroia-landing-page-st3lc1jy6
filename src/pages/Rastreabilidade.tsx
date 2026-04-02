@@ -134,12 +134,12 @@ const Rastreabilidade = () => {
 
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] transition-all duration-300 border-none">
+            <Button className="bg-agro-green hover:bg-agro-green-hover text-white font-bold shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.5)] transition-all duration-400 ease-bounce border-none">
               <Plus className="w-4 h-4 mr-2" />
               Adicionar Etapa
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-[#0a1120] border border-slate-800 text-slate-100 sm:max-w-[425px]">
+          <DialogContent className="bg-bg-dark border border-white/10 text-white sm:max-w-[425px] rounded-[24px]">
             <DialogHeader>
               <DialogTitle className="text-xl font-bold text-emerald-400">
                 Registrar Nova Etapa
@@ -216,7 +216,7 @@ const Rastreabilidade = () => {
               </Button>
               <Button
                 onClick={handleAdd}
-                className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold"
+                className="bg-agro-green hover:bg-agro-green-hover text-white font-bold"
               >
                 Salvar Registro
               </Button>
