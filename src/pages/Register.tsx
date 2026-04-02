@@ -30,7 +30,7 @@ import {
 } from '@/components/ui/card'
 import { Tractor, ArrowLeft, Loader2, UserPlus } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
-import { supabaseUrl, getSupabaseHeaders } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase/client'
 
 const registerSchema = z
   .object({
@@ -67,31 +67,23 @@ export default function Register() {
   const onSubmit = async (data: RegisterFormValues) => {
     setIsLoading(true)
     try {
-      if (!supabaseUrl) {
-        throw new Error('Supabase integration missing. Please set VITE_SUPABASE_URL in .env')
-      }
-
       const normalizedEmail = data.email.trim().toLowerCase()
 
-      const authRes = await fetch(`${supabaseUrl}/auth/v1/signup`, {
-        method: 'POST',
-        headers: getSupabaseHeaders(),
-        body: JSON.stringify({
-          email: normalizedEmail,
-          password: data.senha,
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: normalizedEmail,
+        password: data.senha,
+        options: {
           data: {
-            nome: data.nomeCompleto,
-            tipo_usuario: data.tipoUsuario,
+            name: data.nomeCompleto,
+            user_type: data.tipoUsuario,
             estado: data.estado,
           },
-        }),
+        },
       })
 
-      const authData = await authRes.json()
-
-      if (!authRes.ok) {
-        const errorMsg = authData.msg || authData.message || ''
-        if (errorMsg.includes('User already registered') || errorMsg.includes('já está em uso')) {
+      if (authError) {
+        const errorMsg = authError.message || ''
+        if (errorMsg.includes('already registered')) {
           toast({
             title: 'Erro de Cadastro',
             description: 'Este e-mail já está em uso.',
@@ -105,21 +97,6 @@ export default function Register() {
           })
         }
         return
-      }
-
-      // Verify data consistency in public.users table as required by AC
-      try {
-        const verifyRes = await fetch(`${supabaseUrl}/rest/v1/rpc/check_user_exists`, {
-          method: 'POST',
-          headers: getSupabaseHeaders(),
-          body: JSON.stringify({ lookup_email: normalizedEmail }),
-        })
-
-        if (!verifyRes.ok) {
-          console.warn('Verificação pendente.')
-        }
-      } catch (e) {
-        console.warn('Falha na verificação de sincronização', e)
       }
 
       toast({

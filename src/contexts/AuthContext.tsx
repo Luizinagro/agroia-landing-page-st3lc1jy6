@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
-import { supabaseUrl, getSupabaseHeaders } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase/client'
+import { Session } from '@supabase/supabase-js'
 
 export type User = {
   id: string
@@ -19,14 +20,15 @@ export type User = {
   trial_expires_at?: string
   plano_ativo: string
   plan_active?: string
-  plano?: string // Alias for compatibility with existing modules
+  plano?: string
 }
 
 interface AuthContextType {
   user: User | null
+  session: Session | null
   loading: boolean
   login: (email: string, senha: string) => Promise<void>
-  logout: () => void
+  logout: () => Promise<void>
   updateUser: (updates: Partial<User>) => Promise<void>
 }
 
@@ -34,141 +36,124 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
+  const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const initAuth = async () => {
-      const token = localStorage.getItem('sb_access_token')
-      const userId = localStorage.getItem('sb_user_id')
+  const fetchProfile = async (userId: string, email: string) => {
+    try {
+      const { data, error } = await supabase.from('users').select('*').eq('id', userId).single()
 
-      if (token && userId && supabaseUrl) {
-        try {
-          const res = await fetch(`${supabaseUrl}/rest/v1/users?id=eq.${userId}&select=*`, {
-            headers: getSupabaseHeaders(token),
-          })
-          if (res.ok) {
-            const data = await res.json()
-            if (data && data.length > 0) {
-              const u = data[0]
-              u.plano = u.plano_ativo
-              setUser(u)
-            } else {
-              logout()
-            }
-          } else {
-            logout()
-          }
-        } catch (err) {
-          console.error('Auth init error', err)
-          logout()
-        }
+      if (data) {
+        setUser({
+          ...data,
+          nome: data.name || 'Usuário',
+          tipo_usuario: data.user_type || 'produtor',
+          estado: data.status || 'Ativo',
+          data_criacao: data.created_at || new Date().toISOString(),
+          data_trial_expira:
+            data.trial_expires_at || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          plano_ativo: data.plan_active || 'Básico',
+          plano: data.plan_active || 'Básico',
+        } as User)
+      } else {
+        // Fallback for user without profile row yet (e.g., trigger latency)
+        setUser({
+          id: userId,
+          email: email,
+          nome: 'Usuário',
+          tipo_usuario: 'produtor',
+          estado: 'Ativo',
+          data_criacao: new Date().toISOString(),
+          data_trial_expira: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          plano_ativo: 'Básico',
+          plano: 'Básico',
+        })
       }
-      setLoading(false)
+    } catch (e) {
+      console.error('Error fetching profile:', e)
     }
-    initAuth()
+  }
+
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      // FORBIDDEN: no async/await inside this callback — sync only
+      setSession(session)
+      if (session?.user) {
+        fetchProfile(session.user.id, session.user.email || '')
+        setLoading(false)
+      } else {
+        setUser(null)
+        setLoading(false)
+      }
+    })
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+      if (session?.user) {
+        fetchProfile(session.user.id, session.user.email || '').finally(() => setLoading(false))
+      } else {
+        setLoading(false)
+      }
+    })
+
+    return () => subscription.unsubscribe()
   }, [])
 
   const login = async (email: string, senha: string) => {
-    if (!supabaseUrl) {
-      throw new Error('Supabase integration missing. Please set VITE_SUPABASE_URL in .env')
+    const { error } = await supabase.auth.signInWithPassword({ email, password: senha })
+    if (error) {
+      throw error
     }
-
-    const normalizedEmail = email.trim().toLowerCase()
-
-    // Securely check if user exists via RPC to provide accurate error messages
-    const rpcRes = await fetch(`${supabaseUrl}/rest/v1/rpc/check_user_exists`, {
-      method: 'POST',
-      headers: getSupabaseHeaders(),
-      body: JSON.stringify({ lookup_email: normalizedEmail }),
-    })
-
-    if (rpcRes.ok) {
-      const exists = await rpcRes.json()
-      if (exists === false) {
-        throw new Error('Usuário não existe no banco de dados')
-      }
-    }
-
-    // Perform Auth - Secure comparison for email and password fields
-    const authRes = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
-      method: 'POST',
-      headers: getSupabaseHeaders(),
-      body: JSON.stringify({ email: normalizedEmail, password: senha }),
-    })
-
-    const authData = await authRes.json()
-    if (!authRes.ok) {
-      throw new Error('Senha Incorreta')
-    }
-
-    const token = authData.access_token
-    const userId = authData.user?.id
-
-    // Ensure login logic specifically targets the users table used by registration, querying by email
-    let u = null
-
-    const profileRes = await fetch(
-      `${supabaseUrl}/rest/v1/users?email=eq.${encodeURIComponent(normalizedEmail)}&select=*`,
-      {
-        headers: getSupabaseHeaders(token),
-      },
-    )
-
-    if (profileRes.ok) {
-      const data = await profileRes.json()
-      if (data && data.length > 0) {
-        u = data[0]
-      }
-    }
-
-    if (!u) {
-      throw new Error('Perfil não encontrado')
-    }
-
-    u.plano = u.plano_ativo
-
-    localStorage.setItem('sb_access_token', token)
-    localStorage.setItem('sb_user_id', userId)
-    setUser(u)
   }
 
-  const logout = () => {
-    localStorage.removeItem('sb_access_token')
-    localStorage.removeItem('sb_user_id')
+  const logout = async () => {
+    await supabase.auth.signOut()
     setUser(null)
+    setSession(null)
   }
 
   const updateUser = async (updates: Partial<User>) => {
-    if (!user || !supabaseUrl) return
-    const token = localStorage.getItem('sb_access_token')
-
-    const dbUpdates = { ...updates }
+    if (!user) return
+    const dbUpdates: any = { ...updates }
     if (dbUpdates.plano) {
-      dbUpdates.plano_ativo = dbUpdates.plano
+      dbUpdates.plan_active = dbUpdates.plano
       delete dbUpdates.plano
     }
+    if (dbUpdates.plano_ativo) {
+      dbUpdates.plan_active = dbUpdates.plano_ativo
+      delete dbUpdates.plano_ativo
+    }
+    if (dbUpdates.nome) {
+      dbUpdates.name = dbUpdates.nome
+      delete dbUpdates.nome
+    }
 
-    const res = await fetch(`${supabaseUrl}/rest/v1/users?id=eq.${user.id}`, {
-      method: 'PATCH',
-      headers: {
-        ...getSupabaseHeaders(token),
-        Prefer: 'return=representation',
-      },
-      body: JSON.stringify(dbUpdates),
-    })
+    const { data, error } = await supabase
+      .from('users')
+      .update(dbUpdates)
+      .eq('id', user.id)
+      .select()
+      .single()
 
-    if (res.ok) {
-      const data = await res.json()
-      if (data && data.length > 0) {
-        const u = data[0]
-        u.plano = u.plano_ativo
-        setUser(u)
-      }
+    if (data) {
+      setUser((prev) =>
+        prev
+          ? {
+              ...prev,
+              ...data,
+              nome: data.name || prev.nome,
+              plano_ativo: data.plan_active || prev.plano_ativo,
+              plano: data.plan_active || prev.plano,
+            }
+          : null,
+      )
     }
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, session, loading, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   )

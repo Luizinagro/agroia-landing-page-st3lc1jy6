@@ -79,22 +79,8 @@ const App = () => {
                         </FeatureGuard>
                       }
                     />
-                    <Route
-                      path="/roi"
-                      element={
-                        <FeatureGuard feature="roi" requiredPlan="Plantio Solo ou Superior">
-                          <CalculadoraRoi />
-                        </FeatureGuard>
-                      }
-                    />
-                    <Route
-                      path="/meus-calculos"
-                      element={
-                        <FeatureGuard feature="roi" requiredPlan="Plantio Solo ou Superior">
-                          <MeusCalculos />
-                        </FeatureGuard>
-                      }
-                    />
+                    <Route path="/roi" element={<CalculadoraRoi />} />
+                    <Route path="/meus-calculos" element={<MeusCalculos />} />
                     <Route
                       path="/previsao-ia"
                       element={

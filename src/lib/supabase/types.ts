@@ -38,36 +38,42 @@ export type Database = {
       }
       calculos_roi: {
         Row: {
+          cultura: string | null
           custo_producao: number
           data_criacao: string
           id: string
           lucro_liquido: number
           margem_lucro: number
           payback_meses: number
+          quantidade: number | null
           receita_esperada: number
           roi_percentual: number
           tempo_retorno: number
           user_id: string
         }
         Insert: {
+          cultura?: string | null
           custo_producao: number
           data_criacao?: string
           id?: string
           lucro_liquido: number
           margem_lucro: number
           payback_meses: number
+          quantidade?: number | null
           receita_esperada: number
           roi_percentual: number
           tempo_retorno: number
           user_id: string
         }
         Update: {
+          cultura?: string | null
           custo_producao?: number
           data_criacao?: string
           id?: string
           lucro_liquido?: number
           margem_lucro?: number
           payback_meses?: number
+          quantidade?: number | null
           receita_esperada?: number
           roi_percentual?: number
           tempo_retorno?: number
@@ -455,6 +461,8 @@ export const Constants = {
 //   roi_percentual: numeric (not null)
 //   payback_meses: numeric (not null)
 //   data_criacao: timestamp with time zone (not null, default: now())
+//   cultura: text (nullable)
+//   quantidade: numeric (nullable)
 // Table: order_items
 //   id: uuid (not null, default: gen_random_uuid())
 //   order_id: uuid (not null)

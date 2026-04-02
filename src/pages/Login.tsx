@@ -77,22 +77,10 @@ export default function Login() {
       logSystemEvent('AUTH_ERROR', `Falha de autenticação para ${data.email}`)
       const msg = error.message
 
-      if (msg === 'Senha Incorreta' || msg === 'E-mail ou senha inválidos') {
+      if (msg.includes('Invalid login credentials')) {
         toast({
-          title: 'Senha Incorreta',
-          description: 'A senha informada não confere.',
-          variant: 'destructive',
-        })
-      } else if (msg === 'Usuário não existe no banco de dados') {
-        toast({
-          title: 'Usuário não encontrado',
-          description: 'Não encontramos uma conta com este e-mail.',
-          variant: 'destructive',
-        })
-      } else if (msg === 'Perfil não encontrado') {
-        toast({
-          title: 'Perfil não encontrado',
-          description: 'Sua conta existe, mas o perfil ainda não foi gerado.',
+          title: 'Credenciais Inválidas',
+          description: 'E-mail ou senha incorretos.',
           variant: 'destructive',
         })
       } else {

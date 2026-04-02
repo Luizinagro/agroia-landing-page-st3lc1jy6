@@ -25,8 +25,8 @@ const Dashboard = () => {
   const navigate = useNavigate()
   const { plan: userPlan } = useSubscription()
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await logout()
     navigate('/login')
   }
 
