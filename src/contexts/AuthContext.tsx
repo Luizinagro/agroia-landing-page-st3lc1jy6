@@ -90,18 +90,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const authData = await authRes.json()
     if (!authRes.ok) {
-      throw new Error('E-mail ou senha inválidos')
+      throw new Error('Senha Incorreta')
     }
 
     const token = authData.access_token
     const userId = authData.user?.id
 
-    // Ensure login logic specifically targets the users table used by registration, querying by ID
+    // Ensure login logic specifically targets the users table used by registration, querying by email
     let u = null
 
-    const profileRes = await fetch(`${supabaseUrl}/rest/v1/users?id=eq.${userId}&select=*`, {
-      headers: getSupabaseHeaders(token),
-    })
+    const profileRes = await fetch(
+      `${supabaseUrl}/rest/v1/users?email=eq.${encodeURIComponent(normalizedEmail)}&select=*`,
+      {
+        headers: getSupabaseHeaders(token),
+      },
+    )
 
     if (profileRes.ok) {
       const data = await profileRes.json()

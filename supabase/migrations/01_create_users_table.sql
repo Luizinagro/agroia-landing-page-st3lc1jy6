@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS public.users (
   estado TEXT NOT NULL,
   data_criacao TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   data_trial_expira TIMESTAMP WITH TIME ZONE,
-  plano_ativo TEXT DEFAULT 'Básico Grátis'
+  plano_ativo TEXT DEFAULT 'Básico'
 );
 
 -- Enable RLS
@@ -23,21 +23,22 @@ CREATE POLICY "Users can insert own profile" ON public.users FOR INSERT WITH CHE
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public.users (id, email, nome, tipo_usuario, estado, data_trial_expira, plano_ativo)
+  INSERT INTO public.users (id, email, nome, tipo_usuario, estado, data_criacao, data_trial_expira, plano_ativo)
   VALUES (
     new.id,
     new.email,
     COALESCE(new.raw_user_meta_data->>'nome', 'Usuário'),
     COALESCE(new.raw_user_meta_data->>'tipo_usuario', 'Produtor'),
-    COALESCE(new.raw_user_meta_data->>'estado', 'Não Informado'),
-    NOW() + INTERVAL '14 days',
-    'Básico Grátis'
+    'ativo',
+    NOW(),
+    NOW() + INTERVAL '30 days',
+    'Básico'
   )
   ON CONFLICT (id) DO UPDATE SET
     email = EXCLUDED.email,
     nome = COALESCE(public.users.nome, EXCLUDED.nome),
     tipo_usuario = COALESCE(public.users.tipo_usuario, EXCLUDED.tipo_usuario),
-    estado = COALESCE(public.users.estado, EXCLUDED.estado);
+    estado = EXCLUDED.estado;
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -77,21 +78,22 @@ RETURNS JSON AS $$
 DECLARE
   result_record RECORD;
 BEGIN
-  INSERT INTO public.users (id, email, nome, tipo_usuario, estado, data_trial_expira, plano_ativo)
+  INSERT INTO public.users (id, email, nome, tipo_usuario, estado, data_criacao, data_trial_expira, plano_ativo)
   VALUES (
     user_id,
     user_email,
     COALESCE(user_nome, 'Usuário'),
     COALESCE(user_tipo, 'Produtor'),
-    COALESCE(user_estado, 'Não Informado'),
-    NOW() + INTERVAL '14 days',
-    'Básico Grátis'
+    'ativo',
+    NOW(),
+    NOW() + INTERVAL '30 days',
+    'Básico'
   )
   ON CONFLICT (id) DO UPDATE SET
     email = EXCLUDED.email,
     nome = COALESCE(public.users.nome, EXCLUDED.nome),
     tipo_usuario = COALESCE(public.users.tipo_usuario, EXCLUDED.tipo_usuario),
-    estado = COALESCE(public.users.estado, EXCLUDED.estado)
+    estado = EXCLUDED.estado
   RETURNING * INTO result_record;
   
   RETURN row_to_json(result_record);
