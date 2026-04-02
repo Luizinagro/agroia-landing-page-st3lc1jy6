@@ -56,17 +56,15 @@ export function Pricing() {
   useGsapAnimations(containerRef)
 
   return (
-    <section ref={containerRef} className="relative overflow-hidden bg-[#0A0E27]">
-      <div className="absolute inset-0 z-0 pointer-events-none bg-[url('https://img.usecurling.com/p/1920/1080?q=agriculture')] bg-cover bg-center opacity-10 mix-blend-overlay" />
+    <section ref={containerRef} className="relative overflow-hidden bg-black">
+      <div className="absolute inset-0 z-0 pointer-events-none bg-[url('https://img.usecurling.com/p/1920/1080?q=agriculture')] bg-cover bg-center opacity-5 mix-blend-overlay" />
       {/* Background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#00FF41]/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#1DB954]/5 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="container relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-20 gsap-grow">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6 tracking-tight drop-shadow-[0_0_10px_rgba(0,255,65,0.2)]">
-            Planos para Escalar sua Produtividade
-          </h2>
-          <p className="text-white/70 text-lg md:text-xl font-medium">
+          <h2>Planos para Escalar sua Produtividade</h2>
+          <p className="text-[#E0E0E0] text-base md:text-lg">
             Escolha o pacote ideal para as necessidades da sua operação. Desbloqueie o poder da IA
             hoje.
           </p>
@@ -78,42 +76,36 @@ export function Pricing() {
               <div
                 className={cn(
                   'card-glass w-full relative flex flex-col',
-                  plan.highlighted &&
-                    'border-[#00FF41]/50 shadow-[0_0_30px_rgba(0,255,65,0.3)] scale-105 z-10 bg-[#1A1F3A]',
+                  plan.highlighted && 'border-[#1DB954]/40 z-10 bg-[#121212] scale-[1.02]',
                 )}
               >
                 {plan.highlighted && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#00FF41] text-[#0A0E27] px-4 py-1 rounded-[8px] text-xs font-bold tracking-wider uppercase shadow-[0_0_15px_rgba(0,255,65,0.5)]">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#1DB954] text-black px-4 py-1 rounded-[12px] text-xs font-medium tracking-wider uppercase">
                     POPULAR
                   </div>
                 )}
 
                 <div className="text-left pb-6">
-                  <h3 className="text-2xl mb-2 text-white font-bold">{plan.name}</h3>
-                  <p className="text-sm text-white/50 mb-6 h-10">{plan.description}</p>
+                  <h3 className="text-xl mb-2 text-white font-medium">{plan.name}</h3>
+                  <p className="text-sm text-[#E0E0E0] mb-6 h-10">{plan.description}</p>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-extrabold text-white tracking-tight">
+                    <span className="text-3xl font-medium text-white tracking-tight">
                       {plan.price}
                     </span>
-                    {plan.period && (
-                      <span className="text-white/50 font-medium">{plan.period}</span>
-                    )}
+                    {plan.period && <span className="text-[#E0E0E0]">{plan.period}</span>}
                   </div>
                 </div>
 
                 <div className="flex-1">
                   <ul className="space-y-4">
                     {plan.features.map((feature, i) => (
-                      <li
-                        key={i}
-                        className="flex items-start gap-3 text-sm text-white/80 font-medium"
-                      >
+                      <li key={i} className="flex items-start gap-3 text-sm text-[#E0E0E0]">
                         <div
                           className={cn(
                             'mt-0.5 rounded-[4px] p-1',
                             plan.highlighted
-                              ? 'bg-[#00FF41]/20 text-[#00FF41]'
-                              : 'bg-white/10 text-white',
+                              ? 'bg-[#1DB954]/10 text-[#1DB954]'
+                              : 'bg-white/5 text-white',
                           )}
                         >
                           <Check className="w-3 h-3" strokeWidth={3} />
@@ -128,7 +120,7 @@ export function Pricing() {
                   <Link
                     to="/cadastro"
                     className={cn(
-                      'w-full py-4 flex items-center justify-center text-center',
+                      'w-full py-3 flex items-center justify-center text-center',
                       plan.highlighted ? 'btn-agro-primary' : 'btn-agro-secondary',
                     )}
                   >

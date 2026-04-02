@@ -6,27 +6,22 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[8px] text-sm font-bold ring-offset-background transition-all duration-300 ease-out active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[12px] text-sm font-medium ring-offset-background transition-all duration-300 ease-out active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
-        default:
-          'bg-[#00FF41] text-[#0A0E27] shadow-[0_0_20px_rgba(0,255,65,0.4)] hover:bg-[#00FF41] hover:text-[#0A0E27] hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(0,255,65,0.6)]',
-        destructive:
-          'bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:scale-[1.02]',
-        outline:
-          'border-2 border-[#00FF41] text-[#00FF41] bg-transparent hover:bg-[#00FF41] hover:text-[#0A0E27]',
-        secondary:
-          'bg-[#1A1F3A] text-white hover:bg-[#00FF41] hover:text-[#0A0E27] hover:scale-[1.02]',
-        ghost:
-          'text-foreground hover:text-[#00FF41] hover:drop-shadow-[0_0_8px_rgba(0,255,65,0.8)]',
-        link: 'text-[#00FF41] underline-offset-4 hover:underline hover:drop-shadow-[0_0_8px_rgba(0,255,65,0.8)]',
+        default: 'bg-[#1DB954] text-black hover:opacity-85',
+        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+        outline: 'border border-[#1DB954] text-[#1DB954] bg-transparent hover:bg-[#1DB954]/10',
+        secondary: 'bg-[#121212] text-white hover:bg-[#181818]',
+        ghost: 'text-foreground hover:bg-white/5 hover:text-[#1DB954]',
+        link: 'text-[#1DB954] underline-offset-4 hover:underline',
       },
       size: {
         default: 'px-[1.5rem] py-[0.75rem] h-auto',
-        sm: 'h-9 rounded-[8px] px-3',
-        lg: 'h-11 rounded-[8px] px-8',
-        icon: 'h-10 w-10 rounded-[8px]',
+        sm: 'h-9 rounded-[12px] px-3',
+        lg: 'h-11 rounded-[12px] px-8',
+        icon: 'h-10 w-10 rounded-[12px]',
       },
     },
     defaultVariants: {

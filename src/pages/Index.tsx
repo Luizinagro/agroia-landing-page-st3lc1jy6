@@ -22,14 +22,14 @@ const Index = () => {
         <div className="container flex h-20 items-center justify-between">
           <div className="flex items-center gap-2 group cursor-pointer">
             <Link to="/">
-              <Logo className="w-10 h-10 text-agro-green drop-shadow-[0_0_15px_rgba(34,197,94,0.5)] group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 ease-out" />
+              <Logo className="w-8 h-8 text-agro-green transition-transform duration-300 ease-out" />
             </Link>
           </div>
 
           <div className="flex items-center gap-6">
             <a
               href="#planos"
-              className="hidden md:block text-sm font-bold text-white/80 hover:text-[#00FF41] transition-colors"
+              className="hidden md:block text-sm font-medium text-[#E0E0E0] hover:text-[#1DB954] transition-colors"
             >
               Planos
             </a>

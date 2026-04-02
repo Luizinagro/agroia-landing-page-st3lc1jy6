@@ -19,97 +19,97 @@
 
 @layer base {
   :root {
-    --agro-green: #00ff41;
-    --agro-green-hover: #00ff41;
-    --neon-purple: #00ff41;
-    --neon-purple-hover: #00ff41;
-    --premium-gold: #00ff41;
-    --premium-gold-hover: #00ff41;
-    --organic-earth: #1a1f3a;
-    --organic-earth-hover: #0a0e27;
-    --bg-dark: #0a0e27;
+    --agro-green: #1db954;
+    --agro-green-hover: #1aa34a;
+    --neon-purple: #1db954;
+    --neon-purple-hover: #1aa34a;
+    --premium-gold: #1db954;
+    --premium-gold-hover: #1aa34a;
+    --organic-earth: #121212;
+    --organic-earth-hover: #181818;
+    --bg-dark: #000000;
     --bg-dark-overlay: #000000;
-    --bg-light: #1a1f3a;
+    --bg-light: #121212;
     --text-primary: #ffffff;
-    --text-secondary: #9ca3af;
-    --text-muted: #6b7280;
+    --text-secondary: #e0e0e0;
+    --text-muted: #a0a0a0;
     --error: #ef4444;
-    --success: #00ff41;
+    --success: #1db954;
     --warning: #fbbf24;
 
-    --gradient-hero: linear-gradient(90deg, #0a0e27, #1a1f3a);
-    --gradient-cards: linear-gradient(180deg, rgba(0, 255, 65, 0.1) 0%, transparent 100%);
-    --glow-ia: rgba(0, 255, 65, 0.4);
-    --particles-ia: rgba(0, 255, 65, 0.3);
+    --gradient-hero: linear-gradient(90deg, #000000, #121212);
+    --gradient-cards: linear-gradient(180deg, rgba(29, 185, 84, 0.05) 0%, transparent 100%);
+    --glow-ia: transparent;
+    --particles-ia: rgba(29, 185, 84, 0.15);
 
     /* Map to Shadcn variables */
-    --background: 231 59% 10%; /* #0A0E27 */
+    --background: 0 0% 0%; /* #000000 */
     --foreground: 0 0% 100%;
-    --card: 231 38% 16%; /* #1A1F3A */
+    --card: 0 0% 7%; /* #121212 */
     --card-foreground: 0 0% 100%;
-    --popover: 231 38% 16%;
+    --popover: 0 0% 7%;
     --popover-foreground: 0 0% 100%;
-    --primary: 135 100% 50%; /* #00FF41 */
-    --primary-foreground: 231 59% 10%;
-    --secondary: 145 76% 21%; /* #0D5F2F */
+    --primary: 141 73% 42%; /* #1DB954 */
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 10%;
     --secondary-foreground: 0 0% 100%;
-    --muted: 231 38% 16%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 135 100% 50%;
-    --accent-foreground: 231 59% 10%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 88%;
+    --accent: 141 73% 42%;
+    --accent-foreground: 0 0% 0%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
-    --border: 135 100% 50%;
-    --input: 231 38% 16%;
-    --ring: 135 100% 50%;
-    --radius: 0.5rem; /* 8px */
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 141 73% 42%;
+    --radius: 0.75rem; /* 12px */
 
-    --sidebar-background: 231 38% 16%;
+    --sidebar-background: 0 0% 7%;
     --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 135 100% 50%;
-    --sidebar-primary-foreground: 231 59% 10%;
-    --sidebar-accent: 231 38% 16%;
+    --sidebar-primary: 141 73% 42%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 12%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 135 100% 50%;
-    --sidebar-ring: 135 100% 50%;
+    --sidebar-border: 0 0% 15%;
+    --sidebar-ring: 141 73% 42%;
 
-    --chart-1: 135 100% 50%;
-    --chart-2: 145 76% 21%;
-    --chart-3: 135 100% 50%;
-    --chart-4: 145 76% 21%;
+    --chart-1: 141 73% 42%;
+    --chart-2: 141 50% 30%;
+    --chart-3: 141 73% 42%;
+    --chart-4: 141 50% 30%;
     --chart-5: 0 84.2% 60.2%;
   }
 
   .dark {
     /* Copy the same as above to ensure dark mode is forced */
-    --background: 231 59% 10%;
+    --background: 0 0% 0%;
     --foreground: 0 0% 100%;
-    --card: 231 38% 16%;
+    --card: 0 0% 7%;
     --card-foreground: 0 0% 100%;
-    --popover: 231 38% 16%;
+    --popover: 0 0% 7%;
     --popover-foreground: 0 0% 100%;
-    --primary: 135 100% 50%;
-    --primary-foreground: 231 59% 10%;
-    --secondary: 145 76% 21%;
+    --primary: 141 73% 42%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 10%;
     --secondary-foreground: 0 0% 100%;
-    --muted: 231 38% 16%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 135 100% 50%;
-    --accent-foreground: 231 59% 10%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 88%;
+    --accent: 141 73% 42%;
+    --accent-foreground: 0 0% 0%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
-    --border: 135 100% 50%;
-    --input: 231 38% 16%;
-    --ring: 135 100% 50%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 141 73% 42%;
 
-    --sidebar-background: 231 38% 16%;
+    --sidebar-background: 0 0% 7%;
     --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 135 100% 50%;
-    --sidebar-primary-foreground: 231 59% 10%;
-    --sidebar-accent: 231 38% 16%;
+    --sidebar-primary: 141 73% 42%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 12%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 135 100% 50%;
-    --sidebar-ring: 135 100% 50%;
+    --sidebar-border: 0 0% 15%;
+    --sidebar-ring: 141 73% 42%;
   }
 
   * {
@@ -124,7 +124,7 @@
 
   body {
     font-family: 'Inter', sans-serif;
-    background: #0a0e27;
+    background: #000000;
     color: #ffffff;
     line-height: 1.6;
     overflow-x: hidden;
@@ -132,18 +132,18 @@
 
   h1 {
     font-family: 'Inter', sans-serif;
-    font-weight: 900;
-    font-size: clamp(2.5rem, 8vw, 4.5rem);
-    line-height: 1.1;
-    letter-spacing: -0.03em;
+    font-weight: 400;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
     color: #ffffff;
     margin-bottom: 1.5rem;
   }
 
   h2 {
     font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    font-size: 2rem;
+    font-weight: 500;
+    font-size: 1.75rem;
     line-height: 1.3;
     color: #ffffff;
     margin-bottom: 1.5rem;
@@ -151,7 +151,7 @@
 
   h3 {
     font-family: 'Inter', sans-serif;
-    font-weight: 700;
+    font-weight: 500;
     font-size: 1.5rem;
     line-height: 1.3;
     color: #ffffff;
@@ -171,7 +171,7 @@
   small,
   .text-label {
     font-family: 'Inter', sans-serif;
-    font-weight: 500;
+    font-weight: 400;
     font-size: 0.875rem;
     line-height: 1.5;
   }
@@ -179,16 +179,16 @@
   .metric,
   .number-text,
   .font-mono {
-    font-family: 'Courier New', monospace;
-    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
     font-size: 1.25rem;
     line-height: 1.6;
   }
 
   section {
     padding: clamp(2rem, 5vw, 4rem) 0;
-    border-bottom: 1px solid rgba(0, 255, 65, 0.1);
-    background-color: #0a0e27;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: #000000;
   }
 
   /* EXCEPTIONS */
@@ -200,18 +200,18 @@
   }
 
   a {
-    color: #00ff41;
+    color: #1db954;
     text-decoration: none;
-    transition: color 0.3s;
+    transition: color 0.3s ease-out;
   }
 
   a:hover {
-    color: #0d5f2f;
+    color: #1aa34a;
   }
 
   button:focus,
   a:focus {
-    outline: 3px solid #00ff41;
+    outline: 2px solid #1db954;
     outline-offset: 2px;
   }
 }
@@ -420,45 +420,42 @@
   }
 
   .btn-agro-primary {
-    background-color: #00ff41;
-    color: #0a0e27;
-    font-weight: 700;
-    border-radius: 8px;
+    background-color: #1db954;
+    color: #000000;
+    font-weight: 500;
+    border-radius: 12px;
     padding: 0.75rem 1.5rem;
-    transition: all 0.3s ease-out;
-    box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+    transition: opacity 0.3s ease-out;
   }
   .btn-agro-primary:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 30px rgba(0, 255, 65, 0.6);
-    background-color: #00ff41;
-    color: #0a0e27;
+    opacity: 0.85;
   }
 
   .btn-agro-secondary {
-    border: 2px solid #00ff41;
-    color: #00ff41;
-    font-weight: 700;
-    border-radius: 8px;
+    border: 1px solid #1db954;
+    color: #1db954;
+    font-weight: 500;
+    border-radius: 12px;
     padding: 0.75rem 1.5rem;
     background-color: transparent;
-    transition: all 0.3s ease-out;
+    transition: background-color 0.3s ease-out;
   }
   .btn-agro-secondary:hover {
-    background-color: #00ff41;
-    color: #0a0e27;
+    background-color: rgba(29, 185, 84, 0.1);
   }
 
   .card-glass {
-    background-color: #1a1f3a;
-    border: 1px solid rgba(0, 255, 65, 0.15);
-    border-radius: 12px;
+    background-color: #121212;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
     padding: 1.5rem;
-    transition: all 0.3s ease-out;
+    transition:
+      border-color 0.3s ease-out,
+      background-color 0.3s ease-out;
   }
   .card-glass:hover {
-    border-color: #00ff41;
-    box-shadow: 0 0 25px rgba(0, 255, 65, 0.3);
+    border-color: rgba(29, 185, 84, 0.4);
+    background-color: #181818;
   }
 
   .navbar-glass {
@@ -466,8 +463,9 @@
     top: 0;
     z-index: 100;
     width: 100%;
-    background-color: #0a0e27;
-    border-bottom: 1px solid rgba(0, 255, 65, 0.1);
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     transition: all 0.3s ease-out;
   }
 
