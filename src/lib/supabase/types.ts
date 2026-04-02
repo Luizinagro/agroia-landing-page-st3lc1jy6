@@ -36,6 +36,45 @@ export type Database = {
         }
         Relationships: []
       }
+      calculos_roi: {
+        Row: {
+          custo_producao: number
+          data_criacao: string
+          id: string
+          lucro_liquido: number
+          margem_lucro: number
+          payback_meses: number
+          receita_esperada: number
+          roi_percentual: number
+          tempo_retorno: number
+          user_id: string
+        }
+        Insert: {
+          custo_producao: number
+          data_criacao?: string
+          id?: string
+          lucro_liquido: number
+          margem_lucro: number
+          payback_meses: number
+          receita_esperada: number
+          roi_percentual: number
+          tempo_retorno: number
+          user_id: string
+        }
+        Update: {
+          custo_producao?: number
+          data_criacao?: string
+          id?: string
+          lucro_liquido?: number
+          margem_lucro?: number
+          payback_meses?: number
+          receita_esperada?: number
+          roi_percentual?: number
+          tempo_retorno?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           id: string
@@ -233,7 +272,27 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      usuarios: {
+        Row: {
+          email: string | null
+          id: string | null
+          nome: string | null
+          plano: string | null
+        }
+        Insert: {
+          email?: string | null
+          id?: string | null
+          nome?: string | null
+          plano?: string | null
+        }
+        Update: {
+          email?: string | null
+          id?: string | null
+          nome?: string | null
+          plano?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
@@ -385,6 +444,17 @@ export const Constants = {
 //   trend_data: jsonb (not null, default: '[]'::jsonb)
 //   recommendation: text (nullable)
 //   created_at: timestamp with time zone (not null, default: now())
+// Table: calculos_roi
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   custo_producao: numeric (not null)
+//   receita_esperada: numeric (not null)
+//   tempo_retorno: numeric (not null)
+//   lucro_liquido: numeric (not null)
+//   margem_lucro: numeric (not null)
+//   roi_percentual: numeric (not null)
+//   payback_meses: numeric (not null)
+//   data_criacao: timestamp with time zone (not null, default: now())
 // Table: order_items
 //   id: uuid (not null, default: gen_random_uuid())
 //   order_id: uuid (not null)
@@ -433,10 +503,18 @@ export const Constants = {
 //   trial_expires_at: timestamp with time zone (nullable, default: (now() + '30 days'::interval))
 //   phone: text (nullable)
 //   address: text (nullable)
+// Table: usuarios
+//   id: uuid (nullable)
+//   email: text (nullable)
+//   nome: text (nullable)
+//   plano: text (nullable)
 
 // --- CONSTRAINTS ---
 // Table: ai_forecasts
 //   PRIMARY KEY ai_forecasts_pkey: PRIMARY KEY (id)
+// Table: calculos_roi
+//   PRIMARY KEY calculos_roi_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY calculos_roi_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 // Table: order_items
 //   FOREIGN KEY order_items_order_id_fkey: FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 //   PRIMARY KEY order_items_pkey: PRIMARY KEY (id)
@@ -465,6 +543,15 @@ export const Constants = {
 //     WITH CHECK: true
 //   Policy "ai_forecasts_select" (SELECT, PERMISSIVE) roles={authenticated}
 //     USING: true
+// Table: calculos_roi
+//   Policy "calculos_roi_delete" (DELETE, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//   Policy "calculos_roi_insert" (INSERT, PERMISSIVE) roles={authenticated}
+//     WITH CHECK: (user_id = auth.uid())
+//   Policy "calculos_roi_select" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//   Policy "calculos_roi_update" (UPDATE, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
 // Table: order_items
 //   Policy "order_items_delete" (DELETE, PERMISSIVE) roles={authenticated}
 //     USING: (order_id IN ( SELECT orders.id    FROM orders   WHERE (orders.user_id = auth.uid())))

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { SEO } from '@/components/SEO'
 import {
   ArrowLeft,
@@ -15,6 +15,13 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import {
   ChartContainer,
   ChartTooltip,
@@ -38,6 +45,31 @@ export default function CalculadoraRoi() {
   const [receitaEsperada, setReceitaEsperada] = useState<number>(35000)
   const [tempoRetorno, setTempoRetorno] = useState<number>(12)
   const [isSaving, setIsSaving] = useState(false)
+
+  // Novos estados para a integração com CEPEA
+  const [prices, setPrices] = useState<Record<string, number>>({})
+  const [cultura, setCultura] = useState<string>('Outro')
+  const [quantidadeToneladas, setQuantidadeToneladas] = useState<number>(0)
+
+  useEffect(() => {
+    const fetchPrices = async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke('cepea-prices')
+        if (data?.prices) {
+          setPrices(data.prices)
+        }
+      } catch (error) {
+        console.error('Erro ao buscar preços:', error)
+      }
+    }
+    fetchPrices()
+  }, [])
+
+  useEffect(() => {
+    if (cultura !== 'Outro' && prices[cultura] && quantidadeToneladas > 0) {
+      setReceitaEsperada(prices[cultura] * quantidadeToneladas)
+    }
+  }, [cultura, quantidadeToneladas, prices])
 
   const { lucroLiquido, margemLucro, roi, payback, chartData } = useMemo(() => {
     const custo = custoTotal || 0
@@ -119,7 +151,7 @@ export default function CalculadoraRoi() {
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans animate-in fade-in duration-500">
       <SEO
         title="Calculadora de ROI"
-        description="Calcule o retorno sobre investimento da sua safra."
+        description="Calcule o retorno sobre investimento da sua safra com base em preços reais."
       />
 
       <header className="sticky top-0 z-50 w-full bg-[#1a3c34]/95 backdrop-blur supports-[backdrop-filter]:bg-[#1a3c34]/80 border-b border-white/10 shadow-sm">
@@ -150,8 +182,8 @@ export default function CalculadoraRoi() {
               Projeção Financeira e ROI
             </h1>
             <p className="text-slate-500 text-lg max-w-3xl">
-              Simule o retorno dos seus investimentos e operações com base na receita esperada e
-              analise a evolução do seu lucro ao longo do tempo.
+              Simule o retorno dos seus investimentos utilizando estimativas próprias ou cotações de
+              mercado (CEPEA) para soja, milho e trigo.
             </p>
           </div>
           <Button
@@ -176,10 +208,44 @@ export default function CalculadoraRoi() {
                   <Calculator className="w-5 h-5" />
                   Dados da Operação
                 </CardTitle>
-                <CardDescription>Insira os valores estimados para o cálculo</CardDescription>
+                <CardDescription>Insira os valores ou use as cotações atuais</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
+                  <Label htmlFor="cultura">Cultura Agrícola</Label>
+                  <Select value={cultura} onValueChange={setCultura}>
+                    <SelectTrigger id="cultura">
+                      <SelectValue placeholder="Selecione a cultura" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Outro">Outro / Digitar Manualmente</SelectItem>
+                      <SelectItem value="Soja">Soja</SelectItem>
+                      <SelectItem value="Milho">Milho</SelectItem>
+                      <SelectItem value="Trigo">Trigo</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {cultura !== 'Outro' && (
+                  <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
+                    <Label htmlFor="quantidade">Quantidade de Produção (Toneladas)</Label>
+                    <Input
+                      id="quantidade"
+                      type="number"
+                      min="0"
+                      value={quantidadeToneladas || ''}
+                      onChange={(e) => setQuantidadeToneladas(Number(e.target.value))}
+                    />
+                    {prices[cultura] && (
+                      <p className="text-xs text-slate-500 mt-1 flex items-center gap-1">
+                        <TrendingUp className="w-3 h-3 text-blue-500" />
+                        Preço base (CEPEA): {formatCurrency(prices[cultura])} / ton
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                <div className="space-y-2 pt-2 border-t border-slate-100">
                   <Label htmlFor="custoTotal">Custo Total da Produção (R$)</Label>
                   <Input
                     id="custoTotal"
@@ -189,16 +255,30 @@ export default function CalculadoraRoi() {
                     onChange={(e) => setCustoTotal(Number(e.target.value))}
                   />
                 </div>
+
                 <div className="space-y-2">
-                  <Label htmlFor="receitaEsperada">Receita Esperada (R$)</Label>
+                  <Label htmlFor="receitaEsperada">
+                    Receita Esperada (R$){' '}
+                    {cultura !== 'Outro' && quantidadeToneladas > 0 && (
+                      <span className="text-xs text-blue-600 font-normal ml-1">
+                        (Auto-calculado)
+                      </span>
+                    )}
+                  </Label>
                   <Input
                     id="receitaEsperada"
                     type="number"
                     min="0"
                     value={receitaEsperada || ''}
                     onChange={(e) => setReceitaEsperada(Number(e.target.value))}
+                    className={
+                      cultura !== 'Outro' && quantidadeToneladas > 0
+                        ? 'border-blue-200 bg-blue-50/30'
+                        : ''
+                    }
                   />
                 </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="tempoRetorno">Tempo de Retorno (meses)</Label>
                   <Input
@@ -218,7 +298,7 @@ export default function CalculadoraRoi() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Card
                 className={cn(
-                  'border-2',
+                  'border-2 transition-colors duration-300',
                   isProfit ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50',
                 )}
               >
@@ -245,7 +325,7 @@ export default function CalculadoraRoi() {
 
               <Card
                 className={cn(
-                  'border-2',
+                  'border-2 transition-colors duration-300',
                   isProfit ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50',
                 )}
               >
@@ -272,7 +352,7 @@ export default function CalculadoraRoi() {
 
               <Card
                 className={cn(
-                  'border-2',
+                  'border-2 transition-colors duration-300',
                   isProfit ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50',
                 )}
               >
