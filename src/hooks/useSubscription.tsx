@@ -3,23 +3,26 @@ import { supabase } from '@/lib/supabase/client'
 import { useAuth } from '@/contexts/AuthContext'
 
 export function useSubscription() {
-  const { user } = useAuth()
+  const { user, loading: authLoading } = useAuth() as any
   const [plan, setPlan] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function fetchPlan() {
+      if (authLoading) return
+
       if (!user?.id) {
         setLoading(false)
         return
       }
       try {
-        console.log('[useSubscription] Buscando permissões para o user_id logado:', user.id)
+        const cleanUserId = String(user.id).trim()
+        console.log('[useSubscription] Buscando permissões para o user_id logado:', cleanUserId)
 
         const { data, error } = await supabase
           .from('user_plans')
           .select('*')
-          .eq('user_id', user.id)
+          .eq('user_id', cleanUserId)
           .maybeSingle()
 
         if (error) {
@@ -35,7 +38,7 @@ export function useSubscription() {
       }
     }
     fetchPlan()
-  }, [user?.id])
+  }, [user?.id, authLoading])
 
   const hasFeature = (feature: string) => {
     // Use plan from DB, or fallback to user context metadata
