@@ -17,6 +17,9 @@ import ForgotPassword from './pages/ForgotPassword'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { AuthProvider } from './contexts/AuthContext'
 import { DatabaseProvider } from './contexts/DatabaseContext'
+import { CartProvider } from './contexts/CartContext'
+import Store from './pages/Store'
+import Checkout from './pages/Checkout'
 
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
@@ -36,34 +39,38 @@ const App = () => {
   return (
     <AuthProvider>
       <DatabaseProvider>
-        <BrowserRouter future={{ v7_startTransition: false, v7_relativeSplatPath: false }}>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <Routes>
-              <Route element={<Layout />}>
-                <Route path="/" element={<Index />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/cadastro" element={<Register />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
+        <CartProvider>
+          <BrowserRouter future={{ v7_startTransition: false, v7_relativeSplatPath: false }}>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <Routes>
+                <Route element={<Layout />}>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/cadastro" element={<Register />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
 
-                <Route element={<ProtectedRoute />}>
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/comunidade" element={<Community />} />
-                  <Route path="/faturamento" element={<Billing />} />
-                  <Route path="/pecuaria" element={<Pecuaria />} />
+                  <Route element={<ProtectedRoute />}>
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/comunidade" element={<Community />} />
+                    <Route path="/faturamento" element={<Billing />} />
+                    <Route path="/pecuaria" element={<Pecuaria />} />
+                    <Route path="/loja" element={<Store />} />
+                    <Route path="/checkout" element={<Checkout />} />
+                  </Route>
+
+                  <Route element={<ProtectedRoute requireActive={false} />}>
+                    <Route path="/selecionar-plano" element={<PlanSelection />} />
+                  </Route>
+
+                  {/* ADD ALL CUSTOM ROUTES MUST BE ADDED HERE */}
                 </Route>
-
-                <Route element={<ProtectedRoute requireActive={false} />}>
-                  <Route path="/selecionar-plano" element={<PlanSelection />} />
-                </Route>
-
-                {/* ADD ALL CUSTOM ROUTES MUST BE ADDED HERE */}
-              </Route>
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </TooltipProvider>
-        </BrowserRouter>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </TooltipProvider>
+          </BrowserRouter>
+        </CartProvider>
       </DatabaseProvider>
     </AuthProvider>
   )
