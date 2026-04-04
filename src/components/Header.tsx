@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/ui/logo'
+import { NeonLink } from '@/components/ui/neon-button'
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -45,9 +46,13 @@ export function Header() {
             >
               Login
             </Link>
-            <Link to="/cadastro" className="btn-agro-primary">
+            <NeonLink
+              to="/cadastro"
+              variant="solid"
+              className="px-6 py-2 bg-[#1DB954] hover:bg-[#1DB954]/90 text-black font-black"
+            >
               Começar Agora
-            </Link>
+            </NeonLink>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -91,9 +96,13 @@ export function Header() {
               Login
             </Link>
             <div className="px-4 pt-4 pb-2">
-              <Link to="/cadastro" className="btn-agro-primary w-full text-center block text-base">
+              <NeonLink
+                to="/cadastro"
+                variant="solid"
+                className="w-full justify-center bg-[#1DB954] hover:bg-[#1DB954]/90 text-black font-black py-3"
+              >
                 Começar Agora
-              </Link>
+              </NeonLink>
             </div>
           </div>
         </div>

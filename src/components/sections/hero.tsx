@@ -4,6 +4,7 @@ import { ArrowRight, TrendingUp, Tractor, Users } from 'lucide-react'
 import { NeonParticles } from '@/components/ui/neon-particles'
 import { useRef } from 'react'
 import { useGsapAnimations } from '@/hooks/use-gsap-animations'
+import { NeonLink, NeonButton } from '@/components/ui/neon-button'
 
 export function Hero() {
   const heroRef = useRef<HTMLElement>(null)
@@ -44,22 +45,24 @@ export function Hero() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link
+              <NeonLink
                 to="/cadastro"
-                className="btn-agro-primary flex items-center justify-center gap-2 group/btn py-4 px-8 text-base"
+                variant="solid"
+                className="flex items-center justify-center gap-2 group/btn py-4 px-8 text-base bg-[#1DB954] hover:bg-[#1DB954]/90 text-black font-black"
               >
                 Comece Agora
                 <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
-              </Link>
+              </NeonLink>
 
-              <button
+              <NeonButton
+                variant="ghost"
                 onClick={() => {
                   document.getElementById('planos')?.scrollIntoView({ behavior: 'smooth' })
                 }}
-                className="btn-agro-secondary flex items-center justify-center bg-white/5 backdrop-blur-md py-4 px-8 text-base hover:bg-white/10 transition-colors"
+                className="flex items-center justify-center bg-white/5 backdrop-blur-md py-4 px-8 text-base hover:bg-white/10 transition-colors text-white"
               >
                 Ver Planos
-              </button>
+              </NeonButton>
             </div>
           </div>
 

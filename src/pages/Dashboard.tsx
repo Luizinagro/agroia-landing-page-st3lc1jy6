@@ -16,6 +16,7 @@ import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/contexts/AuthContext'
 import { SEO } from '@/components/SEO'
 import { useSubscription } from '@/hooks/useSubscription'
+import { EtheralShadow } from '@/components/ui/etheral-shadow'
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import {
@@ -59,7 +60,7 @@ const Dashboard = () => {
       ref={dashboardRef}
       className="relative min-h-screen bg-background text-foreground font-sans flex flex-col overflow-hidden"
     >
-      {/* Satellite Background */}
+      {/* Satellite Background + Etheral Shadow */}
       <div
         className="fixed inset-0 z-0 pointer-events-none opacity-10 bg-cover bg-center bg-no-repeat"
         style={{
@@ -67,9 +68,18 @@ const Dashboard = () => {
             'url("https://img.usecurling.com/p/1920/1080?q=farm%20satellite%20dark&color=black")',
         }}
       />
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <EtheralShadow
+          color="rgba(29, 185, 84, 0.03)"
+          animation={{ scale: 40, speed: 60 }}
+          noise={{ opacity: 0.1, scale: 1.2 }}
+          sizing="fill"
+          className="opacity-70"
+        />
+      </div>
       <div className="fixed inset-0 z-0 pointer-events-none bg-gradient-to-b from-background/80 to-background opacity-90" />
-      {/* Subtle blue glow */}
-      <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[120px] pointer-events-none z-0" />
+      {/* Subtle green glow */}
+      <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-[#1DB954]/5 blur-[120px] pointer-events-none z-0" />
 
       <SEO
         title="Dashboard"

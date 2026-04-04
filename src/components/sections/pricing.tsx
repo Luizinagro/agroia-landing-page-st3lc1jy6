@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { useRef } from 'react'
 import { useGsapAnimations } from '@/hooks/use-gsap-animations'
 import { cn } from '@/lib/utils'
+import { GlowCard } from '@/components/ui/spotlight-card'
+import { NeonLink } from '@/components/ui/neon-button'
 
 const plans = [
   {
@@ -53,13 +55,16 @@ const plans = [
 
 function PricingCard({ plan, className }: { plan: (typeof plans)[0]; className?: string }) {
   return (
-    <div
+    <GlowCard
+      glowColor="green"
+      customSize
       className={cn(
-        'bg-[#050505] border border-white/5 rounded-[32px] p-8 flex flex-col hover:border-[#1DB954]/30 transition-colors duration-500 gsap-stagger-item',
+        'bg-[#050505] border border-white/5 rounded-[32px] p-8 flex flex-col hover:border-[#1DB954]/30 transition-colors duration-500 gsap-stagger-item h-full',
         className,
       )}
     >
-      <h3 className="text-white text-2xl font-black mb-2 tracking-tight">{plan.name}</h3>
+      <div className="flex flex-col flex-1 relative z-10">
+        <h3 className="text-white text-2xl font-black mb-2 tracking-tight">{plan.name}</h3>
       <p className="text-[#A0A0A0] text-sm font-medium mb-8 h-10">{plan.description}</p>
 
       <div className="flex items-baseline gap-1 mb-8">
@@ -78,13 +83,15 @@ function PricingCard({ plan, className }: { plan: (typeof plans)[0]; className?:
         ))}
       </ul>
 
-      <Link
+      <NeonLink
         to="/cadastro"
-        className="w-full py-4 bg-[#1DB954] text-black rounded-full font-black text-sm text-center hover:bg-[#1DB954]/90 transition-all duration-300 mt-auto hover:scale-[1.02] shadow-[0_0_20px_rgba(29,185,84,0.15)]"
+        variant="solid"
+        className="w-full py-4 bg-[#1DB954] text-black font-black text-sm text-center hover:bg-[#1DB954]/90 transition-all duration-300 mt-auto hover:scale-[1.02] shadow-[0_0_20px_rgba(29,185,84,0.15)]"
       >
         Assinar {plan.name}
-      </Link>
-    </div>
+      </NeonLink>
+      </div>
+    </GlowCard>
   )
 }
 
@@ -103,14 +110,18 @@ export function Pricing() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 gsap-stagger-container">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 gsap-stagger-container items-stretch">
           {/* Highlighted Completo - takes full width on small, 6 cols on large */}
-          <div className="md:col-span-12 lg:col-span-6 bg-[#1DB954] rounded-[32px] p-8 md:p-12 flex flex-col gsap-stagger-item hover:scale-[1.01] transition-transform duration-500 shadow-[0_0_40px_rgba(29,185,84,0.15)] relative overflow-hidden">
-            <div className="absolute top-8 right-8 bg-black text-[#1DB954] px-4 py-2 rounded-full text-xs font-black tracking-wider uppercase">
+          <GlowCard
+            glowColor="green"
+            customSize
+            className="md:col-span-12 lg:col-span-6 bg-[#1DB954] rounded-[32px] p-8 md:p-12 flex flex-col gsap-stagger-item hover:scale-[1.01] transition-transform duration-500 shadow-[0_0_40px_rgba(29,185,84,0.15)] relative overflow-hidden"
+          >
+            <div className="absolute top-8 right-8 z-20 bg-black text-[#1DB954] px-4 py-2 rounded-full text-xs font-black tracking-wider uppercase">
               POPULAR
             </div>
 
-            <div className="flex-1">
+            <div className="flex-1 relative z-10 flex flex-col">
               <h3 className="text-black text-3xl font-black mb-2 tracking-tight">
                 {plans[3].name}
               </h3>
@@ -135,13 +146,15 @@ export function Pricing() {
               </ul>
             </div>
 
-            <Link
+            <NeonLink
               to="/cadastro"
-              className="w-full py-5 bg-black text-white rounded-full font-black text-center hover:bg-black/80 hover:scale-[1.02] transition-all duration-300 mt-auto shadow-lg"
+              variant="solid"
+              className="w-full py-5 bg-black text-white font-black text-center hover:bg-black/80 hover:scale-[1.02] transition-all duration-300 mt-auto shadow-lg"
             >
               Assinar Completo Agora
-            </Link>
-          </div>
+            </NeonLink>
+            </div>
+          </GlowCard>
 
           {/* Plantio & Pecuaria stacked */}
           <div className="md:col-span-6 lg:col-span-3 flex flex-col gap-6">

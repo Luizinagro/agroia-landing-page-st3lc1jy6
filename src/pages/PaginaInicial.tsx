@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { SEO } from '@/components/SEO'
 import { Logo } from '@/components/ui/logo'
+import { NeonLink } from '@/components/ui/neon-button'
 
 const PaginaInicial = () => {
   const { user } = useAuth()
@@ -35,12 +36,13 @@ const PaginaInicial = () => {
             >
               Planos
             </a>
-            <Link
+            <NeonLink
               to={user ? '/dashboard' : '/login'}
-              className="bg-white text-black hover:bg-[#1DB954] px-6 py-2.5 rounded-full text-sm font-black transition-colors duration-300"
+              variant="solid"
+              className="bg-white text-black hover:bg-[#1DB954] px-6 py-2.5 text-sm font-black transition-colors duration-300"
             >
               {user ? 'Dashboard' : 'Entrar'}
-            </Link>
+            </NeonLink>
           </div>
         </div>
       </header>
