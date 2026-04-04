@@ -211,7 +211,7 @@ export function Rebanho() {
             <DialogTrigger asChild>
               <Button className="bg-agro-green hover:bg-agro-green/90 text-white font-medium border-b-4 border-agro-green/50 active:border-b-0 active:mt-1 transition-all">
                 <Plus className="w-4 h-4 mr-2" />
-                Adicionar Animal
+                Adicionar Rebanho
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
