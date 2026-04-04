@@ -6,6 +6,7 @@ import { GamificationCard } from '@/components/community/GamificationCard'
 import { SEO } from '@/components/SEO'
 import { Suspense, lazy } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Logo } from '@/components/ui/logo'
 
 const ForumTab = lazy(() =>
   import('@/components/community/ForumTab').then((m) => ({ default: m.ForumTab })),
@@ -19,24 +20,24 @@ const MarketplaceTab = lazy(() =>
 
 export default function Community() {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#000000] flex flex-col font-sans selection:bg-primary/30">
       <SEO
         title="Comunidade Agro-Futuro"
         description="Conecte-se, aprenda e faça negócios com outros produtores na rede AgroIA."
       />
-      <header className="sticky top-0 z-50 w-full bg-[#111827]/80 backdrop-blur-md border-b border-white/10 shadow-md transition-all duration-400 ease-bounce">
+      <header className="sticky top-0 z-50 w-full glass-panel border-b border-primary/20 shadow-[0_4px_20px_rgba(0,0,0,0.5)] transition-all duration-400 ease-bounce">
         <div className="container flex h-16 items-center justify-between px-4 md:px-6">
           <Link
             to="/"
-            className="flex items-center gap-2 font-bold text-xl hover:opacity-90 transition-opacity"
+            className="flex items-center gap-2 font-bold text-xl hover:opacity-90 transition-opacity text-white"
           >
-            <Tractor className="w-6 h-6 text-premium-gold" />
+            <Logo className="w-8 h-8 text-primary drop-shadow-[0_0_8px_rgba(29,185,84,0.6)]" />
             <span>AgroIA</span>
           </Link>
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
-              className="text-white hover:text-premium-gold hover:bg-white/10 hidden sm:flex"
+              className="text-white hover:text-primary hover:bg-primary/10 hidden sm:flex font-semibold"
               asChild
             >
               <Link to="/dashboard">Voltar ao Dashboard</Link>
@@ -46,10 +47,12 @@ export default function Community() {
       </header>
 
       <main className="flex-1 container mx-auto px-4 py-8 max-w-6xl">
-        <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 glass-panel p-6 rounded-2xl">
           <div>
-            <h1 className="text-3xl font-bold text-white">Comunidade Agro-Futuro</h1>
-            <p className="text-muted-foreground mt-1">
+            <h1 className="text-3xl font-extrabold text-white tracking-tight">
+              Comunidade Agro-Futuro
+            </h1>
+            <p className="text-[#A0A0A0] mt-2 font-medium">
               Conecte-se, aprenda e faça negócios com outros produtores.
             </p>
           </div>
@@ -57,24 +60,24 @@ export default function Community() {
         </div>
 
         <Tabs defaultValue="forum" className="w-full">
-          <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent mb-6 overflow-x-auto flex-nowrap [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 bg-[#050505] p-1 border border-primary/20 h-auto md:h-12 mb-8 rounded-xl gap-1">
             <TabsTrigger
               value="forum"
-              className="data-[state=active]:border-b-2 data-[state=active]:border-agro-green data-[state=active]:text-agro-green data-[state=active]:shadow-none rounded-none px-6 py-3 text-base font-medium text-muted-foreground bg-transparent whitespace-nowrap transition-colors"
+              className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-black py-2.5 text-white/80 transition-all font-bold"
             >
               <MessageSquare className="w-4 h-4 mr-2" />
               Fórum
             </TabsTrigger>
             <TabsTrigger
               value="live"
-              className="data-[state=active]:border-b-2 data-[state=active]:border-agro-green data-[state=active]:text-agro-green data-[state=active]:shadow-none rounded-none px-6 py-3 text-base font-medium text-muted-foreground bg-transparent whitespace-nowrap transition-colors"
+              className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-black py-2.5 text-white/80 transition-all font-bold"
             >
               <PlayCircle className="w-4 h-4 mr-2" />
               Próxima Live
             </TabsTrigger>
             <TabsTrigger
               value="marketplace"
-              className="data-[state=active]:border-b-2 data-[state=active]:border-agro-green data-[state=active]:text-agro-green data-[state=active]:shadow-none rounded-none px-6 py-3 text-base font-medium text-muted-foreground bg-transparent whitespace-nowrap transition-colors"
+              className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-black py-2.5 text-white/80 transition-all font-bold"
             >
               <ShoppingBag className="w-4 h-4 mr-2" />
               Marketplace
@@ -85,7 +88,11 @@ export default function Community() {
             value="forum"
             className="animate-in fade-in slide-in-from-bottom-4 duration-500 focus-visible:outline-none"
           >
-            <Suspense fallback={<Skeleton className="w-full h-[400px] rounded-xl" />}>
+            <Suspense
+              fallback={
+                <Skeleton className="w-full h-[400px] rounded-xl bg-[#050505] border border-primary/20" />
+              }
+            >
               <ForumTab />
             </Suspense>
           </TabsContent>
@@ -94,7 +101,11 @@ export default function Community() {
             value="live"
             className="animate-in fade-in slide-in-from-bottom-4 duration-500 focus-visible:outline-none"
           >
-            <Suspense fallback={<Skeleton className="w-full h-[400px] rounded-xl" />}>
+            <Suspense
+              fallback={
+                <Skeleton className="w-full h-[400px] rounded-xl bg-[#050505] border border-primary/20" />
+              }
+            >
               <LiveTab />
             </Suspense>
           </TabsContent>
@@ -103,7 +114,11 @@ export default function Community() {
             value="marketplace"
             className="animate-in fade-in slide-in-from-bottom-4 duration-500 focus-visible:outline-none"
           >
-            <Suspense fallback={<Skeleton className="w-full h-[400px] rounded-xl" />}>
+            <Suspense
+              fallback={
+                <Skeleton className="w-full h-[400px] rounded-xl bg-[#050505] border border-primary/20" />
+              }
+            >
               <MarketplaceTab />
             </Suspense>
           </TabsContent>

@@ -30,13 +30,13 @@ export default function Pecuaria() {
       />
 
       <main className="flex-1 container py-8 mx-auto space-y-8">
-        <div className="flex flex-col md:flex-row items-start justify-between gap-4 bg-[#050505] p-6 rounded-2xl border border-[#1DB954]/20">
+        <div className="flex flex-col md:flex-row items-start justify-between gap-4 glass-panel p-6 rounded-2xl">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-[#FFFFFF] flex items-center gap-3">
-              <Logo className="w-8 h-8 text-[#1DB954]" />
+            <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
+              <Logo className="w-8 h-8 text-primary drop-shadow-[0_0_8px_rgba(29,185,84,0.6)]" />
               Gestão de Pecuária
             </h1>
-            <p className="text-[#E0E0E0] mt-2 text-lg font-medium">
+            <p className="text-[#A0A0A0] mt-2 text-lg font-medium">
               Manejo inteligente de rebanhos. Otimize custos com nutrição, garanta certificações ESG
               e monitore indicadores mercadológicos.
             </p>
@@ -44,28 +44,28 @@ export default function Pecuaria() {
         </div>
 
         <Tabs defaultValue="calculadora" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 h-auto p-1 bg-[#050505] border border-[#1DB954]/20 rounded-xl mb-8">
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 h-auto p-1 bg-[#050505] border border-primary/20 rounded-xl mb-8 gap-1">
             <TabsTrigger
               value="calculadora"
-              className="py-3 text-sm font-bold data-[state=active]:bg-[#1DB954] data-[state=active]:text-[#000000] text-[#E0E0E0] rounded-lg transition-all"
+              className="py-3 text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-black text-white/80 rounded-lg transition-all"
             >
               Calculadora Ração
             </TabsTrigger>
             <TabsTrigger
               value="esg"
-              className="py-3 text-sm font-bold data-[state=active]:bg-[#1DB954] data-[state=active]:text-[#000000] text-[#E0E0E0] rounded-lg transition-all"
+              className="py-3 text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-black text-white/80 rounded-lg transition-all"
             >
               Rastreabilidade ESG
             </TabsTrigger>
             <TabsTrigger
               value="cepea"
-              className="py-3 text-sm font-bold data-[state=active]:bg-[#1DB954] data-[state=active]:text-[#000000] text-[#E0E0E0] rounded-lg transition-all"
+              className="py-3 text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-black text-white/80 rounded-lg transition-all"
             >
               Mercado CEPEA
             </TabsTrigger>
             <TabsTrigger
               value="rebanho"
-              className="py-3 text-sm font-bold data-[state=active]:bg-[#1DB954] data-[state=active]:text-[#000000] text-[#E0E0E0] rounded-lg transition-all"
+              className="py-3 text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-black text-white/80 rounded-lg transition-all"
             >
               Rebanho
             </TabsTrigger>

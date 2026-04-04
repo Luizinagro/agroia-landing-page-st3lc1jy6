@@ -19,8 +19,8 @@ export default function Layout() {
 
   if (!isPublicPath && auth?.loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#000000]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary drop-shadow-[0_0_10px_rgba(29,185,84,0.5)]" />
       </div>
     )
   }
@@ -30,10 +30,10 @@ export default function Layout() {
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset>
-          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 bg-background">
-            <SidebarTrigger className="-ml-1" />
+          <header className="flex h-16 shrink-0 items-center gap-2 border-b border-primary/20 px-4 bg-[#000000] sticky top-0 z-10 backdrop-blur-md">
+            <SidebarTrigger className="-ml-1 text-white hover:text-primary transition-colors" />
           </header>
-          <main className="flex-1 flex flex-col p-4 md:p-6 overflow-auto bg-background">
+          <main className="flex-1 flex flex-col p-4 md:p-6 overflow-auto bg-[#000000] text-white">
             <Outlet />
           </main>
         </SidebarInset>
@@ -42,7 +42,7 @@ export default function Layout() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen bg-[#000000]">
       <Header />
       <main className="flex-1 flex flex-col">
         <Outlet />

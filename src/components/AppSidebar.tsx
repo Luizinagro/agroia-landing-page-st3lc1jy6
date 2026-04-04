@@ -80,14 +80,14 @@ export function AppSidebar() {
 
   return (
     <>
-      <Sidebar>
-        <SidebarHeader className="h-16 flex items-center justify-start px-4 border-b border-border bg-transparent">
-          <div className="flex items-center gap-2 font-bold text-xl text-foreground">
-            <Logo className="h-8 w-8 text-primary" />
+      <Sidebar className="border-r border-primary/20 bg-[#050505]">
+        <SidebarHeader className="h-16 flex items-center justify-start px-4 border-b border-primary/20 bg-transparent">
+          <div className="flex items-center gap-2 font-bold text-xl text-white">
+            <Logo className="h-8 w-8 text-primary drop-shadow-[0_0_8px_rgba(29,185,84,0.6)]" />
             <span>AgroIA</span>
           </div>
         </SidebarHeader>
-        <SidebarContent className="py-4">
+        <SidebarContent className="py-4 bg-transparent">
           <SidebarMenu>
             {menuItems.map((item) => {
               const allowed = hasFeature(item.feature)
@@ -99,10 +99,10 @@ export function AppSidebar() {
                     asChild
                     isActive={isActive && allowed}
                     className={cn(
-                      'transition-all duration-300 ease-out hover:text-primary hover:bg-primary/10 rounded-xl',
+                      'transition-all duration-300 ease-out hover:text-primary hover:bg-primary/10 rounded-xl mx-2',
                       isActive
-                        ? 'bg-primary/10 text-primary font-semibold'
-                        : 'text-muted-foreground',
+                        ? 'bg-primary/10 text-primary font-bold shadow-[inset_0_0_10px_rgba(29,185,84,0.1)] border border-primary/20'
+                        : 'text-[#A0A0A0]',
                       !allowed
                         ? 'opacity-50 grayscale cursor-not-allowed hover:bg-transparent hover:text-muted-foreground'
                         : '',
@@ -119,13 +119,13 @@ export function AppSidebar() {
             })}
           </SidebarMenu>
         </SidebarContent>
-        <SidebarFooter className="border-t p-4">
-          <div className="flex items-center justify-between overflow-hidden gap-2">
+        <SidebarFooter className="border-t border-primary/20 p-4 bg-transparent">
+          <div className="flex items-center justify-between overflow-hidden gap-2 glass-card rounded-xl p-2 px-3">
             <div className="flex flex-col truncate">
-              <span className="text-sm font-medium truncate" title={userName}>
+              <span className="text-sm font-bold text-white truncate" title={userName}>
                 {userName}
               </span>
-              <span className="text-xs text-muted-foreground truncate" title={userEmail}>
+              <span className="text-xs text-primary truncate" title={userEmail}>
                 {userEmail}
               </span>
             </div>
@@ -134,27 +134,34 @@ export function AppSidebar() {
               size="icon"
               onClick={handleLogout}
               title="Sair"
-              className="shrink-0"
+              className="shrink-0 hover:bg-red-500/10 hover:text-red-500"
             >
-              <LogOut className="h-5 w-5 text-destructive" />
+              <LogOut className="h-5 w-5 text-red-500" />
             </Button>
           </div>
         </SidebarFooter>
       </Sidebar>
 
       <Dialog open={blockedOpen} onOpenChange={setBlockedOpen}>
-        <DialogContent>
+        <DialogContent className="glass-panel border-primary/20 text-white sm:max-w-[425px] rounded-[16px]">
           <DialogHeader>
-            <DialogTitle>Funcionalidade bloqueada</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-xl font-bold text-primary">
+              Funcionalidade bloqueada
+            </DialogTitle>
+            <DialogDescription className="text-[#A0A0A0]">
               Faça upgrade do seu plano para acessar este recurso e potencializar sua produção.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setBlockedOpen(false)}>
+            <Button
+              variant="outline"
+              className="border-primary/20 text-white hover:bg-primary/10 rounded-full"
+              onClick={() => setBlockedOpen(false)}
+            >
               Cancelar
             </Button>
             <Button
+              className="rounded-full bg-primary hover:bg-primary/90 text-black font-bold shadow-[0_0_15px_rgba(29,185,84,0.4)]"
               onClick={() => {
                 setBlockedOpen(false)
                 navigate('/planos')
