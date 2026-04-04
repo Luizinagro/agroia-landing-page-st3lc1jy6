@@ -36,10 +36,10 @@ export function Hero() {
               <Button
                 asChild
                 size="lg"
-                className="bg-primary hover:bg-primary/90 text-white font-bold h-14 px-8 rounded-full text-lg"
+                className="bg-[#00ff66] hover:bg-[#00cc55] text-black font-black tracking-tight h-14 px-8 rounded-full text-lg shadow-[0_0_20px_rgba(0,255,102,0.4)] hover:shadow-[0_0_30px_rgba(0,255,102,0.6)] transition-all duration-300"
               >
                 <Link to="/cadastro">
-                  Comece Agora
+                  Começar Agora
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
               </Button>
@@ -88,13 +88,13 @@ export function Hero() {
                 </div>
               </div>
 
-              <div className="bg-primary rounded-3xl p-6 flex flex-col justify-between text-black hover:bg-primary/90 transition-colors duration-500">
-                <Users className="w-8 h-8 text-black/60 mb-4" />
+              <div className="bg-[#003314] border border-[#00ff66]/20 rounded-3xl p-6 flex flex-col justify-between text-white hover:bg-[#00401a] transition-colors duration-500">
+                <Users className="w-8 h-8 text-[#00ff66] mb-4" />
                 <div>
-                  <p className="text-black/80 font-bold text-xs mb-1 uppercase tracking-wider">
+                  <p className="text-[#00ff66]/80 font-bold text-xs mb-1 uppercase tracking-wider">
                     Produtores
                   </p>
-                  <p className="text-3xl font-black text-black tracking-tighter">5k+</p>
+                  <p className="text-3xl font-black text-white tracking-tighter">5k+</p>
                 </div>
               </div>
             </div>

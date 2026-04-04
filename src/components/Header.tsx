@@ -30,7 +30,7 @@ export function Header() {
             <Logo className="w-8 h-8 text-primary" />
             <span className="text-xl font-black tracking-tight text-white">
               Agro
-              <span className="text-primary drop-shadow-[0_0_10px_rgba(34,197,94,0.5)]">IA</span>
+              <span className="text-primary drop-shadow-[0_0_10px_currentColor]">IA</span>
             </span>
           </Link>
 
@@ -55,7 +55,7 @@ export function Header() {
             </Link>
             <Button
               asChild
-              className="bg-primary hover:bg-primary/90 text-black font-black rounded-full px-6 shadow-[0_0_15px_rgba(34,197,94,0.3)] hover:shadow-[0_0_25px_rgba(34,197,94,0.5)] transition-all"
+              className="bg-[#00ff66] hover:bg-[#00cc55] text-black font-black tracking-tight rounded-full px-6 shadow-[0_0_15px_rgba(0,255,102,0.4)] hover:shadow-[0_0_25px_rgba(0,255,102,0.6)] transition-all duration-300"
             >
               <Link to="/cadastro">Começar Agora</Link>
             </Button>
@@ -97,7 +97,7 @@ export function Header() {
           </Link>
           <Button
             asChild
-            className="w-full bg-primary hover:bg-primary/90 text-black font-black rounded-full"
+            className="w-full bg-[#00ff66] hover:bg-[#00cc55] text-black font-black tracking-tight rounded-full shadow-[0_0_15px_rgba(0,255,102,0.4)] transition-all duration-300"
           >
             <Link to="/cadastro" onClick={() => setIsMenuOpen(false)}>
               Começar Agora
