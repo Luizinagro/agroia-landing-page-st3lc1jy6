@@ -39,9 +39,8 @@ export default function Login() {
 
       <div className="w-full max-w-md p-8 rounded-2xl bg-black/60 border border-primary/20 backdrop-blur-xl shadow-2xl animate-fade-in-up">
         <div className="flex flex-col items-center mb-8">
-          <Link to="/" className="flex items-center gap-2 mb-6">
-            <Logo className="h-10 w-10" />
-            <LogoText className="text-2xl" />
+          <Link to="/" className="flex items-center justify-center mb-6">
+            <Logo />
           </Link>
           <h2 className="text-2xl font-bold text-center text-white">Bem-vindo de volta</h2>
           <p className="text-muted-foreground text-sm mt-2 text-center">

@@ -43,18 +43,21 @@ export function Hero() {
               Começar Agora <ArrowRight className="w-5 h-5" />
             </Button>
           </Link>
-          <a href="#solucoes">
+          <a href="#pricing">
             <Button
               size="lg"
               variant="outline"
               className="h-12 px-8 border-primary/30 text-primary hover:bg-primary/10 font-bold text-lg"
             >
-              Conhecer Soluções
+              Conhecer Planos
             </Button>
           </a>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto pt-16">
+        <div
+          id="solucoes"
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto pt-16 scroll-mt-24"
+        >
           <div className="flex flex-col items-center p-6 rounded-2xl bg-black/40 border border-primary/20 backdrop-blur hover:bg-primary/5 transition-colors">
             <Cpu className="w-10 h-10 text-primary mb-4" />
             <h3 className="text-lg font-bold mb-2 text-foreground">IA Avançada</h3>

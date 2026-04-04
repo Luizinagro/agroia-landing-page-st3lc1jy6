@@ -17,7 +17,7 @@ export function Header() {
           </Link>
           <nav className="hidden md:flex items-center gap-6">
             <a
-              href="#recursos"
+              href="#features"
               className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             >
               Recursos
