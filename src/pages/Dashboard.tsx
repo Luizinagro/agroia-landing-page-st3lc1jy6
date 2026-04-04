@@ -14,7 +14,17 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog'
-import { AlertTriangle, TrendingUp, Shield, Leaf, Activity, DollarSign, MapPin } from 'lucide-react'
+import {
+  AlertTriangle,
+  TrendingUp,
+  Shield,
+  Leaf,
+  Activity,
+  DollarSign,
+  MapPin,
+  X,
+} from 'lucide-react'
+import { Pricing } from '@/components/sections/pricing'
 
 const Dashboard = () => {
   const { user } = useAuth() as any
@@ -22,6 +32,16 @@ const Dashboard = () => {
   const location = useLocation()
   const { plan: userPlan } = useSubscription()
   const [blockedOpen, setBlockedOpen] = useState(false)
+  const [promoOpen, setPromoOpen] = useState(false)
+
+  useEffect(() => {
+    const hasSeenPromo = sessionStorage.getItem('hasSeenPlanPromo')
+    const currentPlan = user?.plan_active || user?.plano_ativo || 'Básico'
+    if (!hasSeenPromo && currentPlan === 'Básico') {
+      setPromoOpen(true)
+      sessionStorage.setItem('hasSeenPlanPromo', 'true')
+    }
+  }, [user])
 
   useEffect(() => {
     if (location.state?.blockedFeature) {
@@ -198,6 +218,23 @@ const Dashboard = () => {
                 Fazer Upgrade
               </Button>
             </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={promoOpen} onOpenChange={setPromoOpen}>
+          <DialogContent className="max-w-[95vw] w-full lg:max-w-6xl bg-black border border-primary/20 p-0 overflow-y-auto max-h-[90vh] rounded-3xl hide-default-close">
+            <div className="sticky top-0 z-50 flex justify-start p-4 bg-gradient-to-b from-black to-transparent pointer-events-none">
+              <button
+                onClick={() => setPromoOpen(false)}
+                className="pointer-events-auto flex items-center justify-center w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 text-white hover:bg-zinc-800 hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary shadow-lg"
+              >
+                <X className="w-5 h-5" />
+                <span className="sr-only">Fechar</span>
+              </button>
+            </div>
+            <div className="-mt-16 pb-8">
+              <Pricing />
+            </div>
           </DialogContent>
         </Dialog>
       </main>

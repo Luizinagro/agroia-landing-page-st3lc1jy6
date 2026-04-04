@@ -85,6 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!mounted) return
       setSession(session)
       if (session?.user) {
+        setLoading(true)
         fetchProfile(session.user.id, session.user.email || '')
       } else {
         setUser(null)

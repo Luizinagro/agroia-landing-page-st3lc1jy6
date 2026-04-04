@@ -1,117 +1,126 @@
-import { Outlet, Link, useLocation } from 'react-router-dom'
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
+import { useAuth } from '@/contexts/AuthContext'
 import {
-  LayoutDashboard,
-  Users,
-  Tractor,
-  CreditCard,
-  User,
-  Calculator,
-  Leaf,
-  Settings,
-  ListTodo,
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { Logo } from '@/components/ui/logo'
-import {
+  SidebarProvider,
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
-  SidebarProvider,
+  SidebarMenuButton,
   SidebarTrigger,
   SidebarHeader,
+  SidebarInset,
 } from '@/components/ui/sidebar'
-import { Toaster } from '@/components/ui/toaster'
-
-const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'CRM', href: '/crm', icon: Users },
-  { name: 'Pecuária', href: '/pecuaria', icon: Tractor },
-  { name: 'Rastreabilidade ESG', href: '/rastreabilidade', icon: Leaf },
-  { name: 'Calculadora ROI', href: '/roi', icon: Calculator },
-  { name: 'Meus Cálculos', href: '/meus-calculos', icon: Calculator },
-  { name: 'Planos', href: '/planos', icon: Settings },
-  { name: 'Perfil', href: '/perfil', icon: User },
-]
+import {
+  Home,
+  Tractor,
+  Users,
+  Settings,
+  LogOut,
+  Package,
+  CreditCard,
+  Search,
+  Calculator,
+  MapPin,
+  BrainCircuit,
+  BookOpen,
+} from 'lucide-react'
+import { Logo } from '@/components/ui/logo'
+import { Button } from '@/components/ui/button'
 
 export default function Layout() {
+  const { user, logout } = useAuth()
   const location = useLocation()
+  const navigate = useNavigate()
 
-  const isPublic = ['/', '/login', '/cadastro', '/forgot-password'].includes(location.pathname)
+  const isAdmin = user?.user_type === 'admin' || user?.tipo_usuario === 'admin'
 
-  if (isPublic) {
-    return (
-      <div className="min-h-screen flex flex-col w-full bg-[#000000] text-slate-200 font-sans selection:bg-green-500/30">
-        <main className="flex-1 flex flex-col relative w-full">
-          <Outlet />
-        </main>
-        <Toaster />
-      </div>
-    )
+  const menuItems = [
+    { title: 'Dashboard', icon: Home, path: '/dashboard' },
+    { title: 'Monitoramento', icon: MapPin, path: '/monitoramento' },
+    { title: 'Previsão IA', icon: BrainCircuit, path: '/previsao-ia' },
+    { title: 'Pecuária', icon: Tractor, path: '/pecuaria' },
+    { title: 'Rastreabilidade', icon: Search, path: '/rastreabilidade' },
+    { title: 'Calculadora ROI', icon: Calculator, path: '/roi' },
+    { title: 'Loja', icon: Package, path: '/loja' },
+    { title: 'Comunidade', icon: Users, path: '/comunidade' },
+    ...(isAdmin ? [{ title: 'CRM', icon: BookOpen, path: '/crm' }] : []),
+    { title: 'Faturamento', icon: CreditCard, path: '/faturamento' },
+    { title: 'Planos', icon: CreditCard, path: '/planos' },
+    { title: 'Configurações', icon: Settings, path: '/perfil' },
+  ]
+
+  const handleLogout = async () => {
+    await logout()
+    navigate('/login')
   }
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-[#000000] text-slate-200 font-sans selection:bg-green-500/30">
-        <Sidebar className="border-r border-slate-800/50 bg-[#0a0a0a]/95 backdrop-blur-xl">
-          <SidebarHeader className="p-6 border-b border-slate-800/50 flex items-center">
-            <Logo />
+      <div className="flex min-h-screen w-full bg-black text-white">
+        <Sidebar className="border-r border-primary/20 bg-zinc-950">
+          <SidebarHeader className="p-4">
+            <Link to="/dashboard" className="flex items-center gap-2">
+              <Logo />
+            </Link>
           </SidebarHeader>
-          <SidebarContent className="p-4">
+          <SidebarContent>
             <SidebarGroup>
+              <SidebarGroupLabel className="text-zinc-500">Menu Principal</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu className="gap-2">
-                  {navigation.map((item) => {
-                    const isActive =
-                      location.pathname === item.href ||
-                      (item.href !== '/' && location.pathname.startsWith(item.href))
-                    return (
-                      <SidebarMenuItem key={item.name}>
-                        <SidebarMenuButton
-                          asChild
-                          isActive={isActive}
-                          className={cn(
-                            'transition-all duration-200 hover:bg-green-500/10 hover:text-green-400 h-10',
-                            isActive
-                              ? 'bg-green-500/10 text-green-500 font-medium'
-                              : 'text-slate-400',
-                          )}
-                        >
-                          <Link
-                            to={item.href}
-                            className="flex items-center gap-3 px-3 py-2 rounded-lg"
-                          >
-                            <item.icon className="h-5 w-5" />
-                            <span className="text-sm">{item.name}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    )
-                  })}
+                  {menuItems.map((item) => (
+                    <SidebarMenuItem key={item.path}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={location.pathname === item.path}
+                        className="data-[active=true]:bg-primary/10 data-[active=true]:text-primary hover:bg-zinc-900 hover:text-primary transition-colors"
+                      >
+                        <Link to={item.path} className="flex items-center gap-3">
+                          <item.icon className="w-5 h-5" />
+                          <span className="font-medium">{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
           </SidebarContent>
+          <div className="p-4 mt-auto border-t border-primary/20">
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-zinc-400 hover:text-red-500 hover:bg-red-500/10"
+              onClick={handleLogout}
+            >
+              <LogOut className="w-5 h-5 mr-3" />
+              Sair
+            </Button>
+          </div>
         </Sidebar>
-
-        <main className="flex-1 flex flex-col min-h-screen overflow-hidden relative">
-          <header className="h-16 flex items-center px-6 border-b border-slate-800/50 bg-[#0a0a0a]/80 backdrop-blur-md sticky top-0 z-10 md:hidden">
-            <SidebarTrigger className="text-slate-400 hover:text-white" />
-            <div className="ml-4 scale-75 origin-left">
-              <Logo />
+        <SidebarInset className="flex-1 bg-black overflow-x-hidden min-w-0">
+          <header className="flex h-16 items-center gap-4 border-b border-primary/20 px-6 bg-zinc-950/50 backdrop-blur-sm sticky top-0 z-40">
+            <SidebarTrigger className="text-zinc-400 hover:text-primary" />
+            <div className="flex-1" />
+            <div className="flex items-center gap-4">
+              <div className="text-sm text-right hidden sm:block">
+                <p className="font-medium text-white">{user?.name || user?.nome || 'Usuário'}</p>
+                <p className="text-xs text-zinc-500 capitalize">
+                  {user?.plano_ativo || user?.plan_active || 'Básico'}
+                </p>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-primary/20 border border-primary/50 flex items-center justify-center text-primary font-bold">
+                {(user?.name || user?.nome || 'U')[0].toUpperCase()}
+              </div>
             </div>
           </header>
-
-          <div className="flex-1 overflow-y-auto bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-green-900/10 via-[#000000] to-[#000000]">
-            <div className="h-full p-4 md:p-8 max-w-7xl mx-auto animate-fade-in">
-              <Outlet />
-            </div>
-          </div>
-        </main>
-        <Toaster />
+          <main className="p-6 max-w-full">
+            <Outlet />
+          </main>
+        </SidebarInset>
       </div>
     </SidebarProvider>
   )
