@@ -11,11 +11,11 @@ export function LogoText({ className }: { className?: string }) {
 
 export function Logo({ className }: { className?: string }) {
   return (
-    <div className={cn('flex items-center gap-2', className)}>
+    <div className={cn('flex items-center gap-1', className)}>
       <img
         src={logoImg}
         alt="Agro IA Logo"
-        className="h-16 w-16 object-contain drop-shadow-[0_0_12px_rgba(0,255,102,0.5)]"
+        className="h-[70px] w-[70px] object-contain drop-shadow-[0_0_12px_rgba(0,255,102,0.5)] -mr-1"
       />
       <LogoText />
     </div>

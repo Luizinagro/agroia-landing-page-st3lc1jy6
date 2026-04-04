@@ -3,6 +3,8 @@ import { CrmOverview } from '@/components/crm/CrmOverview'
 import { CrmLeads } from '@/components/crm/CrmLeads'
 import { CrmTasks } from '@/components/crm/CrmTasks'
 import { CrmInventory } from '@/components/crm/CrmInventory'
+import { CrmPipeline } from '@/components/crm/CrmPipeline'
+import { CrmReports } from '@/components/crm/CrmReports'
 import { useAuth } from '@/contexts/AuthContext'
 import { Navigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -33,7 +35,7 @@ export default function CRM() {
         </div>
 
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 bg-[#050505] p-1 border border-primary/20 h-auto md:h-12 mb-8 rounded-xl gap-1">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-6 bg-[#050505] p-1 border border-primary/20 h-auto md:h-12 mb-8 rounded-xl gap-1">
             <TabsTrigger
               value="overview"
               className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-black py-2.5 text-white/80 transition-all font-bold"
@@ -58,6 +60,18 @@ export default function CRM() {
             >
               Estoque de Insumos
             </TabsTrigger>
+            <TabsTrigger
+              value="pipeline"
+              className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-black py-2.5 text-white/80 transition-all font-bold"
+            >
+              Pipeline
+            </TabsTrigger>
+            <TabsTrigger
+              value="reports"
+              className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-black py-2.5 text-white/80 transition-all font-bold"
+            >
+              Relatórios
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4">
@@ -77,6 +91,20 @@ export default function CRM() {
             className="space-y-4 outline-none animate-in fade-in slide-in-from-bottom-4 duration-500"
           >
             <CrmInventory />
+          </TabsContent>
+
+          <TabsContent
+            value="pipeline"
+            className="space-y-4 outline-none animate-in fade-in slide-in-from-bottom-4 duration-500"
+          >
+            <CrmPipeline />
+          </TabsContent>
+
+          <TabsContent
+            value="reports"
+            className="space-y-4 outline-none animate-in fade-in slide-in-from-bottom-4 duration-500"
+          >
+            <CrmReports />
           </TabsContent>
         </Tabs>
       </main>

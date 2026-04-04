@@ -76,6 +76,7 @@ export function CrmLeads() {
       case 'Em Negociação':
         return 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
       case 'Convertido':
+      case 'Fechado ganho':
         return 'bg-primary/10 text-primary border-primary/20'
       case 'Perdido':
         return 'bg-destructive/10 text-destructive border-destructive/20'
@@ -170,10 +171,10 @@ export function CrmLeads() {
                             Em Negociação
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => updateLeadStatus(lead.id, 'Convertido')}
+                            onClick={() => updateLeadStatus(lead.id, 'Fechado ganho')}
                             className="focus:bg-primary/20 focus:text-primary cursor-pointer font-medium"
                           >
-                            Convertido (Ganho)
+                            Fechado ganho
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => updateLeadStatus(lead.id, 'Perdido')}
