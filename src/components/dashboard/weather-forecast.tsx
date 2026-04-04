@@ -93,8 +93,8 @@ export function WeatherForecast() {
     )
 
   return (
-    <Card className="h-full flex flex-col">
-      <CardHeader className="pb-4 flex flex-row items-center justify-between border-b border-white/5">
+    <Card className="h-full rounded-[2rem] border-black/5 dark:border-white/5 shadow-sm flex flex-col bg-white dark:bg-[#18181b]">
+      <CardHeader className="pb-4 flex flex-row items-center justify-between border-b border-black/5 dark:border-white/5">
         <div>
           <CardTitle className="flex items-center gap-2">
             <CloudRain className="w-5 h-5 text-primary" />

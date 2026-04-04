@@ -65,19 +65,19 @@ export const FeatureCards = ({ userPlan, user }: FeatureCardsProps) => {
             <div
               key={feature.id}
               className={cn(
-                'card-glass p-6 flex flex-col gsap-stagger-item',
+                'bg-white dark:bg-[#18181b] rounded-[2rem] p-6 flex flex-col gsap-stagger-item shadow-sm border border-black/5 dark:border-white/5 transition-shadow hover:shadow-md',
                 !unlocked &&
-                  'opacity-60 grayscale cursor-not-allowed hover:transform-none hover:shadow-none hover:border-border',
+                  'opacity-60 grayscale cursor-not-allowed hover:transform-none hover:shadow-none',
               )}
             >
               <div className="pb-2">
                 <div className="flex justify-between items-start">
                   <div
                     className={cn(
-                      'p-3 rounded-xl backdrop-blur-md',
+                      'p-3 rounded-[1rem]',
                       unlocked
-                        ? 'bg-primary/20 text-primary border border-primary/20'
-                        : 'bg-white/5 text-muted-foreground border border-white/10',
+                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                        : 'bg-gray-100 dark:bg-zinc-800 text-muted-foreground',
                     )}
                   >
                     <feature.icon className="w-6 h-6" />

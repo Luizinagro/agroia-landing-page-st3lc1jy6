@@ -51,8 +51,8 @@ export function AlertsSection() {
   }
 
   return (
-    <Card className="h-full border-primary/10 shadow-elevation flex flex-col overflow-hidden">
-      <CardHeader className="bg-primary/5 pb-4">
+    <Card className="h-full rounded-[2rem] border-black/5 dark:border-white/5 shadow-sm flex flex-col overflow-hidden bg-white dark:bg-[#18181b]">
+      <CardHeader className="bg-slate-50/50 dark:bg-zinc-900/50 pb-4">
         <CardTitle className="text-primary flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Bell className="w-5 h-5 text-secondary" />

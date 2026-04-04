@@ -32,8 +32,8 @@ const chartConfig = {
 
 export function HistoryChart() {
   return (
-    <Card>
-      <CardHeader className="pb-4 border-b border-white/5">
+    <Card className="rounded-[2rem] border-black/5 dark:border-white/5 shadow-sm bg-white dark:bg-[#18181b]">
+      <CardHeader className="pb-4 border-b border-black/5 dark:border-white/5">
         <CardTitle className="flex items-center gap-2">
           <Activity className="w-5 h-5 text-secondary" />
           Histórico Climático (Últimos 7 dias)

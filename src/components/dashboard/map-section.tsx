@@ -60,8 +60,8 @@ export function MapSection() {
   const [selectedRegion, setSelectedRegion] = useState<RegionData | null>(null)
 
   return (
-    <Card className="border-primary/10 shadow-elevation overflow-hidden">
-      <CardHeader className="bg-primary/5 pb-4">
+    <Card className="rounded-[2rem] border-black/5 dark:border-white/5 shadow-sm overflow-hidden bg-white dark:bg-[#18181b]">
+      <CardHeader className="bg-slate-50/50 dark:bg-zinc-900/50 pb-4">
         <CardTitle className="text-primary flex items-center gap-2">
           <MapPin className="w-5 h-5 text-secondary" />
           Mapa Interativo da Região
