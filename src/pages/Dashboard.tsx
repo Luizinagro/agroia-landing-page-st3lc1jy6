@@ -9,6 +9,7 @@ import { useGsapAnimations } from '@/hooks/use-gsap-animations'
 import { useRef } from 'react'
 import { LayoutDashboard, ArrowLeft, LogOut, AlertTriangle, Calendar, Star } from 'lucide-react'
 import { Logo } from '@/components/ui/logo'
+import BentoCard from '@/components/ui/bento-card'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -179,6 +180,10 @@ const Dashboard = () => {
         </div>
 
         <FeatureCards userPlan={userPlan} user={user} />
+
+        <div className="gsap-grow mb-8 flex justify-center w-full">
+          <BentoCard />
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 gsap-grow">
           <div className="lg:col-span-8 space-y-8">

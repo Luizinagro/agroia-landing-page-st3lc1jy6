@@ -29,9 +29,6 @@ import PrevisaoIA from './pages/PrevisaoIA'
 import Rastreabilidade from './pages/Rastreabilidade'
 import Insumos from './pages/Insumos'
 import CRM from './pages/CRM'
-import { FeatureGuard } from './components/FeatureGuard'
-import { AdminGuard } from './components/AdminGuard'
-
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
 
@@ -63,90 +60,21 @@ const App = () => {
                   <Route path="/forgot-password" element={<ForgotPassword />} />
 
                   <Route element={<ProtectedRoute />}>
-                    <Route
-                      path="/dashboard"
-                      element={
-                        <FeatureGuard feature="dashboard" requiredPlan="Básico">
-                          <Dashboard />
-                        </FeatureGuard>
-                      }
-                    />
+                    <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/comunidade" element={<Community />} />
                     <Route path="/faturamento" element={<Billing />} />
-                    <Route
-                      path="/pecuaria"
-                      element={
-                        <FeatureGuard feature="pecuaria">
-                          <Pecuaria />
-                        </FeatureGuard>
-                      }
-                    />
-                    <Route
-                      path="/rastreabilidade"
-                      element={
-                        <FeatureGuard
-                          feature="rastreabilidade"
-                          requiredPlan="Plantio Solo ou Superior"
-                        >
-                          <Rastreabilidade />
-                        </FeatureGuard>
-                      }
-                    />
-                    <Route
-                      path="/loja"
-                      element={
-                        <FeatureGuard feature="loja" requiredPlan="Completo ou Superior">
-                          <Store />
-                        </FeatureGuard>
-                      }
-                    />
-                    <Route
-                      path="/insumos"
-                      element={
-                        <FeatureGuard feature="loja" requiredPlan="Completo ou Superior">
-                          <Insumos />
-                        </FeatureGuard>
-                      }
-                    />
-                    <Route
-                      path="/checkout"
-                      element={
-                        <FeatureGuard feature="loja" requiredPlan="Completo ou Superior">
-                          <Checkout />
-                        </FeatureGuard>
-                      }
-                    />
-                    <Route
-                      path="/roi"
-                      element={
-                        <FeatureGuard feature="roi" requiredPlan="Plantio Solo ou Superior">
-                          <CalculadoraRoi />
-                        </FeatureGuard>
-                      }
-                    />
-                    <Route
-                      path="/meus-calculos"
-                      element={
-                        <FeatureGuard feature="roi" requiredPlan="Plantio Solo ou Superior">
-                          <MeusCalculos />
-                        </FeatureGuard>
-                      }
-                    />
-                    <Route
-                      path="/previsao-ia"
-                      element={
-                        <FeatureGuard feature="previsao-ia">
-                          <PrevisaoIA />
-                        </FeatureGuard>
-                      }
-                    />
+                    <Route path="/pecuaria" element={<Pecuaria />} />
+                    <Route path="/rastreabilidade" element={<Rastreabilidade />} />
+                    <Route path="/loja" element={<Store />} />
+                    <Route path="/insumos" element={<Insumos />} />
+                    <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/roi" element={<CalculadoraRoi />} />
+                    <Route path="/meus-calculos" element={<MeusCalculos />} />
+                    <Route path="/previsao-ia" element={<PrevisaoIA />} />
                     <Route path="/bloqueado" element={<BlockedAccess />} />
                     <Route path="/planos" element={<Planos />} />
                     <Route path="/perfil" element={<Profile />} />
-
-                    <Route element={<AdminGuard />}>
-                      <Route path="/crm" element={<CRM />} />
-                    </Route>
+                    <Route path="/crm" element={<CRM />} />
                   </Route>
 
                   <Route element={<ProtectedRoute requireActive={false} />}>
