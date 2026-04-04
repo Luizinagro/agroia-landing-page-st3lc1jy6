@@ -5,7 +5,6 @@ import {
   Cpu,
   BarChart3,
   Calculator,
-  Users,
   Tractor,
   DollarSign,
   ShoppingBag,
@@ -38,12 +37,6 @@ const ecossistema = [
     title: 'Calculadora ROI',
     description: 'Calcule o retorno sobre o investimento da sua safra.',
     link: '/roi',
-  },
-  {
-    icon: Users,
-    title: 'CRM e Leads',
-    description: 'Gestão de clientes e funil de vendas integrado.',
-    link: '/crm',
   },
   {
     icon: Tractor,

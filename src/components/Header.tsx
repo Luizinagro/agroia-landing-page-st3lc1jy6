@@ -23,10 +23,10 @@ export function Header() {
               Recursos
             </a>
             <a
-              href="#solucoes"
+              href="#pricing"
               className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             >
-              Soluções
+              Planos
             </a>
           </nav>
           <div className="flex items-center gap-4">
