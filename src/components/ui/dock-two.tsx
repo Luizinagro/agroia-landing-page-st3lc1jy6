@@ -48,7 +48,7 @@ const DockIconButton = React.forwardRef<HTMLButtonElement, DockIconButtonProps>(
           'relative group p-2.5 md:p-3 rounded-xl',
           'transition-all duration-300 flex-shrink-0',
           isActive
-            ? 'bg-primary/20 text-primary border border-primary/30 shadow-[inset_0_0_10px_rgba(29,185,84,0.2)]'
+            ? 'bg-[#1a3c34] text-white border border-[#1DB954] shadow-[inset_0_0_15px_rgba(29,185,84,0.3)]'
             : 'text-[#A0A0A0] hover:bg-white/5 hover:text-white border border-transparent',
           disabled &&
             'opacity-40 grayscale cursor-not-allowed hover:bg-transparent hover:text-[#A0A0A0]',
@@ -75,6 +75,21 @@ const DockIconButton = React.forwardRef<HTMLButtonElement, DockIconButtonProps>(
 DockIconButton.displayName = 'DockIconButton'
 
 const Dock = React.forwardRef<HTMLDivElement, DockProps>(({ items, className }, ref) => {
+  const displayItems = React.useMemo(() => {
+    const list = [...items]
+    const dashIdx = list.findIndex((i) => i.label.toLowerCase().includes('dashboard'))
+    const lojaIdx = list.findIndex(
+      (i) => i.label.toLowerCase() === 'loja' || i.label.toLowerCase().includes('loja'),
+    )
+
+    if (dashIdx !== -1 && lojaIdx !== -1 && lojaIdx !== dashIdx + 1) {
+      const [lojaItem] = list.splice(lojaIdx, 1)
+      const targetIdx = list.findIndex((i) => i.label.toLowerCase().includes('dashboard')) + 1
+      list.splice(targetIdx, 0, lojaItem)
+    }
+    return list
+  }, [items])
+
   return (
     <div
       ref={ref}
@@ -96,7 +111,7 @@ const Dock = React.forwardRef<HTMLDivElement, DockProps>(({ items, className }, 
           '[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]',
         )}
       >
-        {items.map((item) => (
+        {displayItems.map((item) => (
           <DockIconButton key={item.label} {...item} />
         ))}
       </motion.div>
