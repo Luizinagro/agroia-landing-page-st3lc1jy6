@@ -1,10 +1,7 @@
 import { Check } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { useRef } from 'react'
-import { useGsapAnimations } from '@/hooks/use-gsap-animations'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { GlowCard } from '@/components/ui/spotlight-card'
-import { NeonLink } from '@/components/ui/neon-button'
 
 const plans = [
   {
@@ -15,19 +12,11 @@ const plans = [
     highlighted: false,
   },
   {
-    name: 'Plantio Solo',
+    name: 'Plantio',
     price: 'R$147',
     period: '/mês',
     description: 'Para pequenos produtores',
     features: ['Tudo do Básico', 'Rastreabilidade', 'Calculadora ROI', 'Alertas de Preço'],
-    highlighted: false,
-  },
-  {
-    name: 'Pecuária Solo',
-    price: 'R$197',
-    period: '/mês',
-    description: 'Foco em rebanhos',
-    features: ['Gestão de Rebanho', 'Controle Sanitário', 'Rastreabilidade', 'Calculadora ROI'],
     highlighted: false,
   },
   {
@@ -38,133 +27,92 @@ const plans = [
     features: ['Plantio + Pecuária', 'Loja de Insumos', 'Dashboard de Estoque', 'Suporte 24/7'],
     highlighted: true,
   },
-  {
-    name: 'Família Coop',
-    price: 'R$747',
-    period: '/mês',
-    description: 'Para grandes grupos',
-    features: [
-      'Tudo do Completo',
-      'Múltiplas Propriedades',
-      'Relatórios Consolidados',
-      'IA Personalizada',
-    ],
-    highlighted: false,
-  },
 ]
 
-function PricingCard({ plan, className }: { plan: (typeof plans)[0]; className?: string }) {
-  return (
-    <GlowCard
-      glowColor="black"
-      customSize
-      className={cn(
-        'bg-[#050505] border border-white/5 rounded-[32px] p-8 flex flex-col hover:border-white/20 transition-colors duration-500 gsap-stagger-item h-full',
-        className,
-      )}
-    >
-      <div className="flex flex-col flex-1 relative z-10">
-        <h3 className="text-white text-2xl font-black mb-2 tracking-tight">{plan.name}</h3>
-        <p className="text-[#A0A0A0] text-sm font-medium mb-8 h-10">{plan.description}</p>
-
-        <div className="flex items-baseline gap-1 mb-8">
-          <span className="text-4xl font-black text-white tracking-tighter">{plan.price}</span>
-          {plan.period && <span className="text-[#A0A0A0] font-bold text-sm">{plan.period}</span>}
-        </div>
-
-        <ul className="space-y-4 mb-8 flex-1">
-          {plan.features.map((f, i) => (
-            <li key={i} className="flex items-start gap-3 text-[#E0E0E0] text-sm font-semibold">
-              <div className="mt-0.5 rounded-full p-1 bg-white/10 text-white">
-                <Check className="w-3 h-3" strokeWidth={3} />
-              </div>
-              <span>{f}</span>
-            </li>
-          ))}
-        </ul>
-
-        <NeonLink
-          to="/cadastro"
-          variant="solid"
-          className="w-full py-4 bg-white text-black font-black text-sm text-center hover:bg-zinc-200 transition-all duration-300 mt-auto hover:scale-[1.02] shadow-[0_0_20px_rgba(255,255,255,0.1)]"
-        >
-          Assinar {plan.name}
-        </NeonLink>
-      </div>
-    </GlowCard>
-  )
-}
-
 export function Pricing() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  useGsapAnimations(containerRef)
-
   return (
-    <section ref={containerRef} className="relative overflow-hidden bg-black py-32">
-      <div className="container relative z-10 max-w-7xl mx-auto">
-        <div className="mb-16 max-w-2xl gsap-grow">
-          <h2 className="text-5xl font-black text-white mb-4 tracking-tighter">Planos</h2>
-          <p className="text-[#A0A0A0] text-lg font-medium">
+    <section id="planos" className="py-32 bg-zinc-950">
+      <div className="container max-w-7xl mx-auto px-4">
+        <div className="text-center mb-16 max-w-2xl mx-auto animate-fade-in-up">
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tighter">
+            Planos e Preços
+          </h2>
+          <p className="text-zinc-400 text-lg font-medium">
             Escolha o pacote ideal para as necessidades da sua operação. Desbloqueie o poder da IA
             hoje.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 gsap-stagger-container items-stretch">
-          {/* Highlighted Completo - takes full width on small, 6 cols on large */}
-          <GlowCard
-            glowColor="black"
-            customSize
-            className="md:col-span-12 lg:col-span-6 bg-zinc-900 border border-white/10 rounded-[32px] p-8 md:p-12 flex flex-col gsap-stagger-item hover:scale-[1.01] transition-transform duration-500 shadow-[0_0_40px_rgba(255,255,255,0.05)] relative overflow-hidden"
-          >
-            <div className="absolute top-8 right-8 z-20 bg-white text-black px-4 py-2 rounded-full text-xs font-black tracking-wider uppercase">
-              POPULAR
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+          {plans.map((plan, i) => (
+            <div
+              key={i}
+              className={cn(
+                'rounded-3xl p-8 transition-all duration-300',
+                plan.highlighted
+                  ? 'bg-primary text-black scale-105 shadow-2xl shadow-primary/20 border-2 border-primary'
+                  : 'bg-black border border-zinc-800 text-white hover:border-zinc-600',
+              )}
+            >
+              {plan.highlighted && (
+                <div className="inline-block px-3 py-1 bg-black text-white text-xs font-bold rounded-full mb-6 uppercase tracking-wider">
+                  Mais Popular
+                </div>
+              )}
 
-            <div className="flex-1 relative z-10 flex flex-col">
-              <h3 className="text-white text-3xl font-black mb-2 tracking-tight">
-                {plans[3].name}
-              </h3>
-              <p className="text-zinc-400 font-bold mb-10">{plans[3].description}</p>
+              <h3 className="text-2xl font-black mb-2">{plan.name}</h3>
+              <p
+                className={cn(
+                  'text-sm font-medium mb-8 h-10',
+                  plan.highlighted ? 'text-black/70' : 'text-zinc-400',
+                )}
+              >
+                {plan.description}
+              </p>
 
-              <div className="flex items-baseline gap-1 mb-10">
-                <span className="text-6xl font-black text-white tracking-tighter">
-                  {plans[3].price}
-                </span>
-                <span className="text-zinc-400 font-black text-lg">{plans[3].period}</span>
+              <div className="flex items-baseline gap-1 mb-8">
+                <span className="text-5xl font-black tracking-tighter">{plan.price}</span>
+                {plan.period && (
+                  <span
+                    className={cn(
+                      'font-bold text-sm',
+                      plan.highlighted ? 'text-black/70' : 'text-zinc-400',
+                    )}
+                  >
+                    {plan.period}
+                  </span>
+                )}
               </div>
 
-              <ul className="space-y-4 mb-10">
-                {plans[3].features.map((f, i) => (
-                  <li key={i} className="flex items-center gap-3 text-white font-bold">
-                    <div className="rounded-full p-1 bg-white/10">
-                      <Check className="w-4 h-4" strokeWidth={4} />
+              <ul className="space-y-4 mb-8">
+                {plan.features.map((f, j) => (
+                  <li key={j} className="flex items-start gap-3 text-sm font-semibold">
+                    <div
+                      className={cn(
+                        'mt-0.5 rounded-full p-1',
+                        plan.highlighted ? 'bg-black/10 text-black' : 'bg-primary/10 text-primary',
+                      )}
+                    >
+                      <Check className="w-3 h-3" strokeWidth={3} />
                     </div>
-                    {f}
+                    <span>{f}</span>
                   </li>
                 ))}
               </ul>
+
+              <Button
+                asChild
+                className={cn(
+                  'w-full h-12 rounded-full font-bold text-base',
+                  plan.highlighted
+                    ? 'bg-black text-white hover:bg-zinc-800'
+                    : 'bg-white text-black hover:bg-zinc-200',
+                )}
+              >
+                <Link to="/cadastro">Assinar {plan.name}</Link>
+              </Button>
             </div>
-
-            <NeonLink
-              to="/cadastro"
-              variant="solid"
-              className="w-full py-5 bg-white text-black font-black text-center hover:bg-zinc-200 hover:scale-[1.02] transition-all duration-300 mt-auto shadow-lg"
-            >
-              Assinar Completo Agora
-            </NeonLink>
-          </GlowCard>
-
-          {/* Plantio & Pecuaria stacked */}
-          <div className="md:col-span-6 lg:col-span-3 flex flex-col gap-6">
-            <PricingCard plan={plans[1]} className="flex-1" />
-            <PricingCard plan={plans[0]} className="flex-1" />
-          </div>
-
-          <div className="md:col-span-6 lg:col-span-3 flex flex-col gap-6">
-            <PricingCard plan={plans[2]} className="flex-1" />
-            <PricingCard plan={plans[4]} className="flex-1" />
-          </div>
+          ))}
         </div>
       </div>
     </section>

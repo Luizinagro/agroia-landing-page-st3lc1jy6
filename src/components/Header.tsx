@@ -1,110 +1,105 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/ui/logo'
-import { NeonLink } from '@/components/ui/neon-button'
+import { cn } from '@/lib/utils'
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
-    <header className="fixed top-0 z-[100] w-full bg-[#000000] border-b border-[#1DB954]/20 transition-all duration-300 ease-out">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <header
+      className={cn(
+        'fixed top-0 z-[100] w-full transition-all duration-300 border-b',
+        scrolled
+          ? 'bg-black/80 backdrop-blur-md border-zinc-800'
+          : 'bg-transparent border-transparent',
+      )}
+    >
+      <div className="container mx-auto px-4 max-w-7xl">
         <div className="flex h-20 items-center justify-between">
-          <div className="flex items-center">
-            <Link
-              to="/"
-              className="flex items-center gap-2 transition-opacity hover:opacity-90 group"
-            >
-              <Logo className="w-8 h-8 text-[#1DB954]" />
-              <span className="text-xl font-bold tracking-tight text-[#FFFFFF] transition-transform duration-300 ease-out">
-                AgroIA
-              </span>
-            </Link>
-          </div>
+          <Link to="/" className="flex items-center gap-2 transition-opacity hover:opacity-90">
+            <Logo className="w-8 h-8 text-primary" />
+            <span className="text-xl font-black tracking-tight text-white">AgroIA</span>
+          </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             <a
               href="#features"
-              className="text-sm font-medium text-[#E0E0E0] hover:text-[#1DB954] transition-colors duration-300 ease-out"
+              className="text-sm font-bold text-zinc-300 hover:text-white transition-colors"
             >
               Funcionalidades
             </a>
             <a
               href="#planos"
-              className="text-sm font-medium text-[#E0E0E0] hover:text-[#1DB954] transition-colors duration-300 ease-out"
+              className="text-sm font-bold text-zinc-300 hover:text-white transition-colors"
             >
               Planos
             </a>
             <Link
               to="/login"
-              className="text-sm font-medium text-[#E0E0E0] hover:text-[#1DB954] transition-colors duration-300 ease-out"
+              className="text-sm font-bold text-zinc-300 hover:text-white transition-colors"
             >
               Login
             </Link>
-            <NeonLink
-              to="/cadastro"
-              variant="solid"
-              className="px-6 py-2 bg-[#1DB954] hover:bg-[#1DB954]/90 text-black font-black"
+            <Button
+              asChild
+              className="bg-primary hover:bg-primary/90 text-white font-bold rounded-full px-6"
             >
-              Começar Agora
-            </NeonLink>
+              <Link to="/cadastro">Começar Agora</Link>
+            </Button>
           </nav>
 
-          {/* Mobile Menu Button */}
-          <div className="flex items-center md:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleMenu}
-              aria-label="Toggle menu"
-              className="text-[#E0E0E0] hover:text-[#1DB954] hover:bg-white/5"
-            >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden text-white hover:bg-white/10"
+          >
+            {isMenuOpen ? <X /> : <Menu />}
+          </Button>
         </div>
       </div>
 
-      {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-[#000000] shadow-lg animate-in slide-in-from-top-2 border-b border-[#1DB954]/20">
-          <div className="flex flex-col space-y-2 px-4 pb-6 pt-4">
-            <a
-              href="#features"
-              className="px-4 py-3 text-base font-medium text-[#E0E0E0] hover:bg-white/5 hover:text-[#1DB954] rounded-[12px] transition-colors duration-300 ease-out"
-              onClick={toggleMenu}
-            >
-              Funcionalidades
-            </a>
-            <a
-              href="#planos"
-              className="px-4 py-3 text-base font-medium text-[#E0E0E0] hover:bg-white/5 hover:text-[#1DB954] rounded-[12px] transition-colors duration-300 ease-out"
-              onClick={toggleMenu}
-            >
-              Planos
-            </a>
-            <Link
-              to="/login"
-              className="px-4 py-3 text-base font-medium text-[#E0E0E0] hover:bg-white/5 hover:text-[#1DB954] rounded-[12px] transition-colors duration-300 ease-out"
-              onClick={toggleMenu}
-            >
-              Login
+        <div className="md:hidden bg-black border-b border-zinc-800 p-4 flex flex-col gap-4 animate-fade-in-down">
+          <a
+            href="#features"
+            className="text-white font-bold px-4 py-2 hover:bg-zinc-900 rounded-lg"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Funcionalidades
+          </a>
+          <a
+            href="#planos"
+            className="text-white font-bold px-4 py-2 hover:bg-zinc-900 rounded-lg"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Planos
+          </a>
+          <Link
+            to="/login"
+            className="text-white font-bold px-4 py-2 hover:bg-zinc-900 rounded-lg"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Login
+          </Link>
+          <Button
+            asChild
+            className="w-full bg-primary hover:bg-primary/90 text-white font-bold rounded-full"
+          >
+            <Link to="/cadastro" onClick={() => setIsMenuOpen(false)}>
+              Começar Agora
             </Link>
-            <div className="px-4 pt-4 pb-2">
-              <NeonLink
-                to="/cadastro"
-                variant="solid"
-                className="w-full justify-center bg-[#1DB954] hover:bg-[#1DB954]/90 text-black font-black py-3"
-              >
-                Começar Agora
-              </NeonLink>
-            </div>
-          </div>
+          </Button>
         </div>
       )}
     </header>

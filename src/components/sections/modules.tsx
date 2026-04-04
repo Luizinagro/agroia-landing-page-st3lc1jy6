@@ -1,6 +1,5 @@
 import { TrendingUp, Users, FileText, Tractor, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { AnimatedSection } from '@/components/animated-section'
 import { cn } from '@/lib/utils'
 
 const modules = [
@@ -26,49 +25,28 @@ const modules = [
   },
 ]
 
-function ModuleCard({
-  mod,
-  className,
-  isAccent,
-}: {
-  mod: (typeof modules)[0]
-  className?: string
-  isAccent?: boolean
-}) {
+function ModuleCard({ mod, isAccent }: { mod: (typeof modules)[0]; isAccent?: boolean }) {
   const Icon = mod.icon
   return (
     <div
       className={cn(
-        'rounded-[32px] p-8 flex flex-col justify-between transition-all duration-500 hover:scale-[1.01] group',
+        'rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1',
         isAccent
-          ? 'bg-[#1DB954] text-black'
-          : 'bg-[#050505] border border-white/5 text-white hover:border-[#1DB954]/30',
-        className,
+          ? 'bg-primary text-black'
+          : 'bg-zinc-950 border border-zinc-800 text-white hover:border-zinc-700',
       )}
     >
       <div className="mb-12">
         <div
           className={cn(
-            'w-12 h-12 rounded-full flex items-center justify-center mb-6 transition-colors',
-            isAccent ? 'bg-black/10' : 'bg-[#1DB954]/10',
+            'w-12 h-12 rounded-2xl flex items-center justify-center mb-6',
+            isAccent ? 'bg-black/10' : 'bg-primary/10',
           )}
         >
-          <Icon className={cn('w-6 h-6', isAccent ? 'text-black' : 'text-[#1DB954]')} />
+          <Icon className={cn('w-6 h-6', isAccent ? 'text-black' : 'text-primary')} />
         </div>
-        <h3
-          className={cn(
-            'text-2xl font-black mb-3 tracking-tight',
-            isAccent ? 'text-black' : 'text-white',
-          )}
-        >
-          {mod.title}
-        </h3>
-        <p
-          className={cn(
-            'font-medium leading-relaxed',
-            isAccent ? 'text-black/70' : 'text-[#A0A0A0]',
-          )}
-        >
+        <h3 className="text-2xl font-black mb-3 tracking-tight">{mod.title}</h3>
+        <p className={cn('font-medium', isAccent ? 'text-black/80' : 'text-zinc-400')}>
           {mod.description}
         </p>
       </div>
@@ -76,8 +54,8 @@ function ModuleCard({
       <Link
         to="/cadastro"
         className={cn(
-          'flex items-center gap-2 font-bold w-fit mt-auto',
-          isAccent ? 'text-black hover:text-black/70' : 'text-[#1DB954] hover:text-[#1aa34a]',
+          'flex items-center gap-2 font-bold w-fit mt-auto group',
+          isAccent ? 'text-black hover:text-black/70' : 'text-primary hover:text-primary/80',
         )}
       >
         Saiba Mais
@@ -89,32 +67,22 @@ function ModuleCard({
 
 export function Modules() {
   return (
-    <section className="py-32 bg-black">
-      <div className="container max-w-7xl mx-auto px-4 md:px-6">
-        <AnimatedSection className="max-w-2xl mb-16">
-          <h2 className="text-5xl font-black text-white mb-4 tracking-tighter">Ecossistema</h2>
-          <p className="text-[#A0A0A0] text-lg font-medium">
+    <section id="features" className="py-32 bg-black">
+      <div className="container max-w-7xl mx-auto px-4">
+        <div className="max-w-2xl mb-16 animate-fade-in-up">
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tighter">
+            Ecossistema Completo
+          </h2>
+          <p className="text-zinc-400 text-lg font-medium">
             Ferramentas essenciais modulares para modernizar e escalar os resultados da sua
             propriedade.
           </p>
-        </AnimatedSection>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          <AnimatedSection delay={0} className="md:col-span-6 lg:col-span-8">
-            <ModuleCard mod={modules[0]} className="h-full min-h-[320px]" />
-          </AnimatedSection>
-
-          <AnimatedSection delay={100} className="md:col-span-6 lg:col-span-4">
-            <ModuleCard mod={modules[1]} isAccent className="h-full min-h-[320px]" />
-          </AnimatedSection>
-
-          <AnimatedSection delay={200} className="md:col-span-6 lg:col-span-5">
-            <ModuleCard mod={modules[2]} className="h-full min-h-[320px]" />
-          </AnimatedSection>
-
-          <AnimatedSection delay={300} className="md:col-span-6 lg:col-span-7">
-            <ModuleCard mod={modules[3]} className="h-full min-h-[320px]" />
-          </AnimatedSection>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {modules.map((mod, i) => (
+            <ModuleCard key={i} mod={mod} isAccent={i === 1} />
+          ))}
         </div>
       </div>
     </section>
