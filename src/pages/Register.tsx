@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Logo, LogoText } from '@/components/ui/logo'
+import { Logo } from '@/components/ui/logo'
 import { useToast } from '@/hooks/use-toast'
 import { supabase } from '@/lib/supabase/client'
 import { Loader2 } from 'lucide-react'
@@ -49,7 +49,6 @@ export default function Register() {
         <div className="flex flex-col items-center mb-8">
           <Link to="/" className="flex items-center gap-2 mb-6">
             <Logo className="h-10 w-10" />
-            <LogoText className="text-2xl" />
           </Link>
           <h2 className="text-2xl font-bold text-center text-white">Crie sua conta</h2>
           <p className="text-muted-foreground text-sm mt-2 text-center">
