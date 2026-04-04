@@ -16,7 +16,7 @@ export function Logo({ className }: { className?: string }) {
       <img
         src={logoImg}
         alt="Agro IA Logo"
-        className="h-[77px] w-[77px] object-contain drop-shadow-[0_0_12px_rgba(0,255,102,0.5)] -mr-3"
+        className="h-[85px] w-[85px] object-contain drop-shadow-[0_0_12px_rgba(0,255,102,0.5)] -mr-5"
       />
       <LogoText />
     </div>
