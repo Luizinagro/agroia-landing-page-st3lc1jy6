@@ -36,6 +36,12 @@ export default function Layout() {
   const location = useLocation()
   const navigate = useNavigate()
 
+  const isPublicPage = ['/', '/login', '/cadastro', '/forgot-password'].includes(location.pathname)
+
+  if (isPublicPage || !user) {
+    return <Outlet />
+  }
+
   const isAdmin = user?.user_type === 'admin' || user?.tipo_usuario === 'admin'
 
   const menuItems = [
@@ -57,6 +63,10 @@ export default function Layout() {
     await logout()
     navigate('/login')
   }
+
+  const firstName = (user?.name || user?.nome || 'Usuário').split(' ')[0]
+  const plan = user?.plan_active || user?.plano_ativo || 'Básico'
+  const initial = firstName[0].toUpperCase()
 
   return (
     <SidebarProvider>
@@ -107,13 +117,11 @@ export default function Layout() {
             <div className="flex-1" />
             <div className="flex items-center gap-4">
               <div className="text-sm text-right hidden sm:block">
-                <p className="font-medium text-white">{user?.name || user?.nome || 'Usuário'}</p>
-                <p className="text-xs text-zinc-500 capitalize">
-                  {user?.plano_ativo || user?.plan_active || 'Básico'}
-                </p>
+                <p className="font-medium text-white">{firstName}</p>
+                <p className="text-xs text-zinc-500 capitalize">{plan}</p>
               </div>
-              <div className="w-10 h-10 rounded-full bg-primary/20 border border-primary/50 flex items-center justify-center text-primary font-bold">
-                {(user?.name || user?.nome || 'U')[0].toUpperCase()}
+              <div className="w-10 h-10 rounded-full bg-[#0a2e16] border border-[#1b5e20] flex items-center justify-center text-primary font-bold">
+                {initial}
               </div>
             </div>
           </header>

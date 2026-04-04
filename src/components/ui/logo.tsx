@@ -3,7 +3,10 @@ import logoImg from '@/assets/adobe-express-file-a4f11.png'
 
 export function LogoText({ className }: { className?: string }) {
   return (
-    <span className={cn('font-black text-[23px] tracking-tight uppercase', className)}>
+    <span
+      className={cn('font-bold text-[26px] tracking-tight uppercase', className)}
+      style={{ fontFamily: 'ui-rounded, "Nunito", "Varela Round", system-ui, sans-serif' }}
+    >
       <span className="text-white">AGRO</span>
       <span className="text-primary">IA</span>
     </span>
@@ -13,11 +16,7 @@ export function LogoText({ className }: { className?: string }) {
 export function Logo({ className }: { className?: string }) {
   return (
     <div className={cn('flex items-center', className)}>
-      <img
-        src={logoImg}
-        alt="Agro IA Logo"
-        className="h-[72px] w-[72px] object-contain drop-shadow-[0_0_12px_rgba(0,255,102,0.5)] -mr-4"
-      />
+      <img src={logoImg} alt="Agro IA Logo" className="h-[72px] w-[72px] object-contain -mr-4" />
       <LogoText />
     </div>
   )
