@@ -5,15 +5,15 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import { Header } from '@/components/Header'
 import { useAuth } from '@/contexts/AuthContext'
-import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
-import { AppSidebar } from '@/components/AppSidebar'
 import { Loader2 } from 'lucide-react'
+import { AppDock } from '@/components/AppDock'
+import { Logo } from '@/components/ui/logo'
 
 export default function Layout() {
   const auth = useAuth() as any
   const location = useLocation()
 
-  // Do not show sidebar on landing page, login, register, forgot-password
+  // Do not show dock on landing page, login, register, forgot-password
   const publicPaths = ['/', '/login', '/cadastro', '/forgot-password']
   const isPublicPath = publicPaths.includes(location.pathname)
 
@@ -27,17 +27,35 @@ export default function Layout() {
 
   if (auth?.user && !isPublicPath) {
     return (
-      <SidebarProvider>
-        <AppSidebar />
-        <SidebarInset>
-          <header className="flex h-16 shrink-0 items-center gap-2 border-b border-primary/20 px-4 bg-[#000000] sticky top-0 z-10 backdrop-blur-md">
-            <SidebarTrigger className="-ml-1 text-white hover:text-primary transition-colors" />
-          </header>
-          <main className="flex-1 flex flex-col p-4 md:p-6 overflow-auto bg-[#000000] text-white">
-            <Outlet />
-          </main>
-        </SidebarInset>
-      </SidebarProvider>
+      <div className="flex flex-col h-[100dvh] bg-[#000000] text-white overflow-hidden relative">
+        <header className="flex h-16 shrink-0 items-center justify-between border-b border-primary/20 px-4 md:px-6 bg-[#050505]/80 sticky top-0 z-10 backdrop-blur-xl">
+          <div className="flex items-center gap-2 font-bold text-xl text-white">
+            <Logo className="h-8 w-8 text-primary drop-shadow-[0_0_8px_rgba(29,185,84,0.6)]" />
+            <span className="tracking-wider">AgroIA</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="text-right hidden md:block">
+              <div
+                className="text-sm font-bold text-white truncate max-w-[150px]"
+                title={auth.user?.user_metadata?.name || 'Produtor'}
+              >
+                {auth.user?.user_metadata?.name || 'Produtor'}
+              </div>
+              <div className="text-xs text-primary truncate max-w-[150px]" title={auth.user?.email}>
+                {auth.user?.email}
+              </div>
+            </div>
+          </div>
+        </header>
+        <main className="flex-1 flex flex-col p-4 md:p-6 overflow-auto pb-32 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <Outlet />
+        </main>
+        <div className="fixed bottom-0 left-0 right-0 z-50 pb-4 md:pb-6 px-2 flex justify-center pointer-events-none">
+          <div className="pointer-events-auto max-w-full">
+            <AppDock />
+          </div>
+        </div>
+      </div>
     )
   }
 
