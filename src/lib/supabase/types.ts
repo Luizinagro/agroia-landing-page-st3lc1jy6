@@ -113,6 +113,36 @@ export type Database = {
           },
         ]
       }
+      comunidade_posts: {
+        Row: {
+          categoria: string
+          conteudo: string
+          created_at: string
+          data: string
+          id: string
+          titulo: string
+          user_id: string
+        }
+        Insert: {
+          categoria: string
+          conteudo: string
+          created_at?: string
+          data: string
+          id?: string
+          titulo: string
+          user_id: string
+        }
+        Update: {
+          categoria?: string
+          conteudo?: string
+          created_at?: string
+          data?: string
+          id?: string
+          titulo?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       crm_leads: {
         Row: {
           created_at: string | null
@@ -179,6 +209,144 @@ export type Database = {
         }
         Relationships: []
       }
+      dashboard_history: {
+        Row: {
+          created_at: string
+          day: string
+          humidity: number
+          id: string
+          temp: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          day: string
+          humidity?: number
+          id?: string
+          temp?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          day?: string
+          humidity?: number
+          id?: string
+          temp?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      dashboard_kpis: {
+        Row: {
+          created_at: string
+          id: string
+          produtividade: number
+          receita_estimada: string
+          saude_safra: string
+          sensores_ativos: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          produtividade?: number
+          receita_estimada?: string
+          saude_safra?: string
+          sensores_ativos?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          produtividade?: number
+          receita_estimada?: string
+          saude_safra?: string
+          sensores_ativos?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      marketplace_pedidos: {
+        Row: {
+          created_at: string
+          data: string
+          frete: number
+          id: string
+          numero_pedido: string
+          produtos: Json
+          status: string
+          subtotal: number
+          user_id: string
+          valor_total: number
+        }
+        Insert: {
+          created_at?: string
+          data: string
+          frete: number
+          id?: string
+          numero_pedido: string
+          produtos?: Json
+          status: string
+          subtotal: number
+          user_id: string
+          valor_total: number
+        }
+        Update: {
+          created_at?: string
+          data?: string
+          frete?: number
+          id?: string
+          numero_pedido?: string
+          produtos?: Json
+          status?: string
+          subtotal?: number
+          user_id?: string
+          valor_total?: number
+        }
+        Relationships: []
+      }
+      marketplace_produtos: {
+        Row: {
+          created_at: string
+          descricao: string
+          estoque: number
+          id: string
+          image: string
+          markup_10pct: boolean
+          nome: string
+          preco_base: number
+          preco_final: number
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          descricao: string
+          estoque?: number
+          id?: string
+          image: string
+          markup_10pct?: boolean
+          nome: string
+          preco_base: number
+          preco_final: number
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          descricao?: string
+          estoque?: number
+          id?: string
+          image?: string
+          markup_10pct?: boolean
+          nome?: string
+          preco_base?: number
+          preco_final?: number
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           id: string
@@ -241,6 +409,39 @@ export type Database = {
           id?: string
           status?: string | null
           total_price?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      pecuaria_animais: {
+        Row: {
+          created_at: string
+          custo_mensal: number
+          fase: string
+          id: string
+          peso: number
+          racao_recomendada: string
+          tipo: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          custo_mensal: number
+          fase: string
+          id?: string
+          peso: number
+          racao_recomendada: string
+          tipo: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          custo_mensal?: number
+          fase?: string
+          id?: string
+          peso?: number
+          racao_recomendada?: string
+          tipo?: string
           user_id?: string
         }
         Relationships: []
@@ -404,6 +605,33 @@ export type Database = {
         }
         Relationships: []
       }
+      system_alerts: {
+        Row: {
+          data_criacao: string
+          data_leitura: string | null
+          id: string
+          mensagem: string
+          tipo: string
+          user_id: string
+        }
+        Insert: {
+          data_criacao?: string
+          data_leitura?: string | null
+          id?: string
+          mensagem: string
+          tipo: string
+          user_id: string
+        }
+        Update: {
+          data_criacao?: string
+          data_leitura?: string | null
+          id?: string
+          mensagem?: string
+          tipo?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_plans: {
         Row: {
           created_at: string
@@ -467,6 +695,42 @@ export type Database = {
           status?: string | null
           trial_expires_at?: string | null
           user_type?: string | null
+        }
+        Relationships: []
+      }
+      weather_forecasts: {
+        Row: {
+          cidade: string
+          created_at: string
+          cultura: string
+          data: string
+          id: string
+          risco_pragas: string
+          temperatura: number
+          umidade: number
+          user_id: string
+        }
+        Insert: {
+          cidade: string
+          created_at?: string
+          cultura: string
+          data: string
+          id?: string
+          risco_pragas: string
+          temperatura: number
+          umidade: number
+          user_id: string
+        }
+        Update: {
+          cidade?: string
+          created_at?: string
+          cultura?: string
+          data?: string
+          id?: string
+          risco_pragas?: string
+          temperatura?: number
+          umidade?: number
+          user_id?: string
         }
         Relationships: []
       }
@@ -663,6 +927,14 @@ export const Constants = {
 //   produto_id: uuid (not null)
 //   quantidade: numeric (not null, default: 1)
 //   created_at: timestamp with time zone (not null, default: now())
+// Table: comunidade_posts
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   titulo: text (not null)
+//   conteudo: text (not null)
+//   categoria: text (not null)
+//   data: text (not null)
+//   created_at: timestamp with time zone (not null, default: now())
 // Table: crm_leads
 //   id: uuid (not null, default: gen_random_uuid())
 //   nome: text (not null)
@@ -681,6 +953,44 @@ export const Constants = {
 //   title: text (not null)
 //   status: text (not null, default: 'pendente'::text)
 //   created_at: timestamp with time zone (not null, default: now())
+// Table: dashboard_history
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   day: text (not null)
+//   temp: numeric (not null, default: 0)
+//   humidity: numeric (not null, default: 0)
+//   created_at: timestamp with time zone (not null, default: now())
+// Table: dashboard_kpis
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   produtividade: numeric (not null, default: 85)
+//   sensores_ativos: text (not null, default: '12/12'::text)
+//   saude_safra: text (not null, default: 'Excelente'::text)
+//   receita_estimada: text (not null, default: 'Em alta'::text)
+//   created_at: timestamp with time zone (not null, default: now())
+//   updated_at: timestamp with time zone (not null, default: now())
+// Table: marketplace_pedidos
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   numero_pedido: text (not null)
+//   data: text (not null)
+//   produtos: jsonb (not null, default: '[]'::jsonb)
+//   subtotal: numeric (not null)
+//   frete: numeric (not null)
+//   valor_total: numeric (not null)
+//   status: text (not null)
+//   created_at: timestamp with time zone (not null, default: now())
+// Table: marketplace_produtos
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (nullable)
+//   nome: text (not null)
+//   descricao: text (not null)
+//   preco_base: numeric (not null)
+//   markup_10pct: boolean (not null, default: true)
+//   preco_final: numeric (not null)
+//   estoque: numeric (not null, default: 0)
+//   image: text (not null)
+//   created_at: timestamp with time zone (not null, default: now())
 // Table: order_items
 //   id: uuid (not null, default: gen_random_uuid())
 //   order_id: uuid (not null)
@@ -694,6 +1004,15 @@ export const Constants = {
 //   status: text (nullable, default: 'pendente'::text)
 //   created_at: timestamp with time zone (not null, default: now())
 //   delivery_address: text (nullable)
+// Table: pecuaria_animais
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   tipo: text (not null)
+//   peso: numeric (not null)
+//   fase: text (not null)
+//   racao_recomendada: text (not null)
+//   custo_mensal: numeric (not null)
+//   created_at: timestamp with time zone (not null, default: now())
 // Table: previsoes
 //   id: uuid (not null, default: gen_random_uuid())
 //   user_id: uuid (not null)
@@ -737,6 +1056,13 @@ export const Constants = {
 //   data_entrada: timestamp with time zone (not null, default: now())
 //   status: text (nullable)
 //   created_at: timestamp with time zone (not null, default: now())
+// Table: system_alerts
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   tipo: text (not null)
+//   mensagem: text (not null)
+//   data_leitura: timestamp with time zone (nullable)
+//   data_criacao: timestamp with time zone (not null, default: now())
 // Table: user_plans
 //   id: uuid (not null, default: gen_random_uuid())
 //   user_id: uuid (not null)
@@ -760,6 +1086,16 @@ export const Constants = {
 //   email: text (nullable)
 //   nome: text (nullable)
 //   plano: text (nullable)
+// Table: weather_forecasts
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   cidade: text (not null)
+//   cultura: text (not null)
+//   temperatura: numeric (not null)
+//   umidade: numeric (not null)
+//   risco_pragas: text (not null)
+//   data: text (not null)
+//   created_at: timestamp with time zone (not null, default: now())
 
 // --- CONSTRAINTS ---
 // Table: ai_forecasts
@@ -771,11 +1107,27 @@ export const Constants = {
 //   PRIMARY KEY carrinho_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY carrinho_produto_id_fkey: FOREIGN KEY (produto_id) REFERENCES products(id) ON DELETE CASCADE
 //   FOREIGN KEY carrinho_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: comunidade_posts
+//   PRIMARY KEY comunidade_posts_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY comunidade_posts_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 // Table: crm_leads
 //   PRIMARY KEY crm_leads_pkey: PRIMARY KEY (id)
 // Table: crm_tasks
 //   PRIMARY KEY crm_tasks_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY crm_tasks_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: dashboard_history
+//   PRIMARY KEY dashboard_history_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY dashboard_history_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: dashboard_kpis
+//   PRIMARY KEY dashboard_kpis_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY dashboard_kpis_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+//   UNIQUE dashboard_kpis_user_id_key: UNIQUE (user_id)
+// Table: marketplace_pedidos
+//   PRIMARY KEY marketplace_pedidos_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY marketplace_pedidos_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: marketplace_produtos
+//   PRIMARY KEY marketplace_produtos_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY marketplace_produtos_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 // Table: order_items
 //   FOREIGN KEY order_items_order_id_fkey: FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 //   PRIMARY KEY order_items_pkey: PRIMARY KEY (id)
@@ -784,6 +1136,9 @@ export const Constants = {
 //   PRIMARY KEY orders_pkey: PRIMARY KEY (id)
 //   CHECK orders_status_check: CHECK ((status = ANY (ARRAY['pendente'::text, 'pago'::text, 'enviado'::text])))
 //   FOREIGN KEY orders_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: pecuaria_animais
+//   PRIMARY KEY pecuaria_animais_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY pecuaria_animais_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 // Table: previsoes
 //   PRIMARY KEY previsoes_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY previsoes_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
@@ -799,6 +1154,9 @@ export const Constants = {
 // Table: rebanho
 //   PRIMARY KEY rebanho_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY rebanho_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: system_alerts
+//   PRIMARY KEY system_alerts_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY system_alerts_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 // Table: user_plans
 //   PRIMARY KEY user_plans_pkey: PRIMARY KEY (id)
 //   CHECK user_plans_plan_name_check: CHECK ((plan_name = ANY (ARRAY['Básico'::text, 'Plantio Solo'::text, 'Pecuário Solo'::text, 'Completo'::text, 'Família Coop'::text])))
@@ -806,6 +1164,9 @@ export const Constants = {
 // Table: users
 //   FOREIGN KEY users_id_fkey: FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE
 //   PRIMARY KEY users_pkey: PRIMARY KEY (id)
+// Table: weather_forecasts
+//   PRIMARY KEY weather_forecasts_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY weather_forecasts_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 
 // --- ROW LEVEL SECURITY POLICIES ---
 // Table: ai_forecasts
@@ -832,11 +1193,36 @@ export const Constants = {
 //   Policy "carrinho_update" (UPDATE, PERMISSIVE) roles={authenticated}
 //     USING: (user_id = auth.uid())
 //     WITH CHECK: (user_id = auth.uid())
+// Table: comunidade_posts
+//   Policy "Users can delete own comunidade_posts" (DELETE, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
+//   Policy "Users can insert own comunidade_posts" (INSERT, PERMISSIVE) roles={authenticated}
+//     WITH CHECK: (auth.uid() = user_id)
+//   Policy "Users can read own comunidade_posts" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
+//   Policy "Users can update own comunidade_posts" (UPDATE, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
 // Table: crm_leads
 //   Policy "admins_all_crm_leads" (ALL, PERMISSIVE) roles={authenticated}
 //     USING: (EXISTS ( SELECT 1    FROM users   WHERE ((users.id = auth.uid()) AND (users.user_type = 'admin'::text))))
 // Table: crm_tasks
 //   Policy "Users can manage their own tasks" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
+//     WITH CHECK: (auth.uid() = user_id)
+// Table: dashboard_history
+//   Policy "Users can read own dashboard_history" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
+// Table: dashboard_kpis
+//   Policy "Users can read own dashboard_kpis" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
+// Table: marketplace_pedidos
+//   Policy "Users can manage own marketplace_pedidos" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
+//     WITH CHECK: (auth.uid() = user_id)
+// Table: marketplace_produtos
+//   Policy "Anyone can read marketplace_produtos" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: true
+//   Policy "Users can manage own marketplace_produtos" (ALL, PERMISSIVE) roles={authenticated}
 //     USING: (auth.uid() = user_id)
 //     WITH CHECK: (auth.uid() = user_id)
 // Table: order_items
@@ -858,6 +1244,10 @@ export const Constants = {
 //   Policy "orders_update" (UPDATE, PERMISSIVE) roles={authenticated}
 //     USING: (user_id = auth.uid())
 //     WITH CHECK: (user_id = auth.uid())
+// Table: pecuaria_animais
+//   Policy "Users can manage own pecuaria_animais" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
+//     WITH CHECK: (auth.uid() = user_id)
 // Table: previsoes
 //   Policy "previsoes_delete" (DELETE, PERMISSIVE) roles={authenticated}
 //     USING: (user_id = auth.uid())
@@ -908,6 +1298,11 @@ export const Constants = {
 //   Policy "rebanho_update" (UPDATE, PERMISSIVE) roles={authenticated}
 //     USING: (user_id = auth.uid())
 //     WITH CHECK: (user_id = auth.uid())
+// Table: system_alerts
+//   Policy "Users can read own system_alerts" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
+//   Policy "Users can update own system_alerts" (UPDATE, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
 // Table: user_plans
 //   Policy "user_plans_delete" (DELETE, PERMISSIVE) roles={authenticated}
 //     USING: (user_id = auth.uid())
@@ -924,6 +1319,15 @@ export const Constants = {
 //   Policy "Users can update own data" (UPDATE, PERMISSIVE) roles={authenticated}
 //     USING: (auth.uid() = id)
 //     WITH CHECK: (auth.uid() = id)
+// Table: weather_forecasts
+//   Policy "Users can delete own weather_forecasts" (DELETE, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
+//   Policy "Users can insert own weather_forecasts" (INSERT, PERMISSIVE) roles={authenticated}
+//     WITH CHECK: (auth.uid() = user_id)
+//   Policy "Users can read own weather_forecasts" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
+//   Policy "Users can update own weather_forecasts" (UPDATE, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
 
 // --- DATABASE FUNCTIONS ---
 // FUNCTION handle_new_user()
@@ -967,3 +1371,5 @@ export const Constants = {
 // --- INDEXES ---
 // Table: crm_tasks
 //   CREATE INDEX crm_tasks_user_id_idx ON public.crm_tasks USING btree (user_id)
+// Table: dashboard_kpis
+//   CREATE UNIQUE INDEX dashboard_kpis_user_id_key ON public.dashboard_kpis USING btree (user_id)

@@ -25,7 +25,6 @@ import {
 } from '@/components/ui/select'
 import { Sprout, Sun, Tractor, Factory, Store, Plus, Calendar, User } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
-import { Logo } from '@/components/ui/logo'
 
 type Status = 'Concluído' | 'Em Andamento' | 'Pendente'
 type Etapa = 'Plantio' | 'Crescimento' | 'Colheita' | 'Processamento' | 'Venda'
@@ -185,7 +184,6 @@ const Rastreabilidade = () => {
       <div className="flex flex-col md:flex-row items-start justify-between gap-4 glass-panel p-6 rounded-2xl">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
-            <Logo className="w-8 h-8 text-primary drop-shadow-[0_0_8px_rgba(29,185,84,0.6)]" />
             Rastreabilidade
           </h1>
           <p className="text-[#A0A0A0] mt-2 text-lg font-medium">
