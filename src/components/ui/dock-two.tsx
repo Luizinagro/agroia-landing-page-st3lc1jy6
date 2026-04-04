@@ -41,7 +41,7 @@ const DockIconButton = React.forwardRef<HTMLButtonElement, DockIconButtonProps>(
     return (
       <motion.button
         ref={ref}
-        whileHover={disabled ? {} : { scale: 1.1, y: -2 }}
+        whileHover={disabled ? {} : { scale: 1.1, x: 2 }}
         whileTap={disabled ? {} : { scale: 0.95 }}
         onClick={onClick}
         className={cn(
@@ -58,7 +58,7 @@ const DockIconButton = React.forwardRef<HTMLButtonElement, DockIconButtonProps>(
         <Icon className="w-5 h-5" />
         <span
           className={cn(
-            'absolute -top-10 left-1/2 -translate-x-1/2',
+            'absolute left-full top-1/2 -translate-y-1/2 ml-4',
             'px-3 py-1.5 rounded-lg text-xs font-medium',
             'bg-black/95 border border-primary/20 text-white backdrop-blur-xl',
             'opacity-0 group-hover:opacity-100',
@@ -78,18 +78,21 @@ const Dock = React.forwardRef<HTMLDivElement, DockProps>(({ items, className }, 
   return (
     <div
       ref={ref}
-      className={cn('w-full flex items-center justify-center pointer-events-none', className)}
+      className={cn(
+        'h-full flex flex-col items-center justify-center pointer-events-none py-4',
+        className,
+      )}
     >
       <motion.div
         initial="initial"
         animate="animate"
         variants={floatingAnimation}
         className={cn(
-          'flex items-center gap-1 md:gap-2 p-2 rounded-2xl pointer-events-auto',
+          'flex flex-col items-center gap-1 md:gap-2 p-2 rounded-2xl pointer-events-auto',
           'backdrop-blur-xl border shadow-[0_0_30px_rgba(0,0,0,0.5)]',
           'bg-[#0a0a0a]/80 border-primary/20',
           'hover:shadow-[0_0_40px_rgba(29,185,84,0.15)] transition-shadow duration-500',
-          'overflow-x-auto max-w-[95vw] hide-scrollbar',
+          'overflow-y-auto max-h-[95vh] hide-scrollbar',
           '[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]',
         )}
       >
