@@ -37,7 +37,7 @@ export function Hero() {
             </span>
           </div>
 
-          <h1 className="text-[#FFFFFF] pb-2 font-normal">
+          <h1 className="text-[#FFFFFF] pb-2 font-normal not-italic">
             Agro IA: Inteligência <br className="hidden md:block" /> Artificial Agronômica
           </h1>
 
