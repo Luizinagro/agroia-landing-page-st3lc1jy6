@@ -1,110 +1,117 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { Menu, X } from 'lucide-react'
+import { Link, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { Logo } from '@/components/ui/logo'
-import { cn } from '@/lib/utils'
+import { Bell, Menu, Search, UserCircle } from 'lucide-react'
+import { Logo, LogoText } from '@/components/ui/logo'
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 
 export function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
+  const location = useLocation()
+  const isApp = !['/', '/login', '/register'].includes(location.pathname)
 
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  if (!isApp) {
+    return (
+      <header className="fixed top-0 w-full z-50 border-b border-primary/20 bg-black/50 backdrop-blur-md">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2">
+            <Logo />
+            <LogoText className="text-xl" />
+          </Link>
+          <nav className="hidden md:flex items-center gap-6">
+            <a
+              href="#recursos"
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            >
+              Recursos
+            </a>
+            <a
+              href="#solucoes"
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            >
+              Soluções
+            </a>
+          </nav>
+          <div className="flex items-center gap-4">
+            <Link to="/login">
+              <Button
+                variant="ghost"
+                className="text-primary hover:text-primary hover:bg-primary/10"
+              >
+                Entrar
+              </Button>
+            </Link>
+            <Link to="/register">
+              <Button className="bg-primary text-black hover:bg-primary/90 font-medium">
+                Começar
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </header>
+    )
+  }
 
   return (
-    <header
-      className={cn(
-        'fixed top-0 z-[100] w-full transition-all duration-300 border-b',
-        scrolled
-          ? 'bg-black/80 backdrop-blur-md border-zinc-800'
-          : 'bg-transparent border-transparent',
-      )}
-    >
-      <div className="container mx-auto px-4 max-w-7xl">
-        <div className="flex h-20 items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 transition-opacity hover:opacity-90">
-            <Logo className="w-8 h-8 text-primary" />
-            <span className="text-xl font-black tracking-tight text-white">
-              Agro
-              <span className="text-primary drop-shadow-[0_0_10px_currentColor]">IA</span>
-            </span>
-          </Link>
-
-          <nav className="hidden md:flex items-center gap-8">
-            <a
-              href="#features"
-              className="text-sm font-bold text-zinc-300 hover:text-white transition-colors"
-            >
-              Funcionalidades
-            </a>
-            <a
-              href="#planos"
-              className="text-sm font-bold text-zinc-300 hover:text-white transition-colors"
-            >
-              Planos
-            </a>
-            <Link
-              to="/login"
-              className="text-sm font-bold text-zinc-300 hover:text-white transition-colors"
-            >
-              Login
-            </Link>
-            <Button
-              asChild
-              className="bg-[#00ff66] hover:bg-[#00cc55] text-black font-black tracking-tight rounded-full px-6 shadow-[0_0_15px_rgba(0,255,102,0.4)] hover:shadow-[0_0_25px_rgba(0,255,102,0.6)] transition-all duration-300"
-            >
-              <Link to="/cadastro">Começar Agora</Link>
+    <header className="h-16 border-b border-primary/20 bg-black/40 backdrop-blur flex items-center justify-between px-4 md:px-6 shrink-0">
+      <div className="flex items-center gap-4 md:hidden">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Menu className="w-5 h-5 text-primary" />
             </Button>
-          </nav>
+          </SheetTrigger>
+          <SheetContent side="left" className="bg-black border-r border-primary/20 p-0">
+            <SheetTitle className="sr-only">Menu de Navegação</SheetTitle>
+            <div className="p-6 flex items-center gap-2 border-b border-primary/10">
+              <Logo />
+              <LogoText className="text-xl" />
+            </div>
+            <nav className="p-4 space-y-2">
+              <Link
+                to="/dashboard"
+                className="block px-3 py-2 rounded-md hover:bg-primary/10 text-muted-foreground hover:text-foreground"
+              >
+                Dashboard
+              </Link>
+              <Link
+                to="/pecuaria"
+                className="block px-3 py-2 rounded-md hover:bg-primary/10 text-muted-foreground hover:text-foreground"
+              >
+                Pecuária
+              </Link>
+              <Link
+                to="/crm"
+                className="block px-3 py-2 rounded-md hover:bg-primary/10 text-muted-foreground hover:text-foreground"
+              >
+                CRM
+              </Link>
+            </nav>
+          </SheetContent>
+        </Sheet>
+        <Link to="/" className="flex items-center gap-2">
+          <Logo />
+        </Link>
+      </div>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-white hover:bg-white/10"
-          >
-            {isMenuOpen ? <X /> : <Menu />}
-          </Button>
+      <div className="hidden md:flex items-center gap-2 flex-1 max-w-md">
+        <div className="relative w-full">
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Buscar informações..."
+            className="w-full bg-black/40 border border-primary/20 rounded-md pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-primary/50 focus:bg-black transition-all text-foreground"
+          />
         </div>
       </div>
 
-      {isMenuOpen && (
-        <div className="md:hidden bg-black border-b border-zinc-800 p-4 flex flex-col gap-4 animate-fade-in-down">
-          <a
-            href="#features"
-            className="text-white font-bold px-4 py-2 hover:bg-zinc-900 rounded-lg"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Funcionalidades
-          </a>
-          <a
-            href="#planos"
-            className="text-white font-bold px-4 py-2 hover:bg-zinc-900 rounded-lg"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Planos
-          </a>
-          <Link
-            to="/login"
-            className="text-white font-bold px-4 py-2 hover:bg-zinc-900 rounded-lg"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Login
-          </Link>
-          <Button
-            asChild
-            className="w-full bg-[#00ff66] hover:bg-[#00cc55] text-black font-black tracking-tight rounded-full shadow-[0_0_15px_rgba(0,255,102,0.4)] transition-all duration-300"
-          >
-            <Link to="/cadastro" onClick={() => setIsMenuOpen(false)}>
-              Começar Agora
-            </Link>
-          </Button>
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" size="icon" className="relative hover:bg-primary/10">
+          <Bell className="w-5 h-5 text-muted-foreground" />
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full"></span>
+        </Button>
+        <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center border border-primary/50 cursor-pointer hover:bg-primary/30 transition-colors">
+          <UserCircle className="w-5 h-5 text-primary" />
         </div>
-      )}
+      </div>
     </header>
   )
 }

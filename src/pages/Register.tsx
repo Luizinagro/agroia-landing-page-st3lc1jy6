@@ -1,291 +1,108 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-} from '@/components/ui/card'
-import { Sprout, Loader2, UserPlus } from 'lucide-react'
+import { Label } from '@/components/ui/label'
+import { Logo, LogoText } from '@/components/ui/logo'
 import { useToast } from '@/hooks/use-toast'
 import { supabase } from '@/lib/supabase/client'
-
-const registerSchema = z
-  .object({
-    nomeCompleto: z.string().min(3, 'Mínimo de 3 caracteres.'),
-    email: z.string().email('E-mail inválido.'),
-    senha: z
-      .string()
-      .min(8, 'Mínimo de 8 caracteres.')
-      .regex(/[A-Za-z]/, 'Requer uma letra.')
-      .regex(/[0-9]/, 'Requer um número.')
-      .regex(/[^A-Za-z0-9]/, 'Requer um símbolo.'),
-    confirmarSenha: z.string(),
-    tipoUsuario: z.enum(['Produtor', 'Cooperativa'], { required_error: 'Obrigatório.' }),
-    estado: z.enum(['Paraná', 'Rondônia'], { required_error: 'Obrigatório.' }),
-  })
-  .refine((data) => data.senha === data.confirmarSenha, {
-    message: 'As senhas não coincidem.',
-    path: ['confirmarSenha'],
-  })
-
-type RegisterFormValues = z.infer<typeof registerSchema>
+import { Loader2 } from 'lucide-react'
 
 export default function Register() {
-  const [isLoading, setIsLoading] = useState(false)
-  const navigate = useNavigate()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
   const { toast } = useToast()
+  const navigate = useNavigate()
 
-  const form = useForm<RegisterFormValues>({
-    resolver: zodResolver(registerSchema),
-    defaultValues: { nomeCompleto: '', email: '', senha: '', confirmarSenha: '' },
-    mode: 'onChange',
-  })
-
-  const onSubmit = async (data: RegisterFormValues) => {
-    setIsLoading(true)
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
     try {
-      const normalizedEmail = data.email.trim().toLowerCase()
-
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: normalizedEmail,
-        password: data.senha,
-        options: {
-          data: {
-            name: data.nomeCompleto,
-            user_type: data.tipoUsuario,
-            estado: data.estado,
-          },
-        },
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: `${window.location.origin}/login` },
       })
-
-      if (authError) {
-        const errorMsg = authError.message || ''
-        if (errorMsg.includes('already registered') || errorMsg.includes('user already exists')) {
-          toast({
-            title: 'E-mail já cadastrado',
-            description: 'Este e-mail já possui uma conta no Auth. Tente fazer login.',
-            variant: 'destructive',
-          })
-        } else {
-          toast({
-            title: 'Erro no Cadastro',
-            description: errorMsg || 'Erro ao criar conta. Verifique os dados.',
-            variant: 'destructive',
-          })
-        }
-        return
-      }
-
+      if (error) throw error
       toast({
-        title: 'Sucesso',
-        description: 'Conta criada com sucesso! Faça login agora.',
-        className: 'bg-[#1a3c34] text-white border-[#f4d03f]',
+        title: 'Conta criada!',
+        description: 'Verifique seu email para confirmar o cadastro.',
       })
       navigate('/login')
     } catch (error: any) {
       toast({
-        title: 'Erro',
-        description: error.message || 'Falha ao processar o cadastro.',
+        title: 'Erro ao criar conta',
+        description: error.message,
         variant: 'destructive',
       })
     } finally {
-      setIsLoading(false)
+      setLoading(false)
     }
   }
 
-  const messageClass =
-    'text-destructive bg-destructive/10 px-2 py-1 rounded text-xs mt-1 inline-block'
-
   return (
-    <div className="min-h-screen bg-bg-dark flex flex-col justify-center items-center p-4 selection:bg-agro-green/30 font-sans">
-      <div className="mb-6 flex flex-col items-center mt-12 sm:mt-8">
-        <Link to="/" className="flex items-center gap-2 mb-6 hover:opacity-90 transition-opacity">
-          <div className="w-12 h-12 bg-[#1DB954] rounded-[16px] flex items-center justify-center shadow-[0_0_20px_rgba(29,185,84,0.3)]">
-            <Sprout className="w-7 h-7 text-black" />
-          </div>
-          <span className="text-3xl font-black text-white tracking-tight">
-            Agro<span className="text-[#1DB954]">IA</span>
-          </span>
-        </Link>
-        <h1 className="text-2xl font-bold text-white">Criar Conta</h1>
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-[#000000] p-4 relative overflow-hidden">
+      <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl -z-10 animate-float"></div>
 
-      <Card className="w-full max-w-md border-white/10 shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500 mb-8">
-        <CardHeader className="space-y-1 text-center pb-4">
-          <CardTitle className="text-2xl text-white flex items-center justify-center gap-2">
-            Novo Usuário <UserPlus className="w-5 h-5 text-white" />
-          </CardTitle>
-          <CardDescription>Preencha os dados para acessar a plataforma AgroIA.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="nomeCompleto"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nome Completo</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="João da Silva"
-                        className="focus-visible:ring-agro-green bg-background/50"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className={messageClass} />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>E-mail</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="joao@fazenda.com"
-                        className="focus-visible:ring-agro-green bg-background/50"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className={messageClass} />
-                  </FormItem>
-                )}
-              />
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="tipoUsuario"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Tipo</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="focus-visible:ring-agro-green bg-background/50">
-                            <SelectValue placeholder="Selecione" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Produtor">Produtor</SelectItem>
-                          <SelectItem value="Cooperativa">Cooperativa</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage className={messageClass} />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="estado"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Estado</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="focus-visible:ring-agro-green bg-background/50">
-                            <SelectValue placeholder="Selecione" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Paraná">Paraná</SelectItem>
-                          <SelectItem value="Rondônia">Rondônia</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage className={messageClass} />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="senha"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Senha</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="••••••••"
-                          className="focus-visible:ring-agro-green bg-background/50"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className={messageClass} />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="confirmarSenha"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Confirmar Senha</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="••••••••"
-                          className="focus-visible:ring-agro-green bg-background/50"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className={messageClass} />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <Button
-                type="submit"
-                className="w-full bg-[#1a3c34] text-white border border-[#1DB954] hover:bg-[#122a24] h-11 text-base mt-4 transition-all"
-                disabled={isLoading || !form.formState.isValid}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin text-white" />
-                    <span className="text-white font-medium">Criando conta...</span>
-                  </>
-                ) : (
-                  <span className="text-white font-semibold">Criar Conta</span>
-                )}
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-        <CardFooter className="flex justify-center border-t bg-muted/30 pt-4">
-          <div className="text-sm text-muted-foreground">
-            Já tem uma conta?{' '}
-            <Link to="/login" className="font-semibold text-agro-green hover:underline">
-              Faça login
-            </Link>
+      <div className="w-full max-w-md p-8 rounded-2xl bg-black/60 border border-primary/20 backdrop-blur-xl shadow-2xl animate-fade-in-up">
+        <div className="flex flex-col items-center mb-8">
+          <Link to="/" className="flex items-center gap-2 mb-6">
+            <Logo className="h-10 w-10" />
+            <LogoText className="text-2xl" />
+          </Link>
+          <h2 className="text-2xl font-bold text-center text-white">Crie sua conta</h2>
+          <p className="text-muted-foreground text-sm mt-2 text-center">
+            Comece a revolucionar sua gestão rural hoje mesmo
+          </p>
+        </div>
+
+        <form onSubmit={handleRegister} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-muted-foreground">
+              Email
+            </Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="seu@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="bg-black/50 border-primary/30 focus-visible:ring-primary text-foreground"
+            />
           </div>
-        </CardFooter>
-      </Card>
+          <div className="space-y-2">
+            <Label htmlFor="password" className="text-muted-foreground">
+              Senha
+            </Label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={6}
+              className="bg-black/50 border-primary/30 focus-visible:ring-primary text-foreground"
+            />
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full bg-primary text-black hover:bg-primary/90 mt-6 font-semibold"
+            disabled={loading}
+          >
+            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Criar Conta na AgroIA'}
+          </Button>
+        </form>
+
+        <p className="text-center text-sm text-muted-foreground mt-6">
+          Já tem uma conta?{' '}
+          <Link to="/login" className="text-primary hover:underline font-medium">
+            Faça login
+          </Link>
+        </p>
+      </div>
     </div>
   )
 }
