@@ -3,8 +3,91 @@ import { Check } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { useIsMobile } from '@/hooks/use-mobile'
 
-const plans = [
+const desktopPlans = [
+  {
+    name: 'Básico',
+    price: 'Grátis',
+    description: 'Comece sem custo e conheça a plataforma.',
+    cardText:
+      'Ideal para quem quer dar os primeiros passos no Agro IA e testar a experiência da plataforma antes de avançar para recursos mais completos.',
+    features: [
+      'Acesso inicial à plataforma',
+      'Visão geral dos recursos',
+      'Entrada sem risco',
+      'Ideal para conhecer o sistema',
+    ],
+    ctaText: 'Começar grátis',
+    highlighted: false,
+  },
+  {
+    name: 'Plantio Solo',
+    price: 'R$ 149',
+    period: '/mês',
+    description: 'Mais controle e previsibilidade para sua lavoura.',
+    cardText:
+      'Perfeito para produtores que querem organizar melhor o plantio, acompanhar informações com mais clareza e tomar decisões com mais segurança no dia a dia da operação.',
+    features: [
+      'Gestão focada em plantio',
+      'Mais organização operacional',
+      'Melhor acompanhamento da produção',
+      'Decisão mais assertiva no campo',
+    ],
+    ctaText: 'Assinar Plantio Solo',
+    highlighted: false,
+  },
+  {
+    name: 'Pecuária Solo',
+    price: 'R$ 199',
+    period: '/mês',
+    description: 'Mais precisão e controle na gestão do rebanho.',
+    cardText:
+      'Indicado para quem atua com pecuária e precisa acompanhar dados do rebanho, melhorar a gestão da operação e reduzir falhas no controle das atividades.',
+    features: [
+      'Gestão focada em pecuária',
+      'Melhor controle do rebanho',
+      'Mais segurança nas informações',
+      'Acompanhamento mais eficiente',
+    ],
+    ctaText: 'Assinar Pecuária Solo',
+    highlighted: false,
+  },
+  {
+    name: 'Completo',
+    price: 'R$ 349',
+    period: '/mês',
+    description: 'A solução ideal para quem quer visão total da operação.',
+    cardText:
+      'Reúne os principais recursos da plataforma em um só plano, entregando mais controle, mais inteligência e melhor custo-benefício para quem quer gerir a produção com visão completa.',
+    features: [
+      'Recursos integrados em um só plano',
+      'Visão mais ampla da operação',
+      'Melhor custo-benefício',
+      'Mais controle e estratégia',
+    ],
+    ctaText: 'Escolher plano Completo',
+    highlighted: true,
+  },
+  {
+    name: 'Família Coop',
+    price: 'R$ 799',
+    period: '/mês',
+    description: 'Mais estrutura para operações maiores e gestão compartilhada.',
+    cardText:
+      'Feito para famílias, grupos e operações com maior escala, que precisam de mais organização, visão consolidada e capacidade de gestão em um nível mais avançado.',
+    features: [
+      'Ideal para operações maiores',
+      'Gestão mais estruturada',
+      'Melhor visão do todo',
+      'Escala com mais controle',
+    ],
+    ctaText: 'Assinar Família Coop',
+    highlighted: false,
+  },
+]
+
+const mobilePlans = [
   {
     name: 'Básico',
     price: 'Grátis',
@@ -59,6 +142,9 @@ const plans = [
 export function Pricing() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const isMobile = useIsMobile()
+
+  const activePlans = isMobile ? mobilePlans : desktopPlans
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return
@@ -103,12 +189,12 @@ export function Pricing() {
 
           <div className="relative z-10 flex flex-col gap-2">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-              {plans.slice(0, 3).map((plan, i) => (
+              {activePlans.slice(0, 3).map((plan, i) => (
                 <PricingCard key={i} plan={plan} />
               ))}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full">
-              {plans.slice(3, 5).map((plan, i) => (
+              {activePlans.slice(3, 5).map((plan, i) => (
                 <PricingCard key={i} plan={plan} />
               ))}
             </div>
