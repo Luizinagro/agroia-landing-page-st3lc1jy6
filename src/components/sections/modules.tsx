@@ -1,4 +1,14 @@
-import { TrendingUp, Users, FileText, Tractor, ArrowRight } from 'lucide-react'
+import {
+  TrendingUp,
+  Users,
+  FileText,
+  Tractor,
+  ArrowRight,
+  Calculator,
+  Leaf,
+  ShoppingCart,
+  Briefcase,
+} from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 
@@ -9,19 +19,39 @@ const modules = [
     icon: TrendingUp,
   },
   {
-    title: 'Comunidade',
-    description: 'Conecte-se com produtores e troque experiências de sucesso.',
-    icon: Users,
+    title: 'Calculadora ROI',
+    description: 'Análise de custo de produção e tempo de retorno (payback).',
+    icon: Calculator,
   },
   {
     title: 'SaaS Faturamento',
-    description: 'Gestão financeira inteligente, integrada e simplificada para sua propriedade.',
+    description: 'Gestão financeira inteligente e simplificada para sua propriedade.',
     icon: FileText,
   },
   {
     title: 'Pecuária',
     description: 'Monitoramento de rebanho e otimização de pastagens.',
     icon: Tractor,
+  },
+  {
+    title: 'CRM e Leads',
+    description: 'Gestão de tarefas e controle de contatos para maximizar vendas.',
+    icon: Briefcase,
+  },
+  {
+    title: 'Rastreabilidade',
+    description: 'Controle ESG de ponta a ponta da produção para certificações.',
+    icon: Leaf,
+  },
+  {
+    title: 'Loja Agrícola',
+    description: 'Compre insumos, sementes e maquinários direto pela plataforma.',
+    icon: ShoppingCart,
+  },
+  {
+    title: 'Comunidade',
+    description: 'Conecte-se com produtores e troque experiências de sucesso.',
+    icon: Users,
   },
 ]
 
@@ -81,7 +111,7 @@ export function Modules() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {modules.map((mod, i) => (
-            <ModuleCard key={i} mod={mod} isAccent={i === 1} />
+            <ModuleCard key={i} mod={mod} isAccent={i === 1 || i === 6} />
           ))}
         </div>
       </div>

@@ -147,7 +147,7 @@ function PricingCard({ plan }: { plan: any }) {
       <p className="text-zinc-400 text-sm font-medium mb-8 h-10">{plan.description}</p>
 
       <div className="flex items-baseline gap-1 mb-8">
-        <span className="text-5xl font-black tracking-tighter text-[#00ff66] drop-shadow-[0_0_15px_rgba(0,255,102,0.5)]">
+        <span className="text-5xl font-black tracking-tighter text-green-500 drop-shadow-[0_0_15px_rgba(34,197,94,0.3)]">
           {plan.price}
         </span>
         {plan.period && <span className="font-bold text-sm text-zinc-500">{plan.period}</span>}
@@ -167,8 +167,8 @@ function PricingCard({ plan }: { plan: any }) {
       <Button
         asChild
         className={cn(
-          'w-full h-14 mt-4 rounded-full font-black text-lg tracking-wide uppercase transition-all duration-300 bg-[#00ff66] text-black hover:bg-[#00cc55] hover:shadow-[0_0_40px_rgba(0,255,102,0.7)] shadow-[0_0_20px_rgba(0,255,102,0.5)]',
-          plan.highlighted && 'shadow-[0_0_30px_rgba(0,255,102,0.6)] scale-105',
+          'w-full h-14 mt-4 rounded-full font-black text-lg tracking-wide uppercase transition-all duration-300 bg-green-500 text-black hover:bg-green-600 hover:shadow-[0_0_30px_rgba(34,197,94,0.4)] shadow-[0_0_15px_rgba(34,197,94,0.3)]',
+          plan.highlighted && 'shadow-[0_0_25px_rgba(34,197,94,0.5)] scale-105',
         )}
       >
         <Link to="/cadastro">Assinar</Link>
