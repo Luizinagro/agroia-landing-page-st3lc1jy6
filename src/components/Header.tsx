@@ -28,7 +28,10 @@ export function Header() {
         <div className="flex h-20 items-center justify-between">
           <Link to="/" className="flex items-center gap-2 transition-opacity hover:opacity-90">
             <Logo className="w-8 h-8 text-primary" />
-            <span className="text-xl font-black tracking-tight text-white">AgroIA</span>
+            <span className="text-xl font-black tracking-tight text-white">
+              Agro
+              <span className="text-primary drop-shadow-[0_0_10px_rgba(34,197,94,0.5)]">IA</span>
+            </span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
@@ -52,7 +55,7 @@ export function Header() {
             </Link>
             <Button
               asChild
-              className="bg-primary hover:bg-primary/90 text-white font-bold rounded-full px-6"
+              className="bg-primary hover:bg-primary/90 text-black font-black rounded-full px-6 shadow-[0_0_15px_rgba(34,197,94,0.3)] hover:shadow-[0_0_25px_rgba(34,197,94,0.5)] transition-all"
             >
               <Link to="/cadastro">Começar Agora</Link>
             </Button>
@@ -94,7 +97,7 @@ export function Header() {
           </Link>
           <Button
             asChild
-            className="w-full bg-primary hover:bg-primary/90 text-white font-bold rounded-full"
+            className="w-full bg-primary hover:bg-primary/90 text-black font-black rounded-full"
           >
             <Link to="/cadastro" onClick={() => setIsMenuOpen(false)}>
               Começar Agora
