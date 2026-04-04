@@ -22,7 +22,7 @@ export default function Billing() {
             <CloudOff className="w-4 h-4" />
             <span>Sincronizar quando conectar</span>
           </div>
-        </header>
+        </div>
 
         <Tabs defaultValue="notas" className="w-full">
           <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 bg-[#050505] p-1 border border-primary/20 h-auto md:h-12 mb-8 rounded-xl gap-1">
