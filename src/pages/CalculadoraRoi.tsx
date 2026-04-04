@@ -158,7 +158,7 @@ export default function CalculadoraRoi() {
         <div className="flex flex-col md:flex-row items-start justify-between gap-4 bg-[#050505] p-6 rounded-2xl border border-[#1DB954]/20">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-[#FFFFFF] flex items-center gap-3">
-              <Logo className="w-8 h-8 text-[#1DB954]" />
+              <Calculator className="w-8 h-8 text-[#1DB954]" />
               Calculadora de ROI
             </h1>
             <p className="text-[#E0E0E0] mt-2 text-lg font-medium">

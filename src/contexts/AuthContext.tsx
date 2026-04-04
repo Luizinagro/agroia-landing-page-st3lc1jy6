@@ -71,18 +71,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } catch (e) {
       console.error('Error fetching profile:', e)
+    } finally {
+      setLoading(false)
     }
   }
 
   useEffect(() => {
+    let mounted = true
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
       // FORBIDDEN: no async/await inside this callback — sync only
+      if (!mounted) return
       setSession(session)
       if (session?.user) {
         fetchProfile(session.user.id, session.user.email || '')
-        setLoading(false)
       } else {
         setUser(null)
         setLoading(false)
@@ -90,15 +93,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
 
     supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!mounted) return
       setSession(session)
       if (session?.user) {
-        fetchProfile(session.user.id, session.user.email || '').finally(() => setLoading(false))
+        fetchProfile(session.user.id, session.user.email || '')
       } else {
         setLoading(false)
       }
     })
 
-    return () => subscription.unsubscribe()
+    return () => {
+      mounted = false
+      subscription.unsubscribe()
+    }
   }, [])
 
   const login = async (email: string, senha: string) => {
