@@ -1,86 +1,107 @@
 import { Outlet, Link, useLocation } from 'react-router-dom'
-import { Header } from '@/components/Header'
-import { Logo, LogoText } from '@/components/ui/logo'
-import { Toaster } from '@/components/ui/toaster'
-import { LayoutDashboard, User, Tractor, Settings } from 'lucide-react'
+import {
+  LayoutDashboard,
+  Users,
+  Tractor,
+  CreditCard,
+  User,
+  Calculator,
+  Leaf,
+  Settings,
+  ListTodo,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Logo } from '@/components/ui/logo'
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+  SidebarHeader,
+} from '@/components/ui/sidebar'
+import { Toaster } from '@/components/ui/toaster'
+
+const navigation = [
+  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { name: 'CRM', href: '/crm', icon: Users },
+  { name: 'Gestão de Tarefas', href: '/tarefas', icon: ListTodo },
+  { name: 'Pecuária', href: '/pecuaria', icon: Tractor },
+  { name: 'Rastreabilidade ESG', href: '/rastreabilidade', icon: Leaf },
+  { name: 'Calculadora ROI', href: '/roi', icon: Calculator },
+  { name: 'Meus Cálculos', href: '/meus-calculos', icon: Calculator },
+  { name: 'Billing', href: '/billing', icon: CreditCard },
+  { name: 'Perfil', href: '/perfil', icon: User },
+  { name: 'Configurações', href: '/configuracoes', icon: Settings },
+]
 
 export default function Layout() {
   const location = useLocation()
-  const isPublicPage = ['/', '/login', '/register'].includes(location.pathname)
 
-  if (isPublicPage) {
-    return (
-      <div className="min-h-screen bg-black text-foreground flex flex-col font-sans">
-        <main className="flex-1">
-          <Outlet />
+  return (
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-[#000000] text-slate-200 font-sans selection:bg-green-500/30">
+        <Sidebar className="border-r border-slate-800/50 bg-[#0a0a0a]/95 backdrop-blur-xl">
+          <SidebarHeader className="p-6 border-b border-slate-800/50 flex items-center">
+            <Logo />
+          </SidebarHeader>
+          <SidebarContent className="p-4">
+            <SidebarGroup>
+              <SidebarGroupContent>
+                <SidebarMenu className="gap-2">
+                  {navigation.map((item) => {
+                    const isActive =
+                      location.pathname === item.href ||
+                      (item.href !== '/' && location.pathname.startsWith(item.href))
+                    return (
+                      <SidebarMenuItem key={item.name}>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={isActive}
+                          className={cn(
+                            'transition-all duration-200 hover:bg-green-500/10 hover:text-green-400 h-10',
+                            isActive
+                              ? 'bg-green-500/10 text-green-500 font-medium'
+                              : 'text-slate-400',
+                          )}
+                        >
+                          <Link
+                            to={item.href}
+                            className="flex items-center gap-3 px-3 py-2 rounded-lg"
+                          >
+                            <item.icon className="h-5 w-5" />
+                            <span className="text-sm">{item.name}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    )
+                  })}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </SidebarContent>
+        </Sidebar>
+
+        <main className="flex-1 flex flex-col min-h-screen overflow-hidden relative">
+          <header className="h-16 flex items-center px-6 border-b border-slate-800/50 bg-[#0a0a0a]/80 backdrop-blur-md sticky top-0 z-10 md:hidden">
+            <SidebarTrigger className="text-slate-400 hover:text-white" />
+            <div className="ml-4 scale-75 origin-left">
+              <Logo />
+            </div>
+          </header>
+
+          <div className="flex-1 overflow-y-auto bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-green-900/10 via-[#000000] to-[#000000]">
+            <div className="h-full p-4 md:p-8 max-w-7xl mx-auto animate-fade-in">
+              <Outlet />
+            </div>
+          </div>
         </main>
         <Toaster />
       </div>
-    )
-  }
-
-  return (
-    <div className="min-h-screen bg-[#000000] text-foreground flex">
-      {/* Sidebar */}
-      <aside className="w-64 border-r border-primary/20 bg-black/50 hidden md:flex flex-col shrink-0">
-        <div className="p-6 flex items-center gap-2 border-b border-primary/10">
-          <Logo />
-          <LogoText className="text-xl" />
-        </div>
-        <nav className="flex-1 p-4 space-y-2">
-          <Link
-            to="/dashboard"
-            className={cn(
-              'flex items-center gap-3 px-3 py-2 rounded-md transition-colors',
-              location.pathname.includes('dashboard')
-                ? 'bg-primary/20 text-primary font-medium'
-                : 'hover:bg-primary/10 text-muted-foreground hover:text-foreground',
-            )}
-          >
-            <LayoutDashboard className="w-5 h-5" /> Dashboard
-          </Link>
-          <Link
-            to="/pecuaria"
-            className={cn(
-              'flex items-center gap-3 px-3 py-2 rounded-md transition-colors',
-              location.pathname.includes('pecuaria')
-                ? 'bg-primary/20 text-primary font-medium'
-                : 'hover:bg-primary/10 text-muted-foreground hover:text-foreground',
-            )}
-          >
-            <Tractor className="w-5 h-5" /> Pecuária
-          </Link>
-          <Link
-            to="/crm"
-            className={cn(
-              'flex items-center gap-3 px-3 py-2 rounded-md transition-colors',
-              location.pathname.includes('crm')
-                ? 'bg-primary/20 text-primary font-medium'
-                : 'hover:bg-primary/10 text-muted-foreground hover:text-foreground',
-            )}
-          >
-            <User className="w-5 h-5" /> CRM
-          </Link>
-        </nav>
-        <div className="p-4 border-t border-primary/10">
-          <Link
-            to="/configuracoes"
-            className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-primary/10 transition-colors text-muted-foreground hover:text-foreground"
-          >
-            <Settings className="w-5 h-5" /> Configurações
-          </Link>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
-        <Header />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-gradient-to-br from-black via-black to-primary/5">
-          <Outlet />
-        </main>
-      </div>
-      <Toaster />
-    </div>
+    </SidebarProvider>
   )
 }

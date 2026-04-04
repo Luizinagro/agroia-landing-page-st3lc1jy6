@@ -155,6 +155,30 @@ export type Database = {
         }
         Relationships: []
       }
+      crm_tasks: {
+        Row: {
+          created_at: string
+          id: string
+          status: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          status?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          status?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           id: string
@@ -651,6 +675,12 @@ export const Constants = {
 //   valor_estimado: numeric (nullable, default: 0)
 //   created_at: timestamp with time zone (nullable, default: now())
 //   updated_at: timestamp with time zone (nullable, default: now())
+// Table: crm_tasks
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   title: text (not null)
+//   status: text (not null, default: 'pendente'::text)
+//   created_at: timestamp with time zone (not null, default: now())
 // Table: order_items
 //   id: uuid (not null, default: gen_random_uuid())
 //   order_id: uuid (not null)
@@ -743,6 +773,9 @@ export const Constants = {
 //   FOREIGN KEY carrinho_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 // Table: crm_leads
 //   PRIMARY KEY crm_leads_pkey: PRIMARY KEY (id)
+// Table: crm_tasks
+//   PRIMARY KEY crm_tasks_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY crm_tasks_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 // Table: order_items
 //   FOREIGN KEY order_items_order_id_fkey: FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 //   PRIMARY KEY order_items_pkey: PRIMARY KEY (id)
@@ -802,6 +835,10 @@ export const Constants = {
 // Table: crm_leads
 //   Policy "admins_all_crm_leads" (ALL, PERMISSIVE) roles={authenticated}
 //     USING: (EXISTS ( SELECT 1    FROM users   WHERE ((users.id = auth.uid()) AND (users.user_type = 'admin'::text))))
+// Table: crm_tasks
+//   Policy "Users can manage their own tasks" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
+//     WITH CHECK: (auth.uid() = user_id)
 // Table: order_items
 //   Policy "order_items_delete" (DELETE, PERMISSIVE) roles={authenticated}
 //     USING: (order_id IN ( SELECT orders.id    FROM orders   WHERE (orders.user_id = auth.uid())))
@@ -926,3 +963,7 @@ export const Constants = {
 //   END;
 //   $function$
 //
+
+// --- INDEXES ---
+// Table: crm_tasks
+//   CREATE INDEX crm_tasks_user_id_idx ON public.crm_tasks USING btree (user_id)
