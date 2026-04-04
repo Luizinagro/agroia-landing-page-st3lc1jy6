@@ -1,13 +1,12 @@
 import { Hero } from '@/components/sections/hero'
 import { Pricing } from '@/components/sections/pricing'
 import { Footer } from '@/components/sections/footer'
-import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { SEO } from '@/components/SEO'
 import { Logo } from '@/components/ui/logo'
 
-const Index = () => {
+const PaginaInicial = () => {
   const { user } = useAuth()
 
   return (
@@ -60,4 +59,4 @@ const Index = () => {
   )
 }
 
-export default Index
+export default PaginaInicial

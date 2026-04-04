@@ -80,7 +80,7 @@ function PricingCard({ plan, className }: { plan: (typeof plans)[0]; className?:
 
       <Link
         to="/cadastro"
-        className="w-full py-4 border border-white/10 text-white rounded-full font-bold text-sm text-center hover:bg-white/10 transition-colors mt-auto"
+        className="w-full py-4 bg-[#1DB954] text-black rounded-full font-black text-sm text-center hover:bg-[#1DB954]/90 transition-all duration-300 mt-auto hover:scale-[1.02] shadow-[0_0_20px_rgba(29,185,84,0.15)]"
       >
         Assinar {plan.name}
       </Link>
