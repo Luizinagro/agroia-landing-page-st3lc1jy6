@@ -11,11 +11,12 @@ interface GlowCardProps {
 }
 
 const glowColorMap = {
-  blue: { base: 220, spread: 200 },
-  purple: { base: 280, spread: 300 },
-  green: { base: 140, spread: 50 },
-  red: { base: 0, spread: 200 },
-  orange: { base: 30, spread: 200 },
+  blue: { base: 220, spread: 200, saturation: 100, lightness: 70 },
+  purple: { base: 280, spread: 300, saturation: 100, lightness: 70 },
+  green: { base: 140, spread: 50, saturation: 100, lightness: 70 },
+  red: { base: 0, spread: 200, saturation: 100, lightness: 70 },
+  orange: { base: 30, spread: 200, saturation: 100, lightness: 70 },
+  black: { base: 0, spread: 0, saturation: 0, lightness: 50 },
 }
 
 const sizeMap = {
@@ -27,7 +28,7 @@ const sizeMap = {
 export const GlowCard: React.FC<GlowCardProps> = ({
   children,
   className = '',
-  glowColor = 'green',
+  glowColor = 'black',
   size = 'md',
   width,
   height,
@@ -52,7 +53,12 @@ export const GlowCard: React.FC<GlowCardProps> = ({
     return () => document.removeEventListener('pointermove', syncPointer)
   }, [])
 
-  const { base, spread } = glowColorMap[glowColor]
+  const {
+    base,
+    spread,
+    saturation = 100,
+    lightness = 70,
+  } = glowColorMap[glowColor] || glowColorMap.black
 
   // Determine sizing
   const getSizeClasses = () => {
@@ -75,6 +81,8 @@ export const GlowCard: React.FC<GlowCardProps> = ({
       '--border-size': 'calc(var(--border, 2) * 1px)',
       '--spotlight-size': 'calc(var(--size, 150) * 1px)',
       '--hue': 'calc(var(--base) + (var(--xp, 0) * var(--spread, 0)))',
+      '--saturation': saturation,
+      '--lightness': lightness,
       backgroundImage: `radial-gradient(
         var(--spotlight-size) var(--spotlight-size) at
         calc(var(--x, 0) * 1px)

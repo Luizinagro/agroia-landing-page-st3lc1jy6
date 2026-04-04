@@ -38,14 +38,14 @@ const NeonButton = React.forwardRef<HTMLButtonElement, NeonButtonProps>(
       <button className={cn(neonButtonVariants({ variant, size }), className)} ref={ref} {...props}>
         <span
           className={cn(
-            'absolute h-px opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out inset-x-0 inset-y-0 bg-gradient-to-r w-3/4 mx-auto from-transparent dark:via-[#1DB954] via-[#1DB954] to-transparent hidden',
+            'absolute h-px opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out inset-x-0 inset-y-0 bg-gradient-to-r w-3/4 mx-auto from-transparent dark:via-zinc-400 via-zinc-600 to-transparent hidden',
             neon && 'block',
           )}
         />
         <span className="relative z-10 flex items-center justify-center gap-2">{children}</span>
         <span
           className={cn(
-            'absolute group-hover:opacity-30 transition-all duration-500 ease-in-out inset-x-0 h-px -bottom-px bg-gradient-to-r w-3/4 mx-auto from-transparent dark:via-[#1DB954] via-[#1DB954] to-transparent hidden',
+            'absolute group-hover:opacity-30 transition-all duration-500 ease-in-out inset-x-0 h-px -bottom-px bg-gradient-to-r w-3/4 mx-auto from-transparent dark:via-zinc-400 via-zinc-600 to-transparent hidden',
             neon && 'block',
           )}
         />
@@ -66,14 +66,14 @@ export const NeonLink = React.forwardRef<HTMLAnchorElement, NeonLinkProps>(
       <Link className={cn(neonButtonVariants({ variant, size }), className)} ref={ref} {...props}>
         <span
           className={cn(
-            'absolute h-px opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out inset-x-0 inset-y-0 bg-gradient-to-r w-3/4 mx-auto from-transparent dark:via-[#1DB954] via-[#1DB954] to-transparent hidden',
+            'absolute h-px opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out inset-x-0 inset-y-0 bg-gradient-to-r w-3/4 mx-auto from-transparent dark:via-zinc-400 via-zinc-600 to-transparent hidden',
             neon && 'block',
           )}
         />
         <span className="relative z-10 flex items-center justify-center gap-2">{children}</span>
         <span
           className={cn(
-            'absolute group-hover:opacity-30 transition-all duration-500 ease-in-out inset-x-0 h-px -bottom-px bg-gradient-to-r w-3/4 mx-auto from-transparent dark:via-[#1DB954] via-[#1DB954] to-transparent hidden',
+            'absolute group-hover:opacity-30 transition-all duration-500 ease-in-out inset-x-0 h-px -bottom-px bg-gradient-to-r w-3/4 mx-auto from-transparent dark:via-zinc-400 via-zinc-600 to-transparent hidden',
             neon && 'block',
           )}
         />

@@ -22,7 +22,7 @@ const PaginaInicial = () => {
         <div className="container max-w-7xl mx-auto flex h-20 items-center justify-between">
           <div className="flex items-center gap-2 group cursor-pointer">
             <Link to="/" className="flex items-center gap-3">
-              <div className="bg-[#1DB954] p-1.5 rounded-xl">
+              <div className="bg-white p-1.5 rounded-xl">
                 <Logo className="w-6 h-6 text-black transition-transform duration-300 ease-out" />
               </div>
               <span className="text-xl font-black text-white tracking-tight">AgroIA</span>
@@ -39,7 +39,7 @@ const PaginaInicial = () => {
             <NeonLink
               to={user ? '/dashboard' : '/login'}
               variant="solid"
-              className="bg-white text-black hover:bg-[#1DB954] px-6 py-2.5 text-sm font-black transition-colors duration-300"
+              className="bg-white text-black hover:bg-zinc-200 px-6 py-2.5 text-sm font-black transition-colors duration-300"
             >
               {user ? 'Dashboard' : 'Entrar'}
             </NeonLink>

@@ -56,10 +56,10 @@ const plans = [
 function PricingCard({ plan, className }: { plan: (typeof plans)[0]; className?: string }) {
   return (
     <GlowCard
-      glowColor="green"
+      glowColor="black"
       customSize
       className={cn(
-        'bg-[#050505] border border-white/5 rounded-[32px] p-8 flex flex-col hover:border-[#1DB954]/30 transition-colors duration-500 gsap-stagger-item h-full',
+        'bg-[#050505] border border-white/5 rounded-[32px] p-8 flex flex-col hover:border-white/20 transition-colors duration-500 gsap-stagger-item h-full',
         className,
       )}
     >
@@ -75,7 +75,7 @@ function PricingCard({ plan, className }: { plan: (typeof plans)[0]; className?:
         <ul className="space-y-4 mb-8 flex-1">
           {plan.features.map((f, i) => (
             <li key={i} className="flex items-start gap-3 text-[#E0E0E0] text-sm font-semibold">
-              <div className="mt-0.5 rounded-full p-1 bg-[#1DB954]/10 text-[#1DB954]">
+              <div className="mt-0.5 rounded-full p-1 bg-white/10 text-white">
                 <Check className="w-3 h-3" strokeWidth={3} />
               </div>
               <span>{f}</span>
@@ -86,7 +86,7 @@ function PricingCard({ plan, className }: { plan: (typeof plans)[0]; className?:
         <NeonLink
           to="/cadastro"
           variant="solid"
-          className="w-full py-4 bg-[#1DB954] text-black font-black text-sm text-center hover:bg-[#1DB954]/90 transition-all duration-300 mt-auto hover:scale-[1.02] shadow-[0_0_20px_rgba(29,185,84,0.15)]"
+          className="w-full py-4 bg-white text-black font-black text-sm text-center hover:bg-zinc-200 transition-all duration-300 mt-auto hover:scale-[1.02] shadow-[0_0_20px_rgba(255,255,255,0.1)]"
         >
           Assinar {plan.name}
         </NeonLink>
@@ -113,31 +113,31 @@ export function Pricing() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 gsap-stagger-container items-stretch">
           {/* Highlighted Completo - takes full width on small, 6 cols on large */}
           <GlowCard
-            glowColor="green"
+            glowColor="black"
             customSize
-            className="md:col-span-12 lg:col-span-6 bg-[#1DB954] rounded-[32px] p-8 md:p-12 flex flex-col gsap-stagger-item hover:scale-[1.01] transition-transform duration-500 shadow-[0_0_40px_rgba(29,185,84,0.15)] relative overflow-hidden"
+            className="md:col-span-12 lg:col-span-6 bg-zinc-900 border border-white/10 rounded-[32px] p-8 md:p-12 flex flex-col gsap-stagger-item hover:scale-[1.01] transition-transform duration-500 shadow-[0_0_40px_rgba(255,255,255,0.05)] relative overflow-hidden"
           >
-            <div className="absolute top-8 right-8 z-20 bg-black text-[#1DB954] px-4 py-2 rounded-full text-xs font-black tracking-wider uppercase">
+            <div className="absolute top-8 right-8 z-20 bg-white text-black px-4 py-2 rounded-full text-xs font-black tracking-wider uppercase">
               POPULAR
             </div>
 
             <div className="flex-1 relative z-10 flex flex-col">
-              <h3 className="text-black text-3xl font-black mb-2 tracking-tight">
+              <h3 className="text-white text-3xl font-black mb-2 tracking-tight">
                 {plans[3].name}
               </h3>
-              <p className="text-black/70 font-bold mb-10">{plans[3].description}</p>
+              <p className="text-zinc-400 font-bold mb-10">{plans[3].description}</p>
 
               <div className="flex items-baseline gap-1 mb-10">
-                <span className="text-6xl font-black text-black tracking-tighter">
+                <span className="text-6xl font-black text-white tracking-tighter">
                   {plans[3].price}
                 </span>
-                <span className="text-black/70 font-black text-lg">{plans[3].period}</span>
+                <span className="text-zinc-400 font-black text-lg">{plans[3].period}</span>
               </div>
 
               <ul className="space-y-4 mb-10">
                 {plans[3].features.map((f, i) => (
-                  <li key={i} className="flex items-center gap-3 text-black font-bold">
-                    <div className="rounded-full p-1 bg-black/10">
+                  <li key={i} className="flex items-center gap-3 text-white font-bold">
+                    <div className="rounded-full p-1 bg-white/10">
                       <Check className="w-4 h-4" strokeWidth={4} />
                     </div>
                     {f}
@@ -149,7 +149,7 @@ export function Pricing() {
             <NeonLink
               to="/cadastro"
               variant="solid"
-              className="w-full py-5 bg-black text-white font-black text-center hover:bg-black/80 hover:scale-[1.02] transition-all duration-300 mt-auto shadow-lg"
+              className="w-full py-5 bg-white text-black font-black text-center hover:bg-zinc-200 hover:scale-[1.02] transition-all duration-300 mt-auto shadow-lg"
             >
               Assinar Completo Agora
             </NeonLink>

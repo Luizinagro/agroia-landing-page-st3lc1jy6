@@ -70,7 +70,7 @@ const Dashboard = () => {
       />
       <div className="fixed inset-0 z-0 pointer-events-none">
         <EtheralShadow
-          color="rgba(29, 185, 84, 0.03)"
+          color="rgba(0, 0, 0, 1)"
           animation={{ scale: 40, speed: 60 }}
           noise={{ opacity: 0.1, scale: 1.2 }}
           sizing="fill"
@@ -78,8 +78,8 @@ const Dashboard = () => {
         />
       </div>
       <div className="fixed inset-0 z-0 pointer-events-none bg-gradient-to-b from-background/80 to-background opacity-90" />
-      {/* Subtle green glow */}
-      <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-[#1DB954]/5 blur-[120px] pointer-events-none z-0" />
+      {/* Subtle dark glow */}
+      <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-white/5 blur-[120px] pointer-events-none z-0" />
 
       <SEO
         title="Dashboard"
