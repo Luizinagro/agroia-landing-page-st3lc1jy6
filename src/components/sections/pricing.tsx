@@ -167,11 +167,11 @@ function PricingCard({ plan }: { plan: any }) {
       <Button
         asChild
         className={cn(
-          'w-full h-12 rounded-full font-bold text-base transition-all duration-300 bg-[#00ff66] text-black hover:bg-[#00cc55] hover:shadow-[0_0_30px_rgba(0,255,102,0.6)] shadow-[0_0_15px_rgba(0,255,102,0.4)]',
-          plan.highlighted && 'shadow-[0_0_25px_rgba(0,255,102,0.5)] scale-105',
+          'w-full h-14 mt-4 rounded-full font-black text-lg tracking-wide uppercase transition-all duration-300 bg-[#00ff66] text-black hover:bg-[#00cc55] hover:shadow-[0_0_40px_rgba(0,255,102,0.7)] shadow-[0_0_20px_rgba(0,255,102,0.5)]',
+          plan.highlighted && 'shadow-[0_0_30px_rgba(0,255,102,0.6)] scale-105',
         )}
       >
-        <Link to="/cadastro">Assinar {plan.name}</Link>
+        <Link to="/cadastro">Assinar</Link>
       </Button>
     </div>
   )

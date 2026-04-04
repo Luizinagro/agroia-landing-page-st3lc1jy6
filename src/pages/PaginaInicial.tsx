@@ -1,4 +1,5 @@
 import { Hero } from '@/components/sections/hero'
+import { Pricing } from '@/components/sections/pricing'
 import { Footer } from '@/components/sections/footer'
 import { Header } from '@/components/Header'
 
@@ -8,6 +9,7 @@ export default function PaginaInicial() {
       <Header />
       <main>
         <Hero />
+        <Pricing />
       </main>
       <Footer />
     </div>

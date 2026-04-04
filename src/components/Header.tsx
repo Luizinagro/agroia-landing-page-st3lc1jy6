@@ -12,9 +12,8 @@ export function Header() {
     return (
       <header className="fixed top-0 w-full z-50 border-b border-primary/20 bg-black/50 backdrop-blur-md">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2 transition-transform hover:scale-105">
             <Logo />
-            <LogoText className="text-xl" />
           </Link>
           <nav className="hidden md:flex items-center gap-6">
             <a
@@ -63,7 +62,6 @@ export function Header() {
             <SheetTitle className="sr-only">Menu de Navegação</SheetTitle>
             <div className="p-6 flex items-center gap-2 border-b border-primary/10">
               <Logo />
-              <LogoText className="text-xl" />
             </div>
             <nav className="p-4 space-y-2">
               <Link

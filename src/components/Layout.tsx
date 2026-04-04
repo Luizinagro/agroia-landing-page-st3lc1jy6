@@ -27,20 +27,31 @@ import {
 import { Toaster } from '@/components/ui/toaster'
 
 const navigation = [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'CRM', href: '/crm', icon: Users },
-  { name: 'Gestão de Tarefas', href: '/tarefas', icon: ListTodo },
   { name: 'Pecuária', href: '/pecuaria', icon: Tractor },
   { name: 'Rastreabilidade ESG', href: '/rastreabilidade', icon: Leaf },
   { name: 'Calculadora ROI', href: '/roi', icon: Calculator },
   { name: 'Meus Cálculos', href: '/meus-calculos', icon: Calculator },
-  { name: 'Billing', href: '/billing', icon: CreditCard },
+  { name: 'Planos', href: '/planos', icon: Settings },
   { name: 'Perfil', href: '/perfil', icon: User },
-  { name: 'Configurações', href: '/configuracoes', icon: Settings },
 ]
 
 export default function Layout() {
   const location = useLocation()
+
+  const isPublic = ['/', '/login', '/cadastro', '/forgot-password'].includes(location.pathname)
+
+  if (isPublic) {
+    return (
+      <div className="min-h-screen flex flex-col w-full bg-[#000000] text-slate-200 font-sans selection:bg-green-500/30">
+        <main className="flex-1 flex flex-col relative w-full">
+          <Outlet />
+        </main>
+        <Toaster />
+      </div>
+    )
+  }
 
   return (
     <SidebarProvider>
