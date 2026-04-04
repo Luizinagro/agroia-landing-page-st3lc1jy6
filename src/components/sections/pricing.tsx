@@ -65,31 +65,31 @@ function PricingCard({ plan, className }: { plan: (typeof plans)[0]; className?:
     >
       <div className="flex flex-col flex-1 relative z-10">
         <h3 className="text-white text-2xl font-black mb-2 tracking-tight">{plan.name}</h3>
-      <p className="text-[#A0A0A0] text-sm font-medium mb-8 h-10">{plan.description}</p>
+        <p className="text-[#A0A0A0] text-sm font-medium mb-8 h-10">{plan.description}</p>
 
-      <div className="flex items-baseline gap-1 mb-8">
-        <span className="text-4xl font-black text-white tracking-tighter">{plan.price}</span>
-        {plan.period && <span className="text-[#A0A0A0] font-bold text-sm">{plan.period}</span>}
-      </div>
+        <div className="flex items-baseline gap-1 mb-8">
+          <span className="text-4xl font-black text-white tracking-tighter">{plan.price}</span>
+          {plan.period && <span className="text-[#A0A0A0] font-bold text-sm">{plan.period}</span>}
+        </div>
 
-      <ul className="space-y-4 mb-8 flex-1">
-        {plan.features.map((f, i) => (
-          <li key={i} className="flex items-start gap-3 text-[#E0E0E0] text-sm font-semibold">
-            <div className="mt-0.5 rounded-full p-1 bg-[#1DB954]/10 text-[#1DB954]">
-              <Check className="w-3 h-3" strokeWidth={3} />
-            </div>
-            <span>{f}</span>
-          </li>
-        ))}
-      </ul>
+        <ul className="space-y-4 mb-8 flex-1">
+          {plan.features.map((f, i) => (
+            <li key={i} className="flex items-start gap-3 text-[#E0E0E0] text-sm font-semibold">
+              <div className="mt-0.5 rounded-full p-1 bg-[#1DB954]/10 text-[#1DB954]">
+                <Check className="w-3 h-3" strokeWidth={3} />
+              </div>
+              <span>{f}</span>
+            </li>
+          ))}
+        </ul>
 
-      <NeonLink
-        to="/cadastro"
-        variant="solid"
-        className="w-full py-4 bg-[#1DB954] text-black font-black text-sm text-center hover:bg-[#1DB954]/90 transition-all duration-300 mt-auto hover:scale-[1.02] shadow-[0_0_20px_rgba(29,185,84,0.15)]"
-      >
-        Assinar {plan.name}
-      </NeonLink>
+        <NeonLink
+          to="/cadastro"
+          variant="solid"
+          className="w-full py-4 bg-[#1DB954] text-black font-black text-sm text-center hover:bg-[#1DB954]/90 transition-all duration-300 mt-auto hover:scale-[1.02] shadow-[0_0_20px_rgba(29,185,84,0.15)]"
+        >
+          Assinar {plan.name}
+        </NeonLink>
       </div>
     </GlowCard>
   )
@@ -153,7 +153,6 @@ export function Pricing() {
             >
               Assinar Completo Agora
             </NeonLink>
-            </div>
           </GlowCard>
 
           {/* Plantio & Pecuaria stacked */}
