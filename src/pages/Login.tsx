@@ -22,7 +22,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Tractor, ArrowLeft, Loader2, ShieldCheck } from 'lucide-react'
+import { Sprout, Loader2, ShieldCheck } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { checkRateLimit, logSystemEvent } from '@/lib/security'
 
@@ -97,19 +97,18 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-bg-dark flex flex-col justify-center items-center p-4 selection:bg-agro-green/30 font-sans">
-      <Link
-        to="/"
-        className="absolute top-6 left-6 text-white/70 hover:text-white flex items-center gap-2 transition-colors"
-      >
-        <ArrowLeft className="w-4 h-4" /> Voltar ao Início
-      </Link>
-
-      <div className="mb-8 flex flex-col items-center">
-        <div className="w-16 h-16 bg-premium-gold rounded-[24px] flex items-center justify-center mb-4 shadow-lg">
-          <Tractor className="w-8 h-8 text-bg-dark" />
-        </div>
-        <h1 className="text-3xl font-bold text-white">AgroIA</h1>
-        <p className="text-white/60 mt-2">Plataforma Inteligente para o Agronegócio</p>
+      <div className="mb-8 flex flex-col items-center mt-8">
+        <Link to="/" className="flex items-center gap-2 mb-2 hover:opacity-90 transition-opacity">
+          <div className="w-12 h-12 bg-[#1DB954] rounded-[16px] flex items-center justify-center shadow-[0_0_20px_rgba(29,185,84,0.3)]">
+            <Sprout className="w-7 h-7 text-black" />
+          </div>
+          <span className="text-3xl font-black text-white tracking-tight">
+            Agro<span className="text-[#1DB954]">IA</span>
+          </span>
+        </Link>
+        <p className="text-white/60 mt-2 text-center max-w-xs">
+          Plataforma Inteligente para o Agronegócio
+        </p>
       </div>
 
       <Card className="w-full max-w-md border-white/10 shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -167,16 +166,16 @@ export default function Login() {
               />
               <Button
                 type="submit"
-                className="w-full bg-agro-green text-white hover:bg-agro-green-hover h-11 text-lg font-medium transition-all"
+                className="w-full bg-[#1a3c34] text-white border border-[#1DB954] hover:bg-[#122a24] h-11 text-lg transition-all"
                 disabled={isLoading || !form.formState.isValid}
               >
                 {isLoading ? (
                   <>
                     <Loader2 className="w-5 h-5 mr-2 animate-spin text-white" />
-                    Autenticando...
+                    <span className="text-white font-medium">Autenticando...</span>
                   </>
                 ) : (
-                  'Entrar de Forma Segura'
+                  <span className="text-white font-semibold">Entrar de Forma Segura</span>
                 )}
               </Button>
             </form>

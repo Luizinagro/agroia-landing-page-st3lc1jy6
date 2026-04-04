@@ -28,7 +28,7 @@ import {
   CardTitle,
   CardFooter,
 } from '@/components/ui/card'
-import { Sprout, ArrowLeft, Loader2, UserPlus } from 'lucide-react'
+import { Sprout, Loader2, UserPlus } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { supabase } from '@/lib/supabase/client'
 
@@ -83,16 +83,16 @@ export default function Register() {
 
       if (authError) {
         const errorMsg = authError.message || ''
-        if (errorMsg.includes('already registered')) {
+        if (errorMsg.includes('already registered') || errorMsg.includes('user already exists')) {
           toast({
-            title: 'Erro de Cadastro',
-            description: 'Este e-mail já está em uso.',
+            title: 'E-mail já cadastrado',
+            description: 'Este e-mail já possui uma conta no Auth. Tente fazer login.',
             variant: 'destructive',
           })
         } else {
           toast({
-            title: 'Erro',
-            description: errorMsg || 'Erro ao criar conta no Supabase Auth.',
+            title: 'Erro no Cadastro',
+            description: errorMsg || 'Erro ao criar conta. Verifique os dados.',
             variant: 'destructive',
           })
         }
@@ -121,13 +121,6 @@ export default function Register() {
 
   return (
     <div className="min-h-screen bg-bg-dark flex flex-col justify-center items-center p-4 selection:bg-agro-green/30 font-sans">
-      <Link
-        to="/"
-        className="absolute top-6 left-6 text-white/70 hover:text-white flex items-center gap-2 transition-colors"
-      >
-        <ArrowLeft className="w-4 h-4" /> Voltar ao Início
-      </Link>
-
       <div className="mb-6 flex flex-col items-center mt-12 sm:mt-8">
         <Link to="/" className="flex items-center gap-2 mb-6 hover:opacity-90 transition-opacity">
           <div className="w-12 h-12 bg-[#1DB954] rounded-[16px] flex items-center justify-center shadow-[0_0_20px_rgba(29,185,84,0.3)]">
@@ -269,15 +262,16 @@ export default function Register() {
               </div>
               <Button
                 type="submit"
-                className="w-full bg-agro-green text-white hover:bg-agro-green-hover h-11 text-base mt-4 transition-all"
+                className="w-full bg-[#1a3c34] text-white border border-[#1DB954] hover:bg-[#122a24] h-11 text-base mt-4 transition-all"
                 disabled={isLoading || !form.formState.isValid}
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin text-white" /> Criando conta...
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin text-white" />
+                    <span className="text-white font-medium">Criando conta...</span>
                   </>
                 ) : (
-                  'Criar Conta'
+                  <span className="text-white font-semibold">Criar Conta</span>
                 )}
               </Button>
             </form>
