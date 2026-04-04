@@ -51,11 +51,11 @@ export function AlertsSection() {
   }
 
   return (
-    <Card className="h-full rounded-[2rem] border-black/5 dark:border-white/5 shadow-sm flex flex-col overflow-hidden bg-white dark:bg-[#18181b]">
-      <CardHeader className="bg-slate-50/50 dark:bg-zinc-900/50 pb-4">
-        <CardTitle className="text-primary flex items-center justify-between">
+    <Card className="h-full rounded-[2rem] border-primary/50 shadow-sm flex flex-col overflow-hidden bg-black text-white">
+      <CardHeader className="bg-primary/5 pb-4">
+        <CardTitle className="text-white flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Bell className="w-5 h-5 text-secondary" />
+            <Bell className="w-5 h-5 text-primary" />
             Meus Alertas
           </div>
           {alertas.length > 0 && (
@@ -64,7 +64,9 @@ export function AlertsSection() {
             </span>
           )}
         </CardTitle>
-        <CardDescription>Avisos importantes sobre sua plantação</CardDescription>
+        <CardDescription className="text-gray-400">
+          Avisos importantes sobre sua plantação
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 p-0">
         <ScrollArea className="h-[400px] lg:h-[calc(100vh-25rem)] px-4 py-4">
@@ -84,7 +86,7 @@ export function AlertsSection() {
                   )}
                 >
                   <div className="flex gap-4">
-                    <div className="mt-0.5 bg-background shadow-sm p-2.5 rounded-full h-fit border border-border/50">
+                    <div className="mt-0.5 bg-black shadow-sm p-2.5 rounded-full h-fit border border-primary/20">
                       {getIcon(alert.tipo)}
                     </div>
                     <div className="flex-1 space-y-1.5">

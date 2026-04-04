@@ -93,14 +93,16 @@ export function WeatherForecast() {
     )
 
   return (
-    <Card className="h-full rounded-[2rem] border-black/5 dark:border-white/5 shadow-sm flex flex-col bg-white dark:bg-[#18181b]">
-      <CardHeader className="pb-4 flex flex-row items-center justify-between border-b border-black/5 dark:border-white/5">
+    <Card className="h-full rounded-[2rem] border-primary/50 shadow-sm flex flex-col bg-black text-white">
+      <CardHeader className="pb-4 flex flex-row items-center justify-between border-b border-primary/20">
         <div>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-white">
             <CloudRain className="w-5 h-5 text-primary" />
             Previsões
           </CardTitle>
-          <CardDescription>Monitoramento climático atualizado</CardDescription>
+          <CardDescription className="text-gray-400">
+            Monitoramento climático atualizado
+          </CardDescription>
         </div>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
@@ -175,7 +177,7 @@ export function WeatherForecast() {
             {previsoes.map((prev) => (
               <div
                 key={prev.id}
-                className="border border-white/5 rounded-xl p-4 bg-white/[0.02] shadow-sm flex flex-col gap-3 transition-all hover:border-primary/30 hover:bg-white/[0.04]"
+                className="border border-primary/30 rounded-xl p-4 bg-primary/5 shadow-sm flex flex-col gap-3 transition-all hover:border-primary/60 hover:bg-primary/10"
               >
                 <div className="flex justify-between items-start">
                   <div>

@@ -32,13 +32,13 @@ const chartConfig = {
 
 export function HistoryChart() {
   return (
-    <Card className="rounded-[2rem] border-black/5 dark:border-white/5 shadow-sm bg-white dark:bg-[#18181b]">
-      <CardHeader className="pb-4 border-b border-black/5 dark:border-white/5">
-        <CardTitle className="flex items-center gap-2">
-          <Activity className="w-5 h-5 text-secondary" />
+    <Card className="rounded-[2rem] border-primary/50 shadow-sm bg-black text-white">
+      <CardHeader className="pb-4 border-b border-primary/20">
+        <CardTitle className="flex items-center gap-2 text-white">
+          <Activity className="w-5 h-5 text-primary" />
           Histórico Climático (Últimos 7 dias)
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-gray-400">
           Acompanhe as tendências de temperatura e umidade para otimizar suas operações
         </CardDescription>
       </CardHeader>

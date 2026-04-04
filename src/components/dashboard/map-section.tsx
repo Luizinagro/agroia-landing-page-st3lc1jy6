@@ -60,18 +60,18 @@ export function MapSection() {
   const [selectedRegion, setSelectedRegion] = useState<RegionData | null>(null)
 
   return (
-    <Card className="rounded-[2rem] border-black/5 dark:border-white/5 shadow-sm overflow-hidden bg-white dark:bg-[#18181b]">
-      <CardHeader className="bg-slate-50/50 dark:bg-zinc-900/50 pb-4">
+    <Card className="rounded-[2rem] border-primary/50 shadow-sm overflow-hidden bg-black text-white">
+      <CardHeader className="bg-primary/5 pb-4">
         <CardTitle className="text-primary flex items-center gap-2">
-          <MapPin className="w-5 h-5 text-secondary" />
+          <MapPin className="w-5 h-5 text-primary" />
           Mapa Interativo da Região
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-gray-400">
           Monitore dados hiperlocais de Cascavel e Toledo em tempo real
         </CardDescription>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="relative w-full aspect-[4/3] sm:aspect-[21/9] bg-gradient-to-br from-green-50 to-emerald-100 dark:from-primary/10 dark:to-primary/20 overflow-hidden">
+        <div className="relative w-full aspect-[4/3] sm:aspect-[21/9] bg-gradient-to-br from-primary/10 to-primary/20 overflow-hidden">
           {/* Decorative Map Pattern */}
           <div
             className="absolute inset-0 opacity-20 pointer-events-none"

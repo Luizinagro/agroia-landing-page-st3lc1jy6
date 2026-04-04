@@ -1,8 +1,4 @@
-import { MapSection } from '@/components/dashboard/map-section'
 import { AlertsSection } from '@/components/dashboard/alerts-section'
-import { HistoryChart } from '@/components/dashboard/history-chart'
-import { IotConnection } from '@/components/dashboard/iot-connection'
-import { WeatherForecast } from '@/components/dashboard/weather-forecast'
 import { FeatureCards } from '@/components/dashboard/feature-cards'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
@@ -18,7 +14,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog'
-import { AlertTriangle, TrendingUp, Shield, Leaf, Activity, DollarSign } from 'lucide-react'
+import { AlertTriangle, TrendingUp, Shield, Leaf, Activity, DollarSign, MapPin } from 'lucide-react'
 
 const Dashboard = () => {
   const { user } = useAuth() as any
@@ -55,12 +51,21 @@ const Dashboard = () => {
               Acompanhe as principais métricas da sua operação.
             </p>
           </div>
-          {isAdmin && (
-            <div className="bg-primary/10 border border-primary/30 text-primary px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 shadow-[0_0_15px_rgba(29,185,84,0.15)] animate-pulse-slow shrink-0">
-              <Shield className="w-4 h-4" />
-              Modo Administrador
-            </div>
-          )}
+          <div className="flex gap-3">
+            <Button
+              onClick={() => navigate('/monitoramento')}
+              className="bg-primary text-black font-bold hover:bg-primary/90 rounded-full shadow-[0_0_15px_rgba(29,185,84,0.3)]"
+            >
+              <MapPin className="w-4 h-4 mr-2" />
+              Monitoramento Técnico
+            </Button>
+            {isAdmin && (
+              <div className="bg-primary/10 border border-primary/30 text-primary px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 shadow-[0_0_15px_rgba(29,185,84,0.15)] animate-pulse-slow shrink-0">
+                <Shield className="w-4 h-4" />
+                Modo Administrador
+              </div>
+            )}
+          </div>
         </div>
 
         {isTrialExpired && !isAdmin && (
@@ -82,7 +87,7 @@ const Dashboard = () => {
         )}
 
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-[#0A0A0A] border border-white/5 hover:border-primary/30 transition-colors duration-300 rounded-2xl p-6 flex flex-col gap-4 shadow-sm">
+          <div className="bg-black border border-primary/60 hover:border-primary transition-colors duration-300 rounded-2xl p-6 flex flex-col gap-4 shadow-[0_0_15px_rgba(29,185,84,0.1)]">
             <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
               <TrendingUp className="w-6 h-6 text-primary" />
             </div>
@@ -95,7 +100,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="bg-[#0A0A0A] border border-white/5 hover:border-primary/30 transition-colors duration-300 rounded-2xl p-6 flex flex-col gap-4 shadow-sm">
+          <div className="bg-black border border-primary/60 hover:border-primary transition-colors duration-300 rounded-2xl p-6 flex flex-col gap-4 shadow-[0_0_15px_rgba(29,185,84,0.1)]">
             <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0">
               <Activity className="w-6 h-6 text-blue-400" />
             </div>
@@ -108,7 +113,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="bg-[#0A0A0A] border border-white/5 hover:border-primary/30 transition-colors duration-300 rounded-2xl p-6 flex flex-col gap-4 shadow-sm">
+          <div className="bg-black border border-primary/60 hover:border-primary transition-colors duration-300 rounded-2xl p-6 flex flex-col gap-4 shadow-[0_0_15px_rgba(29,185,84,0.1)]">
             <div className="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center shrink-0">
               <Leaf className="w-6 h-6 text-yellow-400" />
             </div>
@@ -120,7 +125,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="bg-[#0A0A0A] border border-white/5 hover:border-primary/30 transition-colors duration-300 rounded-2xl p-6 flex flex-col gap-4 shadow-sm">
+          <div className="bg-black border border-primary/60 hover:border-primary transition-colors duration-300 rounded-2xl p-6 flex flex-col gap-4 shadow-[0_0_15px_rgba(29,185,84,0.1)]">
             <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center shrink-0">
               <DollarSign className="w-6 h-6 text-purple-400" />
             </div>
@@ -134,46 +139,30 @@ const Dashboard = () => {
           </div>
         </section>
 
-        <section>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold tracking-tight text-white">Módulos do Sistema</h2>
-            {isAdmin && (
-              <span className="text-xs text-primary font-semibold px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
-                Acesso Total
-              </span>
-            )}
-          </div>
-          <FeatureCards userPlan={isAdmin ? { plan_name: 'Completo' } : userPlan} user={user} />
-        </section>
-
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
           <div className="xl:col-span-2 space-y-8">
-            <section className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-6 overflow-hidden shadow-lg relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
-              <h2 className="text-xl font-bold tracking-tight mb-6 relative z-10">
-                Mapa da Propriedade
-              </h2>
-              <div className="relative z-10">
-                <MapSection />
+            <section>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold tracking-tight text-white">
+                  Funcionalidades do Plano
+                </h2>
+                {isAdmin && (
+                  <span className="text-xs text-primary font-semibold px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
+                    Acesso Total
+                  </span>
+                )}
               </div>
-            </section>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <section className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-6 shadow-lg">
-                <WeatherForecast />
-              </section>
-              <section className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-6 shadow-lg">
-                <HistoryChart />
-              </section>
-            </div>
-
-            <section className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-6 shadow-lg">
-              <IotConnection />
+              <div className="[&>div]:bg-black [&>div]:border-primary/50 [&>div]:shadow-[0_0_15px_rgba(29,185,84,0.1)] [&_.bg-card]:bg-black [&_.bg-card]:border-primary/50">
+                <FeatureCards
+                  userPlan={isAdmin ? { plan_name: 'Completo' } : userPlan}
+                  user={user}
+                />
+              </div>
             </section>
           </div>
 
           <div className="xl:col-span-1">
-            <section className="bg-[#0A0A0A] border border-white/5 rounded-3xl p-6 h-full flex flex-col shadow-lg">
+            <section className="bg-black border border-primary/50 rounded-3xl p-6 h-full flex flex-col shadow-[0_0_15px_rgba(29,185,84,0.1)]">
               <AlertsSection />
             </section>
           </div>

@@ -23,6 +23,7 @@ import Checkout from './pages/Checkout'
 import BlockedAccess from './pages/BlockedAccess'
 import CalculadoraRoi from './pages/CalculadoraRoi'
 import MeusCalculos from './pages/MeusCalculos'
+import Monitoramento from './pages/Monitoramento'
 import Planos from './pages/Planos'
 import Profile from './pages/Profile'
 import PrevisaoIA from './pages/PrevisaoIA'
@@ -68,6 +69,7 @@ const App = () => {
                     <Route path="/checkout" element={<Checkout />} />
                     <Route path="/roi" element={<CalculadoraRoi />} />
                     <Route path="/meus-calculos" element={<MeusCalculos />} />
+                    <Route path="/monitoramento" element={<Monitoramento />} />
                     <Route path="/previsao-ia" element={<PrevisaoIA />} />
                     <Route path="/bloqueado" element={<BlockedAccess />} />
                     <Route path="/planos" element={<Planos />} />

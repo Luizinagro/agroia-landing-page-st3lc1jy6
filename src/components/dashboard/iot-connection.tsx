@@ -39,10 +39,10 @@ export function IotConnection() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-white/5 text-foreground hover:bg-white/10 shadow-sm border border-white/10 font-semibold transition-all hover:scale-105 backdrop-blur-md rounded-full">
+        <Button className="bg-primary/20 text-primary hover:bg-primary/30 shadow-[0_0_15px_rgba(29,185,84,0.2)] border border-primary font-bold transition-all hover:scale-105 backdrop-blur-md rounded-full px-6">
           <Wifi className="w-4 h-4 mr-2 text-primary" />
-          <span className="hidden sm:inline">Conectar Sensor IoT</span>
-          <span className="sm:hidden">Sensor IoT</span>
+          <span className="hidden sm:inline text-white">Conectar Sensor IoT</span>
+          <span className="sm:hidden text-white">Sensor IoT</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
