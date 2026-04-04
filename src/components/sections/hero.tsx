@@ -12,55 +12,87 @@ import {
 } from 'lucide-react'
 import { LogoText } from '@/components/ui/logo'
 import { Link } from 'react-router-dom'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 
 const ecossistema = [
   {
     icon: Cpu,
     title: 'IA Avançada',
     description: 'Previsões precisas e análises preditivas para sua fazenda.',
-    link: '/previsao-ia',
+    cta: 'Ver previsões na prática',
+    modalTitle: 'Previsões mais inteligentes para decidir melhor',
+    modalText:
+      'A IA Avançada analisa dados da operação para gerar previsões e apoiar decisões com mais segurança. Na prática, ela ajuda a antecipar cenários, reduzir erros e agir com mais precisão no campo.',
   },
   {
     icon: BarChart3,
     title: 'Gestão Completa',
     description: 'Dashboard intuitivo com todos os dados concentrados.',
-    link: '/dashboard',
+    cta: 'Ver o dashboard em ação',
+    modalTitle: 'Tudo centralizado em um só lugar',
+    modalText:
+      'A Gestão Completa reúne os principais dados da fazenda em um painel intuitivo e organizado. Isso facilita o acompanhamento da operação, melhora o controle e reduz a perda de informação no dia a dia.',
   },
   {
     icon: Leaf,
     title: 'Sustentabilidade ESG',
     description: 'Rastreabilidade total e conformidade com normas globais.',
-    link: '/rastreabilidade',
+    cta: 'Ver como rastrear',
+    modalTitle: 'Rastreabilidade e conformidade com mais clareza',
+    modalText:
+      'Este recurso ajuda a acompanhar processos, registros e padrões importantes para a operação. Na prática, fortalece a transparência, melhora o controle e apoia uma gestão mais alinhada às exigências do mercado.',
   },
   {
     icon: Calculator,
     title: 'Calculadora ROI',
     description: 'Calcule o retorno sobre o investimento da sua safra.',
-    link: '/roi',
+    cta: 'Calcular retorno',
+    modalTitle: 'Entenda o retorno antes de investir',
+    modalText:
+      'A Calculadora ROI mostra de forma simples o retorno esperado sobre investimentos da operação. Assim, você compara custos, avalia viabilidade e toma decisões com mais confiança.',
   },
   {
     icon: Tractor,
     title: 'Pecuária',
     description: 'Controle de rebanho e manejo eficiente.',
-    link: '/pecuaria',
+    cta: 'Ver controle do rebanho',
+    modalTitle: 'Mais controle sobre o rebanho',
+    modalText:
+      'O módulo de Pecuária ajuda a organizar informações do rebanho e melhorar o manejo da operação. Com isso, fica mais fácil acompanhar dados importantes e tomar decisões com mais precisão.',
   },
   {
     icon: DollarSign,
     title: 'SaaS Faturamento',
     description: 'Gestão financeira e emissão de cobranças.',
-    link: '/faturamento',
+    cta: 'Ver gestão financeira',
+    modalTitle: 'Mais organização financeira na operação',
+    modalText:
+      'O recurso de faturamento ajuda no controle financeiro, nas cobranças e na visão das receitas da operação. Isso traz mais clareza para a gestão e mais controle sobre o fluxo financeiro.',
   },
   {
     icon: ShoppingBag,
     title: 'Loja Agrícola',
     description: 'Compre insumos e equipamentos diretamente na plataforma.',
-    link: '/loja',
+    cta: 'Ver como comprar',
+    modalTitle: 'Compra mais prática dentro da plataforma',
+    modalText:
+      'A Loja Agrícola facilita o acesso a insumos e equipamentos em um só ambiente. Na prática, isso agiliza compras importantes e centraliza parte da rotina da operação.',
   },
   {
     icon: MessageSquare,
     title: 'Comunidade',
     description: 'Conecte-se com outros produtores e troque experiências.',
-    link: '/comunidade',
+    cta: 'Entrar na comunidade',
+    modalTitle: 'Troque experiências com outros produtores',
+    modalText:
+      'A Comunidade conecta usuários que vivem desafios parecidos no campo. É um espaço para aprender, compartilhar experiências e ampliar a visão com trocas relevantes.',
   },
 ]
 
@@ -131,12 +163,31 @@ export function Hero() {
                 <h3 className="text-lg font-bold mb-2 text-foreground text-center">{item.title}</h3>
                 <p className="text-sm text-muted-foreground text-center mb-6">{item.description}</p>
               </div>
-              <Link
-                to={item.link}
-                className="text-primary text-sm font-bold flex items-center gap-1 group-hover:gap-2 transition-all mt-auto uppercase tracking-wider"
-              >
-                Saiba Mais <ArrowRight className="w-4 h-4" />
-              </Link>
+
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button className="text-primary text-sm font-bold flex items-center gap-1 group-hover:gap-2 transition-all mt-auto uppercase tracking-wider outline-none">
+                    {item.cta} <ArrowRight className="w-4 h-4" />
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md bg-background border border-primary/20 shadow-[0_0_40px_rgba(29,185,84,0.1)]">
+                  <DialogHeader>
+                    <DialogTitle className="text-xl font-bold text-foreground mb-3 leading-tight">
+                      {item.modalTitle}
+                    </DialogTitle>
+                    <DialogDescription className="text-base text-muted-foreground leading-relaxed">
+                      {item.modalText}
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="flex justify-end mt-4 pt-4 border-t border-border/50">
+                    <Link to="/cadastro">
+                      <Button className="bg-primary text-black hover:bg-primary/90 font-bold px-6">
+                        Começar agora
+                      </Button>
+                    </Link>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           ))}
         </div>
