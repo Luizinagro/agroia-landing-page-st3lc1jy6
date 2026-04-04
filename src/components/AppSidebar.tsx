@@ -19,6 +19,7 @@ import {
   LayoutDashboard,
   Package,
   UserCircle,
+  Tractor,
 } from 'lucide-react'
 import {
   Dialog,
