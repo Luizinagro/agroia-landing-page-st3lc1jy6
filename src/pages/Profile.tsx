@@ -26,7 +26,6 @@ import { ptBR } from 'date-fns/locale'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
 import { LogOut, User as UserIcon, Package, Calendar } from 'lucide-react'
-import { Logo } from '@/components/ui/logo'
 
 export default function Profile() {
   const { user, updateUser, logout } = useAuth()
@@ -126,7 +125,6 @@ export default function Profile() {
         <div className="flex flex-col md:flex-row items-start justify-between gap-4 glass-panel p-6 rounded-2xl">
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
-              <Logo className="w-8 h-8 text-primary drop-shadow-[0_0_8px_rgba(29,185,84,0.6)]" />
               Meu Perfil
             </h1>
             <p className="text-[#A0A0A0] mt-2 text-lg font-medium">

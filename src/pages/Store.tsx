@@ -3,7 +3,6 @@ import { supabase } from '@/lib/supabase/client'
 import { useCart, Product } from '@/contexts/CartContext'
 import { useSubscription } from '@/hooks/useSubscription'
 import { Filter, PackageSearch } from 'lucide-react'
-import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
@@ -70,7 +69,6 @@ export default function Store() {
         <div className="flex flex-col md:flex-row items-start justify-between gap-4 glass-panel p-6 rounded-2xl">
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
-              <Logo className="h-8 w-8 text-primary drop-shadow-[0_0_8px_rgba(29,185,84,0.6)]" />
               Loja de Insumos
             </h1>
             <p className="text-[#A0A0A0] mt-2 text-lg font-medium max-w-xl">

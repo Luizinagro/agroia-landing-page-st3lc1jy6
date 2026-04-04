@@ -6,7 +6,7 @@ import { GamificationCard } from '@/components/community/GamificationCard'
 import { SEO } from '@/components/SEO'
 import { Suspense, lazy } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Logo } from '@/components/ui/logo'
+import { LogoText } from '@/components/ui/logo'
 
 const ForumTab = lazy(() =>
   import('@/components/community/ForumTab').then((m) => ({ default: m.ForumTab })),
@@ -29,10 +29,9 @@ export default function Community() {
         <div className="container flex h-16 items-center justify-between px-4 md:px-6">
           <Link
             to="/"
-            className="flex items-center gap-2 font-bold text-xl hover:opacity-90 transition-opacity text-white"
+            className="flex items-center gap-2 hover:opacity-90 transition-opacity text-white"
           >
-            <Logo className="w-8 h-8 text-primary drop-shadow-[0_0_8px_rgba(29,185,84,0.6)]" />
-            <span>AgroIA</span>
+            <LogoText />
           </Link>
           <div className="flex items-center gap-4">
             <Button

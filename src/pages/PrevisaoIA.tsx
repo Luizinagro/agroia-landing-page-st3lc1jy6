@@ -10,9 +10,8 @@ import {
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { LineChart, TrendingUp, TrendingDown, DollarSign, Loader2 } from 'lucide-react'
+import { LineChart, TrendingUp, TrendingDown, DollarSign, Loader2, Bot } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { Logo } from '@/components/ui/logo'
 import { supabase } from '@/lib/supabase/client'
 import { useToast } from '@/hooks/use-toast'
 
@@ -81,7 +80,6 @@ export default function PrevisaoIA() {
         <div className="flex flex-col md:flex-row items-start justify-between gap-4 glass-panel p-6 rounded-2xl">
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
-              <Logo className="w-8 h-8 text-primary drop-shadow-[0_0_8px_rgba(29,185,84,0.6)]" />
               Previsão IA
             </h1>
             <p className="text-[#A0A0A0] mt-2 text-lg font-medium">
@@ -252,7 +250,7 @@ export default function PrevisaoIA() {
                 <Card className="bg-[#1DB954]/5 border-[#1DB954]/30 shadow-[0_0_20px_rgba(29,185,84,0.1)]">
                   <CardContent className="p-5">
                     <p className="text-sm text-[#FFFFFF] flex items-start gap-3 font-medium">
-                      <Logo className="h-6 w-6 text-[#1DB954] shrink-0 mt-0.5" />
+                      <Bot className="h-6 w-6 text-[#1DB954] shrink-0 mt-0.5" />
                       <span>
                         <strong className="text-[#1DB954]">Análise IA:</strong>{' '}
                         {resultado.recommendation}{' '}

@@ -3,7 +3,7 @@ import logoImg from '@/assets/adobe-express-file-a4f11.png'
 
 export function LogoText({ className }: { className?: string }) {
   return (
-    <span className={cn('font-black text-[20px] tracking-tight uppercase', className)}>
+    <span className={cn('font-black text-[23px] tracking-tight uppercase', className)}>
       <span className="text-white">AGRO</span>
       <span className="text-primary">IA</span>
     </span>
