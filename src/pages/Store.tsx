@@ -65,72 +65,76 @@ export default function Store() {
   useGsapAnimations(containerRef)
 
   return (
-    <div className="container mx-auto py-8 bg-[#000000] min-h-screen">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 bg-[#050505] p-6 rounded-2xl border border-[#1DB954]/20 shadow-sm">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-[#FFFFFF] flex items-center gap-3">
-            <Logo className="h-8 w-8 text-[#1DB954]" />
-            Loja de Insumos
-          </h1>
-          <p className="text-[#E0E0E0] mt-2 text-lg font-medium max-w-xl">
-            Insumos premium para sua lavoura. Adquira sementes, fertilizantes e defensivos com a
-            melhor qualidade do mercado.
-          </p>
+    <div className="min-h-screen bg-[#000000] flex flex-col font-sans">
+      <main className="flex-1 container py-8 mx-auto space-y-8">
+        <div className="flex flex-col md:flex-row items-start justify-between gap-4 glass-panel p-6 rounded-2xl">
+          <div>
+            <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
+              <Logo className="h-8 w-8 text-primary drop-shadow-[0_0_8px_rgba(29,185,84,0.6)]" />
+              Loja de Insumos
+            </h1>
+            <p className="text-[#A0A0A0] mt-2 text-lg font-medium max-w-xl">
+              Insumos premium para sua lavoura. Adquira sementes, fertilizantes e defensivos com a
+              melhor qualidade do mercado.
+            </p>
+          </div>
+          <div className="shrink-0">
+            <CartSheet canBuy={canBuy} planLoading={planLoading} />
+          </div>
         </div>
-        <CartSheet canBuy={canBuy} planLoading={planLoading} />
-      </div>
 
-      <div className="flex items-center gap-2 mb-8 overflow-x-auto pb-2 scrollbar-hide">
-        <Filter className="h-5 w-5 text-agro-green mr-2 shrink-0" />
-        {CATEGORIES.map((cat) => (
-          <Button
-            key={cat.id}
-            variant={selectedCategory === cat.id ? 'default' : 'outline'}
-            className={cn(
-              'rounded-[20px] whitespace-nowrap font-medium transition-all duration-400 ease-bounce',
-              selectedCategory === cat.id
-                ? 'bg-agro-green hover:bg-agro-green-hover text-white border-agro-green shadow-md'
-                : 'bg-transparent text-foreground border-border hover:bg-accent hover:text-accent-foreground',
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+          <Filter className="h-5 w-5 text-agro-green mr-2 shrink-0" />
+          {CATEGORIES.map((cat) => (
+            <Button
+              key={cat.id}
+              variant={selectedCategory === cat.id ? 'default' : 'outline'}
+              className={cn(
+                'rounded-[20px] whitespace-nowrap font-medium transition-all duration-400 ease-bounce',
+                selectedCategory === cat.id
+                  ? 'bg-agro-green hover:bg-agro-green-hover text-white border-agro-green shadow-md'
+                  : 'bg-transparent text-foreground border-border hover:bg-accent hover:text-accent-foreground',
+              )}
+              onClick={() => setSelectedCategory(cat.id)}
+            >
+              {cat.label}
+            </Button>
+          ))}
+        </div>
+
+        {loading ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            {[...Array(8)].map((_, i) => (
+              <div
+                key={i}
+                className="animate-pulse border border-[#1DB954]/20 shadow-sm rounded-[16px] h-80 bg-[#050505]"
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            {filteredProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onAddToCart={handleAddToCart}
+                canBuy={canBuy}
+                planLoading={planLoading}
+              />
+            ))}
+
+            {filteredProducts.length === 0 && (
+              <div className="col-span-full py-16 flex flex-col items-center justify-center bg-[#050505] rounded-2xl border border-dashed border-[#1DB954]/20 text-center px-4 shadow-sm">
+                <PackageSearch className="h-16 w-16 text-[#1DB954] opacity-50 mb-4" />
+                <h3 className="text-xl font-bold text-[#FFFFFF] mb-2">Nenhum produto encontrado</h3>
+                <p className="text-[#E0E0E0] max-w-md font-medium">
+                  Não há insumos cadastrados nesta categoria no momento.
+                </p>
+              </div>
             )}
-            onClick={() => setSelectedCategory(cat.id)}
-          >
-            {cat.label}
-          </Button>
-        ))}
-      </div>
-
-      {loading ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={i}
-              className="animate-pulse border border-[#1DB954]/20 shadow-sm rounded-[16px] h-80 bg-[#050505]"
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-          {filteredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onAddToCart={handleAddToCart}
-              canBuy={canBuy}
-              planLoading={planLoading}
-            />
-          ))}
-
-          {filteredProducts.length === 0 && (
-            <div className="col-span-full py-16 flex flex-col items-center justify-center bg-[#050505] rounded-2xl border border-dashed border-[#1DB954]/20 text-center px-4 shadow-sm">
-              <PackageSearch className="h-16 w-16 text-[#1DB954] opacity-50 mb-4" />
-              <h3 className="text-xl font-bold text-[#FFFFFF] mb-2">Nenhum produto encontrado</h3>
-              <p className="text-[#E0E0E0] max-w-md font-medium">
-                Não há insumos cadastrados nesta categoria no momento.
-              </p>
-            </div>
-          )}
-        </div>
-      )}
+          </div>
+        )}
+      </main>
     </div>
   )
 }

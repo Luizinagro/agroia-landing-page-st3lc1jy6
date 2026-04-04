@@ -46,8 +46,8 @@ export default function Community() {
         </div>
       </header>
 
-      <main className="flex-1 container mx-auto px-4 py-8 max-w-6xl">
-        <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 glass-panel p-6 rounded-2xl">
+      <main className="flex-1 container py-8 mx-auto space-y-8 max-w-6xl">
+        <div className="flex flex-col md:flex-row items-start justify-between gap-6 glass-panel p-6 rounded-2xl mb-8">
           <div>
             <h1 className="text-3xl font-extrabold text-white tracking-tight">
               Comunidade Agro-Futuro
@@ -56,7 +56,9 @@ export default function Community() {
               Conecte-se, aprenda e faça negócios com outros produtores.
             </p>
           </div>
-          <GamificationCard />
+          <div className="shrink-0 w-full md:w-auto">
+            <GamificationCard />
+          </div>
         </div>
 
         <Tabs defaultValue="forum" className="w-full">

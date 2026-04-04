@@ -16,41 +16,70 @@ export default function CRM() {
   }
 
   return (
-    <div className="flex-1 space-y-6 p-4 md:p-8 pt-6 min-h-screen bg-background text-foreground font-sans">
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-3xl font-semibold tracking-tight text-foreground">CRM & Gestão</h2>
-          <p className="text-muted-foreground mt-1">Centro de comando administrativo da AgroIA.</p>
+    <div className="min-h-screen bg-[#000000] flex flex-col font-sans">
+      <main className="flex-1 container py-8 mx-auto space-y-8">
+        <div className="flex flex-col md:flex-row items-start justify-between gap-4 glass-panel p-6 rounded-2xl">
+          <div>
+            <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
+              CRM & Gestão
+            </h1>
+            <p className="text-[#A0A0A0] mt-2 text-lg font-medium">
+              Centro de comando administrativo da AgroIA.
+            </p>
+          </div>
+          <Button className="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 font-semibold transition-colors shrink-0">
+            Exportar Relatório
+          </Button>
         </div>
-        <Button className="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 font-semibold transition-colors">
-          Exportar Relatório
-        </Button>
-      </div>
 
-      <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="bg-[#050505] border border-white/5 overflow-x-auto w-full md:w-auto flex-nowrap scrollbar-hide justify-start">
-          <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-          <TabsTrigger value="leads">Leads e Vendas</TabsTrigger>
-          <TabsTrigger value="tasks">Tarefas</TabsTrigger>
-          <TabsTrigger value="inventory">Estoque de Insumos</TabsTrigger>
-        </TabsList>
+        <Tabs defaultValue="overview" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 bg-[#050505] p-1 border border-primary/20 h-auto md:h-12 mb-8 rounded-xl gap-1">
+            <TabsTrigger
+              value="overview"
+              className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-black py-2.5 text-white/80 transition-all font-bold"
+            >
+              Visão Geral
+            </TabsTrigger>
+            <TabsTrigger
+              value="leads"
+              className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-black py-2.5 text-white/80 transition-all font-bold"
+            >
+              Leads e Vendas
+            </TabsTrigger>
+            <TabsTrigger
+              value="tasks"
+              className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-black py-2.5 text-white/80 transition-all font-bold"
+            >
+              Tarefas
+            </TabsTrigger>
+            <TabsTrigger
+              value="inventory"
+              className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-black py-2.5 text-white/80 transition-all font-bold"
+            >
+              Estoque de Insumos
+            </TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="overview" className="space-y-4">
-          <CrmOverview />
-        </TabsContent>
+          <TabsContent value="overview" className="space-y-4">
+            <CrmOverview />
+          </TabsContent>
 
-        <TabsContent value="leads" className="space-y-4">
-          <CrmLeads />
-        </TabsContent>
+          <TabsContent value="leads" className="space-y-4">
+            <CrmLeads />
+          </TabsContent>
 
-        <TabsContent value="tasks" className="space-y-4">
-          <CrmTasks />
-        </TabsContent>
+          <TabsContent value="tasks" className="space-y-4">
+            <CrmTasks />
+          </TabsContent>
 
-        <TabsContent value="inventory" className="space-y-4">
-          <CrmInventory />
-        </TabsContent>
-      </Tabs>
+          <TabsContent
+            value="inventory"
+            className="space-y-4 outline-none animate-in fade-in slide-in-from-bottom-4 duration-500"
+          >
+            <CrmInventory />
+          </TabsContent>
+        </Tabs>
+      </main>
     </div>
   )
 }

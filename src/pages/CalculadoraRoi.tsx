@@ -155,13 +155,13 @@ export default function CalculadoraRoi() {
       />
 
       <main className="flex-1 container py-8 mx-auto space-y-8">
-        <div className="flex flex-col md:flex-row items-start justify-between gap-4 bg-[#050505] p-6 rounded-2xl border border-[#1DB954]/20">
+        <div className="flex flex-col md:flex-row items-start justify-between gap-4 glass-panel p-6 rounded-2xl">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-[#FFFFFF] flex items-center gap-3">
-              <Calculator className="w-8 h-8 text-[#1DB954]" />
+            <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
+              <Calculator className="w-8 h-8 text-primary drop-shadow-[0_0_8px_rgba(29,185,84,0.6)]" />
               Calculadora de ROI
             </h1>
-            <p className="text-[#E0E0E0] mt-2 text-lg font-medium">
+            <p className="text-[#A0A0A0] mt-2 text-lg font-medium">
               Planejamento financeiro estratégico. Simule cenários, calcule margens de lucro e
               descubra o tempo de retorno do seu investimento.
             </p>
@@ -169,7 +169,7 @@ export default function CalculadoraRoi() {
           <Button
             onClick={handleSave}
             disabled={isSaving}
-            className="btn-agro-primary font-bold whitespace-nowrap"
+            className="btn-agro-primary font-bold whitespace-nowrap shrink-0"
           >
             {isSaving ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
