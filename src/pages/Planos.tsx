@@ -3,9 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { useSubscription } from '@/hooks/useSubscription'
 import { supabase } from '@/lib/supabase/client'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Check, Loader2, Sparkles } from 'lucide-react'
+import { Check, Loader2 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 
@@ -16,44 +15,65 @@ const PLANS = [
     period: '',
     level: 0,
     features: ['dashboard'],
-    featureLabels: ['Dashboard Básico', 'Suporte Básico'],
+    description: 'Comece sem custo e conheça a plataforma.',
+    featureLabels: ['Acesso inicial à plataforma', 'Visão geral dos recursos', 'Entrada sem risco'],
   },
   {
     name: 'Plantio Solo',
-    price: 'R$ 147',
+    price: 'R$ 149',
     period: '/mês',
     level: 1,
     features: ['dashboard', 'roi', 'loja'],
-    featureLabels: ['Previsão IA', 'Calculadora de ROI', 'Loja de Insumos'],
+    description: 'Mais controle e previsibilidade para sua lavoura.',
+    featureLabels: [
+      'Gestão focada em plantio',
+      'Mais organização operacional',
+      'Calculadora de ROI',
+      'Loja de Insumos',
+    ],
   },
   {
-    name: 'Pecuário Solo',
-    price: 'R$ 147',
+    name: 'Pecuária Solo',
+    price: 'R$ 199',
     period: '/mês',
     level: 1,
     features: ['dashboard', 'pecuaria', 'rastreabilidade', 'loja'],
-    featureLabels: ['Rastreabilidade', 'Loja de Insumos', 'Gestão Pecuária'],
+    description: 'Mais precisão e controle na gestão do rebanho.',
+    featureLabels: [
+      'Gestão focada em pecuária',
+      'Melhor controle do rebanho',
+      'Rastreabilidade',
+      'Loja de Insumos',
+    ],
   },
   {
     name: 'Completo',
-    price: 'R$ 347',
+    price: 'R$ 349',
     period: '/mês',
     level: 2,
     features: ['dashboard', 'roi', 'loja', 'pecuaria', 'rastreabilidade'],
-    featureLabels: ['Previsão IA', 'Rastreabilidade', 'Calculadora de ROI', 'Loja de Insumos'],
-  },
-  {
-    name: 'Família Coop',
-    price: 'R$ 747',
-    period: '/mês',
-    level: 3,
-    features: ['dashboard', 'roi', 'loja', 'pecuaria', 'rastreabilidade', 'multi_propriedade'],
+    description: 'A solução ideal para quem quer visão total da operação.',
     featureLabels: [
+      'Recursos integrados',
       'Previsão IA',
       'Rastreabilidade',
       'Calculadora de ROI',
       'Loja de Insumos',
+    ],
+    highlighted: true,
+  },
+  {
+    name: 'Família Coop',
+    price: 'R$ 799',
+    period: '/mês',
+    level: 3,
+    features: ['dashboard', 'roi', 'loja', 'pecuaria', 'rastreabilidade', 'multi_propriedade'],
+    description: 'Mais estrutura para operações maiores e gestão compartilhada.',
+    featureLabels: [
+      'Gestão compartilhada',
+      'Mais escala',
       'Até 5 propriedades',
+      'Todos os recursos Completos',
     ],
   },
 ]
@@ -73,7 +93,6 @@ export default function Planos() {
     setUpdating(selectedPlan.name)
 
     try {
-      // Atualizar user_plans
       if (currentPlan?.id) {
         const { error } = await supabase
           .from('user_plans')
@@ -92,16 +111,14 @@ export default function Planos() {
         if (error) throw error
       }
 
-      // Sincronizar campo redundante na tabela users
       await supabase.from('users').update({ plan_active: selectedPlan.name }).eq('id', user.id)
 
       toast({
         title: 'Plano atualizado com sucesso!',
         description: `Seu novo plano é o ${selectedPlan.name}. Aproveite as novas ferramentas!`,
-        className: 'bg-[#1a3c34] text-white border-[#f4d03f]',
+        className: 'bg-green-500 text-black border-green-600',
       })
 
-      // Force reload to update all subscription contexts immediately
       window.location.assign('/dashboard')
     } catch (error) {
       console.error(error)
@@ -117,98 +134,121 @@ export default function Planos() {
   if (loadingPlan) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 className="w-10 h-10 animate-spin text-[#1a3c34]" />
+        <Loader2 className="w-10 h-10 animate-spin text-green-500" />
       </div>
     )
   }
 
   return (
-    <div className="container py-12 px-4 md:px-6 mx-auto animate-in fade-in duration-500">
-      <div className="text-center space-y-4 max-w-3xl mx-auto mb-12">
-        <h1 className="text-4xl font-bold text-[#1a3c34]">Evolua sua Gestão</h1>
-        <p className="text-lg text-muted-foreground">
+    <div className="bg-black min-h-full rounded-2xl md:rounded-3xl p-6 md:p-12 animate-in fade-in duration-500 border border-white/10 shadow-2xl">
+      <div className="text-center mb-16 max-w-2xl mx-auto">
+        <h1 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tighter">
+          Evolua sua Gestão
+        </h1>
+        <p className="text-zinc-400 text-lg font-medium">
           Escolha o plano ideal para a sua propriedade e libere todo o potencial da inteligência
           artificial e rastreabilidade no campo.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6 max-w-[1400px] mx-auto">
-        {PLANS.map((plan) => {
-          const isCurrent = plan.name === currentPlanName
-          const isSuperior = plan.level > currentPlanLevel
-
-          let btnText = 'Mudar Plano'
-          if (isCurrent) btnText = 'Seu Plano Atual'
-          else if (isSuperior) btnText = 'Fazer Upgrade'
-
-          return (
-            <Card
-              key={plan.name}
-              className={cn(
-                'relative flex flex-col h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1 overflow-hidden',
-                isCurrent
-                  ? 'border-2 border-[#1a3c34] shadow-md bg-green-50/20'
-                  : 'border border-border',
-                plan.name === 'Completo' && !isCurrent ? 'border-[#f4d03f] border-2 shadow-lg' : '',
-              )}
-            >
-              {isCurrent && (
-                <div className="absolute top-0 inset-x-0 bg-[#1a3c34] text-[#f4d03f] text-center py-1.5 text-xs font-bold uppercase tracking-wider">
-                  Seu Plano Atual
-                </div>
-              )}
-              {plan.name === 'Completo' && !isCurrent && (
-                <div className="absolute top-0 inset-x-0 bg-[#f4d03f] text-[#1a3c34] text-center py-1 text-xs font-bold flex items-center justify-center gap-1">
-                  <Sparkles className="w-3 h-3" /> Mais Escolhido
-                </div>
-              )}
-
-              <CardHeader
-                className={cn('pb-4', isCurrent || plan.name === 'Completo' ? 'pt-10' : 'pt-6')}
-              >
-                <CardTitle className="text-xl text-[#1a3c34]">{plan.name}</CardTitle>
-                <div className="mt-4 flex items-baseline text-3xl font-extrabold text-[#1a3c34]">
-                  {plan.price}
-                  <span className="ml-1 text-sm font-medium text-muted-foreground">
-                    {plan.period}
-                  </span>
-                </div>
-              </CardHeader>
-
-              <CardContent className="flex-1 pb-6">
-                <ul className="space-y-4">
-                  {plan.featureLabels.map((feat, i) => (
-                    <li key={i} className="flex items-start">
-                      <Check className="h-5 w-5 text-[#f4d03f] shrink-0 mr-3 mt-0.5" />
-                      <span className="text-sm font-medium text-zinc-700">{feat}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-
-              <CardFooter className="pt-0">
-                <Button
-                  className={cn(
-                    'w-full h-11 text-sm font-bold transition-colors',
-                    isCurrent
-                      ? 'bg-zinc-100 text-zinc-500 hover:bg-zinc-100 cursor-not-allowed'
-                      : plan.name === 'Completo'
-                        ? 'bg-[#f4d03f] text-[#1a3c34] hover:bg-[#f4d03f]/90'
-                        : 'bg-[#1a3c34] text-white hover:bg-[#1a3c34]/90',
-                  )}
-                  disabled={isCurrent || updating !== null}
-                  onClick={() => handleUpgrade(plan)}
-                >
-                  {updating === plan.name ? (
-                    <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                  ) : null}
-                  {btnText}
-                </Button>
-              </CardFooter>
-            </Card>
-          )
-        })}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 max-w-6xl mx-auto mb-6">
+        {PLANS.slice(0, 3).map((plan) => (
+          <PlanCard
+            key={plan.name}
+            plan={plan}
+            currentPlanName={currentPlanName}
+            currentPlanLevel={currentPlanLevel}
+            updating={updating}
+            onUpgrade={handleUpgrade}
+          />
+        ))}
       </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        {PLANS.slice(3, 5).map((plan) => (
+          <PlanCard
+            key={plan.name}
+            plan={plan}
+            currentPlanName={currentPlanName}
+            currentPlanLevel={currentPlanLevel}
+            updating={updating}
+            onUpgrade={handleUpgrade}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function PlanCard({ plan, currentPlanName, currentPlanLevel, updating, onUpgrade }: any) {
+  const isCurrent = plan.name === currentPlanName
+  const isSuperior = plan.level > currentPlanLevel
+
+  let btnText = 'Mudar Plano'
+  if (isCurrent) btnText = 'Seu Plano Atual'
+  else if (isSuperior) btnText = 'Fazer Upgrade'
+
+  return (
+    <div
+      className={cn(
+        'relative flex flex-col p-8 rounded-[2.2rem] transition-all duration-300',
+        plan.highlighted || isCurrent
+          ? 'bg-zinc-900/90 border-2 border-green-500 shadow-[0_0_40px_-15px_rgba(34,197,94,0.5)] z-10 scale-[1.02]'
+          : 'bg-black border border-white/5 hover:bg-zinc-900/40 hover:border-white/10',
+      )}
+    >
+      {isCurrent && (
+        <div className="absolute top-0 right-8 -translate-y-1/2">
+          <div className="bg-zinc-100 text-zinc-800 text-xs font-black px-4 py-1 rounded-full uppercase tracking-wider shadow-lg border border-zinc-200">
+            Plano Atual
+          </div>
+        </div>
+      )}
+      {!isCurrent && plan.highlighted && (
+        <div className="absolute top-0 right-8 -translate-y-1/2">
+          <div className="bg-green-500 text-black text-xs font-black px-4 py-1 rounded-full uppercase tracking-wider shadow-[0_0_20px_rgba(34,197,94,0.5)]">
+            Recomendado
+          </div>
+        </div>
+      )}
+
+      <h3 className="text-2xl font-black mb-2 text-white">{plan.name}</h3>
+      <p className="text-zinc-400 text-sm font-medium mb-6 min-h-[40px]">{plan.description}</p>
+
+      <div className="flex items-baseline gap-1 mb-8">
+        <span className="text-5xl font-black tracking-tighter text-green-500 drop-shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+          {plan.price}
+        </span>
+        {plan.period && <span className="font-bold text-sm text-zinc-500">{plan.period}</span>}
+      </div>
+
+      <ul className="space-y-4 mb-8 flex-1">
+        {plan.featureLabels.map((f: string, j: number) => (
+          <li key={j} className="flex items-start gap-3 text-sm font-semibold text-zinc-300">
+            <div className="mt-0.5 rounded-full p-1 bg-green-500/10 text-green-500 shrink-0">
+              <Check className="w-3 h-3" strokeWidth={3} />
+            </div>
+            <span>{f}</span>
+          </li>
+        ))}
+      </ul>
+
+      <Button
+        className={cn(
+          'w-full h-auto py-4 mt-4 rounded-full font-black text-sm tracking-wide uppercase transition-all duration-300 whitespace-normal text-center',
+          isCurrent
+            ? 'bg-zinc-800 text-zinc-400 hover:bg-zinc-800 cursor-not-allowed'
+            : plan.highlighted
+              ? 'bg-green-500 text-black hover:bg-green-600 shadow-[0_0_25px_rgba(34,197,94,0.6)] hover:scale-105'
+              : 'bg-zinc-100 text-black hover:bg-white hover:scale-105',
+        )}
+        disabled={isCurrent || updating !== null}
+        onClick={() => onUpgrade(plan)}
+      >
+        {updating === plan.name ? (
+          <Loader2 className="w-5 h-5 animate-spin mr-2 inline-block" />
+        ) : null}
+        {btnText}
+      </Button>
     </div>
   )
 }
