@@ -55,9 +55,6 @@ export const FeatureCards = ({ userPlan, user }: FeatureCardsProps) => {
 
   return (
     <div className="space-y-4 animate-slide-up" style={{ animationDelay: '50ms' }}>
-      <h2 className="text-xl font-semibold tracking-tight text-foreground flex items-center gap-2">
-        Funcionalidades do seu Plano
-      </h2>
       <div className="grid-responsive gsap-stagger-container">
         {features.map((feature) => {
           const unlocked = isFeatureUnlocked(feature.id, feature.name)
@@ -65,9 +62,9 @@ export const FeatureCards = ({ userPlan, user }: FeatureCardsProps) => {
             <div
               key={feature.id}
               className={cn(
-                'bg-white dark:bg-[#18181b] rounded-[2rem] p-6 flex flex-col gsap-stagger-item shadow-sm border border-black/5 dark:border-white/5 transition-shadow hover:shadow-md',
+                'bg-black rounded-[2rem] p-6 flex flex-col gsap-stagger-item shadow-[0_0_15px_rgba(29,185,84,0.1)] border border-primary/50 transition-colors hover:border-primary',
                 !unlocked &&
-                  'opacity-60 grayscale cursor-not-allowed hover:transform-none hover:shadow-none',
+                  'opacity-60 grayscale cursor-not-allowed hover:border-primary/50 hover:shadow-[0_0_15px_rgba(29,185,84,0.1)]',
               )}
             >
               <div className="pb-2">
@@ -76,8 +73,8 @@ export const FeatureCards = ({ userPlan, user }: FeatureCardsProps) => {
                     className={cn(
                       'p-3 rounded-[1rem]',
                       unlocked
-                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                        : 'bg-gray-100 dark:bg-zinc-800 text-muted-foreground',
+                        ? 'bg-primary/10 text-primary'
+                        : 'bg-zinc-800/50 text-muted-foreground',
                     )}
                   >
                     <feature.icon className="w-6 h-6" />
@@ -95,12 +92,12 @@ export const FeatureCards = ({ userPlan, user }: FeatureCardsProps) => {
                     </Badge>
                   )}
                 </div>
-                <h3 className="text-lg font-semibold tracking-tight text-foreground mt-4">
+                <h3 className="text-lg font-semibold tracking-tight text-white mt-4">
                   {feature.name}
                 </h3>
               </div>
               <div className="mt-2">
-                <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+                <p className="text-sm text-[#A0A0A0] line-clamp-2 leading-relaxed">
                   {feature.description}
                 </p>
               </div>

@@ -152,7 +152,7 @@ const Dashboard = () => {
                   </span>
                 )}
               </div>
-              <div className="[&>div]:bg-black [&>div]:border-primary/50 [&>div]:shadow-[0_0_15px_rgba(29,185,84,0.1)] [&_.bg-card]:bg-black [&_.bg-card]:border-primary/50">
+              <div>
                 <FeatureCards
                   userPlan={isAdmin ? { plan_name: 'Completo' } : userPlan}
                   user={user}
