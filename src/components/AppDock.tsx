@@ -6,7 +6,6 @@ import {
   Store,
   Users,
   Settings,
-  Tractor,
   ActivitySquare,
   Beef,
   MessageSquare,
@@ -29,12 +28,18 @@ export function AppDock() {
     return requiredPlan.includes(planName)
   }
 
-  const items = [
+  const baseItems = [
     {
       icon: LayoutDashboard,
       label: 'Dashboard',
       onClick: () => navigate('/dashboard'),
       isActive: location.pathname === '/dashboard',
+    },
+    {
+      icon: Store,
+      label: 'Loja',
+      onClick: () => navigate('/loja'),
+      isActive: location.pathname === '/loja',
     },
     {
       icon: Calculator,
@@ -53,12 +58,6 @@ export function AppDock() {
         }
       },
       isActive: location.pathname === '/previsao-ia',
-    },
-    {
-      icon: Tractor,
-      label: 'Insumos',
-      onClick: () => navigate('/insumos'),
-      isActive: location.pathname === '/insumos',
     },
     {
       icon: ActivitySquare,
@@ -85,28 +84,10 @@ export function AppDock() {
       isActive: location.pathname === '/pecuaria',
     },
     {
-      icon: Users,
-      label: 'CRM / Gestão',
-      onClick: () => {
-        if (hasAccess(['Completo', 'Família Coop'])) {
-          navigate('/crm')
-        } else {
-          navigate('/dashboard', { state: { blockedFeature: true } })
-        }
-      },
-      isActive: location.pathname === '/crm',
-    },
-    {
       icon: MessageSquare,
       label: 'Comunidade',
       onClick: () => navigate('/comunidade'),
       isActive: location.pathname === '/comunidade',
-    },
-    {
-      icon: Store,
-      label: 'Loja',
-      onClick: () => navigate('/loja'),
-      isActive: location.pathname === '/loja',
     },
     {
       icon: Settings,
@@ -116,5 +97,14 @@ export function AppDock() {
     },
   ]
 
-  return <Dock items={items} />
+  if (isAdmin) {
+    baseItems.push({
+      icon: Users,
+      label: 'CRM / Gestão',
+      onClick: () => navigate('/crm'),
+      isActive: location.pathname === '/crm',
+    })
+  }
+
+  return <Dock items={baseItems} />
 }

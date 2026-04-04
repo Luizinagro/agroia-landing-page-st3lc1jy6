@@ -27,7 +27,6 @@ import Planos from './pages/Planos'
 import Profile from './pages/Profile'
 import PrevisaoIA from './pages/PrevisaoIA'
 import Rastreabilidade from './pages/Rastreabilidade'
-import Insumos from './pages/Insumos'
 import CRM from './pages/CRM'
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
@@ -66,7 +65,6 @@ const App = () => {
                     <Route path="/pecuaria" element={<Pecuaria />} />
                     <Route path="/rastreabilidade" element={<Rastreabilidade />} />
                     <Route path="/loja" element={<Store />} />
-                    <Route path="/insumos" element={<Insumos />} />
                     <Route path="/checkout" element={<Checkout />} />
                     <Route path="/roi" element={<CalculadoraRoi />} />
                     <Route path="/meus-calculos" element={<MeusCalculos />} />

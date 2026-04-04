@@ -100,7 +100,7 @@ export default function Store() {
       </div>
 
       {loading ? (
-        <div className="grid-responsive">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           {[...Array(8)].map((_, i) => (
             <div
               key={i}
@@ -109,7 +109,7 @@ export default function Store() {
           ))}
         </div>
       ) : (
-        <div className="grid-responsive">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           {filteredProducts.map((product) => (
             <ProductCard
               key={product.id}
