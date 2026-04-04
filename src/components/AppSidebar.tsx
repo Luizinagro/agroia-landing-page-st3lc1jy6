@@ -20,6 +20,7 @@ import {
   Package,
   UserCircle,
   Tractor,
+  Users as UsersIcon,
 } from 'lucide-react'
 import {
   Dialog,
@@ -46,8 +47,13 @@ export function AppSidebar() {
     navigate('/login')
   }
 
+  const isAdmin = user?.tipo_usuario === 'admin' || user?.user_type === 'admin'
+
   const menuItems = [
     { title: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, feature: 'dashboard' },
+    ...(isAdmin
+      ? [{ title: 'CRM Vendas', path: '/crm', icon: UsersIcon, feature: 'dashboard' }]
+      : []),
     { title: 'Pecuária', path: '/pecuaria', icon: Tractor, feature: 'pecuaria' },
     { title: 'Previsão IA', path: '/previsao-ia', icon: LineChart, feature: 'previsao-ia' },
     {

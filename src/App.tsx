@@ -28,7 +28,9 @@ import Profile from './pages/Profile'
 import PrevisaoIA from './pages/PrevisaoIA'
 import Rastreabilidade from './pages/Rastreabilidade'
 import Insumos from './pages/Insumos'
+import CRM from './pages/CRM'
 import { FeatureGuard } from './components/FeatureGuard'
+import { AdminGuard } from './components/AdminGuard'
 
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
@@ -141,6 +143,10 @@ const App = () => {
                     <Route path="/bloqueado" element={<BlockedAccess />} />
                     <Route path="/planos" element={<Planos />} />
                     <Route path="/perfil" element={<Profile />} />
+
+                    <Route element={<AdminGuard />}>
+                      <Route path="/crm" element={<CRM />} />
+                    </Route>
                   </Route>
 
                   <Route element={<ProtectedRoute requireActive={false} />}>
