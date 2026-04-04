@@ -55,7 +55,7 @@ export const FeatureCards = ({ userPlan, user }: FeatureCardsProps) => {
 
   return (
     <div className="space-y-4 animate-slide-up" style={{ animationDelay: '50ms' }}>
-      <h2 className="text-xl font-bold text-[#1a3c34] flex items-center gap-2">
+      <h2 className="text-xl font-semibold tracking-tight text-foreground flex items-center gap-2">
         Funcionalidades do seu Plano
       </h2>
       <div className="grid-responsive gsap-stagger-container">
@@ -67,38 +67,42 @@ export const FeatureCards = ({ userPlan, user }: FeatureCardsProps) => {
               className={cn(
                 'card-glass p-6 flex flex-col gsap-stagger-item',
                 !unlocked &&
-                  'opacity-60 grayscale cursor-not-allowed hover:transform-none hover:shadow-none hover:border-[#1DB954]',
+                  'opacity-60 grayscale cursor-not-allowed hover:transform-none hover:shadow-none hover:border-border',
               )}
             >
               <div className="pb-2">
                 <div className="flex justify-between items-start">
                   <div
                     className={cn(
-                      'p-3 rounded-xl',
+                      'p-3 rounded-xl backdrop-blur-md',
                       unlocked
-                        ? 'bg-[#1DB954]/20 text-[#1DB954]'
-                        : 'bg-[#E0E0E0]/10 text-[#E0E0E0]',
+                        ? 'bg-primary/20 text-primary border border-primary/20'
+                        : 'bg-white/5 text-muted-foreground border border-white/10',
                     )}
                   >
                     <feature.icon className="w-6 h-6" />
                   </div>
                   {unlocked ? (
-                    <Badge className="bg-[#1DB954]/20 text-[#1DB954] border-[#1DB954]/30 flex items-center gap-1">
+                    <Badge className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 flex items-center gap-1 rounded-full">
                       <CheckCircle2 className="w-3 h-3" /> Acesso
                     </Badge>
                   ) : (
                     <Badge
                       variant="outline"
-                      className="border-[#E0E0E0]/20 text-[#E0E0E0] flex items-center gap-1"
+                      className="border-white/10 text-muted-foreground flex items-center gap-1 rounded-full"
                     >
                       <Lock className="w-3 h-3" /> Upgrade
                     </Badge>
                   )}
                 </div>
-                <h3 className="text-lg font-medium text-[#FFFFFF] mt-4">{feature.name}</h3>
+                <h3 className="text-lg font-semibold tracking-tight text-foreground mt-4">
+                  {feature.name}
+                </h3>
               </div>
               <div className="mt-2">
-                <p className="text-sm text-[#E0E0E0] line-clamp-2">{feature.description}</p>
+                <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+                  {feature.description}
+                </p>
               </div>
             </div>
           )

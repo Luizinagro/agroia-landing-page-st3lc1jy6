@@ -93,11 +93,11 @@ export function WeatherForecast() {
     )
 
   return (
-    <Card className="h-full border-[#1a3c34]/10 shadow-elevation flex flex-col">
-      <CardHeader className="bg-[#1a3c34]/5 pb-4 flex flex-row items-center justify-between">
+    <Card className="h-full flex flex-col">
+      <CardHeader className="pb-4 flex flex-row items-center justify-between border-b border-white/5">
         <div>
-          <CardTitle className="text-[#1a3c34] flex items-center gap-2">
-            <CloudRain className="w-5 h-5 text-[#f4d03f]" />
+          <CardTitle className="flex items-center gap-2">
+            <CloudRain className="w-5 h-5 text-primary" />
             Previsões
           </CardTitle>
           <CardDescription>Monitoramento climático atualizado</CardDescription>
@@ -107,14 +107,14 @@ export function WeatherForecast() {
             <Button
               onClick={handleOpenNew}
               size="sm"
-              className="bg-[#1a3c34] text-white hover:bg-[#1a3c34]/90"
+              className="bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20"
             >
               <Plus className="w-4 h-4 mr-1" /> Nova Previsão
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="bg-card border-white/10">
             <DialogHeader>
-              <DialogTitle className="text-[#1a3c34]">
+              <DialogTitle className="text-foreground">
                 {editId ? 'Editar Previsão' : 'Nova Previsão'}
               </DialogTitle>
             </DialogHeader>
@@ -157,7 +157,7 @@ export function WeatherForecast() {
                 </div>
               </div>
               <DialogFooter>
-                <Button type="submit" className="bg-[#1a3c34] text-[#f4d03f] font-bold">
+                <Button type="submit" className="bg-primary text-primary-foreground font-semibold">
                   Salvar Dados
                 </Button>
               </DialogFooter>
@@ -175,11 +175,11 @@ export function WeatherForecast() {
             {previsoes.map((prev) => (
               <div
                 key={prev.id}
-                className="border border-[#1a3c34]/10 rounded-lg p-4 bg-white shadow-sm flex flex-col gap-3 transition-colors hover:border-[#1a3c34]/30"
+                className="border border-white/5 rounded-xl p-4 bg-white/[0.02] shadow-sm flex flex-col gap-3 transition-all hover:border-primary/30 hover:bg-white/[0.04]"
               >
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="font-bold text-[#1a3c34]">
+                    <h4 className="font-semibold text-foreground tracking-tight">
                       {prev.cidade}{' '}
                       <span className="text-muted-foreground font-normal ml-1">
                         | {prev.cultura}
@@ -187,33 +187,33 @@ export function WeatherForecast() {
                     </h4>
                     <span className="text-xs text-muted-foreground">{prev.data}</span>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-1">
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 hover:bg-blue-50"
+                      className="h-8 w-8 hover:bg-white/10 text-muted-foreground hover:text-foreground"
                       onClick={() => handleOpenEdit(prev)}
                     >
-                      <Edit2 className="w-4 h-4 text-blue-600" />
+                      <Edit2 className="w-4 h-4" />
                     </Button>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 hover:bg-red-50"
+                      className="h-8 w-8 hover:bg-destructive/10 text-muted-foreground hover:text-destructive"
                       onClick={() => handleDelete(prev.id)}
                     >
-                      <Trash2 className="w-4 h-4 text-red-600" />
+                      <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
-                  <div className="flex items-center justify-center gap-1.5 text-sm bg-orange-50 p-2 rounded text-orange-700 font-medium">
+                  <div className="flex items-center justify-center gap-1.5 text-sm bg-orange-500/10 p-2 rounded-lg text-orange-400 font-medium border border-orange-500/20">
                     <ThermometerSun className="w-4 h-4" /> {prev.temperatura}°C
                   </div>
-                  <div className="flex items-center justify-center gap-1.5 text-sm bg-blue-50 p-2 rounded text-blue-700 font-medium">
+                  <div className="flex items-center justify-center gap-1.5 text-sm bg-blue-500/10 p-2 rounded-lg text-blue-400 font-medium border border-blue-500/20">
                     <Droplets className="w-4 h-4" /> {prev.umidade}%
                   </div>
-                  <div className="flex items-center justify-center gap-1.5 text-sm bg-red-50 p-2 rounded text-red-700 font-medium whitespace-nowrap overflow-hidden text-ellipsis">
+                  <div className="flex items-center justify-center gap-1.5 text-sm bg-red-500/10 p-2 rounded-lg text-red-400 font-medium border border-red-500/20 whitespace-nowrap overflow-hidden text-ellipsis">
                     <Bug className="w-4 h-4 shrink-0" /> {prev.risco_pragas}
                   </div>
                 </div>

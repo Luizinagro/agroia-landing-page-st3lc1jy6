@@ -33,7 +33,7 @@ export default function Layout() {
           <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 bg-background">
             <SidebarTrigger className="-ml-1" />
           </header>
-          <main className="flex-1 flex flex-col p-4 md:p-6 overflow-auto bg-muted/20">
+          <main className="flex-1 flex flex-col p-4 md:p-6 overflow-auto bg-background">
             <Outlet />
           </main>
         </SidebarInset>

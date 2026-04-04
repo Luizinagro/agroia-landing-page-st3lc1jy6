@@ -39,19 +39,19 @@ export function IotConnection() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm border border-secondary/20 font-semibold transition-all hover:scale-105">
-          <Wifi className="w-4 h-4 mr-2" />
+        <Button className="bg-white/5 text-foreground hover:bg-white/10 shadow-sm border border-white/10 font-semibold transition-all hover:scale-105 backdrop-blur-md rounded-full">
+          <Wifi className="w-4 h-4 mr-2 text-primary" />
           <span className="hidden sm:inline">Conectar Sensor IoT</span>
           <span className="sm:hidden">Sensor IoT</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-primary text-xl">
-            <Wifi className="w-6 h-6 text-secondary" />
+          <DialogTitle className="flex items-center gap-2 text-foreground text-xl">
+            <Wifi className="w-6 h-6 text-primary" />
             Adicionar Novo Sensor IoT
           </DialogTitle>
-          <DialogDescription className="text-base pt-2">
+          <DialogDescription className="text-base pt-2 text-muted-foreground">
             Conecte seus sensores de campo para receber dados em tempo real direto no seu dashboard
             AgroIA.
           </DialogDescription>

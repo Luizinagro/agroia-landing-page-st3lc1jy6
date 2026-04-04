@@ -113,6 +113,48 @@ export type Database = {
           },
         ]
       }
+      crm_leads: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          nome: string
+          regiao: string | null
+          status: string | null
+          tamanho_propriedade: string | null
+          telefone: string | null
+          tipo_cultura: string | null
+          updated_at: string | null
+          valor_estimado: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          nome: string
+          regiao?: string | null
+          status?: string | null
+          tamanho_propriedade?: string | null
+          telefone?: string | null
+          tipo_cultura?: string | null
+          updated_at?: string | null
+          valor_estimado?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          nome?: string
+          regiao?: string | null
+          status?: string | null
+          tamanho_propriedade?: string | null
+          telefone?: string | null
+          tipo_cultura?: string | null
+          updated_at?: string | null
+          valor_estimado?: number | null
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           id: string
@@ -597,6 +639,18 @@ export const Constants = {
 //   produto_id: uuid (not null)
 //   quantidade: numeric (not null, default: 1)
 //   created_at: timestamp with time zone (not null, default: now())
+// Table: crm_leads
+//   id: uuid (not null, default: gen_random_uuid())
+//   nome: text (not null)
+//   email: text (not null)
+//   telefone: text (nullable)
+//   tamanho_propriedade: text (nullable)
+//   regiao: text (nullable)
+//   tipo_cultura: text (nullable)
+//   status: text (nullable, default: 'Novo'::text)
+//   valor_estimado: numeric (nullable, default: 0)
+//   created_at: timestamp with time zone (nullable, default: now())
+//   updated_at: timestamp with time zone (nullable, default: now())
 // Table: order_items
 //   id: uuid (not null, default: gen_random_uuid())
 //   order_id: uuid (not null)
@@ -687,6 +741,8 @@ export const Constants = {
 //   PRIMARY KEY carrinho_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY carrinho_produto_id_fkey: FOREIGN KEY (produto_id) REFERENCES products(id) ON DELETE CASCADE
 //   FOREIGN KEY carrinho_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: crm_leads
+//   PRIMARY KEY crm_leads_pkey: PRIMARY KEY (id)
 // Table: order_items
 //   FOREIGN KEY order_items_order_id_fkey: FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 //   PRIMARY KEY order_items_pkey: PRIMARY KEY (id)
@@ -743,6 +799,9 @@ export const Constants = {
 //   Policy "carrinho_update" (UPDATE, PERMISSIVE) roles={authenticated}
 //     USING: (user_id = auth.uid())
 //     WITH CHECK: (user_id = auth.uid())
+// Table: crm_leads
+//   Policy "admins_all_crm_leads" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: (EXISTS ( SELECT 1    FROM users   WHERE ((users.id = auth.uid()) AND (users.user_type = 'admin'::text))))
 // Table: order_items
 //   Policy "order_items_delete" (DELETE, PERMISSIVE) roles={authenticated}
 //     USING: (order_id IN ( SELECT orders.id    FROM orders   WHERE (orders.user_id = auth.uid())))

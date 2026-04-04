@@ -81,9 +81,9 @@ export function AppSidebar() {
   return (
     <>
       <Sidebar>
-        <SidebarHeader className="h-16 flex items-center justify-start px-4 border-b border-[#1DB954]/20 bg-[#000000]">
-          <div className="flex items-center gap-2 font-bold text-xl text-[#FFFFFF]">
-            <Logo className="h-8 w-8 text-[#1DB954]" />
+        <SidebarHeader className="h-16 flex items-center justify-start px-4 border-b border-border bg-transparent">
+          <div className="flex items-center gap-2 font-bold text-xl text-foreground">
+            <Logo className="h-8 w-8 text-primary" />
             <span>AgroIA</span>
           </div>
         </SidebarHeader>
@@ -99,9 +99,12 @@ export function AppSidebar() {
                     asChild
                     isActive={isActive && allowed}
                     className={cn(
-                      'transition-colors duration-300 ease-out hover:text-[#1DB954] hover:bg-white/5',
+                      'transition-all duration-300 ease-out hover:text-primary hover:bg-primary/10 rounded-xl',
+                      isActive
+                        ? 'bg-primary/10 text-primary font-semibold'
+                        : 'text-muted-foreground',
                       !allowed
-                        ? 'opacity-50 grayscale cursor-not-allowed hover:bg-transparent'
+                        ? 'opacity-50 grayscale cursor-not-allowed hover:bg-transparent hover:text-muted-foreground'
                         : '',
                     )}
                     onClick={(e) => handleNavigation(e, item.path, item.feature)}

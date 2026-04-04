@@ -56,7 +56,7 @@ const Dashboard = () => {
   return (
     <div
       ref={dashboardRef}
-      className="relative min-h-screen bg-[#000000] text-foreground font-sans flex flex-col overflow-hidden"
+      className="relative min-h-screen bg-background text-foreground font-sans flex flex-col overflow-hidden"
     >
       {/* Satellite Background */}
       <div
@@ -66,28 +66,30 @@ const Dashboard = () => {
             'url("https://img.usecurling.com/p/1920/1080?q=farm%20satellite%20dark&color=black")',
         }}
       />
-      <div className="fixed inset-0 z-0 pointer-events-none bg-gradient-to-b from-[#000000]/80 to-[#000000] opacity-80" />
+      <div className="fixed inset-0 z-0 pointer-events-none bg-gradient-to-b from-background/80 to-background opacity-90" />
+      {/* Subtle blue glow */}
+      <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[120px] pointer-events-none z-0" />
 
       <SEO
         title="Dashboard"
         description="Painel central de controle. Visão geral da propriedade, métricas de inteligência artificial e monitoramento de ativos."
       />
-      <header className="navbar-glass !border-b !border-[#1DB954]/20 relative z-10">
+      <header className="navbar-glass !border-b !border-border relative z-10">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
               size="icon"
               asChild
-              className="text-[#E0E0E0] hover:bg-[#1DB954]/10 hover:text-[#1DB954] h-9 w-9"
+              className="text-muted-foreground hover:bg-primary/10 hover:text-primary h-9 w-9"
             >
               <Link to="/">
                 <ArrowLeft className="w-5 h-5" />
                 <span className="sr-only">Voltar</span>
               </Link>
             </Button>
-            <div className="flex items-center gap-2 font-bold text-xl text-[#FFFFFF]">
-              <Logo className="w-8 h-8 text-[#1DB954]" />
+            <div className="flex items-center gap-2 font-bold text-xl text-foreground">
+              <Logo className="w-8 h-8 text-primary" />
               <span className="hidden sm:inline">AgroIA Dashboard</span>
               <span className="sm:hidden">AgroIA</span>
             </div>
@@ -125,41 +127,43 @@ const Dashboard = () => {
 
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 gsap-grow">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[12px] bg-[#1DB954]/5 border border-[#1DB954]/20 mb-4">
-              <span className="flex h-2 w-2 rounded-full bg-[#1DB954] animate-pulse"></span>
-              <span className="text-xs font-medium text-[#E0E0E0] uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-4 backdrop-blur-sm">
+              <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_hsl(var(--primary))]"></span>
+              <span className="text-xs font-medium text-primary uppercase tracking-wider">
                 Sistema Ativo
               </span>
             </div>
-            <h1 className="flex items-center gap-3 text-[#FFFFFF] font-bold">Olá, {userName}</h1>
-            {userEmail && <p className="text-[#E0E0E0] mt-1 font-semibold">{userEmail}</p>}
-            <p className="text-[#E0E0E0] mt-2 text-base max-w-2xl font-medium">
+            <h1 className="flex items-center gap-3 text-foreground font-semibold tracking-tight">
+              Olá, {userName}
+            </h1>
+            {userEmail && <p className="text-muted-foreground mt-1 text-sm">{userEmail}</p>}
+            <p className="text-muted-foreground mt-3 text-base max-w-2xl font-normal leading-relaxed">
               Centro de comando AgroIA. Monitore a saúde da sua lavoura, acompanhe previsões de IA e
               tome decisões baseadas em dados em tempo real.
             </p>
           </div>
 
-          <div className="card-glass flex flex-col p-6 min-w-[300px] bg-[#000000] border-[#1DB954]">
+          <div className="card-glass flex flex-col p-6 min-w-[300px]">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <Star className="w-5 h-5 text-[#1DB954]" />
-                <span className="text-sm font-medium uppercase tracking-wider text-[#E0E0E0]">
+                <Star className="w-5 h-5 text-primary" />
+                <span className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
                   Plano Atual
                 </span>
               </div>
               <Badge
                 variant="outline"
-                className="bg-[#1DB954]/10 text-[#1DB954] border-[#1DB954]/20 font-medium px-3 py-1 text-sm rounded-[12px]"
+                className="bg-primary/10 text-primary border-primary/20 font-medium px-3 py-1 text-sm rounded-full"
               >
                 {currentPlanName}
               </Badge>
             </div>
 
-            <div className="flex items-center gap-2 pt-4 border-t border-[#1DB954]/20">
-              <Calendar className="w-4 h-4 text-[#E0E0E0]" />
-              <span className="text-sm font-medium text-[#E0E0E0]">
+            <div className="flex items-center gap-2 pt-4 border-t border-white/5">
+              <Calendar className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm font-medium text-muted-foreground">
                 Trial expira em:{' '}
-                <span className="text-[#FFFFFF] font-bold">
+                <span className="text-foreground font-semibold">
                   {trialDate ? new Date(trialDate).toLocaleDateString('pt-BR') : 'N/A'}
                 </span>
               </span>
