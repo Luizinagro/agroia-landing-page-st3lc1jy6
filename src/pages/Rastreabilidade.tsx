@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { SEO } from '@/components/SEO'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { supabase } from '@/lib/supabase/client'
+import { useAuth } from '@/contexts/AuthContext'
 import {
   Dialog,
   DialogContent,
@@ -51,38 +53,74 @@ const STATUS_COLORS = {
   Pendente: 'bg-zinc-800/50 text-zinc-400 border-zinc-700/50',
 }
 
-const MOCK_DATA: TimelineItem[] = [
-  { id: '1', etapa: 'Plantio', data: '2023-10-15', responsavel: 'João Silva', status: 'Concluído' },
-  {
-    id: '2',
-    etapa: 'Crescimento',
-    data: '2023-11-20',
-    responsavel: 'Maria Alves',
-    status: 'Concluído',
-  },
-  {
-    id: '3',
-    etapa: 'Colheita',
-    data: '2024-02-10',
-    responsavel: 'Carlos Santos',
-    status: 'Em Andamento',
-  },
-  { id: '4', etapa: 'Processamento', data: '---', responsavel: 'A Definir', status: 'Pendente' },
-  { id: '5', etapa: 'Venda', data: '---', responsavel: 'A Definir', status: 'Pendente' },
-]
-
 const Rastreabilidade = () => {
-  const [items, setItems] = useState<TimelineItem[]>(MOCK_DATA)
+  const [items, setItems] = useState<TimelineItem[]>([])
+  const [loading, setLoading] = useState(true)
   const [isOpen, setIsOpen] = useState(false)
   const { toast } = useToast()
+  const { user } = useAuth()
+
+  useEffect(() => {
+    async function fetchRastreabilidade() {
+      if (!user) return
+
+      const { data, error } = await supabase
+        .from('rastreabilidade')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('data', { ascending: true })
+
+      if (data && data.length > 0) {
+        setItems(
+          data.map((d) => ({
+            id: d.id,
+            etapa: d.etapa as Etapa,
+            data: new Date(d.data).toISOString().split('T')[0],
+            responsavel: d.responsavel || 'A Definir',
+            status: (d.status as Status) || 'Pendente',
+          })),
+        )
+      } else {
+        // Inicializa com as etapas vazias como padrão se não houver nada
+        setItems([
+          { id: 'p1', etapa: 'Plantio', data: '---', responsavel: 'A Definir', status: 'Pendente' },
+          {
+            id: 'p2',
+            etapa: 'Crescimento',
+            data: '---',
+            responsavel: 'A Definir',
+            status: 'Pendente',
+          },
+          {
+            id: 'p3',
+            etapa: 'Colheita',
+            data: '---',
+            responsavel: 'A Definir',
+            status: 'Pendente',
+          },
+          {
+            id: 'p4',
+            etapa: 'Processamento',
+            data: '---',
+            responsavel: 'A Definir',
+            status: 'Pendente',
+          },
+          { id: 'p5', etapa: 'Venda', data: '---', responsavel: 'A Definir', status: 'Pendente' },
+        ])
+      }
+      setLoading(false)
+    }
+
+    fetchRastreabilidade()
+  }, [user])
 
   const [etapa, setEtapa] = useState<Etapa>('Plantio')
   const [data, setData] = useState('')
   const [responsavel, setResponsavel] = useState('')
   const [status, setStatus] = useState<Status>('Pendente')
 
-  const handleAdd = () => {
-    if (!data || !responsavel) {
+  const handleAdd = async () => {
+    if (!data || !responsavel || !user) {
       toast({
         title: 'Erro de Validação',
         description: 'Por favor, preencha todos os campos para continuar.',
@@ -91,15 +129,40 @@ const Rastreabilidade = () => {
       return
     }
 
-    const newItem: TimelineItem = {
-      id: Math.random().toString(),
+    const payload = {
+      user_id: user.id,
       etapa,
-      data,
+      data: new Date(data).toISOString(),
       responsavel,
       status,
     }
 
-    setItems((prev) => [...prev, newItem])
+    const { data: inserted, error } = await supabase
+      .from('rastreabilidade')
+      .insert(payload)
+      .select()
+      .single()
+
+    if (error) {
+      toast({ title: 'Erro', description: 'Erro ao registrar etapa', variant: 'destructive' })
+      return
+    }
+
+    setItems((prev) => {
+      // Remove placeholders if they exist
+      const filtered = prev.filter((p) => !p.id.startsWith('p'))
+      return [
+        ...filtered,
+        {
+          id: inserted.id,
+          etapa: inserted.etapa as Etapa,
+          data: new Date(inserted.data).toISOString().split('T')[0],
+          responsavel: inserted.responsavel || '',
+          status: inserted.status as Status,
+        },
+      ].sort((a, b) => new Date(a.data).getTime() - new Date(b.data).getTime())
+    })
+
     setIsOpen(false)
     toast({
       title: 'Etapa Adicionada com Sucesso!',
@@ -224,68 +287,82 @@ const Rastreabilidade = () => {
         </Dialog>
       </div>
 
-      <div className="relative border-l-2 border-primary/30 ml-4 md:ml-8 space-y-10 pb-12 pt-4">
-        {items.map((item, index) => {
-          const Icon = ICONS[item.etapa]
-          const isActive = item.status !== 'Pendente'
+      {loading ? (
+        <div className="flex justify-center p-12">
+          <div className="w-8 h-8 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
+        </div>
+      ) : items.length === 0 ? (
+        <div className="text-center py-16 bg-[#050505] rounded-xl border border-dashed border-primary/20">
+          <Sprout className="w-12 h-12 text-primary/50 mx-auto mb-4" />
+          <h3 className="text-xl font-bold text-white mb-2">Nenhum registro</h3>
+          <p className="text-[#A0A0A0]">
+            Comece a registrar as etapas da sua safra clicando em "Adicionar Etapa".
+          </p>
+        </div>
+      ) : (
+        <div className="relative border-l-2 border-primary/30 ml-4 md:ml-8 space-y-10 pb-12 pt-4">
+          {items.map((item, index) => {
+            const Icon = ICONS[item.etapa]
+            const isActive = item.status !== 'Pendente'
 
-          return (
-            <div key={item.id} className="relative pl-8 md:pl-12 group">
-              {/* Timeline Dot */}
-              <div
-                className={`absolute -left-[21px] top-6 bg-[#000000] border-2 rounded-full p-2.5 z-10 transition-all duration-500
+            return (
+              <div key={item.id} className="relative pl-8 md:pl-12 group">
+                {/* Timeline Dot */}
+                <div
+                  className={`absolute -left-[21px] top-6 bg-[#000000] border-2 rounded-full p-2.5 z-10 transition-all duration-500
                 ${
                   isActive
                     ? 'border-primary shadow-[0_0_15px_rgba(29,185,84,0.5)]'
                     : 'border-[#333333] shadow-none'
                 }`}
-              >
-                <Icon
-                  className={`w-5 h-5 ${isActive ? 'text-primary drop-shadow-[0_0_5px_rgba(29,185,84,0.8)]' : 'text-[#555555]'}`}
-                />
-              </div>
+                >
+                  <Icon
+                    className={`w-5 h-5 ${isActive ? 'text-primary drop-shadow-[0_0_5px_rgba(29,185,84,0.8)]' : 'text-[#555555]'}`}
+                  />
+                </div>
 
-              {/* Card */}
-              <Card
-                className={`glass-card overflow-hidden
+                {/* Card */}
+                <Card
+                  className={`glass-card overflow-hidden
                 ${isActive ? '' : 'opacity-60 grayscale-[0.5]'}
               `}
-              >
-                {isActive && (
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary shadow-[0_0_10px_rgba(29,185,84,0.8)]" />
-                )}
-                <CardContent className="p-6 md:p-8">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    <div className="space-y-3">
-                      <h3
-                        className={`text-2xl font-extrabold ${isActive ? 'text-white' : 'text-[#A0A0A0]'}`}
-                      >
-                        {item.etapa}
-                      </h3>
-                      <div className="flex flex-wrap items-center gap-4 text-sm text-[#A0A0A0] font-medium">
-                        <span className="flex items-center gap-1.5 bg-[#000000] px-3 py-1.5 rounded-md border border-primary/20">
-                          <Calendar className="w-4 h-4 text-primary" />
-                          {item.data}
-                        </span>
-                        <span className="flex items-center gap-1.5 bg-[#000000] px-3 py-1.5 rounded-md border border-primary/20">
-                          <User className="w-4 h-4 text-primary" />
-                          {item.responsavel}
-                        </span>
+                >
+                  {isActive && (
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary shadow-[0_0_10px_rgba(29,185,84,0.8)]" />
+                  )}
+                  <CardContent className="p-6 md:p-8">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                      <div className="space-y-3">
+                        <h3
+                          className={`text-2xl font-extrabold ${isActive ? 'text-white' : 'text-[#A0A0A0]'}`}
+                        >
+                          {item.etapa}
+                        </h3>
+                        <div className="flex flex-wrap items-center gap-4 text-sm text-[#A0A0A0] font-medium">
+                          <span className="flex items-center gap-1.5 bg-[#000000] px-3 py-1.5 rounded-md border border-primary/20">
+                            <Calendar className="w-4 h-4 text-primary" />
+                            {item.data}
+                          </span>
+                          <span className="flex items-center gap-1.5 bg-[#000000] px-3 py-1.5 rounded-md border border-primary/20">
+                            <User className="w-4 h-4 text-primary" />
+                            {item.responsavel}
+                          </span>
+                        </div>
                       </div>
+                      <Badge
+                        variant="outline"
+                        className={`px-4 py-1.5 rounded-full text-sm font-bold tracking-wide ${STATUS_COLORS[item.status]}`}
+                      >
+                        {item.status}
+                      </Badge>
                     </div>
-                    <Badge
-                      variant="outline"
-                      className={`px-4 py-1.5 rounded-full text-sm font-bold tracking-wide ${STATUS_COLORS[item.status]}`}
-                    >
-                      {item.status}
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )
-        })}
-      </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }

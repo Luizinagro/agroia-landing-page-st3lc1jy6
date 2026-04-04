@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { useAuth } from './AuthContext'
-import { supabaseUrl, getSupabaseHeaders } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase/client'
 
 export type Previsao = {
   id: string
@@ -113,32 +113,43 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
     }
 
     setLoading(true)
-    if (!supabaseUrl) {
-      setLoading(false)
-      return
-    }
 
     try {
-      const token = localStorage.getItem('sb_access_token') || undefined
-      const headers = getSupabaseHeaders(token)
+      // Tabela esperada: weather_forecasts (para não conflitar com previsões de mercado na db original)
+      const prevRes = await supabase
+        .from('weather_forecasts' as any)
+        .select('*')
+        .eq('user_id', user.id)
+      // Tabela esperada: system_alerts
+      const alertasRes = await supabase
+        .from('system_alerts' as any)
+        .select('*')
+        .eq('user_id', user.id)
+        .is('data_leitura', null)
+      // Tabela esperada: comunidade_posts
+      const postsRes = await supabase
+        .from('comunidade_posts' as any)
+        .select('*')
+        .eq('user_id', user.id)
+      // Tabela esperada: pecuaria_animais
+      const animaisRes = await supabase
+        .from('pecuaria_animais' as any)
+        .select('*')
+        .eq('user_id', user.id)
+      // Tabela esperada: marketplace_produtos
+      const prodRes = await supabase.from('marketplace_produtos' as any).select('*')
+      // Tabela esperada: marketplace_pedidos
+      const pedidosRes = await supabase
+        .from('marketplace_pedidos' as any)
+        .select('*')
+        .eq('user_id', user.id)
 
-      const [prevRes, alertasRes, postsRes, animaisRes, prodRes, pedidosRes] = await Promise.all([
-        fetch(`${supabaseUrl}/rest/v1/previsoes?user_id=eq.${user.id}`, { headers }),
-        fetch(`${supabaseUrl}/rest/v1/alertas?user_id=eq.${user.id}&data_leitura=is.null`, {
-          headers,
-        }),
-        fetch(`${supabaseUrl}/rest/v1/comunidade_posts?user_id=eq.${user.id}`, { headers }),
-        fetch(`${supabaseUrl}/rest/v1/pecuaria_animais?user_id=eq.${user.id}`, { headers }),
-        fetch(`${supabaseUrl}/rest/v1/marketplace_produtos`, { headers }),
-        fetch(`${supabaseUrl}/rest/v1/marketplace_pedidos?user_id=eq.${user.id}`, { headers }),
-      ])
-
-      if (prevRes.ok) setPrevisoes(await prevRes.json())
-      if (alertasRes.ok) setAlertas(await alertasRes.json())
-      if (postsRes.ok) setComunidadePosts(await postsRes.json())
-      if (animaisRes.ok) setAnimais(await animaisRes.json())
-      if (prodRes.ok) setProdutos(await prodRes.json())
-      if (pedidosRes.ok) setPedidos(await pedidosRes.json())
+      if (prevRes.data) setPrevisoes(prevRes.data)
+      if (alertasRes.data) setAlertas(alertasRes.data)
+      if (postsRes.data) setComunidadePosts(postsRes.data)
+      if (animaisRes.data) setAnimais(animaisRes.data)
+      if (prodRes.data) setProdutos(prodRes.data)
+      if (pedidosRes.data) setPedidos(pedidosRes.data)
     } catch (err) {
       console.error('Error loading data from Supabase', err)
     } finally {
@@ -151,151 +162,140 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
-  const apiFetch = async (endpoint: string, method: string, body?: any) => {
-    const token = localStorage.getItem('sb_access_token') || undefined
-    const res = await fetch(`${supabaseUrl}/rest/v1/${endpoint}`, {
-      method,
-      headers: { ...getSupabaseHeaders(token), Prefer: 'return=representation' },
-      ...(body ? { body: JSON.stringify(body) } : {}),
-    })
-    return res
-  }
-
   const addPrevisao = async (p: Omit<Previsao, 'id' | 'user_id'>) => {
-    if (!user || !supabaseUrl) return
-    const res = await apiFetch('previsoes', 'POST', { ...p, user_id: user.id })
-    if (res.ok) {
-      const data = await res.json()
-      if (data && data.length > 0) setPrevisoes((prev) => [...prev, data[0]])
-    }
+    if (!user) return
+    const { data, error } = await supabase
+      .from('weather_forecasts' as any)
+      .insert({ ...p, user_id: user.id })
+      .select()
+    if (!error && data) setPrevisoes((prev) => [...prev, data[0]])
   }
 
   const updatePrevisao = async (id: string, p: Partial<Previsao>) => {
-    if (!supabaseUrl) return
-    const res = await apiFetch(`previsoes?id=eq.${id}`, 'PATCH', p)
-    if (res.ok) {
-      const data = await res.json()
-      if (data && data.length > 0) {
-        setPrevisoes((prev) => prev.map((item) => (item.id === id ? data[0] : item)))
-      }
+    const { data, error } = await supabase
+      .from('weather_forecasts' as any)
+      .update(p)
+      .eq('id', id)
+      .select()
+    if (!error && data) {
+      setPrevisoes((prev) => prev.map((item) => (item.id === id ? data[0] : item)))
     }
   }
 
   const deletePrevisao = async (id: string) => {
-    if (!supabaseUrl) return
-    const res = await apiFetch(`previsoes?id=eq.${id}`, 'DELETE')
-    if (res.ok) {
-      setPrevisoes((prev) => prev.filter((item) => item.id !== id))
-    }
+    const { error } = await supabase
+      .from('weather_forecasts' as any)
+      .delete()
+      .eq('id', id)
+    if (!error) setPrevisoes((prev) => prev.filter((item) => item.id !== id))
   }
 
   const addAnimal = async (animal: Omit<Animal, 'id' | 'user_id'>) => {
-    if (!user || !supabaseUrl) return
-    const res = await apiFetch('pecuaria_animais', 'POST', { ...animal, user_id: user.id })
-    if (res.ok) {
-      const data = await res.json()
-      if (data && data.length > 0) setAnimais((prev) => [...prev, data[0]])
-    }
+    if (!user) return
+    const { data, error } = await supabase
+      .from('pecuaria_animais' as any)
+      .insert({ ...animal, user_id: user.id })
+      .select()
+    if (!error && data) setAnimais((prev) => [...prev, data[0]])
   }
 
   const updateAnimal = async (id: string, animal: Partial<Animal>) => {
-    if (!supabaseUrl) return
-    const res = await apiFetch(`pecuaria_animais?id=eq.${id}`, 'PATCH', animal)
-    if (res.ok) {
-      const data = await res.json()
-      if (data && data.length > 0) {
-        setAnimais((prev) => prev.map((item) => (item.id === id ? data[0] : item)))
-      }
+    const { data, error } = await supabase
+      .from('pecuaria_animais' as any)
+      .update(animal)
+      .eq('id', id)
+      .select()
+    if (!error && data) {
+      setAnimais((prev) => prev.map((item) => (item.id === id ? data[0] : item)))
     }
   }
 
   const deleteAnimal = async (id: string) => {
-    if (!supabaseUrl) return
-    const res = await apiFetch(`pecuaria_animais?id=eq.${id}`, 'DELETE')
-    if (res.ok) {
-      setAnimais((prev) => prev.filter((item) => item.id !== id))
-    }
+    const { error } = await supabase
+      .from('pecuaria_animais' as any)
+      .delete()
+      .eq('id', id)
+    if (!error) setAnimais((prev) => prev.filter((item) => item.id !== id))
   }
 
   const addPost = async (post: Omit<Post, 'id' | 'user_id'>) => {
-    if (!user || !supabaseUrl) return
-    const res = await apiFetch('comunidade_posts', 'POST', { ...post, user_id: user.id })
-    if (res.ok) {
-      const data = await res.json()
-      if (data && data.length > 0) setComunidadePosts((prev) => [...prev, data[0]])
-    }
+    if (!user) return
+    const { data, error } = await supabase
+      .from('comunidade_posts' as any)
+      .insert({ ...post, user_id: user.id })
+      .select()
+    if (!error && data) setComunidadePosts((prev) => [...prev, data[0]])
   }
 
   const updatePost = async (id: string, post: Partial<Post>) => {
-    if (!supabaseUrl) return
-    const res = await apiFetch(`comunidade_posts?id=eq.${id}`, 'PATCH', post)
-    if (res.ok) {
-      const data = await res.json()
-      if (data && data.length > 0) {
-        setComunidadePosts((prev) => prev.map((item) => (item.id === id ? data[0] : item)))
-      }
+    const { data, error } = await supabase
+      .from('comunidade_posts' as any)
+      .update(post)
+      .eq('id', id)
+      .select()
+    if (!error && data) {
+      setComunidadePosts((prev) => prev.map((item) => (item.id === id ? data[0] : item)))
     }
   }
 
   const deletePost = async (id: string) => {
-    if (!supabaseUrl) return
-    const res = await apiFetch(`comunidade_posts?id=eq.${id}`, 'DELETE')
-    if (res.ok) {
-      setComunidadePosts((prev) => prev.filter((item) => item.id !== id))
-    }
+    const { error } = await supabase
+      .from('comunidade_posts' as any)
+      .delete()
+      .eq('id', id)
+    if (!error) setComunidadePosts((prev) => prev.filter((item) => item.id !== id))
   }
 
   const addProduto = async (produto: Omit<Produto, 'id' | 'user_id'>) => {
-    if (!user || !supabaseUrl) return
-    const res = await apiFetch('marketplace_produtos', 'POST', { ...produto, user_id: user.id })
-    if (res.ok) {
-      const data = await res.json()
-      if (data && data.length > 0) setProdutos((prev) => [...prev, data[0]])
-    }
+    if (!user) return
+    const { data, error } = await supabase
+      .from('marketplace_produtos' as any)
+      .insert({ ...produto, user_id: user.id })
+      .select()
+    if (!error && data) setProdutos((prev) => [...prev, data[0]])
   }
 
   const updateProduto = async (id: string, produto: Partial<Produto>) => {
-    if (!supabaseUrl) return
-    const res = await apiFetch(`marketplace_produtos?id=eq.${id}`, 'PATCH', produto)
-    if (res.ok) {
-      const data = await res.json()
-      if (data && data.length > 0) {
-        setProdutos((prev) => prev.map((item) => (item.id === id ? data[0] : item)))
-      }
+    const { data, error } = await supabase
+      .from('marketplace_produtos' as any)
+      .update(produto)
+      .eq('id', id)
+      .select()
+    if (!error && data) {
+      setProdutos((prev) => prev.map((item) => (item.id === id ? data[0] : item)))
     }
   }
 
   const deleteProduto = async (id: string) => {
-    if (!supabaseUrl) return
-    const res = await apiFetch(`marketplace_produtos?id=eq.${id}`, 'DELETE')
-    if (res.ok) {
-      setProdutos((prev) => prev.filter((item) => item.id !== id))
-    }
+    const { error } = await supabase
+      .from('marketplace_produtos' as any)
+      .delete()
+      .eq('id', id)
+    if (!error) setProdutos((prev) => prev.filter((item) => item.id !== id))
   }
 
   const dismissAlerta = async (id: string) => {
-    if (!user || !supabaseUrl) return
-    const res = await apiFetch(`alertas?id=eq.${id}`, 'PATCH', {
-      data_leitura: new Date().toISOString(),
-    })
-    if (res.ok) {
-      setAlertas((prev) => prev.filter((a) => a.id !== id))
-    }
+    if (!user) return
+    const { error } = await supabase
+      .from('system_alerts' as any)
+      .update({ data_leitura: new Date().toISOString() })
+      .eq('id', id)
+    if (!error) setAlertas((prev) => prev.filter((a) => a.id !== id))
   }
 
   const addPedido = async (pedido: Omit<Pedido, 'id' | 'user_id' | 'data' | 'numero_pedido'>) => {
-    if (!user || !supabaseUrl) return
+    if (!user) return
     const newPedido = {
       ...pedido,
       user_id: user.id,
       data: new Date().toISOString(),
       numero_pedido: Math.floor(10000 + Math.random() * 90000).toString(),
     }
-    const res = await apiFetch('marketplace_pedidos', 'POST', newPedido)
-    if (res.ok) {
-      const data = await res.json()
-      if (data && data.length > 0) setPedidos((prev) => [data[0], ...prev])
-    }
+    const { data, error } = await supabase
+      .from('marketplace_pedidos' as any)
+      .insert(newPedido)
+      .select()
+    if (!error && data) setPedidos((prev) => [data[0], ...prev])
   }
 
   return (

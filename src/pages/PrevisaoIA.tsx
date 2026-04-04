@@ -10,15 +10,11 @@ import {
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { LineChart, TrendingUp, TrendingDown, DollarSign } from 'lucide-react'
+import { LineChart, TrendingUp, TrendingDown, DollarSign, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Logo } from '@/components/ui/logo'
-
-const mockPrices: Record<string, { current: number; d30: number; d60: number }> = {
-  Soja: { current: 2166, d30: 2210, d60: 2280 },
-  Milho: { current: 1000, d30: 980, d60: 950 },
-  Trigo: { current: 1400, d30: 1450, d60: 1520 },
-}
+import { supabase } from '@/lib/supabase/client'
+import { useToast } from '@/hooks/use-toast'
 
 export default function PrevisaoIA() {
   const [cultura, setCultura] = useState<string>('Soja')
@@ -27,16 +23,53 @@ export default function PrevisaoIA() {
     cultura: string
     quantidade: number
     precos: { current: number; d30: number; d60: number }
+    recommendation: string
   } | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const { toast } = useToast()
 
-  const handleBuscarPreco = () => {
+  const handleBuscarPreco = async () => {
     if (!quantidade || isNaN(Number(quantidade))) return
     setIsLoading(true)
-    setTimeout(() => {
-      setResultado({ cultura, quantidade: Number(quantidade), precos: mockPrices[cultura] })
+
+    try {
+      const { data, error } = await supabase.functions.invoke('gemini-forecast', {
+        body: { commodity: cultura },
+      })
+
+      if (error) throw error
+
+      if (data?.data) {
+        const trendData = data.data.trend_data || []
+        const current = data.data.current_price
+
+        // Safety check to ensure we don't go out of bounds
+        const d30Index = Math.min(29, trendData.length - 1)
+        const d60Index = Math.min(59, trendData.length - 1)
+
+        setResultado({
+          cultura,
+          quantidade: Number(quantidade),
+          precos: {
+            current: current,
+            d30: trendData[d30Index]?.price || current,
+            d60: trendData[d60Index]?.price || current,
+          },
+          recommendation: data.data.recommendation,
+        })
+      } else {
+        throw new Error('Dados inválidos retornados pela IA')
+      }
+    } catch (error: any) {
+      console.error(error)
+      toast({
+        title: 'Erro ao buscar previsão',
+        description: 'Não foi possível gerar a previsão com IA no momento.',
+        variant: 'destructive',
+      })
+    } finally {
       setIsLoading(false)
-    }, 800)
+    }
   }
 
   const formatCurrency = (value: number) =>
@@ -99,7 +132,13 @@ export default function PrevisaoIA() {
                   onClick={handleBuscarPreco}
                   disabled={isLoading || !quantidade}
                 >
-                  {isLoading ? 'Calculando Previsões...' : 'Buscar Preço'}
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Calculando Previsões...
+                    </>
+                  ) : (
+                    'Buscar Preço'
+                  )}
                 </Button>
               </CardContent>
             </Card>
@@ -216,9 +255,7 @@ export default function PrevisaoIA() {
                       <Logo className="h-6 w-6 text-[#1DB954] shrink-0 mt-0.5" />
                       <span>
                         <strong className="text-[#1DB954]">Análise IA:</strong>{' '}
-                        {resultado.precos.d60 > resultado.precos.current
-                          ? `A tendência para ${resultado.cultura} é de alta nos próximos 60 dias. A inteligência artificial recomenda segurar a comercialização se possível para maximizar os lucros na safra atual.`
-                          : `A tendência para ${resultado.cultura} é de baixa nos próximos 60 dias. A inteligência artificial recomenda realizar a comercialização no curto prazo para proteger a margem de lucro e evitar perdas.`}
+                        {resultado.recommendation}{' '}
                       </span>
                     </p>
                   </CardContent>

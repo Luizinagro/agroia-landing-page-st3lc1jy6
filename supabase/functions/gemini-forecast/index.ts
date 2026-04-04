@@ -40,7 +40,7 @@ Deno.serve(async (req) => {
         "trend_data": [{"date": "YYYY-MM-DD", "price": 125.50}],
         "recommendation": "Recomendação curta sobre quando plantar/colher baseado nos preços."
       }
-      Gere 30 itens em trend_data.`
+      Gere 60 itens em trend_data.`
 
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
@@ -80,7 +80,7 @@ Deno.serve(async (req) => {
     // Fallback if no API key or parsing failed
     if (!trend_data || trend_data.length === 0) {
       const today = new Date()
-      trend_data = Array.from({ length: 30 }).map((_, i) => {
+      trend_data = Array.from({ length: 60 }).map((_, i) => {
         const d = new Date(today)
         d.setDate(today.getDate() + i)
         const change = (Math.random() - 0.4) * 5

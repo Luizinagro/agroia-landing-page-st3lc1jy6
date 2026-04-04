@@ -34,6 +34,29 @@ const Dashboard = () => {
   const [blockedOpen, setBlockedOpen] = useState(false)
   const [promoOpen, setPromoOpen] = useState(false)
 
+  const [dashboardKpis, setDashboardKpis] = useState<{
+    produtividade: number
+    sensores_ativos: string
+    saude_safra: string
+    receita_estimada: string
+  } | null>(null)
+
+  useEffect(() => {
+    async function fetchKpis() {
+      if (!user) return
+      import('@/lib/supabase/client').then(async ({ supabase }) => {
+        // Tabela esperada: dashboard_kpis
+        const { data } = await supabase
+          .from('dashboard_kpis' as any)
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle()
+        if (data) setDashboardKpis(data)
+      })
+    }
+    fetchKpis()
+  }, [user])
+
   useEffect(() => {
     const hasSeenPromo = sessionStorage.getItem('hasSeenPlanPromo')
     const currentPlan = user?.plan_active || user?.plano_ativo || 'Básico'
@@ -114,7 +137,9 @@ const Dashboard = () => {
             <div>
               <p className="text-sm text-[#A0A0A0] font-semibold mb-1">Produtividade</p>
               <div className="flex items-baseline gap-2">
-                <p className="text-3xl font-black text-white">85%</p>
+                <p className="text-3xl font-black text-white">
+                  {dashboardKpis?.produtividade || '85'}%
+                </p>
                 <span className="text-xs text-primary font-bold">+5%</span>
               </div>
             </div>
@@ -127,8 +152,12 @@ const Dashboard = () => {
             <div>
               <p className="text-sm text-[#A0A0A0] font-semibold mb-1">Status Sensores</p>
               <div className="flex items-baseline gap-2">
-                <p className="text-3xl font-black text-white">Ativos</p>
-                <span className="text-xs text-blue-400 font-bold">12/12</span>
+                <p className="text-3xl font-black text-white">
+                  {dashboardKpis ? 'Ativos' : 'Sem dados'}
+                </p>
+                <span className="text-xs text-blue-400 font-bold">
+                  {dashboardKpis?.sensores_ativos || '0/0'}
+                </span>
               </div>
             </div>
           </div>
@@ -140,7 +169,9 @@ const Dashboard = () => {
             <div>
               <p className="text-sm text-[#A0A0A0] font-semibold mb-1">Saúde Safra</p>
               <div className="flex items-baseline gap-2">
-                <p className="text-3xl font-black text-white">Excelente</p>
+                <p className="text-3xl font-black text-white">
+                  {dashboardKpis?.saude_safra || 'Pendente'}
+                </p>
               </div>
             </div>
           </div>
@@ -152,7 +183,9 @@ const Dashboard = () => {
             <div>
               <p className="text-sm text-[#A0A0A0] font-semibold mb-1">Receita Estimada</p>
               <div className="flex items-baseline gap-2">
-                <p className="text-3xl font-black text-white">Em alta</p>
+                <p className="text-3xl font-black text-white">
+                  {dashboardKpis?.receita_estimada || 'Aguardando'}
+                </p>
                 <span className="text-xs text-purple-400 font-bold">IA</span>
               </div>
             </div>

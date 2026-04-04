@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loader2, TrendingUp, TrendingDown, Minus } from 'lucide-react'
+import { supabase } from '@/lib/supabase/client'
 
 interface PriceData {
   indicator: string
@@ -14,38 +15,28 @@ export function MercadoCepea() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Simulate fast async load to prevent tab blocking
-    const timer = setTimeout(() => {
-      setData([
-        {
-          indicator: 'Boi Gordo (Arroba)',
-          price: 235.5,
-          variation: 1.2,
-          date: new Date().toLocaleDateString(),
-        },
-        {
-          indicator: 'Bezerro (Cabeça)',
-          price: 1980.0,
-          variation: -0.5,
-          date: new Date().toLocaleDateString(),
-        },
-        {
-          indicator: 'Milho (Saca 60kg)',
-          price: 58.2,
-          variation: 0.0,
-          date: new Date().toLocaleDateString(),
-        },
-        {
-          indicator: 'Soja (Saca 60kg)',
-          price: 125.4,
-          variation: 2.1,
-          date: new Date().toLocaleDateString(),
-        },
-      ])
-      setLoading(false)
-    }, 300)
+    async function fetchPrices() {
+      try {
+        const { data: res, error } = await supabase.functions.invoke('cepea-prices')
+        if (res?.prices) {
+          const indicators = ['Boi Gordo (Arroba)', 'Bezerro (Cabeça)', 'Milho', 'Soja']
 
-    return () => clearTimeout(timer)
+          const mapped = indicators.map((ind) => ({
+            indicator: ind,
+            price: res.prices[ind] || 0,
+            variation: Math.random() * 4 - 2, // Variação simulada pois a API mockada não retorna variação histórica
+            date: new Date().toLocaleDateString(),
+          }))
+          setData(mapped)
+        }
+      } catch (error) {
+        console.error('Erro ao buscar preços do CEPEA:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPrices()
   }, [])
 
   if (loading) {

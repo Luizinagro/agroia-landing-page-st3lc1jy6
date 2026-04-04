@@ -19,6 +19,8 @@ Deno.serve(async (req) => {
       Soja: 2166.0,
       Milho: 1000.0,
       Trigo: 1400.0,
+      'Boi Gordo (Arroba)': 235.5,
+      'Bezerro (Cabeça)': 1980.0,
     }
 
     return new Response(JSON.stringify({ prices }), {
