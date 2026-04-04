@@ -4,28 +4,33 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-[#050A15] text-white/60 py-16 border-t border-white/5 relative overflow-hidden">
-      <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-[#00FF94]/5 to-transparent pointer-events-none" />
+    <footer className="bg-[#000000] text-white/60 py-16 border-t border-white/5 relative overflow-hidden">
+      <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-[#1DB954]/5 to-transparent pointer-events-none" />
 
-      <div className="container relative z-10 px-4 md:px-6">
+      <div className="container max-w-7xl mx-auto relative z-10 px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-1 md:col-span-2 space-y-6">
-            <div className="flex items-center gap-3 text-white font-bold text-2xl">
-              <Logo className="w-10 h-10 text-[#00FF94]" />
+            <div className="flex items-center gap-3 text-white font-black text-2xl">
+              <div className="bg-[#1DB954] p-1.5 rounded-xl inline-block">
+                <Logo className="w-6 h-6 text-black" />
+              </div>
+              <span className="tracking-tight">AgroIA</span>
             </div>
-            <p className="max-w-md text-white/50 leading-relaxed">
+            <p className="max-w-md text-[#A0A0A0] font-medium leading-relaxed">
               O ecossistema definitivo para o agronegócio inteligente. Potencializando a produção
               rural com tecnologia preditiva e rastreabilidade hiperlocal.
             </p>
           </div>
 
           <div>
-            <h4 className="text-white font-bold mb-6 tracking-wide">Plataforma</h4>
-            <ul className="space-y-4 font-medium text-sm">
+            <h4 className="text-white font-black mb-6 tracking-wide uppercase text-xs">
+              Plataforma
+            </h4>
+            <ul className="space-y-4 font-bold text-sm">
               <li>
                 <a
                   href="#"
-                  className="hover:text-[#00FF94] transition-colors focus-visible:outline-none focus-visible:text-[#00FF94]"
+                  className="text-[#A0A0A0] hover:text-[#1DB954] transition-colors focus-visible:outline-none focus-visible:text-[#1DB954]"
                 >
                   Sobre nós
                 </a>
@@ -33,7 +38,7 @@ export function Footer() {
               <li>
                 <a
                   href="#"
-                  className="hover:text-[#00FF94] transition-colors focus-visible:outline-none focus-visible:text-[#00FF94]"
+                  className="text-[#A0A0A0] hover:text-[#1DB954] transition-colors focus-visible:outline-none focus-visible:text-[#1DB954]"
                 >
                   Tecnologia
                 </a>
@@ -41,7 +46,7 @@ export function Footer() {
               <li>
                 <a
                   href="#"
-                  className="hover:text-[#00FF94] transition-colors focus-visible:outline-none focus-visible:text-[#00FF94]"
+                  className="text-[#A0A0A0] hover:text-[#1DB954] transition-colors focus-visible:outline-none focus-visible:text-[#1DB954]"
                 >
                   Parceiros
                 </a>
@@ -50,12 +55,12 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="text-white font-bold mb-6 tracking-wide">Legal</h4>
-            <ul className="space-y-4 font-medium text-sm">
+            <h4 className="text-white font-black mb-6 tracking-wide uppercase text-xs">Legal</h4>
+            <ul className="space-y-4 font-bold text-sm">
               <li>
                 <a
                   href="#"
-                  className="hover:text-[#00FF94] transition-colors focus-visible:outline-none focus-visible:text-[#00FF94]"
+                  className="text-[#A0A0A0] hover:text-[#1DB954] transition-colors focus-visible:outline-none focus-visible:text-[#1DB954]"
                 >
                   Contato
                 </a>
@@ -63,7 +68,7 @@ export function Footer() {
               <li>
                 <a
                   href="#"
-                  className="hover:text-[#00FF94] transition-colors focus-visible:outline-none focus-visible:text-[#00FF94]"
+                  className="text-[#A0A0A0] hover:text-[#1DB954] transition-colors focus-visible:outline-none focus-visible:text-[#1DB954]"
                 >
                   Termos de Uso
                 </a>
@@ -71,7 +76,7 @@ export function Footer() {
               <li>
                 <a
                   href="#"
-                  className="hover:text-[#00FF94] transition-colors focus-visible:outline-none focus-visible:text-[#00FF94]"
+                  className="text-[#A0A0A0] hover:text-[#1DB954] transition-colors focus-visible:outline-none focus-visible:text-[#1DB954]"
                 >
                   Privacidade
                 </a>
@@ -80,7 +85,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-white/40">
+        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-bold text-[#A0A0A0]">
           <p>© {currentYear} AgroIA. Inovação para o campo.</p>
           <div className="flex gap-4">
             <span>Cascavel</span>

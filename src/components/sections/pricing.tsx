@@ -51,78 +51,108 @@ const plans = [
   },
 ]
 
+function PricingCard({ plan, className }: { plan: (typeof plans)[0]; className?: string }) {
+  return (
+    <div
+      className={cn(
+        'bg-[#050505] border border-white/5 rounded-[32px] p-8 flex flex-col hover:border-[#1DB954]/30 transition-colors duration-500 gsap-stagger-item',
+        className,
+      )}
+    >
+      <h3 className="text-white text-2xl font-black mb-2 tracking-tight">{plan.name}</h3>
+      <p className="text-[#A0A0A0] text-sm font-medium mb-8 h-10">{plan.description}</p>
+
+      <div className="flex items-baseline gap-1 mb-8">
+        <span className="text-4xl font-black text-white tracking-tighter">{plan.price}</span>
+        {plan.period && <span className="text-[#A0A0A0] font-bold text-sm">{plan.period}</span>}
+      </div>
+
+      <ul className="space-y-4 mb-8 flex-1">
+        {plan.features.map((f, i) => (
+          <li key={i} className="flex items-start gap-3 text-[#E0E0E0] text-sm font-semibold">
+            <div className="mt-0.5 rounded-full p-1 bg-[#1DB954]/10 text-[#1DB954]">
+              <Check className="w-3 h-3" strokeWidth={3} />
+            </div>
+            <span>{f}</span>
+          </li>
+        ))}
+      </ul>
+
+      <Link
+        to="/cadastro"
+        className="w-full py-4 border border-white/10 text-white rounded-full font-bold text-sm text-center hover:bg-white/10 transition-colors mt-auto"
+      >
+        Assinar {plan.name}
+      </Link>
+    </div>
+  )
+}
+
 export function Pricing() {
   const containerRef = useRef<HTMLDivElement>(null)
   useGsapAnimations(containerRef)
 
   return (
-    <section ref={containerRef} className="relative overflow-hidden bg-black">
-      <div className="absolute inset-0 z-0 pointer-events-none bg-[url('https://img.usecurling.com/p/1920/1080?q=agriculture')] bg-cover bg-center opacity-5 mix-blend-overlay" />
-      {/* Background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#1DB954]/5 rounded-full blur-[150px] pointer-events-none" />
-
-      <div className="container relative z-10">
-        <div className="text-center max-w-3xl mx-auto mb-20 gsap-grow">
-          <h2>Planos para Escalar sua Produtividade</h2>
-          <p className="text-[#E0E0E0] text-base md:text-lg">
+    <section ref={containerRef} className="relative overflow-hidden bg-black py-32">
+      <div className="container relative z-10 max-w-7xl mx-auto">
+        <div className="mb-16 max-w-2xl gsap-grow">
+          <h2 className="text-5xl font-black text-white mb-4 tracking-tighter">Planos</h2>
+          <p className="text-[#A0A0A0] text-lg font-medium">
             Escolha o pacote ideal para as necessidades da sua operação. Desbloqueie o poder da IA
             hoje.
           </p>
         </div>
 
-        <div className="grid-responsive gsap-stagger-container">
-          {plans.map((plan, index) => (
-            <div key={index} className="flex gsap-stagger-item">
-              <div
-                className={cn(
-                  'card-glass w-full relative flex flex-col bg-[#000000] border border-[#1DB954]',
-                  plan.highlighted && 'z-10 scale-[1.02] shadow-[0_0_20px_rgba(29,185,84,0.4)]',
-                )}
-              >
-                {plan.highlighted && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#1DB954] text-[#000000] px-4 py-1 rounded-[12px] text-xs font-medium tracking-wider uppercase">
-                    POPULAR
-                  </div>
-                )}
-
-                <div className="text-left pb-6">
-                  <h3 className="text-xl mb-2 text-[#FFFFFF] font-medium">{plan.name}</h3>
-                  <p className="text-sm text-[#E0E0E0] mb-6 h-10">{plan.description}</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-medium text-[#FFFFFF] tracking-tight">
-                      {plan.price}
-                    </span>
-                    {plan.period && <span className="text-[#E0E0E0]">{plan.period}</span>}
-                  </div>
-                </div>
-
-                <div className="flex-1">
-                  <ul className="space-y-4">
-                    {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm text-[#E0E0E0]">
-                        <div className="mt-0.5 rounded-[4px] p-1 bg-[#1DB954]/10 text-[#1DB954]">
-                          <Check className="w-3 h-3" strokeWidth={3} />
-                        </div>
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="pt-8 mt-auto">
-                  <Link
-                    to="/cadastro"
-                    className={cn(
-                      'w-full py-3 flex items-center justify-center text-center',
-                      plan.highlighted ? 'btn-agro-primary' : 'btn-agro-secondary',
-                    )}
-                  >
-                    Assinar Agora
-                  </Link>
-                </div>
-              </div>
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 gsap-stagger-container">
+          {/* Highlighted Completo - takes full width on small, 6 cols on large */}
+          <div className="md:col-span-12 lg:col-span-6 bg-[#1DB954] rounded-[32px] p-8 md:p-12 flex flex-col gsap-stagger-item hover:scale-[1.01] transition-transform duration-500 shadow-[0_0_40px_rgba(29,185,84,0.15)] relative overflow-hidden">
+            <div className="absolute top-8 right-8 bg-black text-[#1DB954] px-4 py-2 rounded-full text-xs font-black tracking-wider uppercase">
+              POPULAR
             </div>
-          ))}
+
+            <div className="flex-1">
+              <h3 className="text-black text-3xl font-black mb-2 tracking-tight">
+                {plans[3].name}
+              </h3>
+              <p className="text-black/70 font-bold mb-10">{plans[3].description}</p>
+
+              <div className="flex items-baseline gap-1 mb-10">
+                <span className="text-6xl font-black text-black tracking-tighter">
+                  {plans[3].price}
+                </span>
+                <span className="text-black/70 font-black text-lg">{plans[3].period}</span>
+              </div>
+
+              <ul className="space-y-4 mb-10">
+                {plans[3].features.map((f, i) => (
+                  <li key={i} className="flex items-center gap-3 text-black font-bold">
+                    <div className="rounded-full p-1 bg-black/10">
+                      <Check className="w-4 h-4" strokeWidth={4} />
+                    </div>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <Link
+              to="/cadastro"
+              className="w-full py-5 bg-black text-white rounded-full font-black text-center hover:bg-black/80 hover:scale-[1.02] transition-all duration-300 mt-auto shadow-lg"
+            >
+              Assinar Completo Agora
+            </Link>
+          </div>
+
+          {/* Plantio & Pecuaria stacked */}
+          <div className="md:col-span-6 lg:col-span-3 flex flex-col gap-6">
+            <PricingCard plan={plans[1]} className="flex-1" />
+            <PricingCard plan={plans[0]} className="flex-1" />
+          </div>
+
+          <div className="md:col-span-6 lg:col-span-3 flex flex-col gap-6">
+            <PricingCard plan={plans[2]} className="flex-1" />
+            <PricingCard plan={plans[4]} className="flex-1" />
+          </div>
         </div>
       </div>
     </section>

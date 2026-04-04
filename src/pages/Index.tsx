@@ -17,28 +17,30 @@ const Index = () => {
         description="Transforme sua Safra com IA Hiperlocal. Previsão 92% precisa e rastreabilidade."
       />
 
-      {/* Futuristic Header */}
-      <header className="navbar-glass !border-b !border-[#1DB954]/20">
-        <div className="container flex h-20 items-center justify-between">
+      {/* iOS Premium Header */}
+      <header className="fixed top-0 z-50 w-full bg-black/50 backdrop-blur-xl border-b border-white/5 transition-all duration-300">
+        <div className="container max-w-7xl mx-auto flex h-20 items-center justify-between">
           <div className="flex items-center gap-2 group cursor-pointer">
-            <Link to="/" className="flex items-center gap-2">
-              <Logo className="w-8 h-8 text-[#FFFFFF] transition-transform duration-300 ease-out" />
-              <span className="text-xl font-medium text-[#FFFFFF]">AgroIA</span>
+            <Link to="/" className="flex items-center gap-3">
+              <div className="bg-[#1DB954] p-1.5 rounded-xl">
+                <Logo className="w-6 h-6 text-black transition-transform duration-300 ease-out" />
+              </div>
+              <span className="text-xl font-black text-white tracking-tight">AgroIA</span>
             </Link>
           </div>
 
           <div className="flex items-center gap-6">
             <a
               href="#planos"
-              className="hidden md:block text-sm font-medium text-[#E0E0E0] hover:text-[#1DB954] transition-colors"
+              className="hidden md:block text-sm font-bold text-[#A0A0A0] hover:text-white transition-colors"
             >
               Planos
             </a>
             <Link
               to={user ? '/dashboard' : '/login'}
-              className="btn-agro-primary px-8 py-2.5 text-sm md:text-base tracking-wide"
+              className="bg-white text-black hover:bg-[#1DB954] px-6 py-2.5 rounded-full text-sm font-black transition-colors duration-300"
             >
-              {user ? 'ÁREA DO PRODUTOR' : 'LOGIN'}
+              {user ? 'Dashboard' : 'Entrar'}
             </Link>
           </div>
         </div>
