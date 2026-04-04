@@ -8,55 +8,80 @@ const plans = [
   {
     name: 'Básico',
     price: 'Grátis',
-    description: 'Ideal para começar',
-    features: ['Dashboard Básico', 'Pecuária Essencial', 'Previsão IA (Limitado)'],
+    description: 'Comece sem custo e conheça a plataforma.',
+    cardText:
+      'Ideal para quem quer dar os primeiros passos no Agro IA e testar a experiência da plataforma antes de avançar para recursos mais completos.',
+    features: [
+      'Acesso inicial à plataforma',
+      'Visão geral dos recursos',
+      'Entrada sem risco',
+      'Ideal para conhecer o sistema',
+    ],
+    ctaText: 'Começar grátis',
     highlighted: false,
   },
   {
     name: 'Plantio Solo',
-    price: 'R$147',
+    price: 'R$ 149',
     period: '/mês',
-    description: 'Focado em agricultura',
+    description: 'Mais controle e previsibilidade para sua lavoura.',
+    cardText:
+      'Perfeito para produtores que querem organizar melhor o plantio, acompanhar informações com mais clareza e tomar decisões com mais segurança no dia a dia da operação.',
     features: [
-      'Tudo do Básico',
-      'Rastreabilidade',
-      'Calculadora ROI',
-      'Alertas de Preço (Plantio)',
+      'Gestão focada em plantio',
+      'Mais organização operacional',
+      'Melhor acompanhamento da produção',
+      'Decisão mais assertiva no campo',
     ],
+    ctaText: 'Assinar Plantio Solo',
     highlighted: false,
   },
   {
-    name: 'Pecuário Solo',
-    price: 'R$147',
+    name: 'Pecuária Solo',
+    price: 'R$ 199',
     period: '/mês',
-    description: 'Focado em pecuária',
+    description: 'Mais precisão e controle na gestão do rebanho.',
+    cardText:
+      'Indicado para quem atua com pecuária e precisa acompanhar dados do rebanho, melhorar a gestão da operação e reduzir falhas no controle das atividades.',
     features: [
-      'Tudo do Básico',
-      'Gestão de Rebanho',
-      'Previsão de Engorda',
-      'Alertas de Preço (Gado)',
+      'Gestão focada em pecuária',
+      'Melhor controle do rebanho',
+      'Mais segurança nas informações',
+      'Acompanhamento mais eficiente',
     ],
+    ctaText: 'Assinar Pecuária Solo',
     highlighted: false,
   },
   {
     name: 'Completo',
-    price: 'R$347',
+    price: 'R$ 349',
     period: '/mês',
-    description: 'A solução definitiva',
-    features: ['Plantio + Pecuária', 'Loja de Insumos', 'Dashboard de Estoque', 'Suporte 24/7'],
+    description: 'A solução ideal para quem quer visão total da operação.',
+    cardText:
+      'Reúne os principais recursos da plataforma em um só plano, entregando mais controle, mais inteligência e melhor custo-benefício para quem quer gerir a produção com visão completa.',
+    features: [
+      'Recursos integrados em um só plano',
+      'Visão mais ampla da operação',
+      'Melhor custo-benefício',
+      'Mais controle e estratégia',
+    ],
+    ctaText: 'Escolher plano Completo',
     highlighted: true,
   },
   {
     name: 'Família Coop',
-    price: 'R$597',
+    price: 'R$ 799',
     period: '/mês',
-    description: 'Para cooperativas',
+    description: 'Mais estrutura para operações maiores e gestão compartilhada.',
+    cardText:
+      'Feito para famílias, grupos e operações com maior escala, que precisam de mais organização, visão consolidada e capacidade de gestão em um nível mais avançado.',
     features: [
-      'Múltiplas Propriedades',
-      'Relatórios Consolidados',
-      'Acesso Multi-usuário',
-      'Consultoria Dedicada',
+      'Ideal para operações maiores',
+      'Gestão mais estruturada',
+      'Melhor visão do todo',
+      'Escala com mais controle',
     ],
+    ctaText: 'Assinar Família Coop',
     highlighted: false,
   },
 ]
@@ -79,11 +104,10 @@ export function Pricing() {
       <div className="container max-w-7xl mx-auto px-4">
         <div className="text-center mb-16 max-w-2xl mx-auto animate-fade-in-up">
           <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tighter">
-            Planos e Preços
+            Escolha o plano ideal para a sua operação
           </h2>
           <p className="text-zinc-400 text-lg font-medium">
-            Escolha o pacote ideal para as necessidades da sua operação. Desbloqueie o poder da IA
-            hoje.
+            Comece grátis ou avance para mais controle, inteligência e gestão no campo.
           </p>
         </div>
 
@@ -131,32 +155,34 @@ function PricingCard({ plan }: { plan: any }) {
       className={cn(
         'relative h-full flex flex-col p-8 rounded-[2.2rem] transition-all duration-300',
         plan.highlighted
-          ? 'bg-zinc-900/90 shadow-[0_0_40px_-15px_rgba(34,197,94,0.3)]'
-          : 'bg-black hover:bg-zinc-900/40',
+          ? 'bg-zinc-900/90 border-2 border-green-500 shadow-[0_0_40px_-15px_rgba(34,197,94,0.5)] z-10 md:scale-[1.02]'
+          : 'bg-black border border-white/5 hover:bg-zinc-900/40 hover:border-white/10',
       )}
     >
       {plan.highlighted && (
         <div className="absolute top-0 right-8 -translate-y-1/2">
           <div className="bg-primary text-black text-xs font-black px-4 py-1 rounded-full uppercase tracking-wider shadow-[0_0_20px_rgba(34,197,94,0.5)]">
-            Recomendado
+            Mais popular
           </div>
         </div>
       )}
 
       <h3 className="text-2xl font-black mb-2 text-white">{plan.name}</h3>
-      <p className="text-zinc-400 text-sm font-medium mb-8 h-10">{plan.description}</p>
+      <p className="text-zinc-400 text-sm font-medium mb-6 min-h-[40px]">{plan.description}</p>
 
-      <div className="flex items-baseline gap-1 mb-8">
+      <div className="flex items-baseline gap-1 mb-4">
         <span className="text-5xl font-black tracking-tighter text-green-500 drop-shadow-[0_0_15px_rgba(34,197,94,0.3)]">
           {plan.price}
         </span>
         {plan.period && <span className="font-bold text-sm text-zinc-500">{plan.period}</span>}
       </div>
 
+      <p className="text-zinc-500 text-sm mb-8 min-h-[80px] leading-relaxed">{plan.cardText}</p>
+
       <ul className="space-y-4 mb-8 flex-1">
         {plan.features.map((f: string, j: number) => (
           <li key={j} className="flex items-start gap-3 text-sm font-semibold text-zinc-300">
-            <div className="mt-0.5 rounded-full p-1 bg-primary/10 text-primary">
+            <div className="mt-0.5 rounded-full p-1 bg-primary/10 text-primary shrink-0">
               <Check className="w-3 h-3" strokeWidth={3} />
             </div>
             <span>{f}</span>
@@ -167,11 +193,12 @@ function PricingCard({ plan }: { plan: any }) {
       <Button
         asChild
         className={cn(
-          'w-full h-14 mt-4 rounded-full font-black text-lg tracking-wide uppercase transition-all duration-300 bg-green-500 text-black hover:bg-green-600 hover:shadow-[0_0_30px_rgba(34,197,94,0.4)] shadow-[0_0_15px_rgba(34,197,94,0.3)]',
-          plan.highlighted && 'shadow-[0_0_25px_rgba(34,197,94,0.5)] scale-105',
+          'w-full h-auto py-4 mt-4 rounded-full font-black text-sm md:text-base tracking-wide uppercase transition-all duration-300 bg-green-500 text-black hover:bg-green-600 hover:shadow-[0_0_30px_rgba(34,197,94,0.4)] shadow-[0_0_15px_rgba(34,197,94,0.3)] whitespace-normal text-center',
+          plan.highlighted &&
+            'shadow-[0_0_25px_rgba(34,197,94,0.6)] md:scale-105 hover:md:scale-110 bg-green-400 hover:bg-green-500',
         )}
       >
-        <Link to="/cadastro">Assinar</Link>
+        <Link to="/cadastro">{plan.ctaText}</Link>
       </Button>
     </div>
   )
