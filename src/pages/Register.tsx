@@ -28,7 +28,7 @@ import {
   CardTitle,
   CardFooter,
 } from '@/components/ui/card'
-import { Tractor, ArrowLeft, Loader2, UserPlus } from 'lucide-react'
+import { Sprout, ArrowLeft, Loader2, UserPlus } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { supabase } from '@/lib/supabase/client'
 
@@ -129,10 +129,15 @@ export default function Register() {
       </Link>
 
       <div className="mb-6 flex flex-col items-center mt-12 sm:mt-8">
-        <div className="w-16 h-16 bg-premium-gold rounded-[24px] flex items-center justify-center mb-4 shadow-lg">
-          <Tractor className="w-8 h-8 text-bg-dark" />
-        </div>
-        <h1 className="text-3xl font-bold text-white">Criar Conta</h1>
+        <Link to="/" className="flex items-center gap-2 mb-6 hover:opacity-90 transition-opacity">
+          <div className="w-12 h-12 bg-[#1DB954] rounded-[16px] flex items-center justify-center shadow-[0_0_20px_rgba(29,185,84,0.3)]">
+            <Sprout className="w-7 h-7 text-black" />
+          </div>
+          <span className="text-3xl font-black text-white tracking-tight">
+            Agro<span className="text-[#1DB954]">IA</span>
+          </span>
+        </Link>
+        <h1 className="text-2xl font-bold text-white">Criar Conta</h1>
       </div>
 
       <Card className="w-full max-w-md border-white/10 shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500 mb-8">
