@@ -128,7 +128,7 @@ export function Hero() {
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-          <Link to="/register">
+          <Link to="/cadastro">
             <Button
               size="lg"
               className="h-12 px-8 bg-primary text-black hover:bg-primary/90 font-bold text-lg gap-2 shadow-[0_0_20px_rgba(29,185,84,0.3)] hover:shadow-[0_0_30px_rgba(29,185,84,0.5)] transition-all"

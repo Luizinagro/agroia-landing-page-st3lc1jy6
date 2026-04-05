@@ -6,7 +6,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/s
 
 export function Header() {
   const location = useLocation()
-  const isApp = !['/', '/login', '/register'].includes(location.pathname)
+  const isApp = !['/', '/login', '/cadastro'].includes(location.pathname)
 
   if (!isApp) {
     return (
@@ -29,17 +29,17 @@ export function Header() {
               Planos
             </a>
           </nav>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1 sm:gap-2">
             <Link to="/login">
               <Button
                 variant="ghost"
-                className="text-primary hover:text-primary hover:bg-primary/10"
+                className="text-primary hover:text-primary hover:bg-primary/10 px-2 sm:px-4"
               >
                 Entrar
               </Button>
             </Link>
-            <Link to="/register">
-              <Button className="bg-primary text-black hover:bg-primary/90 font-medium">
+            <Link to="/cadastro">
+              <Button className="bg-primary text-black hover:bg-primary/90 font-medium px-3 sm:px-4">
                 Começar
               </Button>
             </Link>
