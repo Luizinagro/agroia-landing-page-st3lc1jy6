@@ -15,13 +15,6 @@ export default function PaginaInicial() {
         {/* 3D Robot Section */}
         <section className="container mx-auto px-4 py-8 md:py-16 relative z-10 flex flex-col items-center justify-center">
           <div className="relative w-full max-w-6xl aspect-video rounded-3xl overflow-hidden border border-white/5 shadow-2xl shadow-green-500/10 bg-zinc-950/80">
-            {/* Holographic AGROIA Text Overlay on the Robot */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-              <span className="text-[15vw] md:text-[12rem] font-black tracking-tighter text-green-500/20 mix-blend-screen select-none drop-shadow-[0_0_40px_rgba(34,197,94,0.4)]">
-                AGROIA
-              </span>
-            </div>
-
             {/* Floating Badge */}
             <div className="absolute bottom-6 md:bottom-12 left-1/2 -translate-x-1/2 pointer-events-none z-20">
               <div className="bg-black/60 backdrop-blur-md border border-green-500/30 px-6 py-2 rounded-full shadow-[0_0_20px_rgba(34,197,94,0.3)]">

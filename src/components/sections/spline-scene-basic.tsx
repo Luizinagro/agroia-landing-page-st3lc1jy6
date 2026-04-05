@@ -1,11 +1,10 @@
 import { SplineScene } from '@/components/ui/splite'
 import { Card } from '@/components/ui/card'
-import { Spotlight } from '@/components/ui/spotlight'
 
 export function SplineSceneBasic() {
   return (
     <Card className="w-full h-[500px] bg-[#0A0A0A] relative overflow-hidden border-white/5 shadow-2xl rounded-3xl">
-      <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="white" />
+      <div className="absolute -top-40 left-0 md:left-60 md:-top-20 w-96 h-96 bg-white/5 blur-[100px] rounded-full pointer-events-none"></div>
 
       <div className="flex flex-col md:flex-row h-full">
         {/* Left content */}

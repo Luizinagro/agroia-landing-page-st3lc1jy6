@@ -58,17 +58,60 @@ export function Hero() {
           </div>
 
           <div className="flex-1 w-full flex justify-center items-center relative mt-12 lg:mt-0">
-            <div className="absolute w-72 h-72 bg-green-500/20 rounded-full blur-3xl animate-pulse pointer-events-none"></div>
-            <div
-              className="relative w-full max-w-lg aspect-square flex items-center justify-center animate-float pointer-events-none"
-              style={{ animationDuration: '6s' }}
-            >
-              <img
-                src="https://images.unsplash.com/photo-1633409361618-c73427e4e206?q=80&w=800&auto=format&fit=crop"
-                alt="Modelo 3D de Análise de Dados"
-                className="w-full h-full object-contain mix-blend-screen opacity-90 drop-shadow-[0_0_30px_rgba(34,197,94,0.4)]"
-                style={{ filter: 'hue-rotate(110deg) brightness(1.3) contrast(1.2)' }}
-              />
+            <div className="absolute w-72 h-72 bg-green-500/10 rounded-full blur-[100px] animate-pulse pointer-events-none"></div>
+            <div className="relative w-full max-w-md aspect-square flex items-center justify-center pointer-events-none">
+              {/* 3D Database / Neural Network CSS Animation */}
+              <div
+                className="relative w-48 h-48 sm:w-60 sm:h-60 animate-float"
+                style={{
+                  transformStyle: 'preserve-3d',
+                  transform: 'rotateX(60deg) rotateZ(45deg)',
+                }}
+              >
+                {/* Glowing Base */}
+                <div
+                  className="absolute inset-0 bg-green-500/20 blur-[40px] rounded-full"
+                  style={{ transform: 'translateZ(-20px)' }}
+                ></div>
+
+                {/* Central vertical line connecting the layers */}
+                <div
+                  className="absolute left-1/2 top-1/2 w-0.5 bg-green-400/80 shadow-[0_0_15px_rgba(34,197,94,1)] -translate-x-1/2 -translate-y-1/2"
+                  style={{ height: '100px', transform: 'translateZ(50px) rotateX(90deg)' }}
+                ></div>
+
+                {/* Secondary vertical line */}
+                <div
+                  className="absolute left-1/4 top-1/4 w-px bg-green-500/50 shadow-[0_0_10px_rgba(34,197,94,0.8)] -translate-x-1/2 -translate-y-1/2"
+                  style={{ height: '100px', transform: 'translateZ(50px) rotateX(90deg)' }}
+                ></div>
+
+                {/* Stacked Layers */}
+                {[0, 1, 2].map((i) => (
+                  <div
+                    key={i}
+                    className="absolute inset-0 border border-green-500/30 bg-black/70 backdrop-blur-sm rounded-xl"
+                    style={{
+                      transform: `translateZ(${i * 50}px)`,
+                      boxShadow:
+                        '0 0 20px rgba(34,197,94,0.15), inset 0 0 20px rgba(34,197,94,0.1)',
+                      transformStyle: 'preserve-3d',
+                    }}
+                  >
+                    {/* Inner grid/circuit pattern */}
+                    <div className="absolute inset-0 bg-[linear-gradient(rgba(34,197,94,0.2)_1px,transparent_1px),linear-gradient(90deg,rgba(34,197,94,0.2)_1px,transparent_1px)] bg-[size:1rem_1rem] rounded-xl opacity-40"></div>
+
+                    {/* Glowing nodes - different position per layer */}
+                    <div
+                      className={`absolute w-2 h-2 bg-green-400 rounded-full shadow-[0_0_15px_rgba(34,197,94,1)] ${i === 0 ? 'top-4 left-4 animate-pulse' : i === 1 ? 'bottom-6 right-6 animate-ping' : 'top-10 right-8 animate-pulse'}`}
+                    ></div>
+
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 border border-green-500/40 rounded-full flex items-center justify-center">
+                      <div className="w-3 h-3 bg-green-400 rounded-full shadow-[0_0_20px_rgba(34,197,94,1)] animate-pulse"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
