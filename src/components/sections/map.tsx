@@ -1,4 +1,4 @@
-import { MapPin } from 'lucide-react'
+import { MapPin, Tractor, AlertTriangle } from 'lucide-react'
 
 export function InteractiveMap() {
   return (
@@ -32,25 +32,35 @@ export function InteractiveMap() {
           <div className="flex-1 w-full relative">
             <div className="absolute -inset-4 bg-green-500/10 blur-3xl rounded-full"></div>
             <div className="relative w-full aspect-[4/3] bg-zinc-900 rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
-              {/* Mock Map Background */}
-              <div className="absolute inset-0 bg-[url('https://img.usecurling.com/p/800/600?q=farm%20map&color=green')] bg-cover bg-center opacity-30 mix-blend-luminosity"></div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
+              {/* Realistic Map Background */}
+              <div className="absolute inset-0 bg-[url('https://img.usecurling.com/p/800/600?q=realistic%20satellite%20farm%20field%20map')] bg-cover bg-center opacity-60 mix-blend-luminosity hover:mix-blend-normal transition-all duration-700"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none"></div>
 
-              {/* Map Points */}
-              <div className="absolute top-[30%] left-[35%] animate-pulse">
-                <MapPin className="w-8 h-8 text-green-500 drop-shadow-[0_0_10px_rgba(34,197,94,1)] -translate-x-1/2 -translate-y-full" />
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 mt-1 bg-black/80 px-2 py-1 rounded text-[10px] text-white border border-green-500/30 whitespace-nowrap font-medium">
-                  Trator 01 - Operando
+              {/* Dynamic Map Points */}
+              <div className="absolute top-[35%] left-[45%] group cursor-pointer z-10">
+                <div className="absolute -inset-4 bg-green-500/20 rounded-full animate-ping"></div>
+                <div className="relative bg-black border border-green-500 p-2 rounded-full shadow-[0_0_15px_rgba(34,197,94,0.5)]">
+                  <Tractor className="w-5 h-5 text-green-400" />
+                </div>
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-zinc-950/95 backdrop-blur-sm px-3 py-2 rounded-lg text-xs text-white border border-green-500/30 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  <p className="font-bold text-green-400 mb-1">Trator 01 - Operando</p>
+                  <p className="text-zinc-300">Velocidade: 8 km/h</p>
+                  <p className="text-zinc-300">Talhão: Leste</p>
                 </div>
               </div>
 
-              <div
-                className="absolute bottom-[40%] right-[30%] animate-pulse"
-                style={{ animationDelay: '1.5s' }}
-              >
-                <MapPin className="w-8 h-8 text-yellow-500 drop-shadow-[0_0_10px_rgba(234,179,8,1)] -translate-x-1/2 -translate-y-full" />
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 mt-1 bg-black/80 px-2 py-1 rounded text-[10px] text-white border border-yellow-500/30 whitespace-nowrap font-medium">
-                  Alerta de Solo Seco
+              <div className="absolute bottom-[25%] right-[25%] group cursor-pointer z-10">
+                <div
+                  className="absolute -inset-4 bg-yellow-500/20 rounded-full animate-ping"
+                  style={{ animationDelay: '1s' }}
+                ></div>
+                <div className="relative bg-black border border-yellow-500 p-2 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]">
+                  <AlertTriangle className="w-5 h-5 text-yellow-400" />
+                </div>
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-zinc-950/95 backdrop-blur-sm px-3 py-2 rounded-lg text-xs text-white border border-yellow-500/30 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  <p className="font-bold text-yellow-400 mb-1">Alerta: Solo Seco</p>
+                  <p className="text-zinc-300">Umidade: 12%</p>
+                  <p className="text-zinc-300">Ação: Irrigação recomendada</p>
                 </div>
               </div>
             </div>
