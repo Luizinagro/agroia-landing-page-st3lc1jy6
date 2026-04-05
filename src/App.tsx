@@ -32,18 +32,7 @@ import CRM from './pages/CRM'
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
 
-import { useEffect } from 'react'
-import { logSystemEvent } from '@/lib/security'
-
 const App = () => {
-  useEffect(() => {
-    // Infra Protection: Enforce HTTPS
-    if (window.location.protocol === 'http:' && window.location.hostname !== 'localhost') {
-      logSystemEvent('SECURITY', 'Redirecionamento HTTP interceptado, forçando HTTPS.', 'system')
-      window.location.href = window.location.href.replace('http:', 'https:')
-    }
-  }, [])
-
   return (
     <AuthProvider>
       <DatabaseProvider>
