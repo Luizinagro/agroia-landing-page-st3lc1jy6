@@ -2,16 +2,8 @@ import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 import { LogoText } from '@/components/ui/logo'
 import { Link } from 'react-router-dom'
-import { useAuth } from '@/contexts/AuthContext'
-import { useSubscription } from '@/hooks/useSubscription'
 
 export function Hero() {
-  const { user, loading: authLoading } = useAuth() as any
-  const { plan, loading: planLoading } = useSubscription()
-
-  const userPlanName = plan?.plan_name || user?.plan_active || user?.plano_ativo || 'Básico'
-  const showPricing = !authLoading && (!user || (!planLoading && userPlanName === 'Básico'))
-
   return (
     <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden bg-black">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(29,185,84,0.15)_0,transparent_50%)] -z-10 pointer-events-none"></div>
@@ -53,17 +45,15 @@ export function Hero() {
                   Começar Agora <ArrowRight className="w-5 h-5" />
                 </Button>
               </Link>
-              {showPricing && (
-                <a href="#planos">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="h-12 px-8 border-green-500/30 text-green-500 hover:bg-green-500/10 hover:text-green-400 font-bold text-lg transition-all"
-                  >
-                    Conhecer Planos
-                  </Button>
-                </a>
-              )}
+              <a href="#planos">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="h-12 px-8 border-green-500/30 text-green-500 hover:bg-green-500/10 hover:text-green-400 font-bold text-lg transition-all"
+                >
+                  Conhecer Planos
+                </Button>
+              </a>
             </div>
           </div>
 

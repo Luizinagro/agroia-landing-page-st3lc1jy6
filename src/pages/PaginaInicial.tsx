@@ -3,17 +3,9 @@ import { Features } from '@/components/sections/features'
 import { Pricing } from '@/components/sections/pricing'
 import { Footer } from '@/components/sections/footer'
 import { Header } from '@/components/Header'
-import { useAuth } from '@/contexts/AuthContext'
-import { useSubscription } from '@/hooks/useSubscription'
 import { SplineSceneBasic } from '@/components/sections/spline-scene-basic'
 
 export default function PaginaInicial() {
-  const { user, loading: authLoading } = useAuth() as any
-  const { plan, loading: planLoading } = useSubscription()
-
-  const userPlanName = plan?.plan_name || user?.plan_active || user?.plano_ativo || 'Básico'
-  const showPricing = !authLoading && (!user || (!planLoading && userPlanName === 'Básico'))
-
   return (
     <div className="min-h-screen bg-[#000000] text-foreground">
       <Header />
@@ -25,7 +17,7 @@ export default function PaginaInicial() {
           <div className="relative w-full max-w-6xl aspect-video rounded-3xl overflow-hidden border border-white/5 shadow-2xl shadow-green-500/10 bg-zinc-950/80">
             {/* Holographic AGROIA Text Overlay on the Robot */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-              <span className="text-[12vw] md:text-[10rem] font-black tracking-tighter text-white/5 mix-blend-overlay select-none drop-shadow-2xl">
+              <span className="text-[15vw] md:text-[12rem] font-black tracking-tighter text-green-500/20 mix-blend-screen select-none drop-shadow-[0_0_40px_rgba(34,197,94,0.4)]">
                 AGROIA
               </span>
             </div>
@@ -47,7 +39,7 @@ export default function PaginaInicial() {
         <Features />
 
         {/* Pricing Section */}
-        {showPricing && <Pricing />}
+        <Pricing />
       </main>
       <Footer />
     </div>
