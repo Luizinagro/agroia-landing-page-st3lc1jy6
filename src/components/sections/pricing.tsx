@@ -35,7 +35,7 @@ const fallbackPlans: Plan[] = [
   {
     id: '2',
     nome: 'Plantio Solo',
-    preco: 'R$ 79',
+    preco: 'R$ 97',
     periodo: '/mês',
     descricao: 'Foco total no monitoramento e gestão da sua lavoura.',
     features: [
@@ -50,7 +50,7 @@ const fallbackPlans: Plan[] = [
   {
     id: '3',
     nome: 'Pecuário Solo',
-    preco: 'R$ 79',
+    preco: 'R$ 97',
     periodo: '/mês',
     descricao: 'Gestão completa do seu rebanho e produção animal.',
     features: [
@@ -65,7 +65,7 @@ const fallbackPlans: Plan[] = [
   {
     id: '4',
     nome: 'Completo',
-    preco: 'R$ 149',
+    preco: 'R$ 197',
     periodo: '/mês',
     descricao: 'A solução definitiva com Inteligência Artificial e automação.',
     features: [
@@ -132,7 +132,7 @@ export function Pricing() {
         id="planos"
         className="py-24 bg-black flex justify-center items-center min-h-[500px]"
       >
-        <Loader2 className="w-10 h-10 text-emerald-500 animate-spin" />
+        <Loader2 className="w-10 h-10 text-green-500 animate-spin" />
       </section>
     )
   }
@@ -152,24 +152,24 @@ export function Pricing() {
               key={plan.id || plan.nome}
               className={`bg-zinc-950 border ${
                 plan.destaque
-                  ? 'border-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.2)] md:scale-105 z-10'
+                  ? 'border-green-500 shadow-[0_0_30px_rgba(34,197,94,0.3)] md:scale-105 z-10'
                   : 'border-white/10'
               } relative flex flex-col rounded-2xl p-6 transition-transform hover:scale-[1.02]`}
             >
               {plan.destaque && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-black px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap shadow-lg">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-black px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap shadow-[0_0_15px_rgba(34,197,94,0.5)]">
                   Mais Escolhido
                 </div>
               )}
               <div className="mb-6">
                 <h3 className="text-xl font-bold text-white mb-2">{plan.nome}</h3>
                 <p className="text-zinc-400 text-sm min-h-[60px]">{plan.descricao}</p>
-                <div className="mt-4 flex items-baseline text-emerald-400">
-                  <span className="text-4xl font-extrabold drop-shadow-[0_0_10px_rgba(16,185,129,0.3)]">
+                <div className="mt-4 flex items-baseline text-green-400">
+                  <span className="text-4xl font-extrabold drop-shadow-[0_0_15px_rgba(34,197,94,0.6)]">
                     {plan.preco}
                   </span>
                   {plan.periodo && (
-                    <span className="text-emerald-500/70 ml-1 font-medium text-sm">
+                    <span className="text-green-500/70 ml-1 font-medium text-sm">
                       {plan.periodo}
                     </span>
                   )}
@@ -179,7 +179,7 @@ export function Pricing() {
                 <ul className="space-y-3">
                   {plan.features.map((feature, j) => (
                     <li key={j} className="flex items-start text-zinc-300">
-                      <Check className="w-4 h-4 text-emerald-500 mr-2 shrink-0 mt-0.5" />
+                      <Check className="w-4 h-4 text-green-500 mr-2 shrink-0 mt-0.5" />
                       <span className="text-sm leading-relaxed">{feature}</span>
                     </li>
                   ))}
@@ -191,8 +191,8 @@ export function Pricing() {
                     size="lg"
                     className={`w-full font-bold shadow-lg transition-all ${
                       plan.destaque
-                        ? 'bg-emerald-500 text-black hover:bg-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]'
-                        : 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 border border-emerald-500/30'
+                        ? 'bg-green-500 text-black hover:bg-green-400 hover:shadow-[0_0_25px_rgba(34,197,94,0.6)]'
+                        : 'bg-green-500/10 text-green-400 hover:bg-green-500/20 border border-green-500/30 hover:shadow-[0_0_15px_rgba(34,197,94,0.3)]'
                     }`}
                   >
                     {plan.botao}

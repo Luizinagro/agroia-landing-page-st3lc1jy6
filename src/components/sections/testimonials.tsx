@@ -7,21 +7,21 @@ export function Testimonials() {
       role: 'Produtor de Soja',
       content:
         'A previsão de IA da AgroIA mudou completamente a forma como decido a hora da colheita. Minha lucratividade aumentou significativamente em apenas uma safra!',
-      image: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
+      image: 'https://img.usecurling.com/p/128/128?q=farmer%20man',
     },
     {
       name: 'Mariana Costa',
       role: 'Pecuária de Corte',
       content:
         'Gerenciar o rebanho nunca foi tão fácil. O sistema de rastreabilidade é impecável e muito simples de usar no dia a dia com a equipe da fazenda.',
-      image: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=2',
+      image: 'https://img.usecurling.com/p/128/128?q=farmer%20woman',
     },
     {
       name: 'Carlos Mendes',
       role: 'Cooperativa Agro',
       content:
         'Integrar nossos cooperados com a plataforma da AgroIA nos deu uma visão em tempo real da produção de toda a nossa região. Foi um divisor de águas.',
-      image: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=3',
+      image: 'https://img.usecurling.com/p/128/128?q=agronomist%20man',
     },
   ]
 
