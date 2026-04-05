@@ -12,6 +12,9 @@ import {
 } from 'lucide-react'
 import { LogoText } from '@/components/ui/logo'
 import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useAuth } from '@/contexts/AuthContext'
+import { useSubscription } from '@/hooks/useSubscription'
 import {
   Dialog,
   DialogContent,
@@ -96,13 +99,45 @@ const ecossistema = [
   },
 ]
 
+const BACKGROUND_VIDEOS = [
+  'https://cdn.pixabay.com/video/2020/07/09/44299-438411037_large.mp4',
+  'https://cdn.pixabay.com/video/2021/08/18/85458-590209257_large.mp4',
+  'https://cdn.pixabay.com/video/2019/04/10/22646-329432653_large.mp4',
+  'https://cdn.pixabay.com/video/2020/05/20/39366-423588975_large.mp4',
+]
+
 export function Hero() {
+  const [videoUrl, setVideoUrl] = useState('')
+  const { user, loading: authLoading } = useAuth() as any
+  const { plan, loading: planLoading } = useSubscription()
+
+  useEffect(() => {
+    const randomVideo = BACKGROUND_VIDEOS[Math.floor(Math.random() * BACKGROUND_VIDEOS.length)]
+    setVideoUrl(randomVideo)
+  }, [])
+
+  const userPlanName = plan?.plan_name || user?.plan_active || user?.plano_ativo || 'Básico'
+  const showPricing = !authLoading && (!user || (!planLoading && userPlanName === 'Básico'))
+
   return (
     <section className="relative min-h-screen flex flex-col justify-center pt-24 pb-16 overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(29,185,84,0.15)_0,transparent_50%)]"></div>
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl -z-10 animate-float"></div>
+      {videoUrl && (
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover -z-20 opacity-30"
+        >
+          <source src={videoUrl} type="video/mp4" />
+        </video>
+      )}
+      <div className="absolute inset-0 bg-black/60 -z-10 pointer-events-none"></div>
+
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(29,185,84,0.15)_0,transparent_50%)] -z-10 pointer-events-none"></div>
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl -z-10 animate-float pointer-events-none"></div>
       <div
-        className="absolute bottom-1/4 right-1/4 w-[30rem] h-[30rem] bg-emerald-900/20 rounded-full blur-3xl -z-10 animate-float"
+        className="absolute bottom-1/4 right-1/4 w-[30rem] h-[30rem] bg-emerald-900/20 rounded-full blur-3xl -z-10 animate-float pointer-events-none"
         style={{ animationDelay: '2s' }}
       ></div>
 
@@ -136,15 +171,17 @@ export function Hero() {
               Começar Agora <ArrowRight className="w-5 h-5" />
             </Button>
           </Link>
-          <a href="#pricing">
-            <Button
-              size="lg"
-              variant="outline"
-              className="h-12 px-8 border-primary/30 text-primary hover:bg-primary/10 font-bold text-lg"
-            >
-              Conhecer Planos
-            </Button>
-          </a>
+          {showPricing && (
+            <a href="#planos">
+              <Button
+                size="lg"
+                variant="outline"
+                className="h-12 px-8 border-primary/30 text-primary hover:bg-primary/10 font-bold text-lg"
+              >
+                Conhecer Planos
+              </Button>
+            </a>
+          )}
         </div>
 
         <div
