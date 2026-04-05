@@ -1,154 +1,63 @@
-import { Button } from '@/components/ui/button'
-import {
-  ArrowRight,
-  Leaf,
-  Cpu,
-  BarChart3,
-  Calculator,
-  Tractor,
-  DollarSign,
-  ShoppingBag,
-  MessageSquare,
-} from 'lucide-react'
-import { Link } from 'react-router-dom'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
-
-const ecossistema = [
-  {
-    icon: Cpu,
-    title: 'IA Avançada',
-    description: 'Previsões precisas e análises preditivas para sua fazenda.',
-    cta: 'Ver previsões na prática',
-    modalTitle: 'Previsões mais inteligentes para decidir melhor',
-    modalText:
-      'A IA Avançada analisa dados da operação para gerar previsões e apoiar decisões com mais segurança. Na prática, ela ajuda a antecipar cenários, reduzir erros e agir com mais precisão no campo.',
-  },
-  {
-    icon: BarChart3,
-    title: 'Gestão Completa',
-    description: 'Dashboard intuitivo com todos os dados concentrados.',
-    cta: 'Ver o dashboard em ação',
-    modalTitle: 'Tudo centralizado em um só lugar',
-    modalText:
-      'A Gestão Completa reúne os principais dados da fazenda em um painel intuitivo e organizado. Isso facilita o acompanhamento da operação, melhora o controle e reduz a perda de informação no dia a dia.',
-  },
-  {
-    icon: Leaf,
-    title: 'Sustentabilidade ESG',
-    description: 'Rastreabilidade total e conformidade com normas globais.',
-    cta: 'Ver como rastrear',
-    modalTitle: 'Rastreabilidade e conformidade com mais clareza',
-    modalText:
-      'Este recurso ajuda a acompanhar processos, registros e padrões importantes para a operação. Na prática, fortalece a transparência, melhora o controle e apoia uma gestão mais alinhada às exigências do mercado.',
-  },
-  {
-    icon: Calculator,
-    title: 'Calculadora ROI',
-    description: 'Calcule o retorno sobre o investimento da sua safra.',
-    cta: 'Calcular retorno',
-    modalTitle: 'Entenda o retorno antes de investir',
-    modalText:
-      'A Calculadora ROI mostra de forma simples o retorno esperado sobre investimentos da operação. Assim, você compara custos, avalia viabilidade e toma decisões com mais confiança.',
-  },
-  {
-    icon: Tractor,
-    title: 'Pecuária',
-    description: 'Controle de rebanho e manejo eficiente.',
-    cta: 'Ver controle do rebanho',
-    modalTitle: 'Mais controle sobre o rebanho',
-    modalText:
-      'O módulo de Pecuária ajuda a organizar informações do rebanho e melhorar o manejo da operação. Com isso, fica mais fácil acompanhar dados importantes e tomar decisões com mais precisão.',
-  },
-  {
-    icon: DollarSign,
-    title: 'SaaS Faturamento',
-    description: 'Gestão financeira e emissão de cobranças.',
-    cta: 'Ver gestão financeira',
-    modalTitle: 'Mais organização financeira na operação',
-    modalText:
-      'O recurso de faturamento ajuda no controle financeiro, nas cobranças e na visão das receitas da operação. Isso traz mais clareza para a gestão e mais controle sobre o fluxo financeiro.',
-  },
-  {
-    icon: ShoppingBag,
-    title: 'Loja Agrícola',
-    description: 'Compre insumos e equipamentos diretamente na plataforma.',
-    cta: 'Ver como comprar',
-    modalTitle: 'Compra mais prática dentro da plataforma',
-    modalText:
-      'A Loja Agrícola facilita o acesso a insumos e equipamentos em um só ambiente. Na prática, isso agiliza compras importantes e centraliza parte da rotina da operação.',
-  },
-  {
-    icon: MessageSquare,
-    title: 'Comunidade',
-    description: 'Conecte-se com outros produtores e troque experiências.',
-    cta: 'Entrar na comunidade',
-    modalTitle: 'Troque experiências com outros produtores',
-    modalText:
-      'A Comunidade conecta usuários que vivem desafios parecidos no campo. É um espaço para aprender, compartilhar experiências e ampliar a visão com trocas relevantes.',
-  },
-]
+import { BrainCircuit, LineChart, MapPin, Tractor, ShieldCheck, CloudSun } from 'lucide-react'
 
 export function Features() {
+  const features = [
+    {
+      title: 'Previsão IA',
+      description: 'Análise preditiva de safra e mercado utilizando algoritmos avançados.',
+      icon: BrainCircuit,
+    },
+    {
+      title: 'Gestão de Pecuária',
+      description: 'Controle de rebanho, nutrição e ganho de peso com alta precisão.',
+      icon: Tractor,
+    },
+    {
+      title: 'Rastreabilidade',
+      description: 'Acompanhe todo o ciclo do produto desde o plantio até a entrega.',
+      icon: MapPin,
+    },
+    {
+      title: 'Análise de ROI',
+      description:
+        'Calcule o retorno sobre o investimento de cada cultura de forma fácil e rápida.',
+      icon: LineChart,
+    },
+    {
+      title: 'Alertas Climáticos',
+      description: 'Receba notificações em tempo real sobre mudanças drásticas no clima.',
+      icon: CloudSun,
+    },
+    {
+      title: 'Segurança de Dados',
+      description: 'Suas informações de safra armazenadas com criptografia de ponta a ponta.',
+      icon: ShieldCheck,
+    },
+  ]
+
   return (
-    <section id="solucoes" className="py-24 bg-black relative">
-      <div className="container mx-auto px-4 z-10">
-        <div className="text-center mb-16 animate-fade-in-up">
-          <h2 className="text-3xl md:text-5xl font-black text-white mb-4">
-            Nosso Ecossistema <span className="text-green-500">AgroIA</span>
-          </h2>
-          <p className="text-zinc-400 text-lg max-w-2xl mx-auto">
-            Tudo o que você precisa para gerir sua operação com inteligência, previsibilidade e
-            controle total.
+    <section id="solucoes" className="py-24 bg-zinc-950">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Nossas Soluções</h2>
+          <p className="text-zinc-400 max-w-2xl mx-auto">
+            Tecnologia de ponta desenvolvida especificamente para as necessidades reais do produtor
+            rural moderno, mantendo a simplicidade de uso.
           </p>
         </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto w-full">
-          {ecossistema.map((item, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {features.map((feature, i) => (
             <div
-              key={index}
-              className="flex flex-col items-center justify-between p-6 rounded-2xl bg-zinc-950/80 border border-green-500/10 hover:bg-green-900/10 hover:border-green-500/30 transition-all duration-300 group h-full shadow-lg"
+              key={i}
+              className="bg-black border border-green-500/10 hover:border-green-500/30 transition-colors group rounded-xl p-8 shadow-sm"
             >
-              <div className="flex flex-col items-center w-full">
-                <div className="mb-4">
-                  <item.icon className="w-10 h-10 text-green-500 transition-transform duration-300 group-hover:scale-110 group-hover:text-green-400" />
-                </div>
-                <h3 className="text-xl font-bold mb-3 text-white text-center">{item.title}</h3>
-                <p className="text-sm text-zinc-400 text-center mb-8 leading-relaxed">
-                  {item.description}
-                </p>
+              <div className="w-14 h-14 rounded-lg bg-green-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <feature.icon className="w-7 h-7 text-green-500" />
               </div>
-
-              <Dialog>
-                <DialogTrigger asChild>
-                  <button className="text-green-500 text-sm font-bold flex items-center gap-2 group-hover:gap-3 transition-all mt-auto uppercase tracking-wider outline-none hover:text-green-400">
-                    {item.cta} <ArrowRight className="w-4 h-4" />
-                  </button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-md bg-zinc-950 border border-green-500/20 shadow-[0_0_40px_rgba(34,197,94,0.15)]">
-                  <DialogHeader>
-                    <DialogTitle className="text-xl font-black text-white mb-3 leading-tight">
-                      {item.modalTitle}
-                    </DialogTitle>
-                    <DialogDescription className="text-base text-zinc-400 leading-relaxed">
-                      {item.modalText}
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="flex justify-end mt-6 pt-6 border-t border-white/10">
-                    <Link to="/cadastro">
-                      <Button className="bg-green-500 text-black hover:bg-green-400 font-black px-6">
-                        Começar agora
-                      </Button>
-                    </Link>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <h3 className="text-xl font-semibold text-white mb-3">{feature.title}</h3>
+              <p className="text-zinc-400 leading-relaxed text-sm md:text-base">
+                {feature.description}
+              </p>
             </div>
           ))}
         </div>

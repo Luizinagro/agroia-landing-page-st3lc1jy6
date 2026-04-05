@@ -1,146 +1,63 @@
-import { Logo, LogoText } from '@/components/ui/logo'
-import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Logo } from '@/components/ui/logo'
 
 export function Footer() {
   return (
-    <footer className="bg-black border-t border-primary/20 pt-16 pb-8">
+    <footer className="border-t border-white/10 bg-black pt-20 pb-8">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-          <div className="space-y-4 md:col-span-1">
-            <Link to="/" className="flex items-center gap-2">
-              <Logo />
-              <LogoText className="text-xl" />
-            </Link>
-            <p className="text-sm text-muted-foreground mt-4">
-              Transformando o agronegócio com tecnologia, inteligência artificial e sustentabilidade
-              para um futuro mais verde e produtivo.
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 mb-16">
+          <div className="col-span-1 md:col-span-2">
+            <Logo className="mb-6" />
+            <p className="text-zinc-400 max-w-sm leading-relaxed">
+              Revolucionando o agronegócio com Inteligência Artificial, dados precisos e tecnologia
+              100% focada no produtor rural.
             </p>
-            <div className="flex items-center gap-4 mt-6">
-              <a
-                href="#"
-                className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-black transition-colors"
-              >
-                <Twitter className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-black transition-colors"
-              >
-                <Instagram className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-black transition-colors"
-              >
-                <Linkedin className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-black transition-colors"
-              >
-                <Facebook className="w-4 h-4" />
-              </a>
-            </div>
           </div>
-
           <div>
-            <h3 className="font-bold text-lg mb-4 text-foreground">Produto</h3>
-            <ul className="space-y-2">
+            <h4 className="text-white font-semibold mb-6">Produto</h4>
+            <ul className="space-y-3">
               <li>
                 <a
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  href="#solucoes"
+                  className="text-zinc-400 hover:text-green-500 transition-colors"
                 >
-                  Funcionalidades
+                  Recursos
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Preços
+                <a href="#planos" className="text-zinc-400 hover:text-green-500 transition-colors">
+                  Planos
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Casos de Uso
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-bold text-lg mb-4 text-foreground">Recursos</h3>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Central de Ajuda
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
+                <a href="#" className="text-zinc-400 hover:text-green-500 transition-colors">
                   Comunidade
                 </a>
               </li>
+              <li>
+                <a href="#" className="text-zinc-400 hover:text-green-500 transition-colors">
+                  Calculadora ROI
+                </a>
+              </li>
             </ul>
           </div>
-
           <div>
-            <h3 className="font-bold text-lg mb-4 text-foreground">Legal</h3>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Termos de Uso
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Privacidade
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Contato
-                </a>
-              </li>
+            <h4 className="text-white font-semibold mb-6">Contato</h4>
+            <ul className="space-y-3">
+              <li className="text-zinc-400">suporte@agroia.com.br</li>
+              <li className="text-zinc-400">0800 123 4567</li>
+              <li className="text-zinc-400">Av. Paulista, 1000 - SP</li>
             </ul>
           </div>
         </div>
-
-        <div className="border-t border-primary/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} <LogoText />. Todos os direitos reservados.
-          </p>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            Feito com <span className="text-red-500">❤️</span> no Brasil
+        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-zinc-500 text-sm">
+          <div>&copy; {new Date().getFullYear()} AgroIA. Todos os direitos reservados.</div>
+          <div className="flex gap-6">
+            <a href="#" className="hover:text-white transition-colors">
+              Termos de Uso
+            </a>
+            <a href="#" className="hover:text-white transition-colors">
+              Privacidade
+            </a>
           </div>
         </div>
       </div>

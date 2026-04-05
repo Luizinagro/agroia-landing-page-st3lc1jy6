@@ -1,68 +1,63 @@
 import { Star } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-
-const testimonials = [
-  {
-    name: 'João Batista',
-    role: 'Produtor de Soja',
-    content:
-      'A precisão da inteligência artificial mudou nossa janela de plantio. Economizamos muito em insumos nesta safra.',
-    image: 'https://img.usecurling.com/ppl/medium?seed=12',
-  },
-  {
-    name: 'Cooperativa AgroOeste',
-    role: 'Gestão Cooperativa',
-    content:
-      'O módulo de faturamento em nuvem integrou nossos 50 cooperados perfeitamente. A rastreabilidade agora é automática.',
-    image: 'https://img.usecurling.com/i?q=farm&color=green&shape=fill',
-  },
-  {
-    name: 'Carlos Mendes',
-    role: 'Pecuarista',
-    content:
-      'O monitoramento do pasto reduziu nossa perda nutricional. O gado está ganhando peso mais rápido e com menos custo.',
-    image: 'https://img.usecurling.com/ppl/medium?seed=45',
-  },
-]
 
 export function Testimonials() {
+  const testimonials = [
+    {
+      name: 'João Silva',
+      role: 'Produtor de Soja',
+      content:
+        'A previsão de IA da AgroIA mudou completamente a forma como decido a hora da colheita. Minha lucratividade aumentou significativamente em apenas uma safra!',
+      image: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
+    },
+    {
+      name: 'Mariana Costa',
+      role: 'Pecuária de Corte',
+      content:
+        'Gerenciar o rebanho nunca foi tão fácil. O sistema de rastreabilidade é impecável e muito simples de usar no dia a dia com a equipe da fazenda.',
+      image: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=2',
+    },
+    {
+      name: 'Carlos Mendes',
+      role: 'Cooperativa Agro',
+      content:
+        'Integrar nossos cooperados com a plataforma da AgroIA nos deu uma visão em tempo real da produção de toda a nossa região. Foi um divisor de águas.',
+      image: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=3',
+    },
+  ]
+
   return (
-    <section className="py-32 bg-zinc-950 relative">
-      <div className="container max-w-7xl mx-auto px-4 relative z-10">
-        <div className="mb-16 animate-fade-in-up">
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tighter">
-            Depoimentos
+    <section className="py-24 bg-zinc-950">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            O que dizem nossos produtores
           </h2>
-          <p className="text-zinc-400 text-lg font-medium max-w-2xl">
-            Veja o que os produtores e cooperativas da nossa região estão falando sobre os
-            resultados com a AgroIA.
+          <p className="text-zinc-400 max-w-2xl mx-auto">
+            Milhares de produtores já estão transformando suas propriedades e multiplicando seus
+            lucros com a AgroIA.
           </p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map((testimonial, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {testimonials.map((t, i) => (
             <div
-              key={index}
-              className="bg-black border border-zinc-800 rounded-3xl p-8 flex flex-col justify-between hover:border-primary/50 transition-colors duration-300"
+              key={i}
+              className="bg-black border border-white/5 rounded-2xl p-8 shadow-sm hover:border-green-500/20 transition-colors flex flex-col"
             >
-              <div className="flex text-primary mb-8">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-current" />
+              <div className="flex gap-1 mb-6">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star key={star} className="w-4 h-4 fill-yellow-500 text-yellow-500" />
                 ))}
               </div>
-
-              <p className="text-white text-lg font-semibold leading-relaxed mb-10 flex-1">
-                "{testimonial.content}"
-              </p>
-
-              <div className="flex items-center gap-4">
-                <Avatar className="w-12 h-12 border-2 border-primary/20">
-                  <AvatarImage src={testimonial.image} />
-                  <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
-                </Avatar>
+              <p className="text-zinc-300 mb-8 italic leading-relaxed flex-1">"{t.content}"</p>
+              <div className="flex items-center gap-4 pt-4 border-t border-white/5">
+                <img
+                  src={t.image}
+                  alt={t.name}
+                  className="w-12 h-12 rounded-full object-cover border border-green-500/30"
+                />
                 <div>
-                  <h3 className="font-black text-base text-white">{testimonial.name}</h3>
-                  <p className="text-sm font-medium text-zinc-400">{testimonial.role}</p>
+                  <p className="text-white font-semibold">{t.name}</p>
+                  <p className="text-zinc-500 text-sm">{t.role}</p>
                 </div>
               </div>
             </div>
