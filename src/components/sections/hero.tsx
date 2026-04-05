@@ -99,21 +99,21 @@ const ecossistema = [
   },
 ]
 
-const BACKGROUND_VIDEOS = [
-  'https://cdn.pixabay.com/video/2020/07/09/44299-438411037_large.mp4',
-  'https://cdn.pixabay.com/video/2021/08/18/85458-590209257_large.mp4',
-  'https://cdn.pixabay.com/video/2019/04/10/22646-329432653_large.mp4',
-  'https://cdn.pixabay.com/video/2020/05/20/39366-423588975_large.mp4',
+const BACKGROUND_IMAGES = [
+  'https://img.usecurling.com/p/1920/1080?q=agriculture',
+  'https://img.usecurling.com/p/1920/1080?q=farming',
+  'https://img.usecurling.com/p/1920/1080?q=tractor',
+  'https://img.usecurling.com/p/1920/1080?q=harvest',
 ]
 
 export function Hero() {
-  const [videoUrl, setVideoUrl] = useState('')
+  const [bgImageUrl, setBgImageUrl] = useState('')
   const { user, loading: authLoading } = useAuth() as any
   const { plan, loading: planLoading } = useSubscription()
 
   useEffect(() => {
-    const randomVideo = BACKGROUND_VIDEOS[Math.floor(Math.random() * BACKGROUND_VIDEOS.length)]
-    setVideoUrl(randomVideo)
+    const randomImage = BACKGROUND_IMAGES[Math.floor(Math.random() * BACKGROUND_IMAGES.length)]
+    setBgImageUrl(randomImage)
   }, [])
 
   const userPlanName = plan?.plan_name || user?.plan_active || user?.plano_ativo || 'Básico'
@@ -121,16 +121,12 @@ export function Hero() {
 
   return (
     <section className="relative min-h-screen flex flex-col justify-center pt-24 pb-16 overflow-hidden">
-      {videoUrl && (
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover -z-20 opacity-30"
-        >
-          <source src={videoUrl} type="video/mp4" />
-        </video>
+      {bgImageUrl && (
+        <img
+          src={bgImageUrl}
+          alt="Background"
+          className="absolute inset-0 w-full h-full object-cover -z-20 opacity-30 animate-fade-in"
+        />
       )}
       <div className="absolute inset-0 bg-black/60 -z-10 pointer-events-none"></div>
 
