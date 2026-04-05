@@ -12,7 +12,6 @@ import {
 } from 'lucide-react'
 import { LogoText } from '@/components/ui/logo'
 import { Link } from 'react-router-dom'
-import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useSubscription } from '@/hooks/useSubscription'
 import {
@@ -99,41 +98,15 @@ const ecossistema = [
   },
 ]
 
-const BACKGROUND_VIDEOS = [
-  'https://cdn.coverr.co/videos/coverr-driving-a-tractor-2720/1080p.mp4',
-  'https://cdn.coverr.co/videos/coverr-wheat-field-in-the-wind-5085/1080p.mp4',
-  'https://cdn.coverr.co/videos/coverr-a-beautiful-sunrise-in-the-countryside-4966/1080p.mp4',
-]
-
 export function Hero() {
-  const [bgVideoUrl, setBgVideoUrl] = useState('')
   const { user, loading: authLoading } = useAuth() as any
   const { plan, loading: planLoading } = useSubscription()
-
-  useEffect(() => {
-    const randomVideo = BACKGROUND_VIDEOS[Math.floor(Math.random() * BACKGROUND_VIDEOS.length)]
-    setBgVideoUrl(randomVideo)
-  }, [])
 
   const userPlanName = plan?.plan_name || user?.plan_active || user?.plano_ativo || 'Básico'
   const showPricing = !authLoading && (!user || (!planLoading && userPlanName === 'Básico'))
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center pt-24 pb-16 overflow-hidden">
-      {bgVideoUrl && (
-        <video
-          key={bgVideoUrl}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover -z-20 opacity-20 animate-fade-in"
-        >
-          <source src={bgVideoUrl} type="video/mp4" />
-        </video>
-      )}
-      <div className="absolute inset-0 bg-black/70 -z-10 pointer-events-none"></div>
-
+    <section className="relative min-h-screen flex flex-col justify-center pt-32 pb-16 overflow-hidden bg-black">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(29,185,84,0.15)_0,transparent_50%)] -z-10 pointer-events-none"></div>
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl -z-10 animate-float pointer-events-none"></div>
       <div
@@ -141,52 +114,71 @@ export function Hero() {
         style={{ animationDelay: '2s' }}
       ></div>
 
-      <div className="container mx-auto px-4 z-10 text-center space-y-8 animate-fade-in-up">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mx-auto mt-8">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-          </span>
-          A Revolução no Agronegócio
-        </div>
+      <div className="container mx-auto px-4 z-10 flex flex-col items-center justify-center animate-fade-in-up">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-12 w-full max-w-7xl">
+          <div className="flex-1 text-center lg:text-left space-y-8">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mt-8 lg:mt-0">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+              </span>
+              A Revolução no Agronegócio
+            </div>
 
-        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight max-w-4xl mx-auto leading-tight text-white">
-          Inteligência Artificial para o seu{' '}
-          <span className="text-primary drop-shadow-[0_0_15px_rgba(29,185,84,0.5)]">
-            Agronegócio
-          </span>
-        </h1>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight text-white">
+              Inteligência Artificial para o seu{' '}
+              <span className="text-primary drop-shadow-[0_0_15px_rgba(29,185,84,0.5)] block mt-2">
+                Agronegócio
+              </span>
+            </h1>
 
-        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-          Com a <LogoText className="text-xl md:text-2xl ml-1" />, você otimiza sua produção,
-          rastreia sua pecuária e toma decisões baseadas em dados.
-        </p>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0">
+              Com a <LogoText className="text-xl md:text-2xl ml-1" />, você otimiza sua produção,
+              rastreia sua pecuária e toma decisões baseadas em dados.
+            </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-          <Link to="/cadastro">
-            <Button
-              size="lg"
-              className="h-12 px-8 bg-primary text-black hover:bg-primary/90 font-bold text-lg gap-2 shadow-[0_0_20px_rgba(29,185,84,0.3)] hover:shadow-[0_0_30px_rgba(29,185,84,0.5)] transition-all"
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+              <Link to="/cadastro">
+                <Button
+                  size="lg"
+                  className="h-12 px-8 bg-primary text-black hover:bg-primary/90 font-bold text-lg gap-2 shadow-[0_0_20px_rgba(29,185,84,0.3)] hover:shadow-[0_0_30px_rgba(29,185,84,0.5)] transition-all"
+                >
+                  Começar Agora <ArrowRight className="w-5 h-5" />
+                </Button>
+              </Link>
+              {showPricing && (
+                <a href="#planos">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="h-12 px-8 border-primary/30 text-primary hover:bg-primary/10 font-bold text-lg"
+                  >
+                    Conhecer Planos
+                  </Button>
+                </a>
+              )}
+            </div>
+          </div>
+
+          <div className="flex-1 w-full flex justify-center items-center relative mt-12 lg:mt-0">
+            <div className="absolute w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
+            <div
+              className="relative w-full max-w-lg aspect-square flex items-center justify-center animate-float"
+              style={{ animationDuration: '6s' }}
             >
-              Começar Agora <ArrowRight className="w-5 h-5" />
-            </Button>
-          </Link>
-          {showPricing && (
-            <a href="#planos">
-              <Button
-                size="lg"
-                variant="outline"
-                className="h-12 px-8 border-primary/30 text-primary hover:bg-primary/10 font-bold text-lg"
-              >
-                Conhecer Planos
-              </Button>
-            </a>
-          )}
+              <img
+                src="https://images.unsplash.com/photo-1633409361618-c73427e4e206?q=80&w=800&auto=format&fit=crop"
+                alt="3D Data Analysis Model"
+                className="w-full h-full object-contain mix-blend-screen opacity-90 drop-shadow-[0_0_30px_rgba(29,185,84,0.4)]"
+                style={{ filter: 'hue-rotate(110deg) brightness(1.3) contrast(1.2)' }}
+              />
+            </div>
+          </div>
         </div>
 
         <div
           id="solucoes"
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-5xl mx-auto pt-24 scroll-mt-24"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-5xl mx-auto pt-32 scroll-mt-24 w-full"
         >
           {ecossistema.map((item, index) => (
             <div
