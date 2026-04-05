@@ -4,6 +4,7 @@ import { Footer } from '@/components/sections/footer'
 import { Header } from '@/components/Header'
 import { useAuth } from '@/contexts/AuthContext'
 import { useSubscription } from '@/hooks/useSubscription'
+import { SplineSceneBasic } from '@/components/sections/spline-scene-basic'
 
 export default function PaginaInicial() {
   const { user, loading: authLoading } = useAuth() as any
@@ -17,6 +18,9 @@ export default function PaginaInicial() {
       <Header />
       <main>
         <Hero />
+        <section className="container mx-auto px-4 py-16 md:py-24 relative z-10">
+          <SplineSceneBasic />
+        </section>
         {showPricing && <Pricing />}
       </main>
       <Footer />
