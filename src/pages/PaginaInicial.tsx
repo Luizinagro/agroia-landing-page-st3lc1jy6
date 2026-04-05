@@ -5,7 +5,6 @@ import { Header } from '@/components/Header'
 import { useAuth } from '@/contexts/AuthContext'
 import { useSubscription } from '@/hooks/useSubscription'
 import { SplineSceneBasic } from '@/components/sections/spline-scene-basic'
-import ScrollExpandMedia from '@/components/ui/scroll-expansion-hero'
 
 export default function PaginaInicial() {
   const { user, loading: authLoading } = useAuth() as any
@@ -17,26 +16,22 @@ export default function PaginaInicial() {
   return (
     <div className="min-h-screen bg-[#000000] text-foreground">
       <Header />
-      <main>
-        <ScrollExpandMedia
-          mediaType="video"
-          // Vídeo de agricultura de alta qualidade para a expansão imersiva
-          mediaSrc="https://www.youtube.com/watch?v=o0vE9Q20aU4"
-          // Imagem de fundo focada no agronegócio
-          bgImageSrc="https://images.unsplash.com/photo-1592982537447-6f2a6a0a5913?q=80&w=1920&auto=format&fit=crop"
-          title="AgroIA Inovação"
-          date="O Futuro do Campo"
-          scrollToExpand="Role para explorar a tecnologia"
-          textBlend={false}
-        >
-          <div className="w-full bg-black/95">
-            <Hero />
-            <section className="container mx-auto px-4 py-16 md:py-24 relative z-10">
-              <SplineSceneBasic />
-            </section>
-            {showPricing && <Pricing />}
+      <main className="flex flex-col w-full bg-black">
+        <Hero />
+        <section className="container mx-auto px-4 py-16 md:py-24 relative z-10 flex flex-col items-center justify-center min-h-[80vh]">
+          <div className="text-center mb-12 animate-fade-in-up">
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
+              AgroIA Inovação
+            </h2>
+            <p className="text-xl md:text-2xl text-green-400">
+              O Futuro do Campo em Análise de Dados
+            </p>
           </div>
-        </ScrollExpandMedia>
+          <div className="w-full max-w-6xl aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-green-500/10">
+            <SplineSceneBasic />
+          </div>
+        </section>
+        {showPricing && <Pricing />}
       </main>
       <Footer />
     </div>
