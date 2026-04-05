@@ -17,6 +17,8 @@
     <meta property="og:image" content="/og-image.png" />
     <meta property="og:url" content="https://agroia-landing-page-a72f6.goskip.app" />
     <meta property="og:type" content="website" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#1DB954" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -39,5 +41,16 @@
     <script src="https://goskip.dev/skip.js"></script>
     <!-- @skip-protected: Do not remove. App entrypoint. -->
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').then(registration => {
+            console.log('SW registered: ', registration);
+          }).catch(registrationError => {
+            console.log('SW registration failed: ', registrationError);
+          });
+        });
+      }
+    </script>
   </body>
 </html>

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { ShieldAlert } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { CrmOverview } from '@/components/crm/CrmOverview'
 
 export default function CRM() {
   const { user } = useAuth()
@@ -37,10 +38,10 @@ export default function CRM() {
 
   return (
     <div className="container mx-auto py-8 animate-fade-in">
-      <h1 className="text-3xl font-bold text-white mb-6">CRM (Admin)</h1>
-      <div className="bg-zinc-950 border border-primary/20 rounded-2xl p-8 text-center text-zinc-400 shadow-[0_0_15px_rgba(29,185,84,0.1)]">
-        <p>Módulo de CRM está sendo carregado...</p>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-3xl font-bold text-white">CRM (Admin)</h1>
       </div>
+      <CrmOverview />
     </div>
   )
 }

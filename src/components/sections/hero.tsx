@@ -100,9 +100,9 @@ const ecossistema = [
 ]
 
 const BACKGROUND_VIDEOS = [
-  'https://cdn.pixabay.com/video/2020/04/09/35817-408933091_large.mp4',
-  'https://cdn.pixabay.com/video/2019/04/10/22616-329712613_large.mp4',
-  'https://cdn.pixabay.com/video/2020/05/11/38600-418659103_large.mp4',
+  'https://cdn.coverr.co/videos/coverr-driving-a-tractor-2720/1080p.mp4',
+  'https://cdn.coverr.co/videos/coverr-wheat-field-in-the-wind-5085/1080p.mp4',
+  'https://cdn.coverr.co/videos/coverr-a-beautiful-sunrise-in-the-countryside-4966/1080p.mp4',
 ]
 
 export function Hero() {
@@ -122,15 +122,17 @@ export function Hero() {
     <section className="relative min-h-screen flex flex-col justify-center pt-24 pb-16 overflow-hidden">
       {bgVideoUrl && (
         <video
+          key={bgVideoUrl}
           autoPlay
           loop
           muted
           playsInline
-          src={bgVideoUrl}
-          className="absolute inset-0 w-full h-full object-cover -z-20 opacity-30 animate-fade-in"
-        />
+          className="absolute inset-0 w-full h-full object-cover -z-20 opacity-20 animate-fade-in"
+        >
+          <source src={bgVideoUrl} type="video/mp4" />
+        </video>
       )}
-      <div className="absolute inset-0 bg-black/60 -z-10 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-black/70 -z-10 pointer-events-none"></div>
 
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(29,185,84,0.15)_0,transparent_50%)] -z-10 pointer-events-none"></div>
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl -z-10 animate-float pointer-events-none"></div>
