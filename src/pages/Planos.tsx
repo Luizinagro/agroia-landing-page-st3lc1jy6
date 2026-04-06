@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useSubscription } from '@/hooks/useSubscription'
 import { supabase } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
-import { Check, Loader2 } from 'lucide-react'
+import { Check, X, Database, Headset, Shield, Loader2 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 
@@ -12,11 +12,31 @@ const PLANS = [
   {
     name: 'Básico',
     price: 'Grátis',
-    period: '',
+    period: '/ 7 dias',
     level: 0,
     features: ['dashboard'],
-    description: 'Comece sem custo e conheça a plataforma.',
-    featureLabels: ['Acesso inicial à plataforma', 'Visão geral dos recursos', 'Entrada sem risco'],
+    description: 'Ideal para: Produtores que querem conhecer a plataforma',
+    permissionsAllowed: [
+      'Criar conta e acessar plataforma',
+      'Visualizar dashboard básico',
+      'Adicionar 1 propriedade',
+      'Ver histórico de 7 dias',
+      'Acessar comunidade (leitura)',
+    ],
+    permissionsDenied: [
+      'Não pode postar na comunidade',
+      'Não pode usar IA Avançada',
+      'Não pode acessar calculadora ROI',
+      'Não pode usar marketplace',
+      'Não pode gerar relatórios avançados',
+    ],
+    limits: [
+      '1 propriedade',
+      '7 dias de histórico',
+      'Sem backup automático',
+      'Sem exportação de dados',
+    ],
+    support: ['Email apenas', 'Resposta em até 48h'],
   },
   {
     name: 'Plantio Solo',
@@ -24,13 +44,32 @@ const PLANS = [
     period: '/mês',
     level: 1,
     features: ['dashboard', 'roi', 'loja'],
-    description: 'Mais controle e previsibilidade para sua lavoura.',
-    featureLabels: [
-      'Gestão focada em plantio',
-      'Mais organização operacional',
-      'Calculadora de ROI',
-      'Loja de Insumos',
+    description: 'Ideal para: Produtores focados em lavoura',
+    permissionsAllowed: [
+      'Tudo do Básico +',
+      'Gestão completa de plantio',
+      'Criar múltiplas safras',
+      'Acompanhar ciclo de plantio',
+      'Receber alertas de clima',
+      'Calcular insumos necessários',
+      'Gerar relatórios mensais',
+      'Acessar histórico de 1 ano',
+      'Postar na comunidade',
     ],
+    permissionsDenied: [
+      'Não pode gerenciar rebanho',
+      'Não pode usar IA Avançada',
+      'Não pode acessar calculadora ROI',
+      'Não pode usar marketplace',
+      'Não pode integrar com APIs externas',
+    ],
+    limits: [
+      '3 propriedades',
+      '1 ano de histórico',
+      'Backup automático semanal',
+      'Exportação em PDF',
+    ],
+    support: ['Email prioritário', 'Resposta em até 24h', 'Chat de suporte básico'],
   },
   {
     name: 'Pecuária Solo',
@@ -38,13 +77,33 @@ const PLANS = [
     period: '/mês',
     level: 1,
     features: ['dashboard', 'pecuaria', 'rastreabilidade', 'loja'],
-    description: 'Mais precisão e controle na gestão do rebanho.',
-    featureLabels: [
-      'Gestão focada em pecuária',
-      'Melhor controle do rebanho',
-      'Rastreabilidade',
-      'Loja de Insumos',
+    description: 'Ideal para: Produtores focados em rebanho',
+    permissionsAllowed: [
+      'Tudo do Básico +',
+      'Gestão completa do rebanho',
+      'Rastrear animais individualmente',
+      'Alertas de cio (detecção de calor)',
+      'Histórico reprodutivo',
+      'Controle de vacinação',
+      'Cálculo de nutrição e ração',
+      'Gerar relatórios de desempenho',
+      'Acessar histórico de 1 ano',
+      'Postar na comunidade',
     ],
+    permissionsDenied: [
+      'Não pode gerenciar plantio',
+      'Não pode usar IA Avançada',
+      'Não pode acessar calculadora ROI',
+      'Não pode usar marketplace',
+      'Não pode integrar com APIs externas',
+    ],
+    limits: [
+      '3 propriedades',
+      '1 ano de histórico',
+      'Backup automático semanal',
+      'Exportação em PDF',
+    ],
+    support: ['Email prioritário', 'Resposta em até 24h', 'Chat de suporte básico'],
   },
   {
     name: 'Completo',
@@ -52,15 +111,43 @@ const PLANS = [
     period: '/mês',
     level: 2,
     features: ['dashboard', 'roi', 'loja', 'pecuaria', 'rastreabilidade'],
-    description: 'A solução ideal para quem quer visão total da operação.',
-    featureLabels: [
-      'Recursos integrados',
-      'Previsão IA',
-      'Rastreabilidade',
-      'Calculadora de ROI',
-      'Loja de Insumos',
-    ],
+    description: 'Ideal para: Produtores que querem visão total da operação',
     highlighted: true,
+    permissionsAllowed: [
+      'Tudo dos planos Solo +',
+      'IA Avançada (previsões)',
+      'Dashboard integrado',
+      'Calculadora ROI completa',
+      'Análise de rentabilidade',
+      'Rastreabilidade e ESG',
+      'Certificação sustentabilidade',
+      'Marketplace de insumos',
+      'Integração APIs (CEPEA)',
+      'Relatórios avançados',
+      'Histórico ilimitado',
+      'Postar e comentar na comunidade',
+      'Participar de grupos privados',
+      'Agendar consultoria (1x/mês)',
+    ],
+    permissionsDenied: [
+      'Não pode gerenciar múltiplos usuários',
+      'Não pode acessar API customizada',
+      'Não pode fazer integrações avançadas',
+    ],
+    limits: [
+      '5 propriedades',
+      'Histórico ilimitado',
+      'Backup automático diário',
+      'Exportação em PDF, Excel, CSV',
+      'Armazenamento de 50GB',
+    ],
+    support: [
+      'Email prioritário',
+      'Chat 24/7',
+      'Resposta em até 2h',
+      'Acesso a webinars e treinamentos',
+      'Suporte VIP',
+    ],
   },
   {
     name: 'Família Coop',
@@ -68,12 +155,56 @@ const PLANS = [
     period: '/mês',
     level: 3,
     features: ['dashboard', 'roi', 'loja', 'pecuaria', 'rastreabilidade', 'multi_propriedade'],
-    description: 'Mais estrutura para operações maiores e gestão compartilhada.',
-    featureLabels: [
-      'Gestão compartilhada',
-      'Mais escala',
-      'Até 5 propriedades',
-      'Todos os recursos Completos',
+    description: 'Ideal para: Famílias, grupos e operações maiores',
+    permissionsAllowed: [
+      'Tudo do plano Completo +',
+      'Gerenciar até 5 usuários',
+      'Definir permissões por usuário',
+      'Visualizar relatórios consolidados',
+      'Análise comparativa',
+      'Consultoria dedicada mensal',
+      'Integração com terceiros',
+      'Acesso à API customizada',
+      'Criar integrações avançadas',
+      'Backup automático real-time',
+      'Armazenamento ilimitado',
+      'Acesso antecipado a features',
+      'Treinamento personalizado',
+    ],
+    permissionsDenied: [],
+    secondaryUsers: [
+      {
+        role: 'Gerente de Propriedade',
+        allowed: ['Visualizar dados da propriedade', 'Editar dados', 'Gerar relatórios'],
+        denied: ['Não pode gerenciar usuários', 'Não pode alterar configurações'],
+      },
+      {
+        role: 'Operacional (Campo)',
+        allowed: ['Visualizar dados', 'Registrar atividades', 'Receber alertas'],
+        denied: ['Não pode editar dados críticos', 'Não pode gerar relatórios'],
+      },
+      {
+        role: 'Consultor (Externo)',
+        allowed: ['Visualizar dados', 'Gerar relatórios'],
+        denied: ['Não pode editar dados', 'Não pode gerenciar usuários'],
+      },
+    ],
+    limits: [
+      '10 propriedades',
+      'Histórico ilimitado',
+      'Backup em tempo real',
+      'Exportação todos formatos',
+      'Armazenamento ilimitado',
+      'API customizada',
+    ],
+    support: [
+      'Email VIP',
+      'Chat 24/7',
+      'Telefone dedicado',
+      'Resposta em até 30min',
+      'Consultoria mensal',
+      'Treinamento personalizado',
+      'Acesso antecipado a features',
     ],
   },
 ]
@@ -146,12 +277,12 @@ export default function Planos() {
           Evolua sua Gestão
         </h1>
         <p className="text-zinc-400 text-lg font-medium">
-          Escolha o plano ideal para a sua propriedade e libere todo o potencial da inteligência
-          artificial e rastreabilidade no campo.
+          Conheça as permissões, limites e acessos de cada plano para escolher a melhor estrutura
+          para a sua operação.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 max-w-6xl mx-auto mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 max-w-[1400px] mx-auto mb-6">
         {PLANS.slice(0, 3).map((plan) => (
           <PlanCard
             key={plan.name}
@@ -163,7 +294,7 @@ export default function Planos() {
           />
         ))}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-[920px] mx-auto mt-8">
         {PLANS.slice(3, 5).map((plan) => (
           <PlanCard
             key={plan.name}
@@ -190,7 +321,7 @@ function PlanCard({ plan, currentPlanName, currentPlanLevel, updating, onUpgrade
   return (
     <div
       className={cn(
-        'relative flex flex-col p-8 rounded-[2.2rem] transition-all duration-300',
+        'relative flex flex-col p-6 md:p-8 rounded-[2.2rem] transition-all duration-300',
         plan.highlighted || isCurrent
           ? 'bg-zinc-900/90 border-2 border-green-500 shadow-[0_0_40px_-15px_rgba(34,197,94,0.5)] z-10 scale-[1.02]'
           : 'bg-black border border-white/5 hover:bg-zinc-900/40 hover:border-white/10',
@@ -221,20 +352,98 @@ function PlanCard({ plan, currentPlanName, currentPlanLevel, updating, onUpgrade
         {plan.period && <span className="font-bold text-sm text-zinc-500">{plan.period}</span>}
       </div>
 
-      <ul className="space-y-4 mb-8 flex-1">
-        {plan.featureLabels.map((f: string, j: number) => (
-          <li key={j} className="flex items-start gap-3 text-sm font-semibold text-zinc-300">
-            <div className="mt-0.5 rounded-full p-1 bg-green-500/10 text-green-500 shrink-0">
-              <Check className="w-3 h-3" strokeWidth={3} />
+      <div className="flex-1 space-y-8 mb-8 border-t border-white/5 pt-6">
+        <div className="space-y-4">
+          <h4 className="text-xs font-black text-white uppercase tracking-widest flex items-center gap-2">
+            <Check className="w-4 h-4 text-green-500" /> Permissões do Usuário
+          </h4>
+          <ul className="space-y-3">
+            {plan.permissionsAllowed.map((f: string, j: number) => (
+              <li key={`allow-${j}`} className="flex items-start gap-3 text-sm text-zinc-300">
+                <div className="mt-0.5 rounded-full p-0.5 bg-green-500/10 text-green-500 shrink-0">
+                  <Check className="w-3 h-3" strokeWidth={3} />
+                </div>
+                <span className="leading-tight">{f}</span>
+              </li>
+            ))}
+            {plan.permissionsDenied?.map((f: string, j: number) => (
+              <li key={`deny-${j}`} className="flex items-start gap-3 text-sm text-zinc-500">
+                <div className="mt-0.5 rounded-full p-0.5 bg-red-500/10 text-red-500/70 shrink-0">
+                  <X className="w-3 h-3" strokeWidth={3} />
+                </div>
+                <span className="leading-tight">{f}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {plan.secondaryUsers && (
+          <div className="space-y-4">
+            <h4 className="text-xs font-black text-white uppercase tracking-widest flex items-center gap-2">
+              <Shield className="w-4 h-4 text-orange-500" /> Permissões Secundárias
+            </h4>
+            <div className="space-y-3">
+              {plan.secondaryUsers.map((role: any, j: number) => (
+                <div key={j} className="bg-white/5 rounded-xl p-4 border border-white/5">
+                  <h5 className="text-sm font-bold text-orange-400 mb-3">{role.role}</h5>
+                  <ul className="space-y-2">
+                    {role.allowed.map((f: string, k: number) => (
+                      <li
+                        key={`r-allow-${k}`}
+                        className="flex items-start gap-2 text-xs text-zinc-300"
+                      >
+                        <Check className="w-3 h-3 text-green-500 shrink-0 mt-0.5" />
+                        <span>{f}</span>
+                      </li>
+                    ))}
+                    {role.denied.map((f: string, k: number) => (
+                      <li
+                        key={`r-deny-${k}`}
+                        className="flex items-start gap-2 text-xs text-zinc-500"
+                      >
+                        <X className="w-3 h-3 text-red-500/70 shrink-0 mt-0.5" />
+                        <span>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
-            <span>{f}</span>
-          </li>
-        ))}
-      </ul>
+          </div>
+        )}
+
+        <div className="space-y-4">
+          <h4 className="text-xs font-black text-white uppercase tracking-widest flex items-center gap-2">
+            <Database className="w-4 h-4 text-blue-500" /> Limite de Dados
+          </h4>
+          <ul className="space-y-2">
+            {plan.limits.map((f: string, j: number) => (
+              <li key={`limit-${j}`} className="flex items-center gap-3 text-sm text-zinc-300">
+                <div className="w-1.5 h-1.5 rounded-full bg-blue-500/70 shrink-0" />
+                <span className="leading-tight">{f}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="space-y-4">
+          <h4 className="text-xs font-black text-white uppercase tracking-widest flex items-center gap-2">
+            <Headset className="w-4 h-4 text-purple-500" /> Suporte
+          </h4>
+          <ul className="space-y-2">
+            {plan.support.map((f: string, j: number) => (
+              <li key={`support-${j}`} className="flex items-center gap-3 text-sm text-zinc-300">
+                <div className="w-1.5 h-1.5 rounded-full bg-purple-500/70 shrink-0" />
+                <span className="leading-tight">{f}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
 
       <Button
         className={cn(
-          'w-full h-auto py-4 mt-4 rounded-full font-black text-sm tracking-wide uppercase transition-all duration-300 whitespace-normal text-center',
+          'w-full h-auto py-4 mt-auto rounded-full font-black text-sm tracking-wide uppercase transition-all duration-300 whitespace-normal text-center',
           isCurrent
             ? 'bg-zinc-800 text-zinc-400 hover:bg-zinc-800 cursor-not-allowed'
             : plan.highlighted

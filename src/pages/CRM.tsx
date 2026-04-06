@@ -8,6 +8,8 @@ import { CrmOverview } from '@/components/crm/CrmOverview'
 import { CrmLeads } from '@/components/crm/CrmLeads'
 import { CrmPipeline } from '@/components/crm/CrmPipeline'
 import { CrmReports } from '@/components/crm/CrmReports'
+import { CrmTasks } from '@/components/crm/CrmTasks'
+import { CheckSquare } from 'lucide-react'
 
 export default function CRM() {
   const { user } = useAuth()
@@ -79,6 +81,13 @@ export default function CRM() {
             <BarChart3 className="w-4 h-4 hidden sm:block" />
             Receita & Conversão
           </TabsTrigger>
+          <TabsTrigger
+            value="tasks"
+            className="data-[state=active]:bg-primary data-[state=active]:text-black flex items-center gap-2 flex-1 md:flex-none"
+          >
+            <CheckSquare className="w-4 h-4 hidden sm:block" />
+            Tarefas
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-0 outline-none animate-fade-in">
@@ -95,6 +104,10 @@ export default function CRM() {
 
         <TabsContent value="reports" className="mt-0 outline-none animate-fade-in">
           <CrmReports />
+        </TabsContent>
+
+        <TabsContent value="tasks" className="mt-0 outline-none animate-fade-in">
+          <CrmTasks />
         </TabsContent>
       </Tabs>
     </div>
