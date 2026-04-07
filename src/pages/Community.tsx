@@ -4,19 +4,11 @@ import { MessageSquare, PlayCircle, ShoppingBag, Tractor } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { GamificationCard } from '@/components/community/GamificationCard'
 import { SEO } from '@/components/SEO'
-import { Suspense, lazy } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { LogoText } from '@/components/ui/logo'
-
-const ForumTab = lazy(() =>
-  import('@/components/community/ForumTab').then((m) => ({ default: m.ForumTab })),
-)
-const LiveTab = lazy(() =>
-  import('@/components/community/LiveTab').then((m) => ({ default: m.LiveTab })),
-)
-const MarketplaceTab = lazy(() =>
-  import('@/components/community/MarketplaceTab').then((m) => ({ default: m.MarketplaceTab })),
-)
+import { ForumTab } from '@/components/community/ForumTab'
+import { LiveTab } from '@/components/community/LiveTab'
+import { MarketplaceTab } from '@/components/community/MarketplaceTab'
 
 export default function Community() {
   return (
@@ -89,39 +81,21 @@ export default function Community() {
             value="forum"
             className="animate-in fade-in slide-in-from-bottom-4 duration-500 focus-visible:outline-none"
           >
-            <Suspense
-              fallback={
-                <Skeleton className="w-full h-[400px] rounded-xl bg-[#050505] border border-primary/20" />
-              }
-            >
-              <ForumTab />
-            </Suspense>
+            <ForumTab />
           </TabsContent>
 
           <TabsContent
             value="live"
             className="animate-in fade-in slide-in-from-bottom-4 duration-500 focus-visible:outline-none"
           >
-            <Suspense
-              fallback={
-                <Skeleton className="w-full h-[400px] rounded-xl bg-[#050505] border border-primary/20" />
-              }
-            >
-              <LiveTab />
-            </Suspense>
+            <LiveTab />
           </TabsContent>
 
           <TabsContent
             value="marketplace"
             className="animate-in fade-in slide-in-from-bottom-4 duration-500 focus-visible:outline-none"
           >
-            <Suspense
-              fallback={
-                <Skeleton className="w-full h-[400px] rounded-xl bg-[#050505] border border-primary/20" />
-              }
-            >
-              <MarketplaceTab />
-            </Suspense>
+            <MarketplaceTab />
           </TabsContent>
         </Tabs>
       </main>
