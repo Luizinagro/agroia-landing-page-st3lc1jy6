@@ -5,6 +5,7 @@ import { Toaster as Sonner } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import PaginaInicial from './pages/PaginaInicial'
 import Dashboard from './pages/Dashboard'
+import DashboardConsolidado from './pages/DashboardConsolidado'
 import Community from './pages/Community'
 import Billing from './pages/Billing'
 import Pecuaria from './pages/Pecuaria'
@@ -49,6 +50,7 @@ const App = () => {
                   <Route path="/forgot-password" element={<ForgotPassword />} />
 
                   <Route element={<ProtectedRoute />}>
+                    <Route path="/dashboard-consolidado" element={<DashboardConsolidado />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/comunidade" element={<Community />} />
                     <Route path="/faturamento" element={<Billing />} />

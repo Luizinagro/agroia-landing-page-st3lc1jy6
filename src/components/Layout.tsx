@@ -27,6 +27,7 @@ import {
   MapPin,
   BrainCircuit,
   BookOpen,
+  TrendingUp,
 } from 'lucide-react'
 import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
@@ -45,6 +46,7 @@ export default function Layout() {
   const isAdmin = user?.user_type === 'admin' || user?.tipo_usuario === 'admin'
 
   const menuItems = [
+    { title: 'Dashboard Consolidado', icon: TrendingUp, path: '/dashboard-consolidado' },
     { title: 'Dashboard', icon: Home, path: '/dashboard' },
     { title: 'Monitoramento', icon: MapPin, path: '/monitoramento' },
     { title: 'Previsão IA', icon: BrainCircuit, path: '/previsao-ia' },
