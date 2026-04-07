@@ -1,7 +1,7 @@
 {
   "_versions": {
-    "gemini-forecast": 2,
-    "whatsapp-notifications": 1,
-    "cepea-prices": 2
+    "gemini-forecast": 3,
+    "whatsapp-notifications": 2,
+    "cepea-prices": 3
   }
 }
