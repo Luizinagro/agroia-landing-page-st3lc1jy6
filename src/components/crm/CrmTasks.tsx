@@ -33,11 +33,20 @@ export function CrmTasks() {
       } = await supabase.auth.getSession()
       if (!session) return
 
-      const { data, error } = await supabase
-        .from('crm_tasks')
-        .select('*')
-        .eq('user_id', session.user.id)
-        .order('created_at', { ascending: false })
+      const { data: userData } = await supabase
+        .from('users')
+        .select('user_type')
+        .eq('id', session.user.id)
+        .single()
+
+      const isAdmin = userData?.user_type === 'admin'
+
+      let query = supabase.from('crm_tasks').select('*').order('created_at', { ascending: false })
+      if (!isAdmin) {
+        query = query.eq('user_id', session.user.id)
+      }
+
+      const { data, error } = await query
 
       if (error) throw error
       setTasks(data || [])

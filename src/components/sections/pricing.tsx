@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Check, Loader2 } from 'lucide-react'
+import { Check, X, Info, Loader2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { supabase } from '@/lib/supabase/client'
 
@@ -24,12 +24,18 @@ const fallbackPlans: Plan[] = [
     periodo: ' por 7 dias',
     descricao: 'Produtores que querem conhecer a plataforma',
     features: [
-      'Acesso completo por 7 dias',
-      'Dashboard básico com visão geral',
-      'Até 1 propriedade',
-      'Histórico de 7 dias',
-      'Suporte por email',
-      'Comunidade de usuários',
+      '✅ Criar conta e acessar plataforma',
+      '✅ Visualizar dashboard básico',
+      '✅ Adicionar 1 propriedade',
+      '✅ Ver histórico de 7 dias',
+      '✅ Acessar comunidade (leitura)',
+      '❌ Não pode postar na comunidade',
+      '❌ Não pode usar IA Avançada',
+      '❌ Não pode acessar calculadora ROI',
+      '❌ Não pode usar marketplace',
+      '❌ Não pode gerar relatórios avançados',
+      'ℹ️ Limite de Dados: 1 propriedade, 7 dias de histórico',
+      'ℹ️ Suporte: Email apenas (resposta em até 48h)',
     ],
     botao: 'Começar Grátis',
     destaque: false,
@@ -42,16 +48,22 @@ const fallbackPlans: Plan[] = [
     periodo: '/mês',
     descricao: 'Produtores focados em lavoura',
     features: [
-      'Tudo do plano Básico +',
-      'Gestão completa de plantio',
-      'Acompanhamento de safras',
-      'Previsão de colheita',
-      'Alertas de clima e umidade',
-      'Cálculo de insumos',
-      'Histórico de 1 ano',
-      'Até 3 propriedades',
-      'Relatórios mensais',
-      'Suporte prioritário',
+      '✅ Tudo do Básico +',
+      '✅ Gestão completa de plantio',
+      '✅ Criar múltiplas safras',
+      '✅ Acompanhar ciclo de plantio',
+      '✅ Receber alertas de clima',
+      '✅ Calcular insumos necessários',
+      '✅ Gerar relatórios mensais',
+      '✅ Acessar histórico de 1 ano',
+      '✅ Postar na comunidade',
+      '❌ Não pode gerenciar rebanho',
+      '❌ Não pode usar IA Avançada',
+      '❌ Não pode acessar calculadora ROI',
+      '❌ Não pode usar marketplace',
+      '❌ Não pode integrar com APIs externas',
+      'ℹ️ Limite de Dados: 3 propriedades, 1 ano de histórico',
+      'ℹ️ Suporte: Email prioritário, Chat básico',
     ],
     botao: 'Assinar',
     destaque: false,
@@ -64,17 +76,23 @@ const fallbackPlans: Plan[] = [
     periodo: '/mês',
     descricao: 'Produtores focados em rebanho',
     features: [
-      'Tudo do plano Básico +',
-      'Gestão completa do rebanho',
-      'Rastreamento individual',
-      'Alertas de cio',
-      'Histórico reprodutivo',
-      'Controle de saúde',
-      'Cálculo de nutrição',
-      'Histórico de 1 ano',
-      'Até 3 propriedades',
-      'Relatórios de desempenho',
-      'Suporte prioritário',
+      '✅ Tudo do Básico +',
+      '✅ Gestão completa do rebanho',
+      '✅ Rastrear animais individualmente',
+      '✅ Alertas de cio (detecção de calor)',
+      '✅ Histórico reprodutivo',
+      '✅ Controle de vacinação',
+      '✅ Cálculo de nutrição e ração',
+      '✅ Gerar relatórios de desempenho',
+      '✅ Acessar histórico de 1 ano',
+      '✅ Postar na comunidade',
+      '❌ Não pode gerenciar plantio',
+      '❌ Não pode usar IA Avançada',
+      '❌ Não pode acessar calculadora ROI',
+      '❌ Não pode usar marketplace',
+      '❌ Não pode integrar com APIs externas',
+      'ℹ️ Limite de Dados: 3 propriedades, 1 ano de histórico',
+      'ℹ️ Suporte: Email prioritário, Chat básico',
     ],
     botao: 'Assinar',
     destaque: false,
@@ -87,17 +105,23 @@ const fallbackPlans: Plan[] = [
     periodo: '/mês',
     descricao: 'Produtores que querem visão total da operação',
     features: [
-      'Tudo dos planos Solo +',
-      'IA Avançada para previsões',
-      'Dashboard integrado',
-      'Calculadora ROI completa',
-      'Análise de rentabilidade',
-      'Rastreabilidade e ESG',
-      'Marketplace integrado',
-      'Até 5 propriedades',
-      'Histórico ilimitado',
-      'Integração CEPEA',
-      'Suporte 24/7',
+      '✅ Tudo dos planos Solo +',
+      '✅ IA Avançada (previsões e recomendações)',
+      '✅ Dashboard integrado',
+      '✅ Calculadora ROI completa',
+      '✅ Análise de rentabilidade',
+      '✅ Rastreabilidade e ESG',
+      '✅ Certificação de sustentabilidade',
+      '✅ Marketplace de insumos',
+      '✅ Integração com APIs de preço',
+      '✅ Gerar relatórios avançados',
+      '✅ Acessar histórico ilimitado',
+      '✅ Participar de grupos privados',
+      '✅ Agendar consultoria (1x/mês)',
+      '❌ Não pode gerenciar múltiplos usuários',
+      '❌ Não pode acessar API customizada',
+      'ℹ️ Limite de Dados: 5 propriedades, histórico ilimitado, 50GB',
+      'ℹ️ Suporte: Chat 24/7, VIP, webinars',
     ],
     botao: 'Escolher plano',
     destaque: true,
@@ -110,17 +134,19 @@ const fallbackPlans: Plan[] = [
     periodo: '/mês',
     descricao: 'Famílias, grupos e operações maiores',
     features: [
-      'Tudo do plano Completo +',
-      'Até 10 propriedades',
-      'Múltiplos usuários (até 5)',
-      'Gestão compartilhada',
-      'Relatórios consolidados',
-      'Consultoria dedicada',
-      'Integração com terceiros',
-      'API customizada',
-      'Backup avançado',
-      'Suporte VIP',
-      'Treinamento para equipe',
+      '✅ Tudo do plano Completo +',
+      '✅ Gerenciar até 5 usuários com permissões',
+      '✅ Visualizar relatórios consolidados',
+      '✅ Análise comparativa entre propriedades',
+      '✅ Consultoria dedicada mensal',
+      '✅ Integração com sistemas de terceiros',
+      '✅ Acesso à API customizada',
+      '✅ Backup automático em tempo real',
+      '✅ Armazenamento ilimitado',
+      '✅ Acesso antecipado a novas funcionalidades',
+      '✅ Treinamento personalizado para equipe',
+      'ℹ️ Limite de Dados: 10 propriedades, histórico ilimitado, API',
+      'ℹ️ Suporte: Email VIP, Telefone dedicado (30min)',
     ],
     botao: 'Assinar',
     destaque: false,
@@ -209,12 +235,30 @@ export function Pricing() {
               </div>
               <div className="flex-1 mb-8">
                 <ul className="space-y-3">
-                  {plan.features.map((feature, j) => (
-                    <li key={j} className="flex items-start text-zinc-300">
-                      <Check className="w-4 h-4 text-green-500 mr-2 shrink-0 mt-0.5" />
-                      <span className="text-sm leading-relaxed">{feature}</span>
-                    </li>
-                  ))}
+                  {plan.features.map((feature, j) => {
+                    const isNegative =
+                      feature.startsWith('❌') || feature.toLowerCase().includes('não pode')
+                    const isInfo =
+                      feature.startsWith('ℹ️') ||
+                      feature.toLowerCase().includes('limite') ||
+                      feature.toLowerCase().includes('suporte')
+                    const cleanFeature = feature.replace(/^[✅❌ℹ️]\s*/, '')
+                    return (
+                      <li
+                        key={j}
+                        className={`flex items-start ${isNegative ? 'text-zinc-500' : 'text-zinc-300'}`}
+                      >
+                        {isNegative ? (
+                          <X className="w-4 h-4 text-red-500 mr-2 shrink-0 mt-0.5" />
+                        ) : isInfo ? (
+                          <Info className="w-4 h-4 text-blue-400 mr-2 shrink-0 mt-0.5" />
+                        ) : (
+                          <Check className="w-4 h-4 text-green-500 mr-2 shrink-0 mt-0.5" />
+                        )}
+                        <span className="text-sm leading-relaxed">{cleanFeature}</span>
+                      </li>
+                    )
+                  })}
                 </ul>
               </div>
               <div className="mt-auto">
