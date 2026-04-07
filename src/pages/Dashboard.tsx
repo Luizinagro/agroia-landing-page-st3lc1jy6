@@ -25,6 +25,7 @@ import {
   X,
 } from 'lucide-react'
 import { Pricing } from '@/components/sections/pricing'
+import { FarmForecastWidget } from '@/components/dashboard/farm-forecast-widget'
 
 const Dashboard = () => {
   const { user } = useAuth() as any
@@ -190,6 +191,10 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
+        </section>
+
+        <section className="animate-fade-in-up">
+          <FarmForecastWidget />
         </section>
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
