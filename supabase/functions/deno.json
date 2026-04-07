@@ -3,6 +3,7 @@
     "gemini-forecast": 3,
     "whatsapp-notifications": 2,
     "cepea-prices": 3,
-    "gemini-previsao-safra": 2
+    "gemini-previsao-safra": 2,
+    "buscar-dados-inmet": 1
   }
 }
