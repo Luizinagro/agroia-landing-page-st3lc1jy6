@@ -28,6 +28,7 @@ import { Pricing } from '@/components/sections/pricing'
 import { FarmForecastWidget } from '@/components/dashboard/farm-forecast-widget'
 import { FarmClimateWidget } from '@/components/dashboard/farm-climate-widget'
 import { IntelligentRecommendationsWidget } from '@/components/dashboard/intelligent-recommendations-widget'
+import { RealTimeAlertsWidget } from '@/components/dashboard/real-time-alerts-widget'
 
 const Dashboard = () => {
   const { user } = useAuth() as any
@@ -205,6 +206,10 @@ const Dashboard = () => {
 
         <section className="animate-fade-in-up mt-8">
           <IntelligentRecommendationsWidget />
+        </section>
+
+        <section className="animate-fade-in-up mt-8">
+          <RealTimeAlertsWidget />
         </section>
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mt-8">
