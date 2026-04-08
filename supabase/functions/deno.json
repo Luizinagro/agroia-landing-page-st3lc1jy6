@@ -1,11 +1,11 @@
 {
   "_versions": {
-    "gemini-forecast": 3,
+    "gemini-forecast": 4,
     "whatsapp-notifications": 2,
     "cepea-prices": 3,
-    "gemini-previsao-safra": 2,
+    "gemini-previsao-safra": 3,
     "buscar-dados-inmet": 1,
-    "gemini-recomendacoes": 1,
+    "gemini-recomendacoes": 2,
     "gerar-alertas": 1
   }
 }
