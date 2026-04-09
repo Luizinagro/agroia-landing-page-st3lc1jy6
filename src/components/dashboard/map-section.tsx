@@ -76,9 +76,9 @@ export function MapSection() {
           <img
             src="https://img.usecurling.com/p/1200/600?q=satellite%20farm%20field&dpr=2"
             alt="Satélite AgroIA"
-            className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-[10s] ease-out mix-blend-luminosity brightness-75"
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[10s] ease-out"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none z-10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none z-10" />
 
           {regions.map((region) => (
             <button

@@ -25,7 +25,9 @@ interface Task {
 
 export function CrmTasks() {
   const [tasks, setTasks] = useState<Task[]>([])
-  const [teamUsers, setTeamUsers] = useState<{ id: string; name: string; email: string }[]>([])
+  const [teamUsers, setTeamUsers] = useState<
+    { id: string; name: string; email: string; user_type?: string }[]
+  >([])
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [selectedAssignee, setSelectedAssignee] = useState<string>('me')
   const [loading, setLoading] = useState(true)
@@ -79,13 +81,23 @@ export function CrmTasks() {
     try {
       if (!currentUser) throw new Error('Usuário não autenticado')
 
-      const assignToId = selectedAssignee === 'me' ? currentUser.id : selectedAssignee
       const currentUserName =
         teamUsers.find((u) => u.id === currentUser.id)?.name || currentUser.email
 
-      const { data, error } = await supabase
-        .from('crm_tasks')
-        .insert([
+      let tasksToInsert = []
+
+      if (selectedAssignee === 'all') {
+        const admins = teamUsers.filter((u) => u.user_type === 'admin')
+        tasksToInsert = admins.map((admin) => ({
+          title: newTask.trim(),
+          user_id: admin.id,
+          status: 'pendente',
+          assigned_by: currentUser.id,
+          assigned_by_name: currentUserName,
+        }))
+      } else {
+        const assignToId = selectedAssignee === 'me' ? currentUser.id : selectedAssignee
+        tasksToInsert = [
           {
             title: newTask.trim(),
             user_id: assignToId,
@@ -93,12 +105,20 @@ export function CrmTasks() {
             assigned_by: currentUser.id,
             assigned_by_name: currentUserName,
           },
-        ])
-        .select()
-        .single()
+        ]
+      }
+
+      const { data, error } = await supabase.from('crm_tasks').insert(tasksToInsert).select()
 
       if (error) throw error
-      setTasks([data, ...tasks])
+
+      if (data) {
+        setTasks((prev) =>
+          [...data, ...prev].sort(
+            (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+          ),
+        )
+      }
       setNewTask('')
       toast({ title: 'Tarefa adicionada com sucesso' })
     } catch (error: any) {
@@ -175,13 +195,18 @@ export function CrmTasks() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="me">Para mim</SelectItem>
-                {teamUsers
-                  .filter((u) => u.id !== currentUser?.id)
-                  .map((u) => (
-                    <SelectItem key={u.id} value={u.id}>
-                      {u.name || u.email}
-                    </SelectItem>
-                  ))}
+                {teamUsers.find((u) => u.id === currentUser?.id)?.user_type === 'admin' && (
+                  <>
+                    <SelectItem value="all">Todos os Admins</SelectItem>
+                    {teamUsers
+                      .filter((u) => u.user_type === 'admin' && u.id !== currentUser?.id)
+                      .map((u) => (
+                        <SelectItem key={u.id} value={u.id}>
+                          {u.name || u.email}
+                        </SelectItem>
+                      ))}
+                  </>
+                )}
               </SelectContent>
             </Select>
             <Button

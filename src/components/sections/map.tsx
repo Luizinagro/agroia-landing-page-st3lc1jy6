@@ -33,8 +33,8 @@ export function InteractiveMap() {
             <div className="absolute -inset-4 bg-green-500/10 blur-3xl rounded-full"></div>
             <div className="relative w-full aspect-[4/3] bg-zinc-900 rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
               {/* Realistic Map Background */}
-              <div className="absolute inset-0 bg-[url('https://img.usecurling.com/p/800/600?q=realistic%20satellite%20farm%20field%20map')] bg-cover bg-center opacity-60 mix-blend-luminosity hover:mix-blend-normal transition-all duration-700"></div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none"></div>
+              <div className="absolute inset-0 bg-[url('https://img.usecurling.com/p/800/600?q=realistic%20satellite%20farm%20field%20map')] bg-cover bg-center transition-all duration-700"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
 
               {/* Dynamic Map Points */}
               <div className="absolute top-[35%] left-[45%] group cursor-pointer z-10">
