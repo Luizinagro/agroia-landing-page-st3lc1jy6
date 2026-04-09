@@ -71,26 +71,20 @@ export function MapSection() {
         </CardDescription>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="relative w-full aspect-[4/3] sm:aspect-[21/9] bg-gradient-to-br from-primary/10 to-primary/20 overflow-hidden">
-          {/* Decorative Map Pattern */}
-          <div
-            className="absolute inset-0 opacity-20 pointer-events-none"
-            style={{
-              backgroundImage:
-                'radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0)',
-              backgroundSize: '32px 32px',
-            }}
+        <div className="relative w-full aspect-[4/3] sm:aspect-[21/9] bg-black overflow-hidden group">
+          {/* Realistic Satellite Background */}
+          <img
+            src="https://img.usecurling.com/p/1200/600?q=satellite%20farm%20field&dpr=2"
+            alt="Satélite AgroIA"
+            className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-[10s] ease-out mix-blend-luminosity brightness-75"
           />
-
-          {/* Abstract map shapes to represent regions */}
-          <div className="absolute top-[20%] left-[10%] w-[40%] h-[50%] bg-primary/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-[20%] right-[10%] w-[30%] h-[40%] bg-secondary/20 rounded-full blur-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none z-10" />
 
           {regions.map((region) => (
             <button
               key={region.id}
               onClick={() => setSelectedRegion(region)}
-              className="absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center group animate-float"
+              className="absolute z-20 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center group/pin animate-float hover:scale-110 transition-transform cursor-pointer"
               style={{
                 left: `${region.coordinates.x}%`,
                 top: `${region.coordinates.y}%`,
@@ -100,15 +94,15 @@ export function MapSection() {
             >
               <div className="relative">
                 <MapPin
-                  className="w-10 h-10 text-primary group-hover:text-secondary transition-colors duration-300 drop-shadow-lg"
+                  className="w-10 h-10 text-primary group-hover/pin:text-secondary transition-colors duration-300 drop-shadow-[0_0_10px_rgba(29,185,84,0.8)]"
                   fill="currentColor"
                 />
                 <span className="absolute -top-1 -right-1 flex h-4 w-4">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75 duration-1000"></span>
-                  <span className="relative inline-flex rounded-full h-4 w-4 bg-destructive border-2 border-white dark:border-background"></span>
+                  <span className="relative inline-flex rounded-full h-4 w-4 bg-destructive border-2 border-black"></span>
                 </span>
               </div>
-              <span className="mt-2 px-3 py-1 bg-white/95 dark:bg-black/95 text-primary dark:text-primary-foreground text-sm font-bold rounded-full shadow-md whitespace-nowrap group-hover:scale-105 transition-transform">
+              <span className="mt-2 px-3 py-1 bg-black/80 backdrop-blur-md border border-primary/30 text-white text-sm font-bold rounded-full shadow-lg whitespace-nowrap group-hover/pin:border-primary transition-colors">
                 {region.name}
               </span>
             </button>

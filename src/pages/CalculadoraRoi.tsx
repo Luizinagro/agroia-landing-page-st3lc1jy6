@@ -49,7 +49,7 @@ export default function CalculadoraRoi() {
   // Novos estados para a integração com CEPEA
   const [prices, setPrices] = useState<Record<string, number>>({})
   const [cultura, setCultura] = useState<string>('Outro')
-  const [quantidadeToneladas, setQuantidadeToneladas] = useState<number>(0)
+  const [quantidadeSacas, setQuantidadeSacas] = useState<number>(0)
 
   useEffect(() => {
     const fetchPrices = async () => {
@@ -66,10 +66,11 @@ export default function CalculadoraRoi() {
   }, [])
 
   useEffect(() => {
-    if (cultura !== 'Outro' && prices[cultura] && quantidadeToneladas > 0) {
-      setReceitaEsperada(prices[cultura] * quantidadeToneladas)
+    if (cultura !== 'Outro' && prices[cultura] && quantidadeSacas > 0) {
+      const precoSaca = prices[cultura] * 0.06 // Conversão tonelada para saca de 60kg
+      setReceitaEsperada(precoSaca * quantidadeSacas)
     }
-  }, [cultura, quantidadeToneladas, prices])
+  }, [cultura, quantidadeSacas, prices])
 
   const { lucroLiquido, margemLucro, roi, payback, chartData } = useMemo(() => {
     const custo = custoTotal || 0
@@ -216,20 +217,20 @@ export default function CalculadoraRoi() {
                 {cultura !== 'Outro' && (
                   <div className="space-y-2">
                     <Label htmlFor="quantidade" className="text-[#FFFFFF] font-semibold">
-                      Quantidade de Produção (Toneladas)
+                      Quantidade de Produção (Sacas de 60kg)
                     </Label>
                     <Input
                       id="quantidade"
                       type="number"
                       min="0"
-                      value={quantidadeToneladas || ''}
-                      onChange={(e) => setQuantidadeToneladas(Number(e.target.value))}
+                      value={quantidadeSacas || ''}
+                      onChange={(e) => setQuantidadeSacas(Number(e.target.value))}
                       className="bg-[#000000] border-[#1DB954]/20 text-[#FFFFFF] focus-visible:ring-[#1DB954]"
                     />
                     {prices[cultura] && (
                       <p className="text-xs text-[#E0E0E0] mt-1 flex items-center gap-1 font-medium">
                         <TrendingUp className="w-3 h-3 text-[#1DB954]" />
-                        Preço base (CEPEA): {formatCurrency(prices[cultura])} / ton
+                        Preço base (CEPEA): {formatCurrency(prices[cultura] * 0.06)} / saca
                       </p>
                     )}
                   </div>
@@ -252,7 +253,7 @@ export default function CalculadoraRoi() {
                 <div className="space-y-2">
                   <Label htmlFor="receitaEsperada" className="text-[#FFFFFF] font-semibold">
                     Receita Esperada (R$){' '}
-                    {cultura !== 'Outro' && quantidadeToneladas > 0 && (
+                    {cultura !== 'Outro' && quantidadeSacas > 0 && (
                       <span className="text-xs text-[#1DB954] font-medium ml-1">
                         (Auto-calculado)
                       </span>
@@ -266,7 +267,7 @@ export default function CalculadoraRoi() {
                     onChange={(e) => setReceitaEsperada(Number(e.target.value))}
                     className={cn(
                       'bg-[#000000] border-[#1DB954]/20 text-[#FFFFFF] focus-visible:ring-[#1DB954]',
-                      cultura !== 'Outro' && quantidadeToneladas > 0
+                      cultura !== 'Outro' && quantidadeSacas > 0
                         ? 'border-[#1DB954]/50 bg-[#1DB954]/5'
                         : '',
                     )}

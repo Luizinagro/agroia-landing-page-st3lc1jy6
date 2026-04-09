@@ -20,8 +20,8 @@ export default function PrevisaoIA() {
   const [quantidade, setQuantidade] = useState<string>('')
   const [resultado, setResultado] = useState<{
     cultura: string
-    quantidade: number
-    precos: { current: number; d30: number; d60: number }
+    quantidadeSacas: number
+    precosSaca: { current: number; d30: number; d60: number }
     recommendation: string
   } | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -40,7 +40,8 @@ export default function PrevisaoIA() {
 
       if (data?.data) {
         const trendData = data.data.trend_data || []
-        const current = data.data.current_price
+        const currentTon = data.data.current_price
+        const precoSacaAtual = currentTon * 0.06
 
         // Safety check to ensure we don't go out of bounds
         const d30Index = Math.min(29, trendData.length - 1)
@@ -48,11 +49,11 @@ export default function PrevisaoIA() {
 
         setResultado({
           cultura,
-          quantidade: Number(quantidade),
-          precos: {
-            current: current,
-            d30: trendData[d30Index]?.price || current,
-            d60: trendData[d60Index]?.price || current,
+          quantidadeSacas: Number(quantidade),
+          precosSaca: {
+            current: precoSacaAtual,
+            d30: (trendData[d30Index]?.price || currentTon) * 0.06,
+            d60: (trendData[d60Index]?.price || currentTon) * 0.06,
           },
           recommendation: data.data.recommendation,
         })
@@ -114,11 +115,11 @@ export default function PrevisaoIA() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-[#FFFFFF] font-semibold">Quantidade (Toneladas)</Label>
+                  <Label className="text-[#FFFFFF] font-semibold">Quantidade (Sacas de 60kg)</Label>
                   <Input
                     type="number"
                     min="1"
-                    placeholder="Ex: 100"
+                    placeholder="Ex: 1000"
                     value={quantidade}
                     onChange={(e) => setQuantidade(e.target.value)}
                     className="bg-[#000000] border-[#1DB954]/20 text-[#FFFFFF] focus-visible:ring-[#1DB954]"
@@ -147,23 +148,24 @@ export default function PrevisaoIA() {
               <div className="space-y-6">
                 <h2 className="text-xl font-bold border-b border-[#1DB954]/20 pb-2 flex items-center gap-2 text-[#FFFFFF]">
                   <LineChart className="h-5 w-5 text-[#1DB954]" />
-                  Resultados para {resultado.quantidade} ton de {resultado.cultura}
+                  Resultados para {resultado.quantidadeSacas} sacas de {resultado.cultura}
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Card className="bg-[#050505] border-[#1DB954]/20">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-sm font-bold text-[#E0E0E0] flex items-center justify-between">
-                        Preço Atual (R$/ton)
+                        Preço Atual (R$/saca)
                         <DollarSign className="h-4 w-4 text-[#1DB954]" />
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="text-2xl font-bold text-[#FFFFFF]">
-                        {formatCurrency(resultado.precos.current)}
+                        {formatCurrency(resultado.precosSaca.current)}
                       </div>
                       <p className="text-xs text-[#E0E0E0] mt-1 font-medium">
-                        Total: {formatCurrency(resultado.precos.current * resultado.quantidade)}
+                        Total:{' '}
+                        {formatCurrency(resultado.precosSaca.current * resultado.quantidadeSacas)}
                       </p>
                     </CardContent>
                   </Card>
@@ -175,7 +177,7 @@ export default function PrevisaoIA() {
                     <CardHeader className="pb-2">
                       <CardTitle className="text-sm font-bold text-[#E0E0E0] flex items-center justify-between">
                         Previsão 30 dias
-                        {resultado.precos.d30 > resultado.precos.current ? (
+                        {resultado.precosSaca.d30 > resultado.precosSaca.current ? (
                           <TrendingUp className="h-4 w-4 text-[#1DB954]" />
                         ) : (
                           <TrendingDown className="h-4 w-4 text-red-500" />
@@ -184,22 +186,23 @@ export default function PrevisaoIA() {
                     </CardHeader>
                     <CardContent>
                       <div className="text-2xl font-bold text-[#FFFFFF]">
-                        {formatCurrency(resultado.precos.d30)}
+                        {formatCurrency(resultado.precosSaca.d30)}
                       </div>
                       <p className="text-xs text-[#E0E0E0] mt-1 font-medium">
-                        Total: {formatCurrency(resultado.precos.d30 * resultado.quantidade)}
+                        Total:{' '}
+                        {formatCurrency(resultado.precosSaca.d30 * resultado.quantidadeSacas)}
                       </p>
                       <div
                         className={cn(
                           'text-xs font-bold mt-2',
-                          resultado.precos.d30 > resultado.precos.current
+                          resultado.precosSaca.d30 > resultado.precosSaca.current
                             ? 'text-[#1DB954]'
                             : 'text-red-500',
                         )}
                       >
                         {(
-                          ((resultado.precos.d30 - resultado.precos.current) /
-                            resultado.precos.current) *
+                          ((resultado.precosSaca.d30 - resultado.precosSaca.current) /
+                            resultado.precosSaca.current) *
                           100
                         ).toFixed(1)}
                         % vs Atual
@@ -214,7 +217,7 @@ export default function PrevisaoIA() {
                     <CardHeader className="pb-2">
                       <CardTitle className="text-sm font-bold text-[#E0E0E0] flex items-center justify-between">
                         Previsão 60 dias
-                        {resultado.precos.d60 > resultado.precos.current ? (
+                        {resultado.precosSaca.d60 > resultado.precosSaca.current ? (
                           <TrendingUp className="h-4 w-4 text-[#1DB954]" />
                         ) : (
                           <TrendingDown className="h-4 w-4 text-red-500" />
@@ -223,22 +226,23 @@ export default function PrevisaoIA() {
                     </CardHeader>
                     <CardContent>
                       <div className="text-2xl font-bold text-[#FFFFFF]">
-                        {formatCurrency(resultado.precos.d60)}
+                        {formatCurrency(resultado.precosSaca.d60)}
                       </div>
                       <p className="text-xs text-[#E0E0E0] mt-1 font-medium">
-                        Total: {formatCurrency(resultado.precos.d60 * resultado.quantidade)}
+                        Total:{' '}
+                        {formatCurrency(resultado.precosSaca.d60 * resultado.quantidadeSacas)}
                       </p>
                       <div
                         className={cn(
                           'text-xs font-bold mt-2',
-                          resultado.precos.d60 > resultado.precos.current
+                          resultado.precosSaca.d60 > resultado.precosSaca.current
                             ? 'text-[#1DB954]'
                             : 'text-red-500',
                         )}
                       >
                         {(
-                          ((resultado.precos.d60 - resultado.precos.current) /
-                            resultado.precos.current) *
+                          ((resultado.precosSaca.d60 - resultado.precosSaca.current) /
+                            resultado.precosSaca.current) *
                           100
                         ).toFixed(1)}
                         % vs Atual
