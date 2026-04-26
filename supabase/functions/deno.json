@@ -6,6 +6,7 @@
     "gemini-previsao-safra": 5,
     "buscar-dados-inmet": 3,
     "gemini-recomendacoes": 4,
-    "gerar-alertas": 3
+    "gerar-alertas": 3,
+    "calcular-cio": 1
   }
 }
