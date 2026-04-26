@@ -8,6 +8,7 @@
     "gemini-recomendacoes": 4,
     "gerar-alertas": 3,
     "calcular-cio": 1,
-    "gerar-alertas-cio": 1
+    "gerar-alertas-cio": 1,
+    "buscar-preco-saca": 1
   }
 }

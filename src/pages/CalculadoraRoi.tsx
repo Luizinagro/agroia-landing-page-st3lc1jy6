@@ -47,30 +47,54 @@ export default function CalculadoraRoi() {
   const [isSaving, setIsSaving] = useState(false)
 
   // Novos estados para a integração com CEPEA
-  const [prices, setPrices] = useState<Record<string, number>>({})
   const [cultura, setCultura] = useState<string>('Outro')
   const [quantidadeSacas, setQuantidadeSacas] = useState<number>(0)
+  const [precoSacaAtual, setPrecoSacaAtual] = useState<number | null>(null)
+  const [isFetchingPrice, setIsFetchingPrice] = useState(false)
 
   useEffect(() => {
-    const fetchPrices = async () => {
+    const fetchPrice = async () => {
+      if (cultura === 'Outro' || quantidadeSacas <= 0) {
+        setPrecoSacaAtual(null)
+        return
+      }
+
+      setIsFetchingPrice(true)
       try {
-        const { data, error } = await supabase.functions.invoke('cepea-prices')
-        if (data?.prices) {
-          setPrices(data.prices)
+        const { data, error } = await supabase.functions.invoke('buscar-preco-saca', {
+          body: { cultura: cultura.toLowerCase(), quantidade: quantidadeSacas },
+        })
+
+        if (error) throw error
+
+        if (data && data.preco_saca) {
+          setPrecoSacaAtual(data.preco_saca)
+          setReceitaEsperada(data.valor_total)
+        } else if (data && data.error) {
+          toast({
+            title: 'Erro ao buscar cotação',
+            description: data.error,
+            variant: 'destructive',
+          })
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Erro ao buscar preços:', error)
+        toast({
+          title: 'Erro ao buscar cotação',
+          description: 'Não conseguimos buscar o preço no momento. Tente novamente.',
+          variant: 'destructive',
+        })
+      } finally {
+        setIsFetchingPrice(false)
       }
     }
-    fetchPrices()
-  }, [])
 
-  useEffect(() => {
-    if (cultura !== 'Outro' && prices[cultura] && quantidadeSacas > 0) {
-      const precoSaca = prices[cultura] * 0.06 // Conversão tonelada para saca de 60kg
-      setReceitaEsperada(precoSaca * quantidadeSacas)
-    }
-  }, [cultura, quantidadeSacas, prices])
+    const timeoutId = setTimeout(() => {
+      fetchPrice()
+    }, 500)
+
+    return () => clearTimeout(timeoutId)
+  }, [cultura, quantidadeSacas])
 
   const { lucroLiquido, margemLucro, roi, payback, chartData } = useMemo(() => {
     const custo = custoTotal || 0
@@ -227,12 +251,17 @@ export default function CalculadoraRoi() {
                       onChange={(e) => setQuantidadeSacas(Number(e.target.value))}
                       className="bg-[#000000] border-[#1DB954]/20 text-[#FFFFFF] focus-visible:ring-[#1DB954]"
                     />
-                    {prices[cultura] && (
+                    {isFetchingPrice ? (
+                      <p className="text-xs text-[#E0E0E0] mt-1 flex items-center gap-1 font-medium">
+                        <Loader2 className="w-3 h-3 text-[#1DB954] animate-spin" />
+                        Buscando cotação em tempo real...
+                      </p>
+                    ) : precoSacaAtual ? (
                       <p className="text-xs text-[#E0E0E0] mt-1 flex items-center gap-1 font-medium">
                         <TrendingUp className="w-3 h-3 text-[#1DB954]" />
-                        Preço base (CEPEA): {formatCurrency(prices[cultura] * 0.06)} / saca
+                        Preço base (CEPEA): {formatCurrency(precoSacaAtual)} / saca
                       </p>
-                    )}
+                    ) : null}
                   </div>
                 )}
 
