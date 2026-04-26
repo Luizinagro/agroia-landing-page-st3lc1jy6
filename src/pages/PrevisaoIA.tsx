@@ -10,10 +10,19 @@ import {
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { LineChart, TrendingUp, TrendingDown, DollarSign, Loader2, Bot } from 'lucide-react'
+import {
+  LineChart,
+  TrendingUp,
+  TrendingDown,
+  DollarSign,
+  Loader2,
+  Bot,
+  AlertCircle,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { supabase } from '@/lib/supabase/client'
 import { useToast } from '@/hooks/use-toast'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function PrevisaoIA() {
   const [cultura, setCultura] = useState<string>('Soja')
@@ -25,10 +34,47 @@ export default function PrevisaoIA() {
     recommendation: string
   } | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+
+  const [isLoadingSaca, setIsLoadingSaca] = useState(false)
+  const [precoSacaData, setPrecoSacaData] = useState<{
+    preco_saca: number
+    quantidade: number
+    valor_total: number
+    data_atualizacao: string
+  } | null>(null)
+  const [precoSacaError, setPrecoSacaError] = useState<string | null>(null)
+
   const { toast } = useToast()
 
-  const handleBuscarPreco = async () => {
+  const buscarPrecoSaca = async () => {
     if (!quantidade || isNaN(Number(quantidade))) return
+    setIsLoadingSaca(true)
+    setPrecoSacaError(null)
+    setPrecoSacaData(null)
+
+    try {
+      const { data, error } = await supabase.functions.invoke('buscar-preco-saca', {
+        body: { cultura, quantidade: Number(quantidade) },
+      })
+
+      if (error) throw error
+
+      if (data?.error) {
+        throw new Error(data.error)
+      }
+
+      setPrecoSacaData(data)
+    } catch (err: any) {
+      console.error(err)
+      setPrecoSacaError(
+        err.message || 'Não conseguimos buscar o preço no momento. Tente novamente.',
+      )
+    } finally {
+      setIsLoadingSaca(false)
+    }
+  }
+
+  const buscarPrevisaoIA = async () => {
     setIsLoading(true)
 
     try {
@@ -70,6 +116,12 @@ export default function PrevisaoIA() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const handleBuscarPreco = () => {
+    if (!quantidade || isNaN(Number(quantidade))) return
+    buscarPrecoSaca()
+    buscarPrevisaoIA()
   }
 
   const formatCurrency = (value: number) =>
@@ -129,9 +181,9 @@ export default function PrevisaoIA() {
                 <Button
                   className="w-full btn-agro-primary font-bold"
                   onClick={handleBuscarPreco}
-                  disabled={isLoading || !quantidade}
+                  disabled={isLoading || isLoadingSaca || !quantidade}
                 >
-                  {isLoading ? (
+                  {isLoading || isLoadingSaca ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Calculando Previsões...
                     </>
@@ -143,8 +195,83 @@ export default function PrevisaoIA() {
             </Card>
           </div>
 
-          <div className="lg:col-span-8">
-            {resultado ? (
+          <div className="lg:col-span-8 space-y-6">
+            {(isLoadingSaca || precoSacaData || precoSacaError) && (
+              <div className="w-full">
+                {isLoadingSaca ? (
+                  <div className="p-[1px] rounded-xl bg-gradient-to-r from-[#1DB954] to-[#00B4D8] animate-pulse shadow-lg">
+                    <div className="bg-[#050505] rounded-xl p-6 space-y-4">
+                      <Skeleton className="h-6 w-1/3 bg-[#1DB954]/20" />
+                      <Skeleton className="h-10 w-1/4 bg-[#1DB954]/20" />
+                      <div className="grid grid-cols-2 gap-4 mt-4">
+                        <Skeleton className="h-12 w-full bg-[#1DB954]/20" />
+                        <Skeleton className="h-12 w-full bg-[#1DB954]/20" />
+                      </div>
+                    </div>
+                  </div>
+                ) : precoSacaError ? (
+                  <div className="p-[1px] rounded-xl bg-gradient-to-r from-red-500 to-orange-500 shadow-lg">
+                    <div className="bg-[#050505] rounded-xl p-8 flex flex-col items-center justify-center text-center space-y-4">
+                      <AlertCircle className="w-10 h-10 text-red-500 mb-2" />
+                      <p className="text-red-400 font-medium text-lg">{precoSacaError}</p>
+                      <Button
+                        onClick={buscarPrecoSaca}
+                        variant="outline"
+                        className="border-red-500/50 text-red-400 hover:bg-red-500/10 mt-2"
+                      >
+                        Tentar Novamente
+                      </Button>
+                    </div>
+                  </div>
+                ) : precoSacaData ? (
+                  <div className="p-[1px] rounded-xl bg-gradient-to-r from-[#1DB954] to-[#00B4D8] shadow-[0_0_20px_rgba(0,180,216,0.15)] transition-all duration-300 hover:shadow-[0_0_30px_rgba(29,185,84,0.25)]">
+                    <div className="bg-[#050505] rounded-xl p-6 flex flex-col justify-between">
+                      <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                        <div>
+                          <h3 className="text-sm font-bold text-[#E0E0E0] mb-2 flex items-center gap-2 uppercase tracking-wider">
+                            Cotação Atual (CEPEA)
+                            <DollarSign className="h-4 w-4 text-[#00B4D8]" />
+                          </h3>
+                          <div className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#1DB954] to-[#00B4D8]">
+                            {formatCurrency(precoSacaData.preco_saca)}{' '}
+                            <span className="text-sm text-[#A0A0A0] font-normal">/ saca</span>
+                          </div>
+                        </div>
+                        <div className="flex gap-8 bg-[#000000] p-4 rounded-lg border border-[#1DB954]/10">
+                          <div>
+                            <p className="text-xs text-[#A0A0A0] mb-1 uppercase tracking-wider">
+                              Quantidade
+                            </p>
+                            <p className="text-xl font-semibold text-[#FFFFFF]">
+                              {precoSacaData.quantidade} sacas
+                            </p>
+                          </div>
+                          <div className="w-[1px] bg-[#1DB954]/20"></div>
+                          <div>
+                            <p className="text-xs text-[#A0A0A0] mb-1 uppercase tracking-wider">
+                              Valor Total
+                            </p>
+                            <p className="text-xl font-semibold text-[#1DB954]">
+                              {formatCurrency(precoSacaData.valor_total)}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-6 pt-4 border-t border-[#1DB954]/20 text-xs text-[#A0A0A0] flex items-center justify-between">
+                        <span className="flex items-center gap-1">
+                          <span className="w-2 h-2 rounded-full bg-[#1DB954] animate-pulse"></span>
+                          Atualizado em:{' '}
+                          {new Date(precoSacaData.data_atualizacao).toLocaleString('pt-BR')}
+                        </span>
+                        <span className="text-[#00B4D8] font-medium">Mercado Real</span>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+            )}
+
+            {resultado && (
               <div className="space-y-6">
                 <h2 className="text-xl font-bold border-b border-[#1DB954]/20 pb-2 flex items-center gap-2 text-[#FFFFFF]">
                   <LineChart className="h-5 w-5 text-[#1DB954]" />
@@ -263,7 +390,9 @@ export default function PrevisaoIA() {
                   </CardContent>
                 </Card>
               </div>
-            ) : (
+            )}
+
+            {!isLoadingSaca && !precoSacaData && !precoSacaError && !resultado && (
               <div className="h-full flex flex-col items-center justify-center text-[#E0E0E0] border-2 border-dashed border-[#1DB954]/20 rounded-xl p-8 bg-[#050505] min-h-[300px]">
                 <LineChart className="h-16 w-16 mb-4 text-[#1DB954]/50" />
                 <p className="text-center max-w-md font-medium">
