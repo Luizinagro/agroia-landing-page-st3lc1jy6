@@ -1,36 +1,36 @@
-import 'jsr:@supabase/functions-js/edge-runtime.d.ts'
-import { createClient } from 'jsr:@supabase/supabase-js@2'
+import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+};
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
-    const { commodity } = await req.json()
+    const { commodity } = await req.json();
     if (!commodity) {
-      throw new Error('Commodity is required')
+      throw new Error('Commodity is required');
     }
 
-    const apiKey = Deno.env.get('GEMINI_API_KEY')
-
+    const apiKey = Deno.env.get('GEMINI_API_KEY');
+    
     // Default base prices for realistic mock/fallback
     const basePrices: Record<string, number> = {
-      Soja: 120,
-      Milho: 60,
-      Trigo: 80,
-      Café: 200,
-    }
-    const currentPrice = basePrices[commodity] || 100
-
-    let trend_data: any[] = []
-    let recommendation = ''
+      'Soja': 120,
+      'Milho': 60,
+      'Trigo': 80,
+      'Café': 200,
+    };
+    const currentPrice = basePrices[commodity] || 100;
+    
+    let trend_data: any[] = [];
+    let recommendation = "";
 
     if (apiKey) {
       const prompt = `Gere uma previsão fictícia mas realista de preços para a commodity agrícola "${commodity}" para os próximos 30 dias. 
@@ -40,100 +40,89 @@ Deno.serve(async (req) => {
         "trend_data": [{"date": "YYYY-MM-DD", "price": 125.50}],
         "recommendation": "Recomendação curta sobre quando plantar/colher baseado nos preços."
       }
-      Gere 60 itens em trend_data.`
+      Gere 60 itens em trend_data.`;
 
       try {
-        const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: prompt }] }],
-              generationConfig: { response_mime_type: 'application/json' },
-            }),
-          },
-        )
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { response_mime_type: "application/json" }
+          })
+        });
 
         if (!response.ok) {
-          console.error(`Gemini API error: ${response.status} ${response.statusText}`)
+          console.error(`Gemini API error: ${response.status} ${response.statusText}`);
         } else {
-          const data = await response.json()
-          let text = data.candidates?.[0]?.content?.parts?.[0]?.text
-
+          const data = await response.json();
+          let text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          
           if (text) {
             try {
               // Remove possible markdown formatting if gemini ignored response_mime_type partially
-              text = text
-                .replace(/```json/g, '')
-                .replace(/```/g, '')
-                .trim()
-              const parsed = JSON.parse(text)
-              trend_data = parsed.trend_data
-              recommendation = parsed.recommendation
-            } catch (e) {
-              console.error('Failed to parse Gemini JSON', e, text)
+              text = text.replace(/```json/g, '').replace(/```/g, '').trim();
+              const parsed = JSON.parse(text);
+              trend_data = parsed.trend_data;
+              recommendation = parsed.recommendation;
+            } catch(e) {
+              console.error("Failed to parse Gemini JSON", e, text);
             }
           }
         }
       } catch (err) {
-        console.error('Error calling Gemini API:', err)
+        console.error("Error calling Gemini API:", err);
       }
     }
 
     // Fallback if no API key or parsing failed
     if (!trend_data || trend_data.length === 0) {
-      const today = new Date()
+      const today = new Date();
       trend_data = Array.from({ length: 60 }).map((_, i) => {
-        const d = new Date(today)
-        d.setDate(today.getDate() + i)
-        const change = (Math.random() - 0.4) * 5
+        const d = new Date(today);
+        d.setDate(today.getDate() + i);
+        const change = (Math.random() - 0.4) * 5;
         return {
           date: d.toISOString().split('T')[0],
-          price: Number((currentPrice + change + i * 0.2).toFixed(2)),
-        }
-      })
-      recommendation = `Baseado na análise de tendências de mercado base de fallback, recomendamos aguardar para a comercialização de ${commodity}. Os preços mostram viés de leve alta. (Configure a chave GEMINI_API_KEY no Supabase para previsões reais)`
+          price: Number((currentPrice + change + (i * 0.2)).toFixed(2))
+        };
+      });
+      recommendation = `Baseado na análise de tendências de mercado base de fallback, recomendamos aguardar para a comercialização de ${commodity}. Os preços mostram viés de leve alta. (Configure a chave GEMINI_API_KEY no Supabase para previsões reais)`;
     }
 
-    const supabaseUrl = Deno.env.get('SUPABASE_URL') || ''
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || ''
-
-    let inserted = null
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+    
+    let inserted = null;
 
     if (supabaseUrl && supabaseServiceKey) {
-      const supabase = createClient(supabaseUrl, supabaseServiceKey)
+      const supabase = createClient(supabaseUrl, supabaseServiceKey);
       const { data, error } = await supabase
         .from('ai_forecasts')
         .insert({
           commodity,
           current_price: currentPrice,
           trend_data,
-          recommendation,
+          recommendation
         })
         .select()
-        .single()
+        .single();
 
       if (error) {
-        console.error('DB Insert Error:', error)
+        console.error("DB Insert Error:", error);
       } else {
-        inserted = data
+        inserted = data;
       }
     }
 
-    return new Response(
-      JSON.stringify({
-        data: inserted || { commodity, current_price: currentPrice, trend_data, recommendation },
-      }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200,
-      },
-    )
+    return new Response(JSON.stringify({ data: inserted || { commodity, current_price: currentPrice, trend_data, recommendation } }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 200,
+    });
   } catch (error: any) {
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 400,
-    })
+    });
   }
-})
+});
