@@ -5,6 +5,7 @@ import { Rebanho } from '@/components/pecuaria/Rebanho'
 import { RastreabilidadeEsg } from '@/components/pecuaria/RastreabilidadeEsg'
 import { LayoutDashboard, TrendingUp, Leaf, Tag } from 'lucide-react'
 import { GestaoAnimais } from '@/components/pecuaria/GestaoAnimais'
+import { AlertasCio } from '@/components/pecuaria/AlertasCio'
 
 export default function Pecuaria() {
   const [activeTab, setActiveTab] = useState('rebanho')
@@ -19,6 +20,8 @@ export default function Pecuaria() {
           </p>
         </div>
       </div>
+
+      <AlertasCio />
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid grid-cols-4 lg:w-[800px] bg-black/60 border border-primary/20 backdrop-blur-md p-1 h-auto">

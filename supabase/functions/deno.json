@@ -7,6 +7,7 @@
     "buscar-dados-inmet": 3,
     "gemini-recomendacoes": 4,
     "gerar-alertas": 3,
-    "calcular-cio": 1
+    "calcular-cio": 1,
+    "gerar-alertas-cio": 1
   }
 }
