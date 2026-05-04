@@ -2,7 +2,7 @@ import { Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { Tractor } from 'lucide-react'
 
-export function ProtectedRoute({}: { requireActive?: boolean }) {
+export function ProtectedRoute(_props: { requireActive?: boolean }) {
   const { user, loading } = useAuth()
 
   if (loading) {
