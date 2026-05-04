@@ -31,6 +31,7 @@ import PrevisaoIA from './pages/PrevisaoIA'
 import Rastreabilidade from './pages/Rastreabilidade'
 import CRM from './pages/CRM'
 import AnaliseSatelite from './pages/AnaliseSatelite'
+import SharedAnalysis from './pages/SharedAnalysis'
 import { FeatureGuard } from './components/FeatureGuard'
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
@@ -172,6 +173,8 @@ const App = () => {
                   <Route element={<ProtectedRoute requireActive={false} />}>
                     <Route path="/selecionar-plano" element={<PlanSelection />} />
                   </Route>
+
+                  <Route path="/analise-compartilhada/:id" element={<SharedAnalysis />} />
 
                   {/* ADD ALL CUSTOM ROUTES MUST BE ADDED HERE */}
                 </Route>

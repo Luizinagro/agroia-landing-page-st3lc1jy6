@@ -106,6 +106,15 @@ export function Header() {
           <Bell className="w-5 h-5 text-muted-foreground" />
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full"></span>
         </Button>
+        <Link to="/selecionar-plano" className="hidden md:block">
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-primary/50 text-primary hover:bg-primary/10 h-8 text-xs font-semibold"
+          >
+            Planos
+          </Button>
+        </Link>
         <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center border border-primary/50 cursor-pointer hover:bg-primary/30 transition-colors">
           <UserCircle className="w-5 h-5 text-primary" />
         </div>

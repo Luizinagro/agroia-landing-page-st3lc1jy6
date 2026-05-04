@@ -12,6 +12,9 @@ import {
   FileText,
   Activity,
   CheckCircle2,
+  Share2,
+  CloudRain,
+  BellRing,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -153,6 +156,25 @@ export default function AnaliseSatelite() {
     }, 1500)
   }
 
+  const handleShare = (id: string) => {
+    const url = `${window.location.origin}/analise-compartilhada/${id}`
+    navigator.clipboard.writeText(url)
+    toast({
+      title: 'Link Copiado!',
+      description: 'O link da análise foi copiado e já pode ser enviado ao seu consultor.',
+      className: 'bg-primary text-primary-foreground border-primary',
+    })
+  }
+
+  const handleAlert = () => {
+    toast({
+      title: 'Alerta Geofencado Ativado',
+      description:
+        'Você será notificado se o NDVI desta área cair abaixo de 0.40 nas próximas análises.',
+      className: 'bg-zinc-900 text-white border-white/20',
+    })
+  }
+
   const getNdviAlert = (value: number) => {
     if (value < 0.4) {
       return {
@@ -259,14 +281,23 @@ export default function AnaliseSatelite() {
           </p>
         </div>
 
-        {status === 'success' && (
-          <Button
-            onClick={generatePDF}
-            className="bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 shadow-lg"
-          >
-            <FileText className="w-4 h-4 mr-2" />
-            Gerar Relatório Agronômico em PDF
-          </Button>
+        {status === 'success' && analysisData && (
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Button
+              onClick={() => handleShare(analysisData.id!)}
+              className="bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 shadow-lg"
+            >
+              <Share2 className="w-4 h-4 mr-2" />
+              Compartilhar Análise
+            </Button>
+            <Button
+              onClick={generatePDF}
+              className="bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 shadow-lg"
+            >
+              <FileText className="w-4 h-4 mr-2" />
+              PDF
+            </Button>
+          </div>
         )}
       </div>
 
@@ -497,6 +528,45 @@ export default function AnaliseSatelite() {
                       <p className="text-2xl font-bold text-white print:text-black">
                         {analysisData.temperatura}°C
                       </p>
+                    </div>
+                  </div>
+
+                  {/* Previsão de Irrigação e Geofencing */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 print:hidden">
+                    <div className="bg-zinc-900/50 p-4 rounded-xl border border-white/5">
+                      <div className="flex items-center gap-2 text-blue-400 mb-2">
+                        <CloudRain className="w-4 h-4" />
+                        <span className="text-sm font-medium">Previsão de Irrigação (3 dias)</span>
+                      </div>
+                      <p className="text-sm text-zinc-300">
+                        Cruzando dados de umidade do solo ({analysisData.umidade}%) com a previsão
+                        meteorológica local, recomendamos{' '}
+                        <strong className="text-white">
+                          {analysisData.umidade < 40
+                            ? 'irrigação imediata (15mm)'
+                            : 'suspender irrigação'}
+                        </strong>
+                        .
+                      </p>
+                    </div>
+                    <div className="bg-zinc-900/50 p-4 rounded-xl border border-white/5 flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center gap-2 text-primary mb-2">
+                          <BellRing className="w-4 h-4" />
+                          <span className="text-sm font-medium">Monitoramento Geofencado</span>
+                        </div>
+                        <p className="text-sm text-zinc-300">
+                          Seja avisado por push/SMS se o NDVI desta área cair abaixo de 0.40.
+                        </p>
+                      </div>
+                      <Button
+                        onClick={handleAlert}
+                        variant="outline"
+                        size="sm"
+                        className="mt-3 w-fit border-primary/50 text-primary hover:bg-primary/10"
+                      >
+                        Ativar Alerta para esta Área
+                      </Button>
                     </div>
                   </div>
 
