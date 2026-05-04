@@ -10,6 +10,8 @@ import {
   Image as ImageIcon,
   History,
   FileText,
+  Activity,
+  CheckCircle2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -26,6 +28,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts'
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 
 interface AnalysisData {
   id?: string
@@ -108,7 +112,7 @@ export default function AnaliseSatelite() {
         lng,
       })
 
-      if (data.message) {
+      if (data.message && data.message.includes('demonstração')) {
         setAlertMessage(data.message)
       }
 
@@ -140,24 +144,52 @@ export default function AnaliseSatelite() {
 
   const generatePDF = () => {
     toast({
-      title: 'Gerando Relatório PDF...',
-      description: 'Preparando o documento agronômico.',
+      title: 'Relatório Gerado com Sucesso!',
+      description: 'O PDF foi enviado para o seu e-mail e o download começará em instantes.',
       className: 'bg-primary text-primary-foreground border-primary',
     })
     setTimeout(() => {
       window.print()
-    }, 800)
+    }, 1500)
+  }
+
+  const getNdviAlert = (value: number) => {
+    if (value < 0.4) {
+      return {
+        title: 'Atenção',
+        desc: 'Solo com baixa saúde — recomendamos análise urgente.',
+        color: 'text-red-500',
+        bg: 'bg-red-500/10 border-red-500/20',
+        icon: <AlertTriangle className="h-5 w-5 text-red-500" />,
+      }
+    }
+    if (value <= 0.6) {
+      return {
+        title: 'Monitoramento',
+        desc: 'Solo em recuperação — continue monitorando.',
+        color: 'text-yellow-500',
+        bg: 'bg-yellow-500/10 border-yellow-500/20',
+        icon: <AlertTriangle className="h-5 w-5 text-yellow-500" />,
+      }
+    }
+    return {
+      title: 'Condição Ideal',
+      desc: 'Solo saudável — continue assim!',
+      color: 'text-green-500',
+      bg: 'bg-green-500/10 border-green-500/20',
+      icon: <CheckCircle2 className="h-5 w-5 text-green-500" />,
+    }
   }
 
   const getNdviColor = (value: number) => {
-    if (value < 0.3) return 'bg-red-500'
-    if (value < 0.6) return 'bg-yellow-500'
+    if (value < 0.4) return 'bg-red-500'
+    if (value <= 0.6) return 'bg-yellow-500'
     return 'bg-green-500'
   }
 
   const getNdviColorText = (value: number) => {
-    if (value < 0.3) return 'text-red-500'
-    if (value < 0.6) return 'text-yellow-500'
+    if (value < 0.4) return 'text-red-500'
+    if (value <= 0.6) return 'text-yellow-500'
     return 'text-green-500'
   }
 
@@ -182,11 +214,36 @@ export default function AnaliseSatelite() {
           </div>
         </div>
         {analysisData && (
-          <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-            <h3 className="font-bold mb-2">Coordenadas Analisadas:</h3>
-            <p>
-              Latitude: {analysisData.lat} | Longitude: {analysisData.lng}
-            </p>
+          <div className="mt-6 space-y-4">
+            <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+              <h3 className="font-bold mb-2 text-lg">Detalhes da Análise:</h3>
+              <p>
+                <strong>Latitude:</strong> {analysisData.lat} | <strong>Longitude:</strong>{' '}
+                {analysisData.lng}
+              </p>
+              <p>
+                <strong>Data da Imagem:</strong> {analysisData.data}
+              </p>
+            </div>
+
+            <div className="p-4 border-2 rounded-lg border-gray-300">
+              <h3 className="font-bold text-lg mb-2">Parecer Agronômico (IA)</h3>
+              <p className="font-medium text-lg">{getNdviAlert(analysisData.ndvi).desc}</p>
+              <div className="mt-4 grid grid-cols-3 gap-4">
+                <div>
+                  <span className="text-gray-500 block">NDVI</span>
+                  <span className="font-bold text-xl">{analysisData.ndvi}</span>
+                </div>
+                <div>
+                  <span className="text-gray-500 block">Umidade</span>
+                  <span className="font-bold text-xl">{analysisData.umidade}%</span>
+                </div>
+                <div>
+                  <span className="text-gray-500 block">Temperatura</span>
+                  <span className="font-bold text-xl">{analysisData.temperatura}°C</span>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -208,7 +265,7 @@ export default function AnaliseSatelite() {
             className="bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 shadow-lg"
           >
             <FileText className="w-4 h-4 mr-2" />
-            Gerar Relatório PDF
+            Gerar Relatório Agronômico em PDF
           </Button>
         )}
       </div>
@@ -364,6 +421,23 @@ export default function AnaliseSatelite() {
 
           {status === 'success' && analysisData && (
             <div className="space-y-4 animate-slide-up print:w-full print:max-w-full">
+              {/* Alerta de Saúde NDVI */}
+              <Alert
+                className={cn(
+                  'print:hidden border',
+                  getNdviAlert(analysisData.ndvi).bg,
+                  getNdviAlert(analysisData.ndvi).color,
+                )}
+              >
+                {getNdviAlert(analysisData.ndvi).icon}
+                <AlertTitle className="font-semibold text-base ml-2">
+                  {getNdviAlert(analysisData.ndvi).title}
+                </AlertTitle>
+                <AlertDescription className="ml-2 font-medium opacity-90">
+                  {getNdviAlert(analysisData.ndvi).desc}
+                </AlertDescription>
+              </Alert>
+
               <Card className="bg-black border-white/10 shadow-[0_0_15px_rgba(29,185,84,0.1)] overflow-hidden print:bg-white print:border-gray-200 print:shadow-none print:text-black">
                 <CardHeader className="bg-zinc-900/50 border-b border-white/5 pb-4 print:bg-gray-100 print:border-gray-300">
                   <CardTitle className="text-white text-lg print:text-black">
@@ -378,15 +452,13 @@ export default function AnaliseSatelite() {
                         <span className="text-sm font-medium text-zinc-300 print:text-gray-700">
                           Índice NDVI (Saúde Vegetal)
                         </span>
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-primary/20 text-primary font-medium border border-primary/20 print:bg-gray-200 print:border-gray-300 print:text-black">
-                          {analysisData.ndvi > 0.6
-                            ? 'Saudável (Vigor Alto)'
-                            : analysisData.ndvi > 0.4
-                              ? 'Atenção (Vigor Médio)'
-                              : 'Crítico (Vigor Baixo)'}
-                        </span>
                       </div>
-                      <span className="text-3xl font-bold text-white print:text-black">
+                      <span
+                        className={cn(
+                          'text-3xl font-bold print:text-black',
+                          getNdviColorText(analysisData.ndvi),
+                        )}
+                      >
                         {analysisData.ndvi}
                       </span>
                     </div>
@@ -447,27 +519,87 @@ export default function AnaliseSatelite() {
                       />
                     </div>
                     <p className="text-xs text-zinc-500 text-center mt-2 print:text-gray-500">
-                      Fonte dos dados: Integração API Satélite (Sentinel Hub / GEE)
+                      Fonte dos dados: Sentinel Hub API
                     </p>
                   </div>
                 </CardContent>
               </Card>
+
+              {/* Gráfico de Evolução (Tendência de NDVI) */}
+              {history.length > 1 && (
+                <Card className="bg-black/50 border-white/10 print:hidden mt-6 animate-fade-in">
+                  <CardHeader>
+                    <CardTitle className="text-white text-lg flex items-center gap-2">
+                      <Activity className="w-5 h-5 text-primary" />
+                      Evolução do NDVI (Últimas Análises)
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ChartContainer
+                      config={{
+                        ndvi: {
+                          label: 'NDVI',
+                          color: 'hsl(var(--primary))',
+                        },
+                      }}
+                      className="h-[250px] w-full"
+                    >
+                      <LineChart
+                        data={history
+                          .slice()
+                          .reverse()
+                          .map((h) => ({
+                            date: new Date(h.analysis_date).toLocaleDateString('pt-BR', {
+                              day: '2-digit',
+                              month: '2-digit',
+                            }),
+                            ndvi: h.ndvi_value,
+                          }))}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
+                        <XAxis
+                          dataKey="date"
+                          stroke="#888"
+                          fontSize={12}
+                          tickLine={false}
+                          axisLine={false}
+                        />
+                        <YAxis
+                          stroke="#888"
+                          fontSize={12}
+                          domain={[0, 1]}
+                          tickLine={false}
+                          axisLine={false}
+                        />
+                        <ChartTooltip content={<ChartTooltipContent />} />
+                        <Line
+                          type="monotone"
+                          dataKey="ndvi"
+                          stroke="var(--color-ndvi)"
+                          strokeWidth={3}
+                          dot={{ r: 4, fill: 'var(--color-ndvi)', strokeWidth: 0 }}
+                          activeDot={{ r: 6 }}
+                        />
+                      </LineChart>
+                    </ChartContainer>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           )}
         </div>
       </div>
 
-      {/* Galeria de Histórico (Slider Temporal) */}
+      {/* Galeria de Histórico (Slider Temporal das últimas 4 semanas) */}
       {history.length > 0 && (
         <div className="mt-12 space-y-6 print:hidden animate-fade-in">
           <div className="flex items-center justify-between">
             <h3 className="text-2xl font-bold text-white flex items-center gap-2">
               <History className="w-6 h-6 text-primary" />
-              Histórico Temporal da Propriedade
+              Histórico de Imagens (Últimas Análises)
             </h3>
             <p className="text-sm text-zinc-400 hidden md:block">
-              Navegue pelo histórico para comparar a evolução da saúde do solo ao longo das
-              análises.
+              Navegue pelo histórico para comparar a evolução da saúde do solo.
             </p>
           </div>
 

@@ -157,7 +157,7 @@ export default function PlanSelection() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8 relative isolate">
       {/* Botão de Fechar muito visível e acessível */}
-      <div className="absolute top-4 right-4 md:top-8 md:right-8 z-[100]">
+      <div className="fixed top-4 right-4 md:top-8 md:right-8 z-[9999]">
         <Button
           variant="outline"
           size="icon"
