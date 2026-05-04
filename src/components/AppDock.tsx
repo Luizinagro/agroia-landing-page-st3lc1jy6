@@ -9,6 +9,7 @@ import {
   ActivitySquare,
   Beef,
   MessageSquare,
+  Map as MapIcon,
 } from 'lucide-react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
@@ -82,6 +83,18 @@ export function AppDock() {
         }
       },
       isActive: location.pathname === '/pecuaria',
+    },
+    {
+      icon: MapIcon,
+      label: 'Satélite',
+      onClick: () => {
+        if (hasAccess(['Completo', 'Família Coop'])) {
+          navigate('/analise-satelite')
+        } else {
+          navigate('/dashboard', { state: { blockedFeature: true } })
+        }
+      },
+      isActive: location.pathname === '/analise-satelite',
     },
     {
       icon: MessageSquare,

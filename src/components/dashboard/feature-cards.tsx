@@ -1,4 +1,12 @@
-import { CheckCircle2, Lock, BrainCircuit, MapPin, Calculator, ShoppingCart } from 'lucide-react'
+import {
+  CheckCircle2,
+  Lock,
+  BrainCircuit,
+  MapPin,
+  Calculator,
+  ShoppingCart,
+  Satellite,
+} from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
@@ -27,6 +35,12 @@ const features = [
     name: 'Loja de Insumos',
     icon: ShoppingCart,
     description: 'Acesso exclusivo para compra de insumos com desconto.',
+  },
+  {
+    id: 'analise-satelite',
+    name: 'Análise Satélite',
+    icon: Satellite,
+    description: 'Índices agronômicos e monitoramento direto do espaço.',
   },
 ]
 

@@ -30,6 +30,7 @@ import Profile from './pages/Profile'
 import PrevisaoIA from './pages/PrevisaoIA'
 import Rastreabilidade from './pages/Rastreabilidade'
 import CRM from './pages/CRM'
+import AnaliseSatelite from './pages/AnaliseSatelite'
 import { FeatureGuard } from './components/FeatureGuard'
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
@@ -155,6 +156,14 @@ const App = () => {
                       element={
                         <FeatureGuard feature="crm" requiredPlan="Completo">
                           <CRM />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/analise-satelite"
+                      element={
+                        <FeatureGuard feature="analise-satelite" requiredPlan="Completo">
+                          <AnaliseSatelite />
                         </FeatureGuard>
                       }
                     />
