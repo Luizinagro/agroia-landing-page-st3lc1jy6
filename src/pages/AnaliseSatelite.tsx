@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   MapPin,
   Satellite,
@@ -8,6 +8,8 @@ import {
   AlertTriangle,
   Search,
   Image as ImageIcon,
+  History,
+  FileText,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -16,29 +18,68 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { cn } from '@/lib/utils'
 import { supabase } from '@/lib/supabase/client'
+import { useToast } from '@/hooks/use-toast'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel'
 
 interface AnalysisData {
+  id?: string
   ndvi: number
   umidade: number
   temperatura: number
   data: string
   thumbnail: string
+  lat?: string
+  lng?: string
 }
 
 export default function AnaliseSatelite() {
+  const { toast } = useToast()
   const [lat, setLat] = useState('-15.7938')
   const [lng, setLng] = useState('-47.8827')
   const [pinPos, setPinPos] = useState({ x: 50, y: 50 })
   const [status, setStatus] = useState<'empty' | 'loading' | 'success' | 'error'>('empty')
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null)
   const [alertMessage, setAlertMessage] = useState<string>('')
+  const [history, setHistory] = useState<any[]>([])
+
+  useEffect(() => {
+    fetchHistory()
+  }, [])
+
+  const fetchHistory = async () => {
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (!user) return
+
+      const { data, error } = await supabase
+        .from('satellite_analyses')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('analysis_date', { ascending: false })
+        .limit(12)
+
+      if (error) throw error
+      if (data) {
+        setHistory(data)
+      }
+    } catch (e) {
+      console.error('Erro ao buscar histórico', e)
+    }
+  }
 
   const handleMapClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
     const x = ((e.clientX - rect.left) / rect.width) * 100
     const y = ((e.clientY - rect.top) / rect.height) * 100
     setPinPos({ x, y })
-    // Simulação simples de coordenada baseada no clique
     setLat((-15 + (y - 50) * 0.2).toFixed(4))
     setLng((-47 + (x - 50) * 0.2).toFixed(4))
   }
@@ -57,11 +98,14 @@ export default function AnaliseSatelite() {
       if (!data?.success) throw new Error(data?.error || 'Erro desconhecido ao analisar imagem.')
 
       setAnalysisData({
+        id: data.data.id,
         ndvi: data.data.ndvi_value,
         umidade: data.data.soil_moisture,
         temperatura: data.data.temperature,
         data: new Date(data.data.analysis_date).toLocaleDateString('pt-BR'),
         thumbnail: data.data.image_url,
+        lat,
+        lng,
       })
 
       if (data.message) {
@@ -69,10 +113,40 @@ export default function AnaliseSatelite() {
       }
 
       setStatus('success')
+      fetchHistory()
     } catch (error) {
       console.error(error)
       setStatus('error')
     }
+  }
+
+  const loadHistoryItem = (item: any) => {
+    setAnalysisData({
+      id: item.id,
+      ndvi: item.ndvi_value,
+      umidade: item.soil_moisture,
+      temperatura: item.temperature,
+      data: new Date(item.analysis_date).toLocaleDateString('pt-BR'),
+      thumbnail: item.image_url,
+      lat: item.latitude.toString(),
+      lng: item.longitude.toString(),
+    })
+    setLat(item.latitude.toString())
+    setLng(item.longitude.toString())
+    setStatus('success')
+    setAlertMessage('Exibindo dados do histórico selecionado.')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const generatePDF = () => {
+    toast({
+      title: 'Gerando Relatório PDF...',
+      description: 'Preparando o documento agronômico.',
+      className: 'bg-primary text-primary-foreground border-primary',
+    })
+    setTimeout(() => {
+      window.print()
+    }, 800)
   }
 
   const getNdviColor = (value: number) => {
@@ -81,39 +155,82 @@ export default function AnaliseSatelite() {
     return 'bg-green-500'
   }
 
+  const getNdviColorText = (value: number) => {
+    if (value < 0.3) return 'text-red-500'
+    if (value < 0.6) return 'text-yellow-500'
+    return 'text-green-500'
+  }
+
   return (
-    <div className="flex-1 space-y-6 p-4 md:p-8 pt-6 pb-24">
-      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+    <div className="flex-1 space-y-6 p-4 md:p-8 pt-6 pb-24 print:p-0 print:m-0 print:bg-white print:text-black">
+      {/* Cabeçalho do Relatório (Apenas Visível na Impressão) */}
+      <div className="hidden print:block mb-8 border-b-2 border-green-700 pb-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-black flex items-center gap-2">
+              <Satellite className="w-8 h-8 text-green-700" />
+              Relatório Agronômico de Satélite
+            </h1>
+            <p className="text-gray-600 mt-1">
+              Data de Emissão: {new Date().toLocaleDateString('pt-BR')} às{' '}
+              {new Date().toLocaleTimeString('pt-BR')}
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="font-bold text-xl text-green-700">AgroIA</p>
+            <p className="text-sm text-gray-500">Tecnologia de Precisão</p>
+          </div>
+        </div>
+        {analysisData && (
+          <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+            <h3 className="font-bold mb-2">Coordenadas Analisadas:</h3>
+            <p>
+              Latitude: {analysisData.lat} | Longitude: {analysisData.lng}
+            </p>
+          </div>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between print:hidden">
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-white flex items-center gap-2">
             <Satellite className="w-8 h-8 text-primary" />
             Análise de Solo por Satélite
           </h2>
           <p className="text-muted-foreground mt-1">
-            Monitore a saúde da lavoura através de índices espectrais e dados climáticos
-            localizados.
+            Monitore a saúde da lavoura através de índices espectrais reais e dados climáticos.
           </p>
         </div>
+
+        {status === 'success' && (
+          <Button
+            onClick={generatePDF}
+            className="bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 shadow-lg"
+          >
+            <FileText className="w-4 h-4 mr-2" />
+            Gerar Relatório PDF
+          </Button>
+        )}
       </div>
 
       {alertMessage && (
-        <Alert className="bg-primary/10 border-primary/20 text-primary">
+        <Alert className="bg-primary/10 border-primary/20 text-primary print:hidden">
           <Satellite className="h-4 w-4" />
-          <AlertTitle>Aviso</AlertTitle>
+          <AlertTitle>Aviso do Sistema</AlertTitle>
           <AlertDescription>{alertMessage}</AlertDescription>
         </Alert>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Painel do Mapa */}
-        <Card className="lg:col-span-2 bg-black border-white/10 shadow-[0_0_15px_rgba(29,185,84,0.05)]">
+        <Card className="lg:col-span-2 bg-black border-white/10 shadow-[0_0_15px_rgba(29,185,84,0.05)] print:hidden">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <MapPin className="w-5 h-5 text-primary" />
               Seleção de Área
             </CardTitle>
             <CardDescription className="text-zinc-400">
-              Clique no mapa ou insira as coordenadas para analisar.
+              Clique no mapa ou insira as coordenadas para obter dados reais de satélite.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -140,25 +257,25 @@ export default function AnaliseSatelite() {
 
             {/* Mapa Interativo Simulado */}
             <div
-              className="relative w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden cursor-crosshair border border-white/10 bg-zinc-900 group"
+              className="relative w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden cursor-crosshair border border-white/10 bg-zinc-900 group shadow-inner"
               onClick={handleMapClick}
             >
               <img
                 src="https://img.usecurling.com/p/1000/600?q=satellite%20map%20terrain&color=gray&dpr=2"
                 alt="Mapa satélite"
-                className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
 
               {/* Pino */}
               <div
-                className="absolute w-6 h-6 -ml-3 -mt-6 text-primary transition-all duration-300 shadow-xl"
+                className="absolute w-6 h-6 -ml-3 -mt-6 text-primary transition-all duration-300 drop-shadow-[0_0_8px_rgba(29,185,84,0.8)]"
                 style={{ left: `${pinPos.x}%`, top: `${pinPos.y}%` }}
               >
-                <MapPin className="w-6 h-6 fill-primary/20 drop-shadow-md" />
+                <MapPin className="w-8 h-8 fill-primary/20" />
               </div>
 
-              <div className="absolute bottom-4 left-4 right-4 text-xs text-white/80 bg-black/60 p-2 rounded-md backdrop-blur-sm w-fit border border-white/10">
+              <div className="absolute bottom-4 left-4 right-4 text-xs text-white/90 bg-black/70 p-2.5 rounded-md backdrop-blur-md w-fit border border-white/20 shadow-lg">
                 Área selecionada: {lat}, {lng}
               </div>
             </div>
@@ -166,18 +283,18 @@ export default function AnaliseSatelite() {
             <Button
               onClick={handleAnalyse}
               disabled={status === 'loading'}
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all font-semibold"
               size="lg"
             >
               {status === 'loading' ? (
                 <div className="flex items-center gap-2">
-                  <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                  Processando Imagens...
+                  <span className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  Conectando ao Satélite (Sentinel Hub)...
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <Search className="w-4 h-4" />
-                  Analisar Satélite
+                  <Search className="w-5 h-5" />
+                  Analisar Área via Satélite
                 </div>
               )}
             </Button>
@@ -187,20 +304,20 @@ export default function AnaliseSatelite() {
         {/* Painel de Resultados */}
         <div className="space-y-6">
           {status === 'empty' && (
-            <Card className="bg-black/50 border-white/5 border-dashed h-full min-h-[400px] flex flex-col items-center justify-center text-center p-6 transition-all duration-500 animate-fade-in">
+            <Card className="bg-black/50 border-white/5 border-dashed h-full min-h-[400px] flex flex-col items-center justify-center text-center p-6 transition-all duration-500 animate-fade-in print:hidden">
               <div className="w-16 h-16 rounded-full bg-zinc-900 flex items-center justify-center mb-4 border border-white/5">
                 <Satellite className="w-8 h-8 text-zinc-500" />
               </div>
-              <h3 className="text-lg font-medium text-white mb-2">Nenhuma Análise Ativa</h3>
+              <h3 className="text-lg font-medium text-white mb-2">Aguardando Seleção</h3>
               <p className="text-sm text-zinc-400">
-                Selecione uma área no mapa ao lado e clique em Analisar para obter os índices
-                agronômicos.
+                Selecione uma área no mapa ao lado e clique em Analisar para obter imagens reais e
+                índices agronômicos detalhados.
               </p>
             </Card>
           )}
 
           {status === 'loading' && (
-            <Card className="bg-black border-white/10 h-full min-h-[400px] overflow-hidden animate-pulse">
+            <Card className="bg-black border-white/10 h-full min-h-[400px] overflow-hidden animate-pulse print:hidden">
               <CardHeader>
                 <Skeleton className="h-6 w-1/2 bg-zinc-800" />
                 <Skeleton className="h-4 w-3/4 bg-zinc-800/50" />
@@ -222,16 +339,16 @@ export default function AnaliseSatelite() {
           {status === 'error' && (
             <Alert
               variant="destructive"
-              className="bg-red-500/10 border-red-500/20 text-red-400 animate-fade-in"
+              className="bg-red-500/10 border-red-500/20 text-red-400 animate-fade-in print:hidden"
             >
               <AlertTriangle className="h-5 w-5" />
               <AlertTitle className="text-red-400 font-semibold text-lg">
-                Erro na Análise
+                Erro de Comunicação
               </AlertTitle>
               <AlertDescription className="mt-2 flex flex-col gap-4">
                 <p>
-                  Não conseguimos processar as imagens de satélite para esta coordenada no momento.
-                  A API de integração pode estar indisponível.
+                  Não foi possível obter a resposta do provedor de satélite no momento. A API pode
+                  estar instável.
                 </p>
                 <Button
                   variant="outline"
@@ -246,28 +363,34 @@ export default function AnaliseSatelite() {
           )}
 
           {status === 'success' && analysisData && (
-            <div className="space-y-4 animate-slide-up">
-              <Card className="bg-black border-white/10 shadow-[0_0_15px_rgba(29,185,84,0.1)] overflow-hidden">
-                <CardHeader className="bg-zinc-900/50 border-b border-white/5 pb-4">
-                  <CardTitle className="text-white text-lg">Resultados da Análise</CardTitle>
+            <div className="space-y-4 animate-slide-up print:w-full print:max-w-full">
+              <Card className="bg-black border-white/10 shadow-[0_0_15px_rgba(29,185,84,0.1)] overflow-hidden print:bg-white print:border-gray-200 print:shadow-none print:text-black">
+                <CardHeader className="bg-zinc-900/50 border-b border-white/5 pb-4 print:bg-gray-100 print:border-gray-300">
+                  <CardTitle className="text-white text-lg print:text-black">
+                    Resultados da Análise Espectral
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-6 space-y-6">
                   {/* NDVI */}
                   <div className="space-y-2">
                     <div className="flex justify-between items-end">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-zinc-300">Índice NDVI</span>
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-primary/20 text-primary font-medium border border-primary/20">
+                        <span className="text-sm font-medium text-zinc-300 print:text-gray-700">
+                          Índice NDVI (Saúde Vegetal)
+                        </span>
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-primary/20 text-primary font-medium border border-primary/20 print:bg-gray-200 print:border-gray-300 print:text-black">
                           {analysisData.ndvi > 0.6
-                            ? 'Saudável'
+                            ? 'Saudável (Vigor Alto)'
                             : analysisData.ndvi > 0.4
-                              ? 'Atenção'
-                              : 'Crítico'}
+                              ? 'Atenção (Vigor Médio)'
+                              : 'Crítico (Vigor Baixo)'}
                         </span>
                       </div>
-                      <span className="text-3xl font-bold text-white">{analysisData.ndvi}</span>
+                      <span className="text-3xl font-bold text-white print:text-black">
+                        {analysisData.ndvi}
+                      </span>
                     </div>
-                    <div className="h-2.5 w-full bg-zinc-800 rounded-full overflow-hidden">
+                    <div className="h-3 w-full bg-zinc-800 rounded-full overflow-hidden print:bg-gray-200 print:border print:border-gray-300">
                       <div
                         className={cn(
                           'h-full transition-all duration-1000',
@@ -276,63 +399,158 @@ export default function AnaliseSatelite() {
                         style={{ width: `${analysisData.ndvi * 100}%` }}
                       />
                     </div>
-                    <div className="flex justify-between text-[10px] text-zinc-500 font-medium">
+                    <div className="flex justify-between text-[10px] text-zinc-500 font-medium print:text-gray-500">
                       <span>0.0 (Crítico)</span>
-                      <span>0.5 (Atenção)</span>
+                      <span>0.5 (Médio)</span>
                       <span>1.0 (Ideal)</span>
                     </div>
                   </div>
 
                   {/* Cards de Métricas */}
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-zinc-900/50 p-4 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
-                      <div className="flex items-center gap-2 text-blue-400 mb-2">
+                    <div className="bg-zinc-900/50 p-4 rounded-xl border border-white/5 hover:border-white/10 transition-colors print:bg-white print:border-gray-200">
+                      <div className="flex items-center gap-2 text-blue-400 print:text-blue-600 mb-2">
                         <Droplets className="w-4 h-4" />
                         <span className="text-sm font-medium">Umidade Solo</span>
                       </div>
-                      <p className="text-2xl font-bold text-white">{analysisData.umidade}%</p>
+                      <p className="text-2xl font-bold text-white print:text-black">
+                        {analysisData.umidade}%
+                      </p>
                     </div>
-                    <div className="bg-zinc-900/50 p-4 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
-                      <div className="flex items-center gap-2 text-orange-400 mb-2">
+                    <div className="bg-zinc-900/50 p-4 rounded-xl border border-white/5 hover:border-white/10 transition-colors print:bg-white print:border-gray-200">
+                      <div className="flex items-center gap-2 text-orange-400 print:text-orange-600 mb-2">
                         <Thermometer className="w-4 h-4" />
                         <span className="text-sm font-medium">Temperatura</span>
                       </div>
-                      <p className="text-2xl font-bold text-white">{analysisData.temperatura}°C</p>
+                      <p className="text-2xl font-bold text-white print:text-black">
+                        {analysisData.temperatura}°C
+                      </p>
                     </div>
                   </div>
 
                   {/* Thumbnail */}
                   <div className="space-y-3">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-zinc-400 flex items-center gap-1.5">
-                        <ImageIcon className="w-4 h-4" /> Imagem Recente
+                      <span className="text-zinc-400 print:text-gray-600 flex items-center gap-1.5">
+                        <ImageIcon className="w-4 h-4" /> Captura do Satélite
                       </span>
-                      <span className="text-zinc-300 flex items-center gap-1.5">
-                        <Calendar className="w-4 h-4 text-primary" /> {analysisData.data}
+                      <span className="text-zinc-300 print:text-gray-800 font-medium flex items-center gap-1.5">
+                        <Calendar className="w-4 h-4 text-primary print:text-black" />{' '}
+                        {analysisData.data}
                       </span>
                     </div>
-                    <div className="relative rounded-xl overflow-hidden border border-white/10 aspect-video group">
+                    <div className="relative rounded-xl overflow-hidden border border-white/10 print:border-gray-300 aspect-video group">
                       <img
                         src={analysisData.thumbnail}
                         alt="Satélite Thumbnail"
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          className="opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-                        >
-                          Ampliar Imagem
-                        </Button>
-                      </div>
                     </div>
+                    <p className="text-xs text-zinc-500 text-center mt-2 print:text-gray-500">
+                      Fonte dos dados: Integração API Satélite (Sentinel Hub / GEE)
+                    </p>
                   </div>
                 </CardContent>
               </Card>
             </div>
           )}
         </div>
+      </div>
+
+      {/* Galeria de Histórico (Slider Temporal) */}
+      {history.length > 0 && (
+        <div className="mt-12 space-y-6 print:hidden animate-fade-in">
+          <div className="flex items-center justify-between">
+            <h3 className="text-2xl font-bold text-white flex items-center gap-2">
+              <History className="w-6 h-6 text-primary" />
+              Histórico Temporal da Propriedade
+            </h3>
+            <p className="text-sm text-zinc-400 hidden md:block">
+              Navegue pelo histórico para comparar a evolução da saúde do solo ao longo das
+              análises.
+            </p>
+          </div>
+
+          <div className="bg-black/40 border border-white/10 rounded-2xl p-6 shadow-lg">
+            <Carousel
+              opts={{
+                align: 'start',
+                dragFree: true,
+              }}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-4">
+                {history.map((item) => (
+                  <CarouselItem
+                    key={item.id}
+                    className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                  >
+                    <Card
+                      className={cn(
+                        'bg-zinc-900/80 border-white/10 overflow-hidden transition-all duration-300 cursor-pointer h-full group hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(29,185,84,0.15)]',
+                        analysisData?.id === item.id
+                          ? 'border-primary ring-2 ring-primary/80'
+                          : 'hover:border-white/30',
+                      )}
+                      onClick={() => loadHistoryItem(item)}
+                    >
+                      <div className="aspect-[4/3] relative overflow-hidden">
+                        <img
+                          src={item.image_url}
+                          alt="Satélite Histórico"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        />
+                        <div className="absolute top-2 right-2 bg-black/70 backdrop-blur-md text-white text-xs px-2.5 py-1 rounded-md border border-white/20 shadow-lg font-medium">
+                          {new Date(item.analysis_date).toLocaleDateString('pt-BR')}
+                        </div>
+                        {analysisData?.id === item.id && (
+                          <div className="absolute inset-0 bg-primary/10 z-10" />
+                        )}
+                      </div>
+                      <CardContent className="p-4 space-y-3">
+                        <div className="flex justify-between items-center text-sm border-b border-white/5 pb-2">
+                          <span className="text-zinc-400 font-medium">NDVI</span>
+                          <span
+                            className={cn('font-bold text-base', getNdviColorText(item.ndvi_value))}
+                          >
+                            {item.ndvi_value}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="text-zinc-400 flex items-center gap-1.5">
+                            <Droplets className="w-3.5 h-3.5" /> Umidade
+                          </span>
+                          <span className="text-white font-medium">{item.soil_moisture}%</span>
+                        </div>
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="text-zinc-400 flex items-center gap-1.5">
+                            <Thermometer className="w-3.5 h-3.5" /> Temp.
+                          </span>
+                          <span className="text-white font-medium">{item.temperature}°C</span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <div className="flex items-center justify-end gap-2 mt-6">
+                <CarouselPrevious className="static translate-y-0 transform-none bg-zinc-800 border-white/10 text-white hover:bg-primary hover:text-primary-foreground hover:border-primary h-10 w-10 transition-colors" />
+                <CarouselNext className="static translate-y-0 transform-none bg-zinc-800 border-white/10 text-white hover:bg-primary hover:text-primary-foreground hover:border-primary h-10 w-10 transition-colors" />
+              </div>
+            </Carousel>
+          </div>
+        </div>
+      )}
+
+      {/* Assinatura no final da página para impressão */}
+      <div className="hidden print:block mt-12 pt-8 border-t border-gray-300 text-center">
+        <p className="text-gray-500 text-sm font-medium">
+          Este relatório foi gerado automaticamente pelo sistema AgroIA.
+        </p>
+        <p className="text-gray-500 text-xs mt-1">
+          As análises de satélite espectrais servem de apoio à tomada de decisão agronômica de
+          precisão.
+        </p>
       </div>
     </div>
   )
