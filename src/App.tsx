@@ -30,6 +30,7 @@ import Profile from './pages/Profile'
 import PrevisaoIA from './pages/PrevisaoIA'
 import Rastreabilidade from './pages/Rastreabilidade'
 import CRM from './pages/CRM'
+import { FeatureGuard } from './components/FeatureGuard'
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
 
@@ -50,22 +51,113 @@ const App = () => {
                   <Route path="/forgot-password" element={<ForgotPassword />} />
 
                   <Route element={<ProtectedRoute />}>
-                    <Route path="/dashboard-consolidado" element={<DashboardConsolidado />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/comunidade" element={<Community />} />
-                    <Route path="/faturamento" element={<Billing />} />
-                    <Route path="/pecuaria" element={<Pecuaria />} />
-                    <Route path="/rastreabilidade" element={<Rastreabilidade />} />
-                    <Route path="/loja" element={<Store />} />
-                    <Route path="/checkout" element={<Checkout />} />
-                    <Route path="/roi" element={<CalculadoraRoi />} />
-                    <Route path="/meus-calculos" element={<MeusCalculos />} />
-                    <Route path="/monitoramento" element={<Monitoramento />} />
-                    <Route path="/previsao-ia" element={<PrevisaoIA />} />
+                    <Route
+                      path="/dashboard-consolidado"
+                      element={
+                        <FeatureGuard feature="dashboard">
+                          <DashboardConsolidado />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/dashboard"
+                      element={
+                        <FeatureGuard feature="dashboard">
+                          <Dashboard />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/comunidade"
+                      element={
+                        <FeatureGuard feature="comunidade">
+                          <Community />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/faturamento"
+                      element={
+                        <FeatureGuard feature="faturamento" requiredPlan="Completo">
+                          <Billing />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/pecuaria"
+                      element={
+                        <FeatureGuard feature="pecuaria" requiredPlan="Pecuário Solo">
+                          <Pecuaria />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/rastreabilidade"
+                      element={
+                        <FeatureGuard feature="rastreabilidade" requiredPlan="Pecuário Solo">
+                          <Rastreabilidade />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/loja"
+                      element={
+                        <FeatureGuard feature="loja" requiredPlan="Plantio Solo">
+                          <Store />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/checkout"
+                      element={
+                        <FeatureGuard feature="checkout" requiredPlan="Completo">
+                          <Checkout />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/roi"
+                      element={
+                        <FeatureGuard feature="roi" requiredPlan="Plantio Solo">
+                          <CalculadoraRoi />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/meus-calculos"
+                      element={
+                        <FeatureGuard feature="meus-calculos" requiredPlan="Completo">
+                          <MeusCalculos />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/monitoramento"
+                      element={
+                        <FeatureGuard feature="monitoramento" requiredPlan="Completo">
+                          <Monitoramento />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/previsao-ia"
+                      element={
+                        <FeatureGuard feature="previsao-ia" requiredPlan="Plantio Solo">
+                          <PrevisaoIA />
+                        </FeatureGuard>
+                      }
+                    />
                     <Route path="/bloqueado" element={<BlockedAccess />} />
                     <Route path="/planos" element={<Planos />} />
                     <Route path="/perfil" element={<Profile />} />
-                    <Route path="/crm" element={<CRM />} />
+                    <Route
+                      path="/crm"
+                      element={
+                        <FeatureGuard feature="crm" requiredPlan="Completo">
+                          <CRM />
+                        </FeatureGuard>
+                      }
+                    />
                   </Route>
 
                   <Route element={<ProtectedRoute requireActive={false} />}>

@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase/client'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Check, Loader2, Sparkles, Tractor, ArrowRight } from 'lucide-react'
+import { Check, Loader2, Sparkles, Tractor, ArrowRight, X } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 
@@ -112,8 +112,22 @@ export default function PlanSelection() {
     }
   }
 
+  const handleClose = () => {
+    sessionStorage.setItem('plan_dismissed', 'true')
+    navigate('/dashboard')
+  }
+
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8 relative">
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={handleClose}
+        className="absolute top-4 right-4 md:top-8 md:right-8 text-slate-500 hover:text-slate-900 bg-white shadow-sm rounded-full w-10 h-10 z-50 border border-slate-200 transition-colors"
+        title="Fechar e ir para o Dashboard"
+      >
+        <X className="w-5 h-5" />
+      </Button>
       <div className="w-full max-w-7xl mx-auto space-y-12 animate-in fade-in duration-500">
         <div className="text-center space-y-4">
           <div className="flex justify-center mb-4">

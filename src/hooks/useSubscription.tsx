@@ -41,16 +41,28 @@ export function useSubscription() {
   const hasFeature = (feature: string) => {
     const userPlanName = plan?.plan_name || user?.plan_active || user?.plano_ativo || 'Básico'
 
-    const basicoFeatures = ['dashboard', 'pecuaria', 'previsao-ia']
-    const soloFeatures = [...basicoFeatures, 'rastreabilidade', 'roi']
-    const completoFeatures = [...soloFeatures, 'loja', 'checkout']
-    const familiaFeatures = [...completoFeatures, 'relatorios']
+    const basicoFeatures = ['dashboard', 'comunidade']
+    const plantioSoloFeatures = ['dashboard', 'comunidade', 'roi', 'previsao-ia', 'loja']
+    const pecuarioSoloFeatures = ['dashboard', 'comunidade', 'pecuaria', 'rastreabilidade', 'loja']
+    const completoFeatures = [
+      ...plantioSoloFeatures,
+      ...pecuarioSoloFeatures,
+      'faturamento',
+      'meus-calculos',
+      'monitoramento',
+      'crm',
+      'checkout',
+    ]
+    const familiaFeatures = [...completoFeatures, 'multi_propriedade', 'relatorios']
 
     if (userPlanName === 'Básico') {
       return basicoFeatures.includes(feature)
     }
-    if (userPlanName === 'Plantio Solo' || userPlanName === 'Pecuário Solo') {
-      return soloFeatures.includes(feature)
+    if (userPlanName === 'Plantio Solo') {
+      return plantioSoloFeatures.includes(feature)
+    }
+    if (userPlanName === 'Pecuário Solo') {
+      return pecuarioSoloFeatures.includes(feature)
     }
     if (userPlanName === 'Completo') {
       return completoFeatures.includes(feature)

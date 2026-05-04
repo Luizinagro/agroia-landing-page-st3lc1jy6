@@ -23,10 +23,11 @@ export function FeatureGuard({ children, feature, requiredPlan }: FeatureGuardPr
   if (!hasFeature(feature)) {
     return (
       <Navigate
-        to="/dashboard"
+        to="/bloqueado"
         state={{
           blockedFeature: feature,
-          requiredPlan: requiredPlan || 'Premium',
+          requiredPlan: requiredPlan || 'Completo',
+          from: location.pathname,
         }}
         replace
       />

@@ -17,7 +17,13 @@ export function ProtectedRoute({ requireActive = true }: { requireActive?: boole
     return <Navigate to="/login" replace />
   }
 
-  if (requireActive && user.data_trial_expira && new Date(user.data_trial_expira) < new Date()) {
+  const trialExpiresAt =
+    (user as any)?.data_trial_expira ||
+    user?.user_metadata?.trial_expires_at ||
+    (user as any)?.trial_expires_at
+  const isTrialExpired = trialExpiresAt ? new Date(trialExpiresAt) < new Date() : false
+
+  if (requireActive && isTrialExpired && !sessionStorage.getItem('plan_dismissed')) {
     return <Navigate to="/selecionar-plano" replace />
   }
 
