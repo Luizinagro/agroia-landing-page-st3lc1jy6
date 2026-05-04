@@ -17,10 +17,14 @@ export function ProtectedRoute({ requireActive = true }: { requireActive?: boole
     return <Navigate to="/login" replace />
   }
 
-  const trialExpiresAt =
-    (user as any)?.data_trial_expira ||
-    user?.user_metadata?.trial_expires_at ||
-    (user as any)?.trial_expires_at
-  // A seleção de plano agora é acessada apenas quando o usuário deseja (através do menu), não forçando o redirecionamento.
+  const hasPlan = !!(user?.plan_type || user?.plan_active || user?.plano_ativo)
+  const isDismissed = sessionStorage.getItem('plan_dismissed') === 'true'
+  const isAdmin = user?.user_type === 'admin' || user?.tipo_usuario === 'admin'
+
+  // Redireciona para selecionar plano apenas se não tiver nenhum plano associado à conta e não tiver dispensado o aviso
+  if (requireActive && !hasPlan && !isDismissed && !isAdmin) {
+    return <Navigate to="/selecionar-plano" replace />
+  }
+
   return <Outlet />
 }

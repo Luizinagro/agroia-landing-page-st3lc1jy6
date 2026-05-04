@@ -48,7 +48,6 @@ const PLANS = [
       'previsao-ia',
       'analise-satelite',
       'crm',
-      'monitoramento',
       'faturamento',
       'meus-calculos',
       'checkout',
@@ -78,7 +77,6 @@ const PLANS = [
       'previsao-ia',
       'analise-satelite',
       'crm',
-      'monitoramento',
       'faturamento',
       'meus-calculos',
       'checkout',
@@ -141,6 +139,7 @@ export default function PlanSelection() {
         await updateUser({
           plan_active: selectedPlan.name,
           plano_ativo: selectedPlan.name,
+          plan_type: selectedPlan.name,
           plano: selectedPlan.name,
         })
       }

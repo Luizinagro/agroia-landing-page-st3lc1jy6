@@ -57,7 +57,7 @@ export default function Layout() {
     { title: 'Comunidade', icon: Users, path: '/comunidade' },
     ...(isAdmin ? [{ title: 'CRM', icon: BookOpen, path: '/crm' }] : []),
     { title: 'Faturamento', icon: CreditCard, path: '/faturamento' },
-    { title: 'Planos', icon: CreditCard, path: '/planos' },
+    { title: 'Planos', icon: CreditCard, path: '/selecionar-plano' },
     { title: 'Configurações', icon: Settings, path: '/perfil' },
   ]
 

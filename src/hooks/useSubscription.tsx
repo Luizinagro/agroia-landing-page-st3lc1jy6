@@ -39,7 +39,8 @@ export function useSubscription() {
   }, [user?.id, authLoading])
 
   const hasFeature = (feature: string) => {
-    const userPlanName = plan?.plan_name || user?.plan_active || user?.plano_ativo || 'Básico'
+    const userPlanName =
+      plan?.plan_name || user?.plan_type || user?.plan_active || user?.plano_ativo || 'Básico'
 
     const basicoFeatures = ['dashboard', 'comunidade']
     const plantioSoloFeatures = ['dashboard', 'comunidade', 'roi', 'previsao-ia', 'loja']
@@ -49,7 +50,6 @@ export function useSubscription() {
       ...pecuarioSoloFeatures,
       'faturamento',
       'meus-calculos',
-      'monitoramento',
       'crm',
       'checkout',
       'analise-satelite',
