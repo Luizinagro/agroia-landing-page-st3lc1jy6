@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase/client'
 
-export type WhatsAppEventType = 'PRICE_ALERT' | 'AI_RECOMMENDATION' | 'ORDER_UPDATE'
+export type WhatsAppEventType = 'PRICE_ALERT' | 'AI_RECOMMENDATION' | 'ORDER_UPDATE' | 'NDVI_ALERT'
 
 export interface WhatsAppPayload {
   event_type: WhatsAppEventType

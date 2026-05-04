@@ -31,6 +31,7 @@ import Rastreabilidade from './pages/Rastreabilidade'
 import CRM from './pages/CRM'
 import AnaliseSatelite from './pages/AnaliseSatelite'
 import SharedAnalysis from './pages/SharedAnalysis'
+import ConsultorPerformance from './pages/ConsultorPerformance'
 import { FeatureGuard } from './components/FeatureGuard'
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
@@ -152,6 +153,14 @@ const App = () => {
                       }
                     />
                     <Route path="/analise-satelite" element={<AnaliseSatelite />} />
+                    <Route
+                      path="/consultores"
+                      element={
+                        <FeatureGuard feature="consultores" requiredPlan="Completo">
+                          <ConsultorPerformance />
+                        </FeatureGuard>
+                      }
+                    />
                   </Route>
 
                   <Route element={<ProtectedRoute requireActive={false} />}>

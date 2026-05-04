@@ -23,6 +23,8 @@ export default function SharedAnalysis() {
 
         if (error) throw error
         setData(analysis)
+
+        await supabase.rpc('increment_satellite_views', { row_id: id })
       } catch (e) {
         console.error('Error fetching shared analysis:', e)
       } finally {

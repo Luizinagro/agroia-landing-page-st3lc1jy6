@@ -186,13 +186,43 @@ export default function AnaliseSatelite() {
     })
   }
 
-  const handleAlert = () => {
+  const handleAlert = async () => {
+    if (!analysisData) return
     toast({
       title: 'Alerta Geofencado Ativado',
-      description:
-        'Você será notificado se o NDVI desta área cair abaixo de 0.40 nas próximas análises.',
+      description: 'Você será notificado via WhatsApp se o NDVI desta área cair abaixo de 0.40.',
       className: 'bg-zinc-900 text-white border-white/20',
     })
+
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (user) {
+        await supabase.from('system_alerts').insert({
+          user_id: user.id,
+          tipo: 'ndvi_alert_config',
+          mensagem: `Alerta configurado para NDVI < 0.40 na área ${analysisData.lat}, ${analysisData.lng}`,
+        })
+
+        // Trigger WhatsApp immediately if NDVI is already low, to demonstrate functionality
+        if (analysisData.ndvi < 0.4) {
+          await supabase.functions.invoke('whatsapp-notifications', {
+            body: {
+              event_type: 'NDVI_ALERT',
+              user_id: user.id,
+              data: {
+                latitude: analysisData.lat,
+                longitude: analysisData.lng,
+                ndvi: analysisData.ndvi,
+              },
+            },
+          })
+        }
+      }
+    } catch (e) {
+      console.error('Error activating alert:', e)
+    }
   }
 
   const getNdviAlert = (value: number) => {
