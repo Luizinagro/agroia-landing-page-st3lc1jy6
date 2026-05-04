@@ -95,7 +95,7 @@ const PLANS = [
 ]
 
 export default function PlanSelection() {
-  const { user } = useAuth()
+  const { user, updateUser } = useAuth()
   const navigate = useNavigate()
   const { toast } = useToast()
   const [updating, setUpdating] = useState<string | null>(null)
@@ -129,7 +129,21 @@ export default function PlanSelection() {
         if (error) throw error
       }
 
-      await supabase.from('users').update({ plan_active: selectedPlan.name }).eq('id', user.id)
+      await supabase
+        .from('users')
+        .update({
+          plan_active: selectedPlan.name,
+          plan_type: selectedPlan.name,
+        } as any)
+        .eq('id', user.id)
+
+      if (updateUser) {
+        await updateUser({
+          plan_active: selectedPlan.name,
+          plano_ativo: selectedPlan.name,
+          plano: selectedPlan.name,
+        })
+      }
 
       toast({
         title: 'Plano selecionado com sucesso!',
@@ -137,7 +151,7 @@ export default function PlanSelection() {
         className: 'bg-[#1a3c34] text-white border-[#f4d03f]',
       })
 
-      window.location.assign('/dashboard')
+      navigate('/dashboard')
     } catch (error) {
       console.error(error)
       toast({

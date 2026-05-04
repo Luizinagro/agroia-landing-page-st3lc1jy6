@@ -52,6 +52,7 @@ export function useSubscription() {
       'monitoramento',
       'crm',
       'checkout',
+      'analise-satelite',
     ]
     const familiaFeatures = [...completoFeatures, 'multi_propriedade', 'relatorios']
 

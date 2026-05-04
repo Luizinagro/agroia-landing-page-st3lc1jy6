@@ -160,14 +160,7 @@ const App = () => {
                         </FeatureGuard>
                       }
                     />
-                    <Route
-                      path="/analise-satelite"
-                      element={
-                        <FeatureGuard feature="analise-satelite" requiredPlan="Completo">
-                          <AnaliseSatelite />
-                        </FeatureGuard>
-                      }
-                    />
+                    <Route path="/analise-satelite" element={<AnaliseSatelite />} />
                   </Route>
 
                   <Route element={<ProtectedRoute requireActive={false} />}>
