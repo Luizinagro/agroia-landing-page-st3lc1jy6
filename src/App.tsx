@@ -152,7 +152,14 @@ const App = () => {
                         </FeatureGuard>
                       }
                     />
-                    <Route path="/analise-satelite" element={<AnaliseSatelite />} />
+                    <Route
+                      path="/analise-satelite"
+                      element={
+                        <FeatureGuard feature="analise-satelite" requiredPlan="Completo">
+                          <AnaliseSatelite />
+                        </FeatureGuard>
+                      }
+                    />
                     <Route
                       path="/consultores"
                       element={

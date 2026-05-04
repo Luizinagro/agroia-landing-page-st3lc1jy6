@@ -1,19 +1,19 @@
 {
-  "name": "AgroIA",
-  "short_name": "AgroIA",
-  "description": "Inteligência Artificial Hiperlocal para o Agro",
+  "name": "Agro IA",
+  "short_name": "Agro IA",
+  "description": "Plataforma de gestão inteligente para o agronegócio.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
-  "theme_color": "#1DB954",
+  "theme_color": "#1a3c34",
   "icons": [
     {
-      "src": "/logo.png",
+      "src": "https://img.usecurling.com/i?q=tractor&color=green&shape=fill",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/logo.png",
+      "src": "https://img.usecurling.com/i?q=tractor&color=green&shape=fill",
       "sizes": "512x512",
       "type": "image/png"
     }
