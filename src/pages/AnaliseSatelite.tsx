@@ -15,12 +15,23 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { cn } from '@/lib/utils'
+import { supabase } from '@/lib/supabase/client'
+
+interface AnalysisData {
+  ndvi: number
+  umidade: number
+  temperatura: number
+  data: string
+  thumbnail: string
+}
 
 export default function AnaliseSatelite() {
   const [lat, setLat] = useState('-15.7938')
   const [lng, setLng] = useState('-47.8827')
   const [pinPos, setPinPos] = useState({ x: 50, y: 50 })
   const [status, setStatus] = useState<'empty' | 'loading' | 'success' | 'error'>('empty')
+  const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null)
+  const [alertMessage, setAlertMessage] = useState<string>('')
 
   const handleMapClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -32,25 +43,36 @@ export default function AnaliseSatelite() {
     setLng((-47 + (x - 50) * 0.2).toFixed(4))
   }
 
-  const handleAnalyse = () => {
+  const handleAnalyse = async () => {
     setStatus('loading')
-    setTimeout(() => {
-      // 10% chance de erro para testar a UX
-      if (Math.random() > 0.9) {
-        setStatus('error')
-      } else {
-        setStatus('success')
-      }
-    }, 2500)
-  }
+    setAlertMessage('')
+    setAnalysisData(null)
 
-  // Dados mockados solicitados
-  const mockData = {
-    ndvi: 0.65,
-    umidade: 72,
-    temperatura: 28,
-    data: new Date().toLocaleDateString('pt-BR'),
-    thumbnail: 'https://img.usecurling.com/p/400/300?q=satellite%20farm%20field&color=green&dpr=2',
+    try {
+      const { data, error } = await supabase.functions.invoke('analyze-satellite', {
+        body: { latitude: parseFloat(lat), longitude: parseFloat(lng) },
+      })
+
+      if (error) throw error
+      if (!data?.success) throw new Error(data?.error || 'Erro desconhecido ao analisar imagem.')
+
+      setAnalysisData({
+        ndvi: data.data.ndvi_value,
+        umidade: data.data.soil_moisture,
+        temperatura: data.data.temperature,
+        data: new Date(data.data.analysis_date).toLocaleDateString('pt-BR'),
+        thumbnail: data.data.image_url,
+      })
+
+      if (data.message) {
+        setAlertMessage(data.message)
+      }
+
+      setStatus('success')
+    } catch (error) {
+      console.error(error)
+      setStatus('error')
+    }
   }
 
   const getNdviColor = (value: number) => {
@@ -73,6 +95,14 @@ export default function AnaliseSatelite() {
           </p>
         </div>
       </div>
+
+      {alertMessage && (
+        <Alert className="bg-primary/10 border-primary/20 text-primary">
+          <Satellite className="h-4 w-4" />
+          <AlertTitle>Aviso</AlertTitle>
+          <AlertDescription>{alertMessage}</AlertDescription>
+        </Alert>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Painel do Mapa */}
@@ -201,7 +231,7 @@ export default function AnaliseSatelite() {
               <AlertDescription className="mt-2 flex flex-col gap-4">
                 <p>
                   Não conseguimos processar as imagens de satélite para esta coordenada no momento.
-                  O servidor pode estar indisponível.
+                  A API de integração pode estar indisponível.
                 </p>
                 <Button
                   variant="outline"
@@ -215,7 +245,7 @@ export default function AnaliseSatelite() {
             </Alert>
           )}
 
-          {status === 'success' && (
+          {status === 'success' && analysisData && (
             <div className="space-y-4 animate-slide-up">
               <Card className="bg-black border-white/10 shadow-[0_0_15px_rgba(29,185,84,0.1)] overflow-hidden">
                 <CardHeader className="bg-zinc-900/50 border-b border-white/5 pb-4">
@@ -228,18 +258,22 @@ export default function AnaliseSatelite() {
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-medium text-zinc-300">Índice NDVI</span>
                         <span className="text-xs px-2 py-0.5 rounded-full bg-primary/20 text-primary font-medium border border-primary/20">
-                          Saudável
+                          {analysisData.ndvi > 0.6
+                            ? 'Saudável'
+                            : analysisData.ndvi > 0.4
+                              ? 'Atenção'
+                              : 'Crítico'}
                         </span>
                       </div>
-                      <span className="text-3xl font-bold text-white">{mockData.ndvi}</span>
+                      <span className="text-3xl font-bold text-white">{analysisData.ndvi}</span>
                     </div>
                     <div className="h-2.5 w-full bg-zinc-800 rounded-full overflow-hidden">
                       <div
                         className={cn(
                           'h-full transition-all duration-1000',
-                          getNdviColor(mockData.ndvi),
+                          getNdviColor(analysisData.ndvi),
                         )}
-                        style={{ width: `${mockData.ndvi * 100}%` }}
+                        style={{ width: `${analysisData.ndvi * 100}%` }}
                       />
                     </div>
                     <div className="flex justify-between text-[10px] text-zinc-500 font-medium">
@@ -256,14 +290,14 @@ export default function AnaliseSatelite() {
                         <Droplets className="w-4 h-4" />
                         <span className="text-sm font-medium">Umidade Solo</span>
                       </div>
-                      <p className="text-2xl font-bold text-white">{mockData.umidade}%</p>
+                      <p className="text-2xl font-bold text-white">{analysisData.umidade}%</p>
                     </div>
                     <div className="bg-zinc-900/50 p-4 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
                       <div className="flex items-center gap-2 text-orange-400 mb-2">
                         <Thermometer className="w-4 h-4" />
                         <span className="text-sm font-medium">Temperatura</span>
                       </div>
-                      <p className="text-2xl font-bold text-white">{mockData.temperatura}°C</p>
+                      <p className="text-2xl font-bold text-white">{analysisData.temperatura}°C</p>
                     </div>
                   </div>
 
@@ -274,12 +308,12 @@ export default function AnaliseSatelite() {
                         <ImageIcon className="w-4 h-4" /> Imagem Recente
                       </span>
                       <span className="text-zinc-300 flex items-center gap-1.5">
-                        <Calendar className="w-4 h-4 text-primary" /> {mockData.data}
+                        <Calendar className="w-4 h-4 text-primary" /> {analysisData.data}
                       </span>
                     </div>
                     <div className="relative rounded-xl overflow-hidden border border-white/10 aspect-video group">
                       <img
-                        src={mockData.thumbnail}
+                        src={analysisData.thumbnail}
                         alt="Satélite Thumbnail"
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />

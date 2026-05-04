@@ -14,15 +14,15 @@ const PLANS = [
     price: 'Grátis',
     period: '',
     level: 0,
-    features: ['dashboard'],
-    featureLabels: ['Dashboard Básico', 'Suporte Básico'],
+    features: ['dashboard', 'comunidade'],
+    featureLabels: ['Dashboard Básico', 'Suporte Básico', 'Acesso à Comunidade'],
   },
   {
     name: 'Plantio Solo',
     price: 'R$ 147',
     period: '/mês',
     level: 1,
-    features: ['dashboard', 'roi', 'loja'],
+    features: ['dashboard', 'comunidade', 'roi', 'loja', 'previsao-ia'],
     featureLabels: ['Previsão IA', 'Calculadora de ROI', 'Loja de Insumos'],
   },
   {
@@ -30,7 +30,7 @@ const PLANS = [
     price: 'R$ 147',
     period: '/mês',
     level: 1,
-    features: ['dashboard', 'pecuaria', 'rastreabilidade', 'loja'],
+    features: ['dashboard', 'comunidade', 'pecuaria', 'rastreabilidade', 'loja'],
     featureLabels: ['Rastreabilidade', 'Loja de Insumos', 'Gestão Pecuária'],
   },
   {
@@ -38,21 +38,58 @@ const PLANS = [
     price: 'R$ 347',
     period: '/mês',
     level: 2,
-    features: ['dashboard', 'roi', 'loja', 'pecuaria', 'rastreabilidade'],
-    featureLabels: ['Previsão IA', 'Rastreabilidade', 'Calculadora de ROI', 'Loja de Insumos'],
+    features: [
+      'dashboard',
+      'comunidade',
+      'roi',
+      'loja',
+      'pecuaria',
+      'rastreabilidade',
+      'previsao-ia',
+      'analise-satelite',
+      'crm',
+      'monitoramento',
+      'faturamento',
+      'meus-calculos',
+      'checkout',
+    ],
+    featureLabels: [
+      'Previsão IA',
+      'Rastreabilidade',
+      'Calculadora de ROI',
+      'Loja de Insumos',
+      'Análise de Satélite',
+      'CRM',
+    ],
   },
   {
     name: 'Família Coop',
     price: 'R$ 747',
     period: '/mês',
     level: 3,
-    features: ['dashboard', 'roi', 'loja', 'pecuaria', 'rastreabilidade', 'multi_propriedade'],
+    features: [
+      'dashboard',
+      'comunidade',
+      'roi',
+      'loja',
+      'pecuaria',
+      'rastreabilidade',
+      'multi_propriedade',
+      'previsao-ia',
+      'analise-satelite',
+      'crm',
+      'monitoramento',
+      'faturamento',
+      'meus-calculos',
+      'checkout',
+    ],
     featureLabels: [
       'Previsão IA',
       'Rastreabilidade',
       'Calculadora de ROI',
       'Loja de Insumos',
       'Até 5 propriedades',
+      'Análise de Satélite',
     ],
   },
 ]
@@ -118,17 +155,21 @@ export default function PlanSelection() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8 relative">
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={handleClose}
-        className="absolute top-4 right-4 md:top-8 md:right-8 text-slate-500 hover:text-slate-900 bg-white shadow-sm rounded-full w-10 h-10 z-50 border border-slate-200 transition-colors"
-        title="Fechar e ir para o Dashboard"
-      >
-        <X className="w-5 h-5" />
-      </Button>
-      <div className="w-full max-w-7xl mx-auto space-y-12 animate-in fade-in duration-500">
+    <div className="min-h-screen bg-slate-50 flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8 relative isolate">
+      {/* Botão de Fechar muito visível e acessível */}
+      <div className="absolute top-4 right-4 md:top-8 md:right-8 z-[100]">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={handleClose}
+          className="text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-100 shadow-md rounded-full w-12 h-12 border-2 border-slate-200 transition-all"
+          title="Fechar e ir para o Dashboard"
+        >
+          <X className="w-6 h-6" />
+        </Button>
+      </div>
+
+      <div className="w-full max-w-7xl mx-auto space-y-12 animate-in fade-in duration-500 z-10 pt-8">
         <div className="text-center space-y-4">
           <div className="flex justify-center mb-4">
             <div className="w-16 h-16 bg-[#1a3c34] rounded-2xl flex items-center justify-center shadow-lg transform -rotate-6">
@@ -144,7 +185,7 @@ export default function PlanSelection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6 items-stretch pb-10">
           {PLANS.map((plan) => (
             <Card
               key={plan.name}
@@ -201,7 +242,14 @@ export default function PlanSelection() {
           ))}
         </div>
 
-        <div className="text-center pt-8">
+        <div className="text-center pb-12 flex flex-col gap-4 items-center">
+          <Button
+            variant="outline"
+            className="text-slate-700 hover:text-[#1a3c34] border-slate-300"
+            onClick={handleClose}
+          >
+            Pular por enquanto
+          </Button>
           <Button
             variant="ghost"
             className="text-slate-500 hover:text-[#1a3c34]"
