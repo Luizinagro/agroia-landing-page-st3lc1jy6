@@ -24,7 +24,6 @@ import Checkout from './pages/Checkout'
 import BlockedAccess from './pages/BlockedAccess'
 import CalculadoraRoi from './pages/CalculadoraRoi'
 import MeusCalculos from './pages/MeusCalculos'
-import Monitoramento from './pages/Monitoramento'
 import Planos from './pages/Planos'
 import Profile from './pages/Profile'
 import PrevisaoIA from './pages/PrevisaoIA'
@@ -130,14 +129,6 @@ const App = () => {
                       element={
                         <FeatureGuard feature="meus-calculos" requiredPlan="Completo">
                           <MeusCalculos />
-                        </FeatureGuard>
-                      }
-                    />
-                    <Route
-                      path="/monitoramento"
-                      element={
-                        <FeatureGuard feature="monitoramento" requiredPlan="Completo">
-                          <Monitoramento />
                         </FeatureGuard>
                       }
                     />

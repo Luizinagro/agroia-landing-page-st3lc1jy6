@@ -24,7 +24,6 @@ import {
   CreditCard,
   Search,
   Calculator,
-  MapPin,
   Satellite,
   BrainCircuit,
   BookOpen,
@@ -49,7 +48,6 @@ export default function Layout() {
   const menuItems = [
     { title: 'Dashboard Consolidado', icon: TrendingUp, path: '/dashboard-consolidado' },
     { title: 'Dashboard', icon: Home, path: '/dashboard' },
-    { title: 'Monitoramento', icon: MapPin, path: '/monitoramento' },
     { title: 'Análise de Satélite', icon: Satellite, path: '/analise-satelite' },
     { title: 'Previsão IA', icon: BrainCircuit, path: '/previsao-ia' },
     { title: 'Pecuária', icon: Tractor, path: '/pecuaria' },
