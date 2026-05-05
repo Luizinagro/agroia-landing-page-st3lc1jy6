@@ -32,6 +32,7 @@ import CRM from './pages/CRM'
 import AnaliseSatelite from './pages/AnaliseSatelite'
 import SharedAnalysis from './pages/SharedAnalysis'
 import ConsultorPerformance from './pages/ConsultorPerformance'
+import ConsultorIAAgro from './pages/ConsultorIAAgro'
 import { FeatureGuard } from './components/FeatureGuard'
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
@@ -165,6 +166,14 @@ const App = () => {
                       element={
                         <FeatureGuard feature="consultores" requiredPlan="Completo">
                           <ConsultorPerformance />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/consultor-ia-agro"
+                      element={
+                        <FeatureGuard feature="consultor-ia-agro" requiredPlan="Plantio Solo">
+                          <ConsultorIAAgro />
                         </FeatureGuard>
                       }
                     />
