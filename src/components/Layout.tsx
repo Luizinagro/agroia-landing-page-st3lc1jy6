@@ -28,6 +28,7 @@ import {
   BrainCircuit,
   BookOpen,
   TrendingUp,
+  Share2,
 } from 'lucide-react'
 import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
@@ -49,8 +50,10 @@ export default function Layout() {
     { title: 'Dashboard Consolidado', icon: TrendingUp, path: '/dashboard-consolidado' },
     { title: 'Dashboard', icon: Home, path: '/dashboard' },
     { title: 'Análise de Satélite', icon: Satellite, path: '/analise-satelite' },
-    { title: 'Previsão IA', icon: BrainCircuit, path: '/previsao-ia' },
     { title: 'Consultor IA Agro', icon: BrainCircuit, path: '/consultor-ia-agro' },
+    { title: 'Consultores', icon: Users, path: '/consultores' },
+    { title: 'Análises Compartilhadas', icon: Share2, path: '/analises-compartilhadas' },
+    { title: 'Previsão IA', icon: BrainCircuit, path: '/previsao-ia' },
     { title: 'Pecuária', icon: Tractor, path: '/pecuaria' },
     { title: 'Rastreabilidade', icon: Search, path: '/rastreabilidade' },
     { title: 'Calculadora ROI', icon: Calculator, path: '/roi' },

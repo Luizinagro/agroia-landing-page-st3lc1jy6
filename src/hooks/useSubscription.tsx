@@ -53,6 +53,9 @@ export function useSubscription() {
       'crm',
       'checkout',
       'analise-satelite',
+      'consultor-ia-agro',
+      'consultores',
+      'analise-compartilhada',
     ]
     const familiaFeatures = [...completoFeatures, 'multi_propriedade', 'relatorios']
 

@@ -1,9 +1,8 @@
 /* Main App Component - Handles routing (using react-router-dom), query client and other providers - use this file to add all routes */
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
-import PaginaInicial from './pages/PaginaInicial'
 import Dashboard from './pages/Dashboard'
 import DashboardConsolidado from './pages/DashboardConsolidado'
 import Community from './pages/Community'
@@ -48,7 +47,7 @@ const App = () => {
               <Sonner />
               <Routes>
                 <Route element={<Layout />}>
-                  <Route path="/" element={<PaginaInicial />} />
+                  <Route path="/" element={<Navigate to="/analise-satelite" replace />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/cadastro" element={<Register />} />
                   <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -170,9 +169,17 @@ const App = () => {
                       }
                     />
                     <Route
+                      path="/analises-compartilhadas"
+                      element={
+                        <FeatureGuard feature="analise-compartilhada" requiredPlan="Completo">
+                          <ConsultorPerformance />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
                       path="/consultor-ia-agro"
                       element={
-                        <FeatureGuard feature="consultor-ia-agro" requiredPlan="Plantio Solo">
+                        <FeatureGuard feature="consultor-ia-agro" requiredPlan="Completo">
                           <ConsultorIAAgro />
                         </FeatureGuard>
                       }
