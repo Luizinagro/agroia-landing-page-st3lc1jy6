@@ -1,16 +1,16 @@
 {
   "_versions": {
-    "gemini-forecast": 6,
-    "whatsapp-notifications": 5,
-    "cepea-prices": 5,
-    "gemini-previsao-safra": 5,
-    "buscar-dados-inmet": 3,
-    "gemini-recomendacoes": 4,
-    "gerar-alertas": 3,
-    "calcular-cio": 1,
-    "gerar-alertas-cio": 1,
-    "buscar-preco-saca": 1,
-    "analyze-satellite": 2,
-    "consultor-ia-agro": 2
+    "gemini-forecast": 10,
+    "whatsapp-notifications": 9,
+    "cepea-prices": 9,
+    "gemini-previsao-safra": 9,
+    "buscar-dados-inmet": 7,
+    "gemini-recomendacoes": 8,
+    "gerar-alertas": 7,
+    "calcular-cio": 5,
+    "gerar-alertas-cio": 5,
+    "buscar-preco-saca": 5,
+    "analyze-satellite": 6,
+    "consultor-ia-agro": 6
   }
 }
