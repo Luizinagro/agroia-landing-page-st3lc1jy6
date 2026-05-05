@@ -91,7 +91,12 @@ export default function Layout() {
                         isActive={location.pathname === item.path}
                         className="data-[active=true]:bg-primary/10 data-[active=true]:text-primary hover:bg-zinc-900 hover:text-primary transition-colors"
                       >
-                        <Link to={item.path} className="flex items-center gap-3">
+                        {/* Adicionado o state={{ fromMenu: true }} para que a página saiba se o acesso foi intencional pelo menu */}
+                        <Link
+                          to={item.path}
+                          state={{ fromMenu: true }}
+                          className="flex items-center gap-3"
+                        >
                           <item.icon className="w-5 h-5" />
                           <span className="font-medium">{item.title}</span>
                         </Link>

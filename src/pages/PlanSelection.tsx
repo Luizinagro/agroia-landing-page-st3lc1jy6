@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase/client'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -95,8 +95,22 @@ const PLANS = [
 export default function PlanSelection() {
   const { user, updateUser } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const { toast } = useToast()
   const [updating, setUpdating] = useState<string | null>(null)
+
+  // Redirecionamento automático se o usuário já tem um plano (e não veio intencionalmente pelo menu)
+  useEffect(() => {
+    if (user) {
+      const currentPlan = user.plan_active || user.plan_type || user.plano_ativo || 'Básico'
+      const isPremium = currentPlan !== 'Básico' && currentPlan !== 'Nenhum'
+      const fromMenu = location.state?.fromMenu
+
+      if (isPremium && !fromMenu) {
+        navigate('/dashboard', { replace: true })
+      }
+    }
+  }, [user, navigate, location.state])
 
   const handleSelectPlan = async (selectedPlan: (typeof PLANS)[0]) => {
     if (!user?.id) return
@@ -196,6 +210,14 @@ export default function PlanSelection() {
             Selecione o plano ideal para iniciar sua jornada e destravar o poder da inteligência
             artificial na sua propriedade.
           </p>
+
+          {user?.plan_active && user.plan_active !== 'Básico' && user.plan_active !== 'Nenhum' && (
+            <div className="pt-2">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800">
+                Seu plano atual: {user.plan_active}
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6 items-stretch pb-10">
@@ -255,13 +277,14 @@ export default function PlanSelection() {
           ))}
         </div>
 
+        {/* Área de pular altamente visível para quem não quer escolher o plano agora */}
         <div className="text-center pb-12 flex flex-col gap-4 items-center">
           <Button
             variant="outline"
-            className="text-slate-700 hover:text-[#1a3c34] border-slate-300"
+            className="text-slate-700 hover:text-[#1a3c34] border-slate-300 w-full max-w-xs h-12 text-base font-bold shadow-sm"
             onClick={handleClose}
           >
-            Pular por enquanto
+            Ir para o Dashboard (Pular)
           </Button>
           <Button
             variant="ghost"
