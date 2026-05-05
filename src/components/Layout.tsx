@@ -1,5 +1,6 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
+import { useSubscription } from '@/hooks/useSubscription'
 import {
   SidebarProvider,
   Sidebar,
@@ -29,14 +30,16 @@ import {
   BookOpen,
   TrendingUp,
   Share2,
+  Lock,
 } from 'lucide-react'
 import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
 
 export default function Layout() {
-  const { user, logout } = useAuth()
+  const { user, logout } = useAuth() as any
   const location = useLocation()
   const navigate = useNavigate()
+  const { hasFeature } = useSubscription()
 
   const isPublicPage = ['/', '/login', '/cadastro', '/forgot-password'].includes(location.pathname)
 
@@ -46,23 +49,73 @@ export default function Layout() {
 
   const isAdmin = user?.user_type === 'admin' || user?.tipo_usuario === 'admin'
 
-  const menuItems = [
-    { title: 'Dashboard Consolidado', icon: TrendingUp, path: '/dashboard-consolidado' },
-    { title: 'Dashboard', icon: Home, path: '/dashboard' },
-    { title: 'Análise de Satélite', icon: Satellite, path: '/analise-satelite' },
-    { title: 'Consultor IA Agro', icon: BrainCircuit, path: '/consultor-ia-agro' },
-    { title: 'Consultores', icon: Users, path: '/consultores' },
-    { title: 'Análises Compartilhadas', icon: Share2, path: '/analises-compartilhadas' },
-    { title: 'Previsão IA', icon: BrainCircuit, path: '/previsao-ia' },
-    { title: 'Pecuária', icon: Tractor, path: '/pecuaria' },
-    { title: 'Rastreabilidade', icon: Search, path: '/rastreabilidade' },
-    { title: 'Calculadora ROI', icon: Calculator, path: '/roi' },
-    { title: 'Loja', icon: Package, path: '/loja' },
-    { title: 'Comunidade', icon: Users, path: '/comunidade' },
-    ...(isAdmin ? [{ title: 'CRM', icon: BookOpen, path: '/crm' }] : []),
-    { title: 'Faturamento', icon: CreditCard, path: '/faturamento' },
-    { title: 'Planos', icon: CreditCard, path: '/selecionar-plano' },
-    { title: 'Configurações', icon: Settings, path: '/perfil' },
+  const menuGroups = [
+    {
+      label: 'Visão Geral',
+      items: [
+        {
+          title: 'Dashboard Consolidado',
+          icon: TrendingUp,
+          path: '/dashboard-consolidado',
+          feature: 'dashboard',
+        },
+        { title: 'Dashboard', icon: Home, path: '/dashboard', feature: 'dashboard' },
+      ],
+    },
+    {
+      label: 'IA e Análises',
+      items: [
+        {
+          title: 'Análise de Satélite',
+          icon: Satellite,
+          path: '/analise-satelite',
+          feature: 'analise-satelite',
+        },
+        {
+          title: 'Consultor IA Agro',
+          icon: BrainCircuit,
+          path: '/consultor-ia-agro',
+          feature: 'consultor-ia-agro',
+        },
+        { title: 'Previsão IA', icon: BrainCircuit, path: '/previsao-ia', feature: 'previsao-ia' },
+        { title: 'Calculadora ROI', icon: Calculator, path: '/roi', feature: 'roi' },
+      ],
+    },
+    {
+      label: 'Gestão e Operação',
+      items: [
+        { title: 'Pecuária', icon: Tractor, path: '/pecuaria', feature: 'pecuaria' },
+        {
+          title: 'Rastreabilidade',
+          icon: Search,
+          path: '/rastreabilidade',
+          feature: 'rastreabilidade',
+        },
+        { title: 'Consultores', icon: Users, path: '/consultores', feature: 'consultores' },
+        {
+          title: 'Análises Compartilhadas',
+          icon: Share2,
+          path: '/analises-compartilhadas',
+          feature: 'analise-compartilhada',
+        },
+        ...(isAdmin ? [{ title: 'CRM', icon: BookOpen, path: '/crm', feature: 'crm' }] : []),
+        { title: 'Faturamento', icon: CreditCard, path: '/faturamento', feature: 'faturamento' },
+      ],
+    },
+    {
+      label: 'Ecossistema',
+      items: [
+        { title: 'Loja', icon: Package, path: '/loja', feature: 'loja' },
+        { title: 'Comunidade', icon: Users, path: '/comunidade', feature: 'comunidade' },
+      ],
+    },
+    {
+      label: 'Minha Conta',
+      items: [
+        { title: 'Planos', icon: CreditCard, path: '/selecionar-plano', feature: null },
+        { title: 'Configurações', icon: Settings, path: '/perfil', feature: null },
+      ],
+    },
   ]
 
   const handleLogout = async () => {
@@ -84,32 +137,41 @@ export default function Layout() {
             </Link>
           </SidebarHeader>
           <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupLabel className="text-zinc-500">Menu Principal</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu className="gap-2">
-                  {menuItems.map((item) => (
-                    <SidebarMenuItem key={item.path}>
-                      <SidebarMenuButton
-                        asChild
-                        isActive={location.pathname === item.path}
-                        className="data-[active=true]:bg-primary/10 data-[active=true]:text-primary hover:bg-zinc-900 hover:text-primary transition-colors"
-                      >
-                        {/* Adicionado o state={{ fromMenu: true }} para que a página saiba se o acesso foi intencional pelo menu */}
-                        <Link
-                          to={item.path}
-                          state={{ fromMenu: true }}
-                          className="flex items-center gap-3"
-                        >
-                          <item.icon className="w-5 h-5" />
-                          <span className="font-medium">{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
+            {menuGroups.map((group, idx) => (
+              <SidebarGroup key={idx}>
+                <SidebarGroupLabel className="text-zinc-500">{group.label}</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu className="gap-2">
+                    {group.items.map((item) => {
+                      const hasAccess = item.feature ? hasFeature(item.feature) : true
+                      return (
+                        <SidebarMenuItem key={item.path}>
+                          <SidebarMenuButton
+                            asChild
+                            isActive={location.pathname === item.path}
+                            className="data-[active=true]:bg-primary/10 data-[active=true]:text-primary hover:bg-zinc-900 hover:text-primary transition-colors flex items-center justify-between"
+                          >
+                            <Link
+                              to={item.path}
+                              state={{ fromMenu: true }}
+                              className="flex items-center gap-3 w-full"
+                            >
+                              <div className="flex items-center gap-3">
+                                <item.icon className="w-5 h-5" />
+                                <span className="font-medium">{item.title}</span>
+                              </div>
+                              {!hasAccess && (
+                                <Lock className="w-4 h-4 text-zinc-600 flex-shrink-0" />
+                              )}
+                            </Link>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      )
+                    })}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            ))}
           </SidebarContent>
           <div className="p-4 mt-auto border-t border-primary/20">
             <Button
