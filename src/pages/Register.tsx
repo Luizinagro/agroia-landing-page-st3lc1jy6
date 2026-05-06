@@ -7,6 +7,7 @@ import { Logo } from '@/components/ui/logo'
 import { useToast } from '@/hooks/use-toast'
 import { supabase } from '@/lib/supabase/client'
 import { Loader2 } from 'lucide-react'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Select,
   SelectContent,
@@ -54,6 +55,7 @@ export default function Register() {
     phone: '',
     estado: '',
     cidade: '',
+    acceptTerms: false,
   })
   const [loading, setLoading] = useState(false)
   const { toast } = useToast()
@@ -70,6 +72,17 @@ export default function Register() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!formData.acceptTerms) {
+      toast({
+        title: 'Termos obrigatórios',
+        description:
+          'Você precisa aceitar os Termos de Uso e a Política de Privacidade para continuar.',
+        variant: 'destructive',
+      })
+      return
+    }
+
     setLoading(true)
     try {
       const { error } = await supabase.auth.signUp({
@@ -83,6 +96,8 @@ export default function Register() {
             phone: formData.phone,
             estado: formData.estado,
             cidade: formData.cidade,
+            terms_accepted: formData.acceptTerms,
+            terms_accepted_at: new Date().toISOString(),
           },
         },
       })
@@ -230,6 +245,41 @@ export default function Register() {
                 minLength={6}
                 className="bg-black/50 border-primary/30 focus-visible:ring-primary text-foreground"
               />
+            </div>
+          </div>
+
+          <div className="flex items-start space-x-3 pt-2">
+            <Checkbox
+              id="terms"
+              checked={formData.acceptTerms}
+              onCheckedChange={(checked) =>
+                setFormData((prev) => ({ ...prev, acceptTerms: checked === true }))
+              }
+              className="mt-1 data-[state=checked]:bg-primary data-[state=checked]:text-black border-primary/50"
+            />
+            <div className="space-y-1 leading-none">
+              <Label
+                htmlFor="terms"
+                className="text-sm font-medium text-muted-foreground cursor-pointer"
+              >
+                Eu concordo com os{' '}
+                <a
+                  href="#"
+                  className="text-primary hover:underline"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Termos de Uso
+                </a>{' '}
+                e a{' '}
+                <a
+                  href="#"
+                  className="text-primary hover:underline"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Política de Privacidade
+                </a>{' '}
+                da AgroIA. *
+              </Label>
             </div>
           </div>
 
