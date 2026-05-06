@@ -21,6 +21,9 @@ export type User = {
   plano_ativo: string
   plan_active?: string
   plano?: string
+  cpf?: string
+  estado?: string
+  cidade?: string
 }
 
 interface AuthContextType {
