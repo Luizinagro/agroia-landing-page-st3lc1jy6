@@ -90,7 +90,6 @@ export default function Layout() {
           path: '/rastreabilidade',
           feature: 'rastreabilidade',
         },
-        { title: 'Consultores', icon: Users, path: '/consultores', feature: 'consultores' },
         {
           title: 'Análises Compartilhadas',
           icon: Share2,

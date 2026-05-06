@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Loader2, TrendingUp, TrendingDown, Minus } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase/client'
 
 interface PriceData {
@@ -24,7 +24,7 @@ export function MercadoCepea() {
           const mapped = indicators.map((ind) => ({
             indicator: ind,
             price: res.prices[ind] || 0,
-            variation: Math.random() * 4 - 2, // Variação simulada pois a API mockada não retorna variação histórica
+            variation: 0,
             date: new Date().toLocaleDateString(),
           }))
           setData(mapped)
@@ -63,24 +63,6 @@ export function MercadoCepea() {
           <CardContent>
             <div className="text-2xl font-bold flex items-center justify-between text-white">
               R$ {item.price.toFixed(2)}
-              <span
-                className={`text-sm flex items-center ${
-                  item.variation > 0
-                    ? 'text-green-500'
-                    : item.variation < 0
-                      ? 'text-red-500'
-                      : 'text-gray-400'
-                }`}
-              >
-                {item.variation > 0 ? (
-                  <TrendingUp className="w-4 h-4 mr-1" />
-                ) : item.variation < 0 ? (
-                  <TrendingDown className="w-4 h-4 mr-1" />
-                ) : (
-                  <Minus className="w-4 h-4 mr-1" />
-                )}
-                {Math.abs(item.variation)}%
-              </span>
             </div>
             <p className="text-xs text-muted-foreground mt-2">Ref: {item.date}</p>
           </CardContent>

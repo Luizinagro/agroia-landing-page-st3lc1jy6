@@ -161,14 +161,6 @@ const App = () => {
                       }
                     />
                     <Route
-                      path="/consultores"
-                      element={
-                        <FeatureGuard feature="consultores" requiredPlan="Completo">
-                          <ConsultorPerformance />
-                        </FeatureGuard>
-                      }
-                    />
-                    <Route
                       path="/analises-compartilhadas"
                       element={
                         <FeatureGuard feature="analise-compartilhada" requiredPlan="Completo">
