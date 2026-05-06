@@ -25,7 +25,7 @@ export function MercadoCepea() {
             indicator: ind,
             price: res.prices[ind] || 0,
             variation: 0,
-            date: new Date().toLocaleDateString(),
+            date: new Date().toLocaleDateString('pt-BR'),
           }))
           setData(mapped)
         }

@@ -130,12 +130,12 @@ const Dashboard = () => {
           </div>
           <div className="flex gap-3">
             <Button
-              onClick={() => navigate('/consultores')}
+              onClick={() => navigate('/analises-compartilhadas')}
               variant="outline"
               className="border-primary/50 text-white hover:bg-primary/10 rounded-full"
             >
               <Users className="w-4 h-4 mr-2" />
-              Performance Consultores
+              Análises Compartilhadas
             </Button>
             <Button
               onClick={() => navigate('/analise-satelite')}

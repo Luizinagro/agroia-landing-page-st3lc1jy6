@@ -1,16 +1,16 @@
 {
   "_versions": {
-    "gemini-forecast": 11,
+    "gemini-forecast": 12,
     "whatsapp-notifications": 9,
-    "cepea-prices": 9,
-    "gemini-previsao-safra": 9,
+    "cepea-prices": 10,
+    "gemini-previsao-safra": 10,
     "buscar-dados-inmet": 7,
-    "gemini-recomendacoes": 8,
+    "gemini-recomendacoes": 9,
     "gerar-alertas": 7,
     "calcular-cio": 5,
     "gerar-alertas-cio": 5,
     "buscar-preco-saca": 5,
     "analyze-satellite": 6,
-    "consultor-ia-agro": 6
+    "consultor-ia-agro": 7
   }
 }
