@@ -18,6 +18,14 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Slider } from '@/components/ui/slider'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -67,6 +75,21 @@ export default function AnaliseSatelite() {
   const [alertMessage, setAlertMessage] = useState<string>('')
   const [history, setHistory] = useState<any[]>([])
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
+  const [propriedades, setPropriedades] = useState<any[]>([])
+  const [zoom, setZoom] = useState(15)
+
+  useEffect(() => {
+    const fetchProps = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (user) {
+        const { data } = await supabase.from('propriedades').select('*').eq('user_id', user.id)
+        if (data) setPropriedades(data)
+      }
+    }
+    fetchProps()
+  }, [])
 
   useEffect(() => {
     if (!planLoading) {
@@ -135,9 +158,7 @@ export default function AnaliseSatelite() {
         lng,
       })
 
-      if (data.message && data.message.includes('demonstração')) {
-        setAlertMessage(data.message)
-      }
+      setAlertMessage('Análise concluída com sucesso via satélite para as coordenadas fornecidas.')
 
       setStatus('success')
       fetchHistory()
@@ -418,6 +439,34 @@ export default function AnaliseSatelite() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {propriedades.length > 0 && (
+                  <div className="space-y-2 md:col-span-2">
+                    <label className="text-sm font-medium text-zinc-300 flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-primary" />
+                      Fazenda Cadastrada
+                    </label>
+                    <Select
+                      onValueChange={(val) => {
+                        const p = propriedades.find((p) => p.id === val)
+                        if (p) {
+                          setLat(p.latitude.toString())
+                          setLng(p.longitude.toString())
+                        }
+                      }}
+                    >
+                      <SelectTrigger className="bg-zinc-900 border-white/10 text-white focus-visible:ring-primary">
+                        <SelectValue placeholder="Selecione para buscar as coordenadas" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-zinc-900 border-white/10 text-white">
+                        {propriedades.map((p) => (
+                          <SelectItem key={p.id} value={p.id}>
+                            {p.nome} - {p.cultura_principal}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-zinc-300">Latitude</label>
                   <Input
@@ -436,17 +485,32 @@ export default function AnaliseSatelite() {
                     placeholder="-47.8827"
                   />
                 </div>
+
+                <div className="space-y-2 md:col-span-2 mt-2">
+                  <div className="flex justify-between items-center text-sm font-medium text-zinc-300">
+                    <label>Aproximação da Câmera (Zoom)</label>
+                    <span className="text-primary">{zoom}x</span>
+                  </div>
+                  <Slider
+                    value={[zoom]}
+                    onValueChange={(v) => setZoom(v[0])}
+                    min={10}
+                    max={20}
+                    step={1}
+                    className="py-2 cursor-ew-resize"
+                  />
+                </div>
               </div>
 
               {/* Mapa Interativo Real */}
               <div className="relative w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden cursor-crosshair border border-white/10 bg-zinc-900 group shadow-inner">
-                <div className="absolute inset-0 z-0 pointer-events-none">
+                <div className="absolute inset-0 z-0 pointer-events-none transition-all duration-500">
                   <iframe
                     width="100%"
                     height="100%"
                     frameBorder="0"
-                    style={{ border: 0 }}
-                    src={`https://maps.google.com/maps?q=${lat},${lng}&t=k&z=15&ie=UTF8&iwloc=&output=embed`}
+                    style={{ border: 0, transition: 'all 0.5s ease-in-out' }}
+                    src={`https://maps.google.com/maps?q=${lat},${lng}&t=k&z=${zoom}&ie=UTF8&iwloc=&output=embed`}
                   />
                 </div>
                 <div

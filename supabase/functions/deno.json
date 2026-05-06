@@ -6,11 +6,11 @@
     "gemini-previsao-safra": 10,
     "buscar-dados-inmet": 8,
     "gemini-recomendacoes": 9,
-    "gerar-alertas": 8,
+    "gerar-alertas": 9,
     "calcular-cio": 5,
     "gerar-alertas-cio": 5,
     "buscar-preco-saca": 5,
-    "analyze-satellite": 6,
+    "analyze-satellite": 7,
     "consultor-ia-agro": 7
   }
 }

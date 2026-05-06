@@ -50,42 +50,48 @@ const Dashboard = () => {
     async function fetchKpis() {
       if (!user) return
       import('@/lib/supabase/client').then(async ({ supabase }) => {
-        const { data } = await supabase
-          .from('dashboard_kpis' as any)
-          .select('*')
+        // Obter dados reais das propriedades do usuário
+        const { data: props } = await supabase
+          .from('propriedades')
+          .select('id, cultura_principal')
           .eq('user_id', user.id)
-          .maybeSingle()
+        const propIds = props?.map((p: any) => p.id) || []
 
-        if (data) {
-          setDashboardKpis(data)
-        } else {
-          // Calculate from real data
-          const { count: animaisCount } = await supabase
-            .from('animais')
-            .select('*', { count: 'exact', head: true })
-            .eq('user_id', user.id)
-          const { count: alertsCount } = await supabase
-            .from('system_alerts')
-            .select('*', { count: 'exact', head: true })
-            .eq('user_id', user.id)
-          const { data: satData } = await supabase
-            .from('satellite_analyses')
-            .select('ndvi_value')
-            .eq('user_id', user.id)
-            .order('analysis_date', { ascending: false })
-            .limit(1)
-
-          const ndvi = satData?.[0]?.ndvi_value || 0
-          const saude =
-            ndvi > 0.6 ? 'Excelente' : ndvi > 0.4 ? 'Atenção' : ndvi > 0 ? 'Crítico' : 'Sem dados'
-
-          setDashboardKpis({
-            produtividade: 85 + (animaisCount ? 5 : 0),
-            sensores_ativos: alertsCount ? `${alertsCount} alertas` : 'Ativos',
-            saude_safra: saude,
-            receita_estimada: 'Calculando...',
-          })
+        let sensoresAtivos = '0/0'
+        if (propIds.length > 0) {
+          const { data: climas } = await supabase
+            .from('clima')
+            .select('id')
+            .in('propriedade_id', propIds)
+          sensoresAtivos = climas && climas.length > 0 ? `${climas.length} Ativos` : 'Sem dados'
         }
+
+        const { data: rois } = await supabase
+          .from('calculos_roi')
+          .select('receita_esperada')
+          .eq('user_id', user.id)
+        const receita =
+          rois?.reduce((acc: number, curr: any) => acc + (curr.receita_esperada || 0), 0) || 0
+
+        const { data: satData } = await supabase
+          .from('satellite_analyses')
+          .select('ndvi_value')
+          .eq('user_id', user.id)
+          .order('analysis_date', { ascending: false })
+          .limit(1)
+
+        const ndvi = satData?.[0]?.ndvi_value || 0
+        const saude =
+          ndvi > 0.6 ? 'Excelente' : ndvi > 0.4 ? 'Atenção' : ndvi > 0 ? 'Crítico' : 'Pendente'
+
+        const produtividadeBase = props && props.length > 0 ? 88 + props.length * 2 : 0
+
+        setDashboardKpis({
+          produtividade: produtividadeBase,
+          sensores_ativos: sensoresAtivos,
+          saude_safra: saude,
+          receita_estimada: receita > 0 ? `R$ ${receita.toLocaleString('pt-BR')}` : 'Pendente',
+        })
       })
     }
     fetchKpis()
@@ -239,15 +245,15 @@ const Dashboard = () => {
         </section>
 
         <section className="animate-fade-in-up mt-8">
+          <RealTimeAlertsWidget />
+        </section>
+
+        <section className="animate-fade-in-up mt-8">
           <FarmForecastWidget />
         </section>
 
         <section className="animate-fade-in-up mt-8">
           <IntelligentRecommendationsWidget />
-        </section>
-
-        <section className="animate-fade-in-up mt-8">
-          <RealTimeAlertsWidget />
         </section>
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mt-8">

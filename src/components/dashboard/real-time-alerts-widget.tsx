@@ -21,7 +21,10 @@ export function RealTimeAlertsWidget() {
   const fetchAlertas = async () => {
     setLoading(true)
     try {
-      const { data, error } = await supabase.functions.invoke('gerar-alertas')
+      const { data: userData } = await supabase.auth.getUser()
+      const { data, error } = await supabase.functions.invoke('gerar-alertas', {
+        body: { user_id: userData.user?.id },
+      })
       if (!error && data?.data) {
         setAlertas(data.data)
       }
