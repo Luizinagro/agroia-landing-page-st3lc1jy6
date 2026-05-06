@@ -10,6 +10,7 @@ import {
   Beef,
   MessageSquare,
   Map as MapIcon,
+  ClipboardList,
 } from 'lucide-react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
@@ -101,6 +102,18 @@ export function AppDock() {
       label: 'Comunidade',
       onClick: () => navigate('/comunidade'),
       isActive: location.pathname === '/comunidade',
+    },
+    {
+      icon: ClipboardList,
+      label: 'Gestão',
+      onClick: () => {
+        if (hasAccess(['Completo', 'Plantio Solo', 'Pecuário Solo', 'Família Coop'])) {
+          navigate('/gestao')
+        } else {
+          navigate('/dashboard', { state: { blockedFeature: true } })
+        }
+      },
+      isActive: location.pathname === '/gestao',
     },
     {
       icon: Settings,

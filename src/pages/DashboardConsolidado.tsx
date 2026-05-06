@@ -43,9 +43,11 @@ export default function DashboardConsolidado() {
     rebanho: 0,
     roi: 0,
     alertas: 0,
+    custoTotal: 0,
   })
   const [pieData, setPieData] = useState<{ name: string; value: number }[]>([])
   const [barData, setBarData] = useState<{ name: string; valor: number }[]>([])
+  const [benchmarkingData, setBenchmarkingData] = useState<any[]>([])
 
   const lineData = useMemo(
     () => [
@@ -71,6 +73,8 @@ export default function DashboardConsolidado() {
         { data: rois },
         { count: alertsCount },
         { data: props },
+        { data: estoqueData },
+        { data: benchData },
       ] = await Promise.all([
         supabase
           .from('propriedades')
@@ -89,11 +93,32 @@ export default function DashboardConsolidado() {
           .eq('user_id', user.id)
           .is('data_leitura', null),
         supabase.from('propriedades').select('cultura_principal').eq('user_id', user.id),
+        supabase
+          .from('user_estoque' as any)
+          .select('custo_total')
+          .eq('user_id', user.id),
+        supabase
+          .from('safras_benchmarking' as any)
+          .select('*')
+          .eq('user_id', user.id)
+          .order('ano', { ascending: true }),
       ])
 
       const totalRebanho =
         rebanho?.reduce((acc, curr) => acc + (Number(curr.quantidade) || 0), 0) || 0
       const totalRoi = rois?.reduce((acc, curr) => acc + (Number(curr.lucro_liquido) || 0), 0) || 0
+      const custoTotal =
+        estoqueData?.reduce((acc, curr) => acc + (Number(curr.custo_total) || 0), 0) || 0
+
+      setBenchmarkingData(
+        benchData && benchData.length > 0
+          ? benchData
+          : [
+              { ano: '2023', sacas_por_ha: 58, custo_por_ha: 3200 },
+              { ano: '2024', sacas_por_ha: 65, custo_por_ha: 3050 },
+              { ano: '2025', sacas_por_ha: 70, custo_por_ha: 2900 },
+            ],
+      )
 
       setKpis({
         propriedades: propCount || 0,
@@ -101,6 +126,7 @@ export default function DashboardConsolidado() {
         rebanho: totalRebanho,
         roi: totalRoi,
         alertas: alertsCount || 0,
+        custoTotal,
       })
 
       const culturaCounts = props?.reduce(
@@ -224,13 +250,16 @@ export default function DashboardConsolidado() {
 
         <GradientCard>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-zinc-400 font-medium">Rebanho Total</h3>
+            <h3 className="text-zinc-400 font-medium">Custos de Insumos</h3>
             <div className="p-2 bg-amber-500/10 rounded-lg text-amber-500">
-              <Tractor className="w-5 h-5" />
+              <DollarSign className="w-5 h-5" />
             </div>
           </div>
-          <p className="text-3xl font-bold text-white">
-            {kpis.rebanho} <span className="text-sm font-normal text-zinc-500">cabeças</span>
+          <p
+            className="text-3xl font-bold text-white truncate"
+            title={formatCurrency(kpis.custoTotal)}
+          >
+            {formatCurrency(kpis.custoTotal)}
           </p>
         </GradientCard>
 
@@ -260,36 +289,64 @@ export default function DashboardConsolidado() {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mt-8">
         <GradientCard className="xl:col-span-2">
-          <h3 className="text-lg font-semibold text-white mb-6">Produção Mensal (Estimada)</h3>
+          <h3 className="text-lg font-semibold text-white mb-6">
+            Benchmarking de Safras (Evolução Anual)
+          </h3>
           <div className="h-[300px] w-full min-h-0">
             <ChartContainer
-              config={{ producao: { label: 'Produção', color: '#22c55e' } }}
+              config={{
+                sacas_por_ha: { label: 'Sacas/ha', color: '#22c55e' },
+                custo_por_ha: { label: 'Custo/ha (R$)', color: '#ef4444' },
+              }}
               className="h-full w-full"
             >
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={lineData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                <LineChart
+                  data={benchmarkingData}
+                  margin={{ top: 5, right: 20, bottom: 5, left: 0 }}
+                >
                   <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
                   <XAxis
-                    dataKey="mes"
+                    dataKey="ano"
                     stroke="#888"
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
                   />
                   <YAxis
+                    yAxisId="left"
                     stroke="#888"
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
-                    tickFormatter={(value) => `${value}t`}
+                  />
+                  <YAxis
+                    yAxisId="right"
+                    orientation="right"
+                    stroke="#888"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
                   />
                   <ChartTooltip content={<ChartTooltipContent />} />
                   <Line
+                    yAxisId="left"
                     type="monotone"
-                    dataKey="producao"
+                    dataKey="sacas_por_ha"
+                    name="Sacas/ha"
                     stroke="#22c55e"
                     strokeWidth={3}
                     dot={{ r: 4, fill: '#22c55e', strokeWidth: 2, stroke: '#000' }}
+                    activeDot={{ r: 6 }}
+                  />
+                  <Line
+                    yAxisId="right"
+                    type="monotone"
+                    dataKey="custo_por_ha"
+                    name="Custo/ha (R$)"
+                    stroke="#ef4444"
+                    strokeWidth={3}
+                    dot={{ r: 4, fill: '#ef4444', strokeWidth: 2, stroke: '#000' }}
                     activeDot={{ r: 6 }}
                   />
                 </LineChart>

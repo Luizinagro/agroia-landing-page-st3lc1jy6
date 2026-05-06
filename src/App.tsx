@@ -33,6 +33,7 @@ import AnaliseSatelite from './pages/AnaliseSatelite'
 import SharedAnalysis from './pages/SharedAnalysis'
 import ConsultorPerformance from './pages/ConsultorPerformance'
 import ConsultorIAAgro from './pages/ConsultorIAAgro'
+import Gestao from './pages/Gestao'
 import { FeatureGuard } from './components/FeatureGuard'
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
@@ -174,6 +175,14 @@ const App = () => {
                       element={
                         <FeatureGuard feature="consultor-ia-agro" requiredPlan="Completo">
                           <ConsultorIAAgro />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/gestao"
+                      element={
+                        <FeatureGuard feature="gestao" requiredPlan="Plantio Solo">
+                          <Gestao />
                         </FeatureGuard>
                       }
                     />
