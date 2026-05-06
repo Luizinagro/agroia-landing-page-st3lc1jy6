@@ -112,29 +112,14 @@ export default function DashboardConsolidado() {
         {} as Record<string, number>,
       )
 
-      let pData = Object.entries(culturaCounts || {}).map(([name, value]) => ({ name, value }))
-      if (pData.length === 0) {
-        pData = [
-          { name: 'Soja', value: 40 },
-          { name: 'Milho', value: 30 },
-          { name: 'Sorgo', value: 10 },
-        ]
-      }
+      const pData = Object.entries(culturaCounts || {}).map(([name, value]) => ({ name, value }))
       setPieData(pData)
 
-      let bData =
+      const bData =
         rois?.map((r, i) => ({
           name: r.cultura || `Cálculo ${i + 1}`,
           valor: Number(r.lucro_liquido) || 0,
         })) || []
-
-      if (bData.length === 0) {
-        bData = [
-          { name: 'Fazenda Esperança', valor: 45000 },
-          { name: 'Fazenda Sol Nascente', valor: 62000 },
-          { name: 'Sítio Verde', valor: 38000 },
-        ]
-      }
       setBarData(bData)
     } catch (error) {
       console.error('Error fetching dashboard data:', error)
@@ -315,32 +300,36 @@ export default function DashboardConsolidado() {
 
         <GradientCard>
           <h3 className="text-lg font-semibold text-white mb-6">Distribuição de Culturas</h3>
-          <div className="h-[300px] w-full min-h-0">
-            <ChartContainer config={pieChartConfig} className="h-full w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={pieData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
-                    paddingAngle={5}
-                    dataKey="value"
-                  >
-                    {pieData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={pieColors[index % pieColors.length]}
-                        stroke="transparent"
-                      />
-                    ))}
-                  </Pie>
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Legend verticalAlign="bottom" height={36} iconType="circle" />
-                </PieChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+          <div className="h-[300px] w-full min-h-0 flex items-center justify-center">
+            {pieData.length === 0 ? (
+              <p className="text-zinc-500 font-medium">Nenhuma cultura cadastrada.</p>
+            ) : (
+              <ChartContainer config={pieChartConfig} className="h-full w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={80}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      {pieData.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={pieColors[index % pieColors.length]}
+                          stroke="transparent"
+                        />
+                      ))}
+                    </Pie>
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Legend verticalAlign="bottom" height={36} iconType="circle" />
+                  </PieChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            )}
           </div>
         </GradientCard>
 
@@ -348,35 +337,39 @@ export default function DashboardConsolidado() {
           <h3 className="text-lg font-semibold text-white mb-6">
             Rentabilidade por Propriedade / Cultura
           </h3>
-          <div className="h-[300px] w-full min-h-0">
-            <ChartContainer
-              config={{ valor: { label: 'Lucro Líquido (R$)', color: '#3b82f6' } }}
-              className="h-full w-full"
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={barData} margin={{ top: 5, right: 20, bottom: 5, left: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
-                  <XAxis
-                    dataKey="name"
-                    stroke="#888"
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <YAxis
-                    stroke="#888"
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={false}
-                    tickFormatter={(value) =>
-                      value >= 1000 ? `R$ ${value / 1000}k` : `R$ ${value}`
-                    }
-                  />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Bar dataKey="valor" fill="#3b82f6" radius={[4, 4, 0, 0]} maxBarSize={60} />
-                </BarChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+          <div className="h-[300px] w-full min-h-0 flex items-center justify-center">
+            {barData.length === 0 ? (
+              <p className="text-zinc-500 font-medium">Nenhum cálculo de ROI cadastrado.</p>
+            ) : (
+              <ChartContainer
+                config={{ valor: { label: 'Lucro Líquido (R$)', color: '#3b82f6' } }}
+                className="h-full w-full"
+              >
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={barData} margin={{ top: 5, right: 20, bottom: 5, left: 20 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
+                    <XAxis
+                      dataKey="name"
+                      stroke="#888"
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <YAxis
+                      stroke="#888"
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                      tickFormatter={(value) =>
+                        value >= 1000 ? `R$ ${value / 1000}k` : `R$ ${value}`
+                      }
+                    />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Bar dataKey="valor" fill="#3b82f6" radius={[4, 4, 0, 0]} maxBarSize={60} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            )}
           </div>
         </GradientCard>
       </div>

@@ -438,27 +438,31 @@ export default function AnaliseSatelite() {
                 </div>
               </div>
 
-              {/* Mapa Interativo Simulado */}
-              <div
-                className="relative w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden cursor-crosshair border border-white/10 bg-zinc-900 group shadow-inner"
-                onClick={handleMapClick}
-              >
-                <img
-                  src="https://img.usecurling.com/p/1000/600?q=satellite%20map%20terrain&color=gray&dpr=2"
-                  alt="Mapa satélite"
-                  className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+              {/* Mapa Interativo Real */}
+              <div className="relative w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden cursor-crosshair border border-white/10 bg-zinc-900 group shadow-inner">
+                <div className="absolute inset-0 z-0 pointer-events-none">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    frameBorder="0"
+                    style={{ border: 0 }}
+                    src={`https://maps.google.com/maps?q=${lat},${lng}&t=k&z=15&ie=UTF8&iwloc=&output=embed`}
+                  />
+                </div>
+                <div
+                  className="absolute inset-0 z-10 bg-black/10 group-hover:bg-transparent transition-colors"
+                  onClick={handleMapClick}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
 
                 {/* Pino */}
                 <div
-                  className="absolute w-6 h-6 -ml-3 -mt-6 text-primary transition-all duration-300 drop-shadow-[0_0_8px_rgba(29,185,84,0.8)]"
+                  className="absolute w-6 h-6 -ml-3 -mt-6 text-primary transition-all duration-300 drop-shadow-[0_0_8px_rgba(29,185,84,0.8)] z-20 pointer-events-none"
                   style={{ left: `${pinPos.x}%`, top: `${pinPos.y}%` }}
                 >
-                  <MapPin className="w-8 h-8 fill-primary/20" />
+                  <MapPin className="w-8 h-8 fill-primary" />
                 </div>
 
-                <div className="absolute bottom-4 left-4 right-4 text-xs text-white/90 bg-black/70 p-2.5 rounded-md backdrop-blur-md w-fit border border-white/20 shadow-lg">
+                <div className="absolute bottom-4 left-4 right-4 text-xs text-white/90 bg-black/70 p-2.5 rounded-md backdrop-blur-md w-fit border border-white/20 shadow-lg z-20 pointer-events-none">
                   Área selecionada: {lat}, {lng}
                 </div>
               </div>

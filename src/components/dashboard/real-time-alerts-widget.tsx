@@ -10,6 +10,8 @@ type Alerta = {
   mensagem: string
   urgencia: 'alta' | 'média' | 'baixa'
   data_alerta: string
+  fonte?: string
+  url?: string
 }
 
 export function RealTimeAlertsWidget() {
@@ -120,7 +122,21 @@ export function RealTimeAlertsWidget() {
                 <p className="text-sm font-medium text-white/90 leading-relaxed flex-1">
                   {alerta.mensagem}
                 </p>
-                <div className="flex justify-end">
+                <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/5">
+                  {alerta.fonte && alerta.url && alerta.url !== '#' ? (
+                    <a
+                      href={alerta.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[10px] text-primary hover:underline flex items-center gap-1 font-medium transition-colors"
+                    >
+                      Fonte: {alerta.fonte}
+                    </a>
+                  ) : (
+                    <span className="text-[10px] text-gray-500 font-medium">
+                      Fonte: {alerta.fonte || 'Sistema Interno'}
+                    </span>
+                  )}
                   <span
                     className={cn(
                       'text-[10px] font-bold px-2 py-0.5 rounded-full',
