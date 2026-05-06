@@ -156,12 +156,17 @@ export default function PrevisaoIA() {
                       <SelectItem value="Soja">Soja</SelectItem>
                       <SelectItem value="Milho">Milho</SelectItem>
                       <SelectItem value="Trigo">Trigo</SelectItem>
+                      <SelectItem value="Cana-de-açúcar">Cana-de-açúcar</SelectItem>
+                      <SelectItem value="Algodão">Algodão</SelectItem>
+                      <SelectItem value="Café">Café</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-[#FFFFFF] font-semibold">Quantidade (Sacas de 60kg)</Label>
+                  <Label className="text-[#FFFFFF] font-semibold">
+                    Quantidade (Sacas/Toneladas/Arrobas)
+                  </Label>
                   <Input
                     type="number"
                     min="1"
@@ -221,7 +226,7 @@ export default function PrevisaoIA() {
                           </h3>
                           <div className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#1DB954] to-[#00B4D8]">
                             {formatCurrency(precoSacaData.preco_saca)}{' '}
-                            <span className="text-sm text-[#A0A0A0] font-normal">/ saca</span>
+                            <span className="text-sm text-[#A0A0A0] font-normal">/ unidade</span>
                           </div>
                         </div>
                         <div className="flex gap-8 bg-[#000000] p-4 rounded-lg border border-[#1DB954]/10">
@@ -230,7 +235,7 @@ export default function PrevisaoIA() {
                               Quantidade
                             </p>
                             <p className="text-xl font-semibold text-[#FFFFFF]">
-                              {precoSacaData.quantidade} sacas
+                              {precoSacaData.quantidade}
                             </p>
                           </div>
                           <div className="w-[1px] bg-[#1DB954]/20"></div>
@@ -276,14 +281,14 @@ export default function PrevisaoIA() {
               <div className="space-y-6">
                 <h2 className="text-xl font-bold border-b border-[#1DB954]/20 pb-2 flex items-center gap-2 text-[#FFFFFF]">
                   <LineChart className="h-5 w-5 text-[#1DB954]" />
-                  Resultados para {resultado.quantidadeSacas} sacas de {resultado.cultura}
+                  Resultados para {resultado.quantidadeSacas} de {resultado.cultura}
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Card className="bg-[#050505] border-[#1DB954]/20">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-sm font-bold text-[#E0E0E0] flex items-center justify-between">
-                        Preço Atual (R$/saca)
+                        Preço Atual (R$)
                         <DollarSign className="h-4 w-4 text-[#1DB954]" />
                       </CardTitle>
                     </CardHeader>
