@@ -47,7 +47,7 @@ const App = () => {
               <Sonner />
               <Routes>
                 <Route element={<Layout />}>
-                  <Route path="/" element={<Navigate to="/analise-satelite" replace />} />
+                  <Route path="/" element={<Navigate to="/dashboard" replace />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/cadastro" element={<Register />} />
                   <Route path="/forgot-password" element={<ForgotPassword />} />

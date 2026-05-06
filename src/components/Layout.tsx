@@ -32,14 +32,13 @@ import {
   Share2,
   Lock,
 } from 'lucide-react'
-import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
 
 export default function Layout() {
   const { user, logout } = useAuth() as any
   const location = useLocation()
   const navigate = useNavigate()
-  const { hasFeature } = useSubscription()
+  const { hasFeature, loading: planLoading } = useSubscription()
 
   const isPublicPage = ['/', '/login', '/cadastro', '/forgot-password'].includes(location.pathname)
 
@@ -53,17 +52,17 @@ export default function Layout() {
     {
       label: 'Visão Geral',
       items: [
+        { title: 'Dashboard', icon: Home, path: '/dashboard', feature: 'dashboard' },
         {
           title: 'Dashboard Consolidado',
           icon: TrendingUp,
           path: '/dashboard-consolidado',
           feature: 'dashboard',
         },
-        { title: 'Dashboard', icon: Home, path: '/dashboard', feature: 'dashboard' },
       ],
     },
     {
-      label: 'IA e Análises',
+      label: 'Inteligência e Análises',
       items: [
         {
           title: 'Análise de Satélite',
@@ -133,34 +132,46 @@ export default function Layout() {
         <Sidebar className="border-r border-primary/20 bg-zinc-950">
           <SidebarHeader className="p-4">
             <Link to="/dashboard" className="flex items-center gap-2">
-              <Logo />
+              <span className="text-2xl font-bold tracking-tight text-white">
+                AGRO<span className="text-primary">IA</span>
+              </span>
             </Link>
           </SidebarHeader>
           <SidebarContent>
             {menuGroups.map((group, idx) => (
               <SidebarGroup key={idx}>
-                <SidebarGroupLabel className="text-zinc-500">{group.label}</SidebarGroupLabel>
+                <SidebarGroupLabel className="text-zinc-500 font-semibold uppercase tracking-wider text-xs px-4 mt-4 mb-2">
+                  {group.label}
+                </SidebarGroupLabel>
                 <SidebarGroupContent>
-                  <SidebarMenu className="gap-2">
+                  <SidebarMenu className="gap-1 px-2">
                     {group.items.map((item) => {
                       const hasAccess = item.feature ? hasFeature(item.feature) : true
+                      const isActive = location.pathname === item.path
+
                       return (
                         <SidebarMenuItem key={item.path}>
                           <SidebarMenuButton
                             asChild
-                            isActive={location.pathname === item.path}
-                            className="data-[active=true]:bg-primary/10 data-[active=true]:text-primary hover:bg-zinc-900 hover:text-primary transition-colors flex items-center justify-between"
+                            isActive={isActive}
+                            className={`flex items-center justify-between rounded-md px-3 py-2 transition-all ${
+                              isActive
+                                ? 'bg-primary/10 text-primary font-medium'
+                                : 'text-zinc-300 hover:bg-zinc-900 hover:text-white'
+                            }`}
                           >
                             <Link
                               to={item.path}
                               state={{ fromMenu: true }}
                               className="flex items-center gap-3 w-full"
                             >
-                              <div className="flex items-center gap-3">
-                                <item.icon className="w-5 h-5" />
-                                <span className="font-medium">{item.title}</span>
+                              <div className="flex items-center gap-3 flex-1">
+                                <item.icon
+                                  className={`w-5 h-5 ${isActive ? 'text-primary' : 'text-zinc-400'}`}
+                                />
+                                <span>{item.title}</span>
                               </div>
-                              {!hasAccess && (
+                              {!planLoading && !hasAccess && (
                                 <Lock className="w-4 h-4 text-zinc-600 flex-shrink-0" />
                               )}
                             </Link>
@@ -173,10 +184,10 @@ export default function Layout() {
               </SidebarGroup>
             ))}
           </SidebarContent>
-          <div className="p-4 mt-auto border-t border-primary/20">
+          <div className="p-4 mt-auto border-t border-primary/20 bg-zinc-950">
             <Button
               variant="ghost"
-              className="w-full justify-start text-zinc-400 hover:text-red-500 hover:bg-red-500/10"
+              className="w-full justify-start text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
               onClick={handleLogout}
             >
               <LogOut className="w-5 h-5 mr-3" />
@@ -184,16 +195,16 @@ export default function Layout() {
             </Button>
           </div>
         </Sidebar>
-        <SidebarInset className="flex-1 bg-black overflow-x-hidden min-w-0">
-          <header className="flex h-16 items-center gap-4 border-b border-primary/20 px-6 bg-zinc-950/50 backdrop-blur-sm sticky top-0 z-40">
-            <SidebarTrigger className="text-zinc-400 hover:text-primary" />
+        <SidebarInset className="flex-1 bg-zinc-950 overflow-x-hidden min-w-0">
+          <header className="flex h-16 items-center gap-4 border-b border-primary/20 px-6 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-40">
+            <SidebarTrigger className="text-zinc-400 hover:text-primary transition-colors" />
             <div className="flex-1" />
             <div className="flex items-center gap-4">
               <div className="text-sm text-right hidden sm:block">
                 <p className="font-medium text-white">{firstName}</p>
-                <p className="text-xs text-zinc-500 capitalize">{plan}</p>
+                <p className="text-xs text-zinc-400 capitalize">{plan}</p>
               </div>
-              <div className="w-10 h-10 rounded-full bg-[#0a2e16] border border-[#1b5e20] flex items-center justify-center text-primary font-bold">
+              <div className="w-10 h-10 rounded-full bg-[#0a2e16] border border-[#1b5e20] flex items-center justify-center text-primary font-bold shadow-sm">
                 {initial}
               </div>
             </div>
