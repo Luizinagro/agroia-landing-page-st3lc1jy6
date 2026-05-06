@@ -49,11 +49,7 @@ type Consulta = {
   regiao: string
   pergunta: string
   is_favorite: boolean
-  resposta: {
-    regiao_considerada: string
-    precos_regionais: string[]
-    recomendacoes: string
-  }
+  resposta: any // using any to safely handle corrupted json
   created_at: string
 }
 
@@ -126,6 +122,25 @@ export default function ConsultorIAAgro() {
     }
   }
 
+  // Safe extraction helpers for malformed Gemini JSON
+  const getRecomendacao = (resposta: any) => {
+    if (!resposta) return 'Sem recomendação disponível'
+    if (typeof resposta === 'string') return resposta
+    return resposta.recomendacoes || 'Sem recomendação disponível'
+  }
+
+  const getRegiao = (resposta: any, fallback: string) => {
+    if (!resposta) return fallback
+    if (typeof resposta === 'string') return fallback
+    return resposta.regiao_considerada || fallback
+  }
+
+  const getPrecos = (resposta: any) => {
+    if (!resposta) return []
+    if (typeof resposta === 'string') return []
+    return Array.isArray(resposta.precos_regionais) ? resposta.precos_regionais : []
+  }
+
   const handleExport = () => {
     const headers = ['Data', 'Região', 'Pergunta', 'Favorito', 'Recomendações']
     const rows = history.map((item) => [
@@ -133,7 +148,7 @@ export default function ConsultorIAAgro() {
       item.regiao,
       `"${item.pergunta.replace(/"/g, '""')}"`,
       item.is_favorite ? 'Sim' : 'Não',
-      `"${(item.resposta?.recomendacoes || '').replace(/"/g, '""')}"`,
+      `"${getRecomendacao(item.resposta).replace(/"/g, '""')}"`,
     ])
 
     const csvContent = [headers.join(','), ...rows.map((e) => e.join(','))].join('\n')
@@ -317,7 +332,7 @@ export default function ConsultorIAAgro() {
                             <div className="flex items-center gap-3">
                               <div className="text-xs font-medium text-[#1a3c34] bg-[#f4d03f] px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
                                 <MapPin className="w-3.5 h-3.5" />
-                                {currentResponse.resposta.regiao_considerada}
+                                {getRegiao(currentResponse.resposta, currentResponse.regiao)}
                               </div>
                               <button
                                 onClick={(e) =>
@@ -340,28 +355,29 @@ export default function ConsultorIAAgro() {
                                 <Sprout className="w-4 h-4" /> Recomendação
                               </h4>
                               <p className="text-slate-800 leading-relaxed text-sm md:text-base whitespace-pre-wrap">
-                                {currentResponse.resposta.recomendacoes}
+                                {getRecomendacao(currentResponse.resposta)}
                               </p>
                             </div>
 
-                            {currentResponse.resposta.precos_regionais &&
-                              currentResponse.resposta.precos_regionais.length > 0 && (
-                                <div className="bg-[#1a3c34]/5 rounded-lg p-4 border border-[#1a3c34]/10">
-                                  <h4 className="text-sm font-bold uppercase tracking-wider text-[#1a3c34] mb-3 flex items-center gap-2">
-                                    <DollarSign className="w-4 h-4" /> Preços Regionais (Referência)
-                                  </h4>
-                                  <div className="flex flex-wrap gap-2">
-                                    {currentResponse.resposta.precos_regionais.map((preco, idx) => (
+                            {getPrecos(currentResponse.resposta).length > 0 && (
+                              <div className="bg-[#1a3c34]/5 rounded-lg p-4 border border-[#1a3c34]/10">
+                                <h4 className="text-sm font-bold uppercase tracking-wider text-[#1a3c34] mb-3 flex items-center gap-2">
+                                  <DollarSign className="w-4 h-4" /> Preços Regionais (Referência)
+                                </h4>
+                                <div className="flex flex-wrap gap-2">
+                                  {getPrecos(currentResponse.resposta).map(
+                                    (preco: any, idx: number) => (
                                       <span
                                         key={idx}
                                         className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-semibold bg-white text-[#1a3c34] border border-[#1a3c34]/20 shadow-sm"
                                       >
                                         {preco}
                                       </span>
-                                    ))}
-                                  </div>
+                                    ),
+                                  )}
                                 </div>
-                              )}
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -476,7 +492,7 @@ export default function ConsultorIAAgro() {
                           </div>
                           <p className="font-medium text-sm text-slate-800">"{item.pergunta}"</p>
                           <p className="text-sm text-slate-600 line-clamp-3">
-                            {item.resposta.recomendacoes}
+                            {getRecomendacao(item.resposta)}
                           </p>
                         </div>
                         <Button
@@ -487,8 +503,6 @@ export default function ConsultorIAAgro() {
                             setCurrentResponse(item)
                             setRegion(item.regiao)
                             setStatus('success')
-                            // Force tab switch by scrolling top or manual state switch not easily possible without controlled tabs,
-                            // but this updates the main consulting view so user can go back.
                           }}
                         >
                           Carregar no Painel Principal

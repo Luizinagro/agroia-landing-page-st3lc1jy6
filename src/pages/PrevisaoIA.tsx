@@ -33,9 +33,10 @@ export default function PrevisaoIA() {
     precosSaca: { current: number; d30: number; d60: number }
     recommendation: string
   } | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
 
   const [isLoadingSaca, setIsLoadingSaca] = useState(false)
+  const [isLoadingIA, setIsLoadingIA] = useState(false)
+
   const [precoSacaData, setPrecoSacaData] = useState<{
     preco_saca: number
     quantidade: number
@@ -46,24 +47,28 @@ export default function PrevisaoIA() {
 
   const { toast } = useToast()
 
-  const buscarPrecoSaca = async () => {
+  const handleBuscarPreco = async () => {
     if (!quantidade || isNaN(Number(quantidade))) return
+
     setIsLoadingSaca(true)
+    setIsLoadingIA(true)
     setPrecoSacaError(null)
     setPrecoSacaData(null)
+    setResultado(null)
 
+    let precoReal = 0
+
+    // Busca o preço real na CEPEA primeiro
     try {
       const { data, error } = await supabase.functions.invoke('buscar-preco-saca', {
         body: { cultura, quantidade: Number(quantidade) },
       })
 
       if (error) throw error
-
-      if (data?.error) {
-        throw new Error(data.error)
-      }
+      if (data?.error) throw new Error(data.error)
 
       setPrecoSacaData(data)
+      precoReal = data.preco_saca
     } catch (err: any) {
       console.error(err)
       setPrecoSacaError(
@@ -72,24 +77,19 @@ export default function PrevisaoIA() {
     } finally {
       setIsLoadingSaca(false)
     }
-  }
 
-  const buscarPrevisaoIA = async () => {
-    setIsLoading(true)
-
+    // Busca a previsão da IA informando o preço real base
     try {
       const { data, error } = await supabase.functions.invoke('gemini-forecast', {
-        body: { commodity: cultura },
+        body: { commodity: cultura, current_price_saca: precoReal || undefined },
       })
 
       if (error) throw error
 
       if (data?.data) {
         const trendData = data.data.trend_data || []
-        const currentTon = data.data.current_price
-        const precoSacaAtual = currentTon * 0.06
+        const currentSaca = data.data.current_price
 
-        // Safety check to ensure we don't go out of bounds
         const d30Index = Math.min(29, trendData.length - 1)
         const d60Index = Math.min(59, trendData.length - 1)
 
@@ -97,9 +97,9 @@ export default function PrevisaoIA() {
           cultura,
           quantidadeSacas: Number(quantidade),
           precosSaca: {
-            current: precoSacaAtual,
-            d30: (trendData[d30Index]?.price || currentTon) * 0.06,
-            d60: (trendData[d60Index]?.price || currentTon) * 0.06,
+            current: currentSaca,
+            d30: data.data.previsao_30d || trendData[d30Index]?.price || currentSaca,
+            d60: data.data.previsao_60d || trendData[d60Index]?.price || currentSaca,
           },
           recommendation: data.data.recommendation,
         })
@@ -114,14 +114,8 @@ export default function PrevisaoIA() {
         variant: 'destructive',
       })
     } finally {
-      setIsLoading(false)
+      setIsLoadingIA(false)
     }
-  }
-
-  const handleBuscarPreco = () => {
-    if (!quantidade || isNaN(Number(quantidade))) return
-    buscarPrecoSaca()
-    buscarPrevisaoIA()
   }
 
   const formatCurrency = (value: number) =>
@@ -181,9 +175,9 @@ export default function PrevisaoIA() {
                 <Button
                   className="w-full btn-agro-primary font-bold"
                   onClick={handleBuscarPreco}
-                  disabled={isLoading || isLoadingSaca || !quantidade}
+                  disabled={isLoadingSaca || isLoadingIA || !quantidade}
                 >
-                  {isLoading || isLoadingSaca ? (
+                  {isLoadingSaca || isLoadingIA ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Calculando Previsões...
                     </>
@@ -214,13 +208,6 @@ export default function PrevisaoIA() {
                     <div className="bg-[#050505] rounded-xl p-8 flex flex-col items-center justify-center text-center space-y-4">
                       <AlertCircle className="w-10 h-10 text-red-500 mb-2" />
                       <p className="text-red-400 font-medium text-lg">{precoSacaError}</p>
-                      <Button
-                        onClick={buscarPrecoSaca}
-                        variant="outline"
-                        className="border-red-500/50 text-red-400 hover:bg-red-500/10 mt-2"
-                      >
-                        Tentar Novamente
-                      </Button>
                     </div>
                   </div>
                 ) : precoSacaData ? (
@@ -268,6 +255,20 @@ export default function PrevisaoIA() {
                     </div>
                   </div>
                 ) : null}
+              </div>
+            )}
+
+            {isLoadingIA && !resultado && !precoSacaError && (
+              <div className="p-[1px] rounded-xl bg-gradient-to-r from-[#1DB954] to-[#00B4D8] animate-pulse shadow-lg mt-6">
+                <div className="bg-[#050505] rounded-xl p-6 space-y-4">
+                  <Skeleton className="h-6 w-1/3 bg-[#1DB954]/20" />
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <Skeleton className="h-24 w-full bg-[#1DB954]/20" />
+                    <Skeleton className="h-24 w-full bg-[#1DB954]/20" />
+                    <Skeleton className="h-24 w-full bg-[#1DB954]/20" />
+                  </div>
+                  <Skeleton className="h-20 w-full bg-[#1DB954]/20 mt-4" />
+                </div>
               </div>
             )}
 
@@ -380,11 +381,11 @@ export default function PrevisaoIA() {
 
                 <Card className="bg-[#1DB954]/5 border-[#1DB954]/30 shadow-[0_0_20px_rgba(29,185,84,0.1)]">
                   <CardContent className="p-5">
-                    <p className="text-sm text-[#FFFFFF] flex items-start gap-3 font-medium">
+                    <p className="text-sm text-[#FFFFFF] flex items-start gap-3 font-medium leading-relaxed">
                       <Bot className="h-6 w-6 text-[#1DB954] shrink-0 mt-0.5" />
                       <span>
                         <strong className="text-[#1DB954]">Análise IA:</strong>{' '}
-                        {resultado.recommendation}{' '}
+                        {resultado.recommendation}
                       </span>
                     </p>
                   </CardContent>
@@ -392,7 +393,7 @@ export default function PrevisaoIA() {
               </div>
             )}
 
-            {!isLoadingSaca && !precoSacaData && !precoSacaError && !resultado && (
+            {!isLoadingSaca && !isLoadingIA && !precoSacaData && !precoSacaError && !resultado && (
               <div className="h-full flex flex-col items-center justify-center text-[#E0E0E0] border-2 border-dashed border-[#1DB954]/20 rounded-xl p-8 bg-[#050505] min-h-[300px]">
                 <LineChart className="h-16 w-16 mb-4 text-[#1DB954]/50" />
                 <p className="text-center max-w-md font-medium">
