@@ -153,19 +153,19 @@ export default function PrevisaoIA() {
                       <SelectValue placeholder="Selecione a cultura" />
                     </SelectTrigger>
                     <SelectContent className="bg-[#050505] border-[#1DB954]/20 text-[#FFFFFF]">
-                      <SelectItem value="Soja">Soja</SelectItem>
-                      <SelectItem value="Milho">Milho</SelectItem>
-                      <SelectItem value="Trigo">Trigo</SelectItem>
-                      <SelectItem value="Cana-de-açúcar">Cana-de-açúcar</SelectItem>
                       <SelectItem value="Algodão">Algodão</SelectItem>
                       <SelectItem value="Café">Café</SelectItem>
+                      <SelectItem value="Cana-de-açúcar">Cana-de-açúcar</SelectItem>
+                      <SelectItem value="Milho">Milho</SelectItem>
+                      <SelectItem value="Soja">Soja</SelectItem>
+                      <SelectItem value="Trigo">Trigo</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className="space-y-2">
                   <Label className="text-[#FFFFFF] font-semibold">
-                    Quantidade (Sacas/Toneladas/Arrobas)
+                    Quantidade (Sacas por alqueire/Hectare)
                   </Label>
                   <Input
                     type="number"

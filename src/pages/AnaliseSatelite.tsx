@@ -10,7 +10,6 @@ import {
   Image as ImageIcon,
   History,
   FileText,
-  Activity,
   CheckCircle2,
   Share2,
   CloudRain,
@@ -32,15 +31,6 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { cn } from '@/lib/utils'
 import { supabase } from '@/lib/supabase/client'
 import { useToast } from '@/hooks/use-toast'
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts'
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import {
   Dialog,
   DialogContent,
@@ -73,7 +63,6 @@ export default function AnaliseSatelite() {
   const [status, setStatus] = useState<'empty' | 'loading' | 'success' | 'error'>('empty')
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null)
   const [alertMessage, setAlertMessage] = useState<string>('')
-  const [history, setHistory] = useState<any[]>([])
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   const [propriedades, setPropriedades] = useState<any[]>([])
   const [zoom, setZoom] = useState(15)
@@ -97,33 +86,9 @@ export default function AnaliseSatelite() {
         setShowUpgradeModal(true)
       } else {
         setShowUpgradeModal(false)
-        fetchHistory()
       }
     }
   }, [hasFeature, planLoading])
-
-  const fetchHistory = async () => {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (!user) return
-
-      const { data, error } = await supabase
-        .from('satellite_analyses')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('analysis_date', { ascending: false })
-        .limit(12)
-
-      if (error) throw error
-      if (data) {
-        setHistory(data)
-      }
-    } catch (e) {
-      console.error('Erro ao buscar histórico', e)
-    }
-  }
 
   const handleMapClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -161,29 +126,10 @@ export default function AnaliseSatelite() {
       setAlertMessage('Análise concluída com sucesso via satélite para as coordenadas fornecidas.')
 
       setStatus('success')
-      fetchHistory()
     } catch (error) {
       console.error(error)
       setStatus('error')
     }
-  }
-
-  const loadHistoryItem = (item: any) => {
-    setAnalysisData({
-      id: item.id,
-      ndvi: item.ndvi_value,
-      umidade: item.soil_moisture,
-      temperatura: item.temperature,
-      data: new Date(item.analysis_date).toLocaleDateString('pt-BR'),
-      thumbnail: item.image_url,
-      lat: item.latitude.toString(),
-      lng: item.longitude.toString(),
-    })
-    setLat(item.latitude.toString())
-    setLng(item.longitude.toString())
-    setStatus('success')
-    setAlertMessage('Exibindo dados do histórico selecionado.')
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const generatePDF = () => {
@@ -759,158 +705,10 @@ export default function AnaliseSatelite() {
                     </div>
                   </CardContent>
                 </Card>
-
-                {/* Gráfico de Evolução (Tendência de NDVI) */}
-                {history.length > 1 && (
-                  <Card className="bg-black/50 border-white/10 print:hidden mt-6 animate-fade-in">
-                    <CardHeader>
-                      <CardTitle className="text-white text-lg flex items-center gap-2">
-                        <Activity className="w-5 h-5 text-primary" />
-                        Evolução do NDVI (Últimas Análises)
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ChartContainer
-                        config={{
-                          ndvi: {
-                            label: 'NDVI',
-                            color: 'hsl(var(--primary))',
-                          },
-                        }}
-                        className="h-[250px] w-full"
-                      >
-                        <LineChart
-                          data={history
-                            .slice()
-                            .reverse()
-                            .map((h) => ({
-                              date: new Date(h.analysis_date).toLocaleDateString('pt-BR', {
-                                day: '2-digit',
-                                month: '2-digit',
-                              }),
-                              ndvi: h.ndvi_value,
-                            }))}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
-                          <XAxis
-                            dataKey="date"
-                            stroke="#888"
-                            fontSize={12}
-                            tickLine={false}
-                            axisLine={false}
-                          />
-                          <YAxis
-                            stroke="#888"
-                            fontSize={12}
-                            domain={[0, 1]}
-                            tickLine={false}
-                            axisLine={false}
-                          />
-                          <ChartTooltip content={<ChartTooltipContent />} />
-                          <Line
-                            type="monotone"
-                            dataKey="ndvi"
-                            stroke="var(--color-ndvi)"
-                            strokeWidth={3}
-                            dot={{ r: 4, fill: 'var(--color-ndvi)', strokeWidth: 0 }}
-                            activeDot={{ r: 6 }}
-                          />
-                        </LineChart>
-                      </ChartContainer>
-                    </CardContent>
-                  </Card>
-                )}
               </div>
             )}
           </div>
         </div>
-
-        {/* Galeria de Histórico (Slider Temporal das últimas 4 semanas) */}
-        {history.length > 0 && (
-          <div className="mt-12 space-y-6 print:hidden animate-fade-in">
-            <div className="flex items-center justify-between">
-              <h3 className="text-2xl font-bold text-white flex items-center gap-2">
-                <History className="w-6 h-6 text-primary" />
-                Histórico de Imagens (Últimas Análises)
-              </h3>
-              <p className="text-sm text-zinc-400 hidden md:block">
-                Navegue pelo histórico para comparar a evolução da saúde do solo.
-              </p>
-            </div>
-
-            <div className="bg-black/40 border border-white/10 rounded-2xl p-6 shadow-lg">
-              <Carousel
-                opts={{
-                  align: 'start',
-                  dragFree: true,
-                }}
-                className="w-full"
-              >
-                <CarouselContent className="-ml-4">
-                  {history.map((item) => (
-                    <CarouselItem
-                      key={item.id}
-                      className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
-                    >
-                      <Card
-                        className={cn(
-                          'bg-zinc-900/80 border-white/10 overflow-hidden transition-all duration-300 cursor-pointer h-full group hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(29,185,84,0.15)]',
-                          analysisData?.id === item.id
-                            ? 'border-primary ring-2 ring-primary/80'
-                            : 'hover:border-white/30',
-                        )}
-                        onClick={() => loadHistoryItem(item)}
-                      >
-                        <div className="aspect-[4/3] relative overflow-hidden">
-                          <img
-                            src={item.image_url}
-                            alt="Satélite Histórico"
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                          />
-                          <div className="absolute top-2 right-2 bg-black/70 backdrop-blur-md text-white text-xs px-2.5 py-1 rounded-md border border-white/20 shadow-lg font-medium">
-                            {new Date(item.analysis_date).toLocaleDateString('pt-BR')}
-                          </div>
-                          {analysisData?.id === item.id && (
-                            <div className="absolute inset-0 bg-primary/10 z-10" />
-                          )}
-                        </div>
-                        <CardContent className="p-4 space-y-3">
-                          <div className="flex justify-between items-center text-sm border-b border-white/5 pb-2">
-                            <span className="text-zinc-400 font-medium">NDVI</span>
-                            <span
-                              className={cn(
-                                'font-bold text-base',
-                                getNdviColorText(item.ndvi_value),
-                              )}
-                            >
-                              {item.ndvi_value}
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center text-sm">
-                            <span className="text-zinc-400 flex items-center gap-1.5">
-                              <Droplets className="w-3.5 h-3.5" /> Umidade
-                            </span>
-                            <span className="text-white font-medium">{item.soil_moisture}%</span>
-                          </div>
-                          <div className="flex justify-between items-center text-sm">
-                            <span className="text-zinc-400 flex items-center gap-1.5">
-                              <Thermometer className="w-3.5 h-3.5" /> Temp.
-                            </span>
-                            <span className="text-white font-medium">{item.temperature}°C</span>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <div className="flex items-center justify-end gap-2 mt-6">
-                  <CarouselPrevious className="static translate-y-0 transform-none bg-zinc-800 border-white/10 text-white hover:bg-primary hover:text-primary-foreground hover:border-primary h-10 w-10 transition-colors" />
-                  <CarouselNext className="static translate-y-0 transform-none bg-zinc-800 border-white/10 text-white hover:bg-primary hover:text-primary-foreground hover:border-primary h-10 w-10 transition-colors" />
-                </div>
-              </Carousel>
-            </div>
-          </div>
-        )}
 
         {/* Assinatura no final da página para impressão */}
         <div className="hidden print:block mt-12 pt-8 border-t border-gray-300 text-center">
