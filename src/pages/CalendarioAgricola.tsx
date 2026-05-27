@@ -3,7 +3,7 @@ import { SEO } from '@/components/SEO'
 import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabase/client'
 import { CalendarDays, MapPin, Loader2, AlertCircle, Sprout, DollarSign, Clock } from 'lucide-react'
-import { useAuth } from '@/hooks/use-auth'
+import { useAuth } from '@/contexts/AuthContext'
 
 const ESTADOS = [
   'Acre',
@@ -37,7 +37,7 @@ const ESTADOS = [
 const CULTURAS = ['Soja', 'Milho', 'Trigo', 'Café', 'Cana-de-açúcar', 'Algodão', 'Feijão', 'Arroz']
 
 export default function CalendarioAgricola() {
-  const { user } = useAuth()
+  const { user } = useAuth() as any
   const [cultura, setCultura] = useState('Soja')
   const [estado, setEstado] = useState('Mato Grosso')
   const [loading, setLoading] = useState(false)

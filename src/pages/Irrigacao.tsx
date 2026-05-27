@@ -11,10 +11,10 @@ import {
   AlertTriangle,
   Info,
 } from 'lucide-react'
-import { useAuth } from '@/hooks/use-auth'
+import { useAuth } from '@/contexts/AuthContext'
 
 export default function Irrigacao() {
-  const { user } = useAuth()
+  const { user } = useAuth() as any
   const [cultura, setCultura] = useState('Soja')
   const [area, setArea] = useState(100)
   const [sistema, setSistema] = useState('Gotejamento')
