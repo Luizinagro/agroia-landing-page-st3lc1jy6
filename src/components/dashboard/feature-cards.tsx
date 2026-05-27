@@ -6,6 +6,7 @@ import {
   Calculator,
   ShoppingCart,
   Satellite,
+  Bug,
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -41,6 +42,12 @@ const features = [
     name: 'Análise Satélite',
     icon: Satellite,
     description: 'Índices agronômicos e monitoramento direto do espaço.',
+  },
+  {
+    id: 'diagnostico-pragas',
+    name: 'Diagnóstico de Pragas',
+    icon: Bug,
+    description: 'Identifique pragas e doenças na sua lavoura por foto usando IA.',
   },
 ]
 

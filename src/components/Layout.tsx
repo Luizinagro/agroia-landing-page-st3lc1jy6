@@ -31,6 +31,7 @@ import {
   TrendingUp,
   Share2,
   Lock,
+  Bug,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -77,6 +78,12 @@ export default function Layout() {
           feature: 'consultor-ia-agro',
         },
         { title: 'Previsão IA', icon: BrainCircuit, path: '/previsao-ia', feature: 'previsao-ia' },
+        {
+          title: 'Diagnóstico de Pragas',
+          icon: Bug,
+          path: '/diagnostico-pragas',
+          feature: 'diagnostico-pragas',
+        },
         { title: 'Calculadora ROI', icon: Calculator, path: '/roi', feature: 'roi' },
       ],
     },
