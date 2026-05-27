@@ -1,166 +1,181 @@
-import 'jsr:@supabase/functions-js/edge-runtime.d.ts'
-import { createClient } from 'jsr:@supabase/supabase-js@2'
+import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type'
+};
+
+// Busca clima REAL via Open-Meteo para a região do usuário
+async function buscarClimaReal(lat: number, lon: number) {
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast` +
+      `?latitude=${lat}&longitude=${lon}` +
+      `&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,soil_moisture_3_to_9cm` +
+      `&daily=precipitation_sum,temperature_2m_max,temperature_2m_min` +
+      `&timezone=auto&forecast_days=1&past_days=3`;
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return {
+      temperatura: Number((data.current?.temperature_2m ?? 25).toFixed(1)),
+      umidade_ar: Math.round(data.current?.relative_humidity_2m ?? 65),
+      umidade_solo: Number(((data.current?.soil_moisture_3_to_9cm ?? 0.25) * 100).toFixed(1)),
+      precipitacao_hoje: Number((data.current?.precipitation ?? 0).toFixed(1)),
+      chuva_3dias: Number(
+        ((data.daily?.precipitation_sum ?? [0, 0, 0]).reduce((a: number, b: number) => a + (b ?? 0), 0)).toFixed(1)
+      ),
+      vento: Number((data.current?.wind_speed_10m ?? 10).toFixed(1)),
+      temp_max: data.daily?.temperature_2m_max?.[0] ?? 30,
+      temp_min: data.daily?.temperature_2m_min?.[0] ?? 18
+    };
+  } catch { return null; }
+}
+
+// Busca preço atual da cultura no cache do Supabase
+async function buscarPrecoAtual(supabase: any, cultura: string): Promise<string> {
+  try {
+    const culturaKey = cultura.toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/\s+/g, '-');
+    const limite = new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString();
+    const { data } = await supabase
+      .from('precos_cache')
+      .select('preco_saca, unidade, variacao_dia')
+      .eq('commodity', culturaKey)
+      .gte('created_at', limite)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+    if (data) return `R$ ${data.preco_saca.toFixed(2)}/${data.unidade} (${data.variacao_dia >= 0 ? '+' : ''}${data.variacao_dia?.toFixed(2)} hoje)`;
+  } catch {}
+  return 'não disponível no momento';
+}
+
+// Busca propriedade do usuário para obter coordenadas reais
+async function buscarPropriedade(supabase: any, userId: string) {
+  try {
+    const { data } = await supabase
+      .from('propriedades')
+      .select('nome, cultura_principal, latitude, longitude, area_hectares, estado')
+      .eq('user_id', userId)
+      .limit(1)
+      .single();
+    return data;
+  } catch { return null; }
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
-  }
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
   try {
-    if (req.method !== 'POST') {
-      throw new Error('Método não permitido. Use POST.')
-    }
+    if (req.method !== 'POST') throw new Error('Use POST.');
 
-    const authHeader = req.headers.get('Authorization') || ''
-    if (!authHeader) {
-      throw new Error('Usuário não autenticado')
-    }
+    const authHeader = req.headers.get('Authorization') || '';
+    if (!authHeader) throw new Error('Não autenticado');
 
-    const supabaseUrl = Deno.env.get('SUPABASE_URL') || ''
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') || ''
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') || '';
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+    const geminiKey = Deno.env.get('GEMINI_API_KEY') || '';
 
-    // Create user client to verify token
     const userClient = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: authHeader } },
-    })
+      global: { headers: { Authorization: authHeader } }
+    });
+    const { data: { user }, error: userError } = await userClient.auth.getUser();
+    if (userError || !user) throw new Error('Não autenticado');
 
-    const {
-      data: { user },
-      error: userError,
-    } = await userClient.auth.getUser()
-    if (userError || !user) {
-      throw new Error('Usuário não autenticado')
+    const body = await req.json();
+    const { regiao, pergunta } = body;
+    if (!pergunta) throw new Error('Pergunta é obrigatória.');
+
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Busca dados REAIS em paralelo
+    const propriedade = await buscarPropriedade(supabase, user.id);
+    const cultura = propriedade?.cultura_principal || body.cultura || 'soja';
+
+    let climaReal = null;
+    if (propriedade?.latitude && propriedade?.longitude) {
+      climaReal = await buscarClimaReal(
+        parseFloat(propriedade.latitude),
+        parseFloat(propriedade.longitude)
+      );
     }
 
-    const body = await req.json()
-    const { regiao, pergunta } = body
+    const precoAtual = await buscarPrecoAtual(supabase, cultura);
 
-    if (!regiao || !pergunta) {
-      throw new Error('Região e pergunta são obrigatórios.')
-    }
+    // Monta contexto com dados reais
+    const hoje = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    const regiaoFinal = propriedade?.estado || regiao || 'Brasil';
 
-    // Mock data from APIs (CEPEA, CONAB, INPE)
-    const mockRegionalData = {
-      'Mato Grosso': { soja_preco: 125.5, clima: 'Quente e úmido', umidade_solo: '60%' },
-      Paraná: { soja_preco: 132.0, clima: 'Ameno', umidade_solo: '70%' },
-      'São Paulo': { soja_preco: 135.0, clima: 'Seco', umidade_solo: '50%' },
-      Goiás: { soja_preco: 128.0, clima: 'Quente', umidade_solo: '55%' },
-      'Minas Gerais': { soja_preco: 130.0, clima: 'Ameno', umidade_solo: '65%' },
-      'Rio Grande do Sul': { soja_preco: 134.0, clima: 'Frio', umidade_solo: '75%' },
-      Bahia: { soja_preco: 126.0, clima: 'Quente e seco', umidade_solo: '45%' },
-      Tocantins: { soja_preco: 124.0, clima: 'Quente', umidade_solo: '50%' },
-    }
+    const contextoCima = climaReal
+      ? `🌡️ Temperatura: ${climaReal.temperatura}°C (máx ${climaReal.temp_max}°C / mín ${climaReal.temp_min}°C)
+💧 Umidade do ar: ${climaReal.umidade_ar}%
+🌱 Umidade do solo (3-9cm): ${climaReal.umidade_solo}%
+🌧️ Chuva hoje: ${climaReal.precipitacao_hoje}mm | Últimos 3 dias: ${climaReal.chuva_3dias}mm
+💨 Vento: ${climaReal.vento} km/h`
+      : '⚠️ Dados climáticos não disponíveis para esta localização.';
 
-    const regionalData =
-      mockRegionalData[regiao as keyof typeof mockRegionalData] || mockRegionalData['São Paulo']
+    const prompt = `Você é o Consultor AgroIA — um agrônomo sênior experiente, empático e direto. Fala de forma clara com o produtor rural brasileiro.
 
-    const apiKey = Deno.env.get('GEMINI_API_KEY')
-    let geminiResponse = null
+📅 Data de hoje: ${hoje}
+📍 Região: ${regiaoFinal}
+🌾 Cultura principal: ${cultura}
+${propriedade?.area_hectares ? `📐 Área: ${propriedade.area_hectares} hectares` : ''}
+${propriedade?.nome ? `🏡 Propriedade: ${propriedade.nome}` : ''}
 
-    if (apiKey) {
-      const prompt = `Você é um agrônomo sênior, experiente, empático e acolhedor. Você fala de forma clara, direta e respeitosa com o produtor rural brasileiro. 
-Sua expertise cobre manejo de culturas (soja, milho, café, cana, algodão, trigo), diagnóstico de pragas e doenças, e mercado.
+CONDIÇÕES CLIMÁTICAS REAIS AGORA (Open-Meteo):
+${contextoCima}
 
-REGRA CRÍTICA DE ATENDIMENTO: 
-1. Se a pergunta for sobre um PROBLEMA no campo (ex: pragas, doenças, "larvas na soja", "bichos no milho"), forneça um diagnóstico técnico completo, explique as possíveis causas, liste sugestões de manejo integrado, recomende ações imediatas e cite os princípios ativos adequados para controle da cultura ESPECÍFICA mencionada. Seja didático.
-2. Se a pergunta for sobre MERCADO ou PREÇOS, forneça as cotações e tendências da região.
+PREÇO DE MERCADO ATUAL:
+💰 ${cultura}: ${precoAtual}
 
-O usuário fez a seguinte pergunta: "${pergunta}"
-A região do usuário é: ${regiao}
-Aqui estão alguns dados regionais atuais (simulados) para contexto:
-- Clima: ${regionalData.clima}
-- Umidade do Solo: ${regionalData.umidade_solo}
-- Preço Base Soja: R$ ${regionalData.soja_preco}
+PERGUNTA DO PRODUTOR:
+"${pergunta}"
 
-Responda ESTRITAMENTE em formato JSON, sem markdown ao redor, com a seguinte estrutura:
-{
-  "regiao_considerada": "${regiao}",
-  "precos_regionais": ["Preço 1", "Preço 2"] (forneça apenas se a pergunta envolver mercado/preços, caso contrário, retorne array vazio),
-  "recomendacoes": "Sua resposta completa, acolhedora e altamente técnica para ajudar o produtor passo a passo com o problema ou dúvida."
-}`
+REGRAS DE RESPOSTA:
+1. Se for PROBLEMA no campo (praga, doença, amarelamento, bicho): dê diagnóstico técnico + 3 soluções práticas + quando chamar engenheiro agrônomo
+2. Se for sobre MERCADO (vender, preço, safra): use o preço real acima e dê recomendação de comercialização
+3. Se for sobre CLIMA/IRRIGAÇÃO: use os dados climáticos reais acima
+4. Seja direto, use linguagem simples, resposta em 150-250 palavras
+5. Termine sempre com uma ação concreta para o produtor fazer HOJE`;
 
-      try {
-        const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: prompt }] }],
-              generationConfig: { response_mime_type: 'application/json' },
-            }),
-          },
-        )
+    if (!geminiKey) throw new Error('Chave Gemini não configurada.');
 
-        if (response.ok) {
-          const data = await response.json()
-          let text = data.candidates?.[0]?.content?.parts?.[0]?.text
-          if (text) {
-            const jsonMatch = text.match(/\{[\s\S]*\}/)
-            if (jsonMatch) {
-              geminiResponse = JSON.parse(jsonMatch[0])
-            } else {
-              geminiResponse = JSON.parse(
-                text
-                  .replace(/```json/g, '')
-                  .replace(/```/g, '')
-                  .trim(),
-              )
-            }
-          }
-        } else {
-          console.error('Gemini API error:', response.status, response.statusText)
-        }
-      } catch (err) {
-        console.error('Erro ao chamar Gemini:', err)
+    const geminiRes = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
+        })
       }
-    }
+    );
 
-    if (!geminiResponse) {
-      geminiResponse = {
-        regiao_considerada: regiao,
-        precos_regionais: [
-          `Soja: R$ ${regionalData.soja_preco.toFixed(2)}`,
-          `Milho: R$ ${(regionalData.soja_preco * 0.45).toFixed(2)}`,
-        ],
-        recomendacoes: `Considerando que você está em ${regiao} com clima ${regionalData.clima.toLowerCase()} e umidade de ${regionalData.umidade_solo}, recomendamos atenção ao planejamento de safra. Os preços variam em relação a outras regiões devido ao custo logístico local.`,
+    if (!geminiRes.ok) throw new Error('Gemini indisponível');
+    const geminiData = await geminiRes.json();
+    const resposta = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+    return new Response(JSON.stringify({
+      success: true,
+      resposta,
+      contexto_utilizado: {
+        regiao: regiaoFinal,
+        cultura,
+        clima_real: climaReal !== null,
+        preco_atual: precoAtual,
+        propriedade: propriedade?.nome || null
       }
-    }
+    }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 });
 
-    // Save to database
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || ''
-    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
-
-    const { data: inserted, error: insertError } = await supabaseAdmin
-      .from('consultas_ia')
-      .insert({
-        user_id: user.id,
-        regiao,
-        pergunta,
-        resposta: geminiResponse,
-        is_favorite: false,
-      })
-      .select()
-      .single()
-
-    if (insertError) {
-      console.error('Erro ao salvar consulta:', insertError)
-    }
-
-    return new Response(JSON.stringify({ success: true, data: inserted }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 200,
-    })
-  } catch (error: any) {
+  } catch (error) {
     return new Response(JSON.stringify({ success: false, error: error.message }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 400,
-    })
+      status: 400
+    });
   }
-})
+});
