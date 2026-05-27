@@ -35,6 +35,9 @@ import ConsultorPerformance from './pages/ConsultorPerformance'
 import ConsultorIAAgro from './pages/ConsultorIAAgro'
 import Gestao from './pages/Gestao'
 import DiagnosticoPragas from './pages/DiagnosticoPragas'
+import CalendarioAgricola from './pages/CalendarioAgricola'
+import CalculadoraCarbono from './pages/CalculadoraCarbono'
+import Irrigacao from './pages/Irrigacao'
 import { FeatureGuard } from './components/FeatureGuard'
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
@@ -195,6 +198,23 @@ const App = () => {
                         </FeatureGuard>
                       }
                     />
+                    <Route
+                      path="/calendario-agricola"
+                      element={
+                        <FeatureGuard feature="calendario-agricola" requiredPlan="Lavoura">
+                          <CalendarioAgricola />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/irrigacao"
+                      element={
+                        <FeatureGuard feature="irrigacao" requiredPlan="Lavoura">
+                          <Irrigacao />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route path="/calculadora-carbono" element={<CalculadoraCarbono />} />
                   </Route>
 
                   <Route element={<ProtectedRoute requireActive={false} />}>

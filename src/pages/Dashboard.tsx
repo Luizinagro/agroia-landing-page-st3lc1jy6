@@ -39,6 +39,7 @@ const Dashboard = () => {
   const [blockedOpen, setBlockedOpen] = useState(false)
   const [promoOpen, setPromoOpen] = useState(false)
 
+  const [hasPropriedades, setHasPropriedades] = useState<boolean | null>(null)
   const [dashboardKpis, setDashboardKpis] = useState<{
     produtividade: number
     sensores_ativos: string
@@ -57,6 +58,7 @@ const Dashboard = () => {
           .select('id, cultura_principal')
           .eq('user_id', user.id)
         const propIds = props?.map((p: any) => p.id) || []
+        setHasPropriedades(props && props.length > 0)
 
         let sensoresAtivos = '0/0'
         if (propIds.length > 0) {
@@ -69,12 +71,12 @@ const Dashboard = () => {
 
         const { data: rois } = await supabase
           .from('calculos_roi')
-          .select('receita_esperada')
+          .select('lucro_liquido')
           .eq('user_id', user.id)
           .order('data_criacao', { ascending: false })
           .limit(1)
 
-        const receita = rois?.[0]?.receita_esperada
+        const receita = rois?.[0]?.lucro_liquido
 
         const { data: satData } = await supabase
           .from('satellite_analyses')
@@ -126,6 +128,8 @@ const Dashboard = () => {
       })
     }
     fetchTicker()
+    const interval = setInterval(fetchTicker, 30 * 60 * 1000)
+    return () => clearInterval(interval)
   }, [])
 
   useEffect(() => {
@@ -166,30 +170,8 @@ const Dashboard = () => {
                 Acompanhe as principais métricas da sua operação.
               </p>
             </div>
-
-            {tickerData.length > 0 && (
-              <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide animate-fade-in max-w-[80vw] md:max-w-full">
-                {tickerData.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center gap-2 bg-black/40 border border-white/5 rounded-full px-4 py-1.5 shrink-0 backdrop-blur-sm"
-                  >
-                    <span className="text-sm font-semibold text-zinc-400">{item.name}</span>
-                    <span className="text-sm font-bold text-white">
-                      R$ {item.price.toFixed(2).replace('.', ',')}
-                    </span>
-                    <span
-                      className={`text-xs font-bold ${item.variation >= 0 ? 'text-green-400' : 'text-red-400'}`}
-                    >
-                      {item.variation >= 0 ? '+' : ''}
-                      {item.variation.toFixed(2).replace('.', ',')}%
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 flex-wrap sm:flex-nowrap">
             <Button
               onClick={() => navigate('/analises-compartilhadas')}
               variant="outline"
@@ -213,6 +195,23 @@ const Dashboard = () => {
             )}
           </div>
         </div>
+
+        {hasPropriedades === false && (
+          <div className="bg-primary/10 border border-primary/30 p-5 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in-down shadow-lg">
+            <div className="flex items-center">
+              <MapPin className="h-6 w-6 text-primary mr-3 shrink-0" />
+              <p className="text-white font-medium text-sm">
+                Cadastre sua propriedade para dados personalizados da sua região 📍
+              </p>
+            </div>
+            <Button
+              asChild
+              className="whitespace-nowrap w-full sm:w-auto rounded-full bg-primary hover:bg-primary/90 text-black font-bold shadow-[0_0_15px_rgba(29,185,84,0.3)]"
+            >
+              <Link to="/perfil">Cadastrar agora</Link>
+            </Button>
+          </div>
+        )}
 
         {isTrialExpired && !isAdmin && (
           <div className="bg-red-950/30 border border-red-900 p-5 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in-down shadow-lg">
@@ -275,10 +274,27 @@ const Dashboard = () => {
                 {dashboardKpis?.saude_safra?.hasData ? (
                   <p className="text-[1.1rem] md:text-xl font-bold text-white truncate">
                     NDVI: {dashboardKpis.saude_safra.ndvi.toFixed(2)} —{' '}
-                    {dashboardKpis.saude_safra.label} {dashboardKpis.saude_safra.emoji}
+                    <span
+                      className={
+                        dashboardKpis.saude_safra.ndvi > 0.65
+                          ? 'text-green-400'
+                          : dashboardKpis.saude_safra.ndvi > 0.45
+                            ? 'text-yellow-400'
+                            : 'text-red-400'
+                      }
+                    >
+                      {dashboardKpis.saude_safra.label}
+                    </span>{' '}
+                    {dashboardKpis.saude_safra.emoji}
                   </p>
                 ) : (
-                  <p className="text-lg font-medium text-zinc-500">Nenhuma análise encontrada</p>
+                  <Button
+                    onClick={() => navigate('/analise-satelite')}
+                    variant="outline"
+                    className="mt-1 h-8 rounded-full border-primary/50 text-primary hover:bg-primary/10 hover:text-primary text-xs w-full justify-center"
+                  >
+                    Analisar agora →
+                  </Button>
                 )}
               </div>
             </div>
@@ -315,7 +331,36 @@ const Dashboard = () => {
           </div>
         </section>
 
-        <section className="animate-fade-in-up">
+        {tickerData.length > 0 && (
+          <section className="animate-fade-in flex gap-4 overflow-x-auto pb-4 pt-2 scrollbar-hide">
+            {tickerData.map((item, idx) => (
+              <div
+                key={idx}
+                className="flex items-center gap-3 bg-zinc-900/50 border border-white/5 rounded-2xl px-5 py-3 shrink-0 backdrop-blur-md"
+              >
+                <span className="text-sm font-medium text-zinc-400">
+                  {item.name.toLowerCase().includes('boi')
+                    ? '🐄'
+                    : item.name.toLowerCase().includes('milho')
+                      ? '🌽'
+                      : '🌾'}{' '}
+                  {item.name}
+                </span>
+                <span className="text-lg font-bold text-white">
+                  R$ {item.price.toFixed(2).replace('.', ',')}
+                </span>
+                <span
+                  className={`text-sm font-bold ${item.variation >= 0 ? 'text-green-400' : 'text-red-400'}`}
+                >
+                  {item.variation >= 0 ? '+' : ''}
+                  {item.variation.toFixed(2).replace('.', ',')}%
+                </span>
+              </div>
+            ))}
+          </section>
+        )}
+
+        <section className="animate-fade-in-up mt-4">
           <FarmClimateWidget />
         </section>
 

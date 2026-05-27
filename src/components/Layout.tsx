@@ -33,7 +33,9 @@ import {
   Share2,
   Lock,
   Bug,
-  Calendar,
+  CalendarDays,
+  Leaf,
+  Droplet,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -104,9 +106,16 @@ export default function Layout() {
         },
         {
           title: 'Calendário Agrícola',
-          icon: Calendar,
+          icon: CalendarDays,
           path: '/calendario-agricola',
-          feature: null,
+          feature: 'calendario-agricola',
+        },
+        {
+          title: 'Calculadora Carbono',
+          icon: Leaf,
+          path: '/calculadora-carbono',
+          feature: 'calculadora-carbono',
+          badge: 'NOVO',
         },
         { title: 'Calculadora ROI', icon: Calculator, path: '/roi', feature: 'roi' },
       ],
@@ -115,6 +124,7 @@ export default function Layout() {
       label: 'Gestão e Operação',
       items: [
         { title: 'Pecuária', icon: Tractor, path: '/pecuaria', feature: 'pecuaria' },
+        { title: 'Irrigação Inteligente', icon: Droplet, path: '/irrigacao', feature: 'irrigacao' },
         {
           title: 'Rastreabilidade',
           icon: Search,
@@ -209,6 +219,11 @@ export default function Layout() {
                                   className={`w-5 h-5 ${isActive && hasAccess ? 'text-primary' : 'text-zinc-400'}`}
                                 />
                                 <span>{item.title}</span>
+                                {(item as any).badge && (
+                                  <span className="ml-2 text-[10px] bg-primary/20 text-primary font-bold px-1.5 py-0.5 rounded-md">
+                                    {(item as any).badge}
+                                  </span>
+                                )}
                               </div>
                               {!planLoading && !hasAccess && (
                                 <Lock className="w-4 h-4 text-zinc-500 flex-shrink-0" />
