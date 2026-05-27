@@ -1,3 +1,6 @@
+ALTER TABLE IF EXISTS public.user_plans DROP CONSTRAINT IF EXISTS user_plans_plan_name_check;
+ALTER TABLE IF EXISTS public.users DROP CONSTRAINT IF EXISTS users_plan_active_check;
+
 DO $$
 BEGIN
   -- Update existing users with new plan names safely
