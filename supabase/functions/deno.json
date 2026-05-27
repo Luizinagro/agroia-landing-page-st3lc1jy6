@@ -13,6 +13,9 @@
     "analyze-satellite": 8,
     "consultor-ia-agro": 9,
     "resumo-semanal": 2,
-    "diagnostico-praga": 1
+    "diagnostico-praga": 1,
+    "calendario-agricola": 1,
+    "calculadora-carbono": 1,
+    "calcular-irrigacao": 1
   }
 }
