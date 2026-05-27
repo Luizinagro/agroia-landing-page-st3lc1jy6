@@ -42,9 +42,10 @@ const Dashboard = () => {
   const [dashboardKpis, setDashboardKpis] = useState<{
     produtividade: number
     sensores_ativos: string
-    saude_safra: string
-    receita_estimada: string
+    saude_safra: { hasData: boolean; ndvi: number; label: string; emoji: string }
+    receita_estimada: { hasData: boolean; valor: number }
   } | null>(null)
+  const [tickerData, setTickerData] = useState<any[]>([])
 
   useEffect(() => {
     async function fetchKpis() {
@@ -70,8 +71,10 @@ const Dashboard = () => {
           .from('calculos_roi')
           .select('receita_esperada')
           .eq('user_id', user.id)
-        const receita =
-          rois?.reduce((acc: number, curr: any) => acc + (curr.receita_esperada || 0), 0) || 0
+          .order('data_criacao', { ascending: false })
+          .limit(1)
+
+        const receita = rois?.[0]?.receita_esperada
 
         const { data: satData } = await supabase
           .from('satellite_analyses')
@@ -80,22 +83,50 @@ const Dashboard = () => {
           .order('analysis_date', { ascending: false })
           .limit(1)
 
-        const ndvi = satData?.[0]?.ndvi_value || 0
-        const saude =
-          ndvi > 0.6 ? 'Excelente' : ndvi > 0.4 ? 'Atenção' : ndvi > 0 ? 'Crítico' : 'Pendente'
+        const ndvi = satData?.[0]?.ndvi_value
+        const saudeSafra =
+          ndvi !== undefined
+            ? {
+                hasData: true,
+                ndvi,
+                label: ndvi > 0.65 ? 'Saudável' : ndvi > 0.45 ? 'Atenção' : 'Crítico',
+                emoji: ndvi > 0.65 ? '✅' : ndvi > 0.45 ? '⚠️' : '🔴',
+              }
+            : { hasData: false, ndvi: 0, label: '', emoji: '' }
 
         const produtividadeBase = props && props.length > 0 ? 88 + props.length * 2 : 0
 
         setDashboardKpis({
           produtividade: produtividadeBase,
           sensores_ativos: sensoresAtivos,
-          saude_safra: saude,
-          receita_estimada: receita > 0 ? `R$ ${receita.toLocaleString('pt-BR')}` : 'Pendente',
+          saude_safra: saudeSafra,
+          receita_estimada:
+            receita !== undefined
+              ? { hasData: true, valor: receita }
+              : { hasData: false, valor: 0 },
         })
       })
     }
     fetchKpis()
   }, [user])
+
+  useEffect(() => {
+    async function fetchTicker() {
+      import('@/lib/supabase/client').then(async ({ supabase }) => {
+        const { data } = await supabase.functions.invoke('cepea-prices')
+        if (data && data.prices) {
+          const commodities = ['Soja', 'Milho', 'Boi Gordo']
+          const formatted = commodities.map((c) => ({
+            name: c,
+            price: data.prices[c]?.atual || 0,
+            variation: data.prices[c]?.variacao || 0,
+          }))
+          setTickerData(formatted)
+        }
+      })
+    }
+    fetchTicker()
+  }, [])
 
   useEffect(() => {
     const hasSeenPromo = sessionStorage.getItem('hasSeenPlanPromo')
@@ -126,13 +157,37 @@ const Dashboard = () => {
         />
 
         <div className="flex flex-col md:flex-row items-start justify-between gap-4 glass-panel p-6 rounded-2xl">
-          <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
-              Visão Geral
-            </h1>
-            <p className="text-[#A0A0A0] mt-2 text-lg font-medium">
-              Acompanhe as principais métricas da sua operação.
-            </p>
+          <div className="space-y-4">
+            <div>
+              <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
+                Visão Geral
+              </h1>
+              <p className="text-[#A0A0A0] mt-2 text-lg font-medium">
+                Acompanhe as principais métricas da sua operação.
+              </p>
+            </div>
+
+            {tickerData.length > 0 && (
+              <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide animate-fade-in max-w-[80vw] md:max-w-full">
+                {tickerData.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center gap-2 bg-black/40 border border-white/5 rounded-full px-4 py-1.5 shrink-0 backdrop-blur-sm"
+                  >
+                    <span className="text-sm font-semibold text-zinc-400">{item.name}</span>
+                    <span className="text-sm font-bold text-white">
+                      R$ {item.price.toFixed(2).replace('.', ',')}
+                    </span>
+                    <span
+                      className={`text-xs font-bold ${item.variation >= 0 ? 'text-green-400' : 'text-red-400'}`}
+                    >
+                      {item.variation >= 0 ? '+' : ''}
+                      {item.variation.toFixed(2).replace('.', ',')}%
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           <div className="flex gap-3">
             <Button
@@ -217,9 +272,14 @@ const Dashboard = () => {
             <div>
               <p className="text-sm text-[#A0A0A0] font-semibold mb-1">Saúde Safra</p>
               <div className="flex items-baseline gap-2">
-                <p className="text-3xl font-black text-white">
-                  {dashboardKpis?.saude_safra || 'Pendente'}
-                </p>
+                {dashboardKpis?.saude_safra?.hasData ? (
+                  <p className="text-[1.1rem] md:text-xl font-bold text-white truncate">
+                    NDVI: {dashboardKpis.saude_safra.ndvi.toFixed(2)} —{' '}
+                    {dashboardKpis.saude_safra.label} {dashboardKpis.saude_safra.emoji}
+                  </p>
+                ) : (
+                  <p className="text-lg font-medium text-zinc-500">Nenhuma análise encontrada</p>
+                )}
               </div>
             </div>
           </div>
@@ -231,10 +291,25 @@ const Dashboard = () => {
             <div>
               <p className="text-sm text-[#A0A0A0] font-semibold mb-1">Receita Estimada</p>
               <div className="flex items-baseline gap-2">
-                <p className="text-3xl font-black text-white">
-                  {dashboardKpis?.receita_estimada || 'Aguardando'}
-                </p>
-                <span className="text-xs text-purple-400 font-bold">IA</span>
+                {dashboardKpis?.receita_estimada?.hasData ? (
+                  <>
+                    <p className="text-2xl md:text-3xl font-black text-white truncate">
+                      {new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL',
+                      }).format(dashboardKpis.receita_estimada.valor)}
+                    </p>
+                    <span className="text-xs text-purple-400 font-bold shrink-0">ROI</span>
+                  </>
+                ) : (
+                  <Button
+                    onClick={() => navigate('/roi')}
+                    variant="outline"
+                    className="mt-1 h-8 rounded-full border-primary/50 text-primary hover:bg-primary/10 hover:text-primary text-xs w-full justify-center"
+                  >
+                    Calcular agora →
+                  </Button>
+                )}
               </div>
             </div>
           </div>

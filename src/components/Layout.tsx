@@ -32,6 +32,7 @@ import {
   Share2,
   Lock,
   Bug,
+  Calendar,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -83,6 +84,12 @@ export default function Layout() {
           icon: Bug,
           path: '/diagnostico-pragas',
           feature: 'diagnostico-pragas',
+        },
+        {
+          title: 'Calendário Agrícola',
+          icon: Calendar,
+          path: '/calendario-agricola',
+          feature: null,
         },
         { title: 'Calculadora ROI', icon: Calculator, path: '/roi', feature: 'roi' },
       ],
