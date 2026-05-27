@@ -39,41 +39,61 @@ export function useSubscription() {
   }, [user?.id, authLoading])
 
   const hasFeature = (feature: string) => {
-    const userPlanName =
-      plan?.plan_name || user?.plan_type || user?.plan_active || user?.plano_ativo || 'Básico'
+    let userPlanName =
+      plan?.plan_name || user?.plan_type || user?.plan_active || user?.plano_ativo || 'Explorador'
 
-    const basicoFeatures = ['dashboard', 'comunidade']
-    const plantioSoloFeatures = ['dashboard', 'comunidade', 'roi', 'previsao-ia', 'loja']
-    const pecuarioSoloFeatures = ['dashboard', 'comunidade', 'pecuaria', 'rastreabilidade', 'loja']
-    const completoFeatures = [
-      ...plantioSoloFeatures,
-      ...pecuarioSoloFeatures,
-      'faturamento',
-      'meus-calculos',
-      'crm',
-      'checkout',
+    // Normalize old plans
+    if (userPlanName === 'Básico') userPlanName = 'Explorador'
+    if (userPlanName === 'Plantio Solo') userPlanName = 'Lavoura'
+    if (userPlanName === 'Pecuário Solo' || userPlanName === 'Pecuária Solo')
+      userPlanName = 'Rebanho'
+    if (userPlanName === 'Completo') userPlanName = 'Fazendeiro Completo'
+    if (userPlanName === 'Família Coop') userPlanName = 'Cooperativa'
+
+    const exploradorFeatures = ['dashboard', 'comunidade']
+    const lavouraFeatures = [
+      'dashboard',
+      'comunidade',
       'analise-satelite',
       'consultor-ia-agro',
+      'diagnostico-pragas',
+      'calendario-agricola',
+      'irrigacao',
+      'roi',
+      'previsao-ia',
+      'loja',
+      'gestao',
+    ]
+    const rebanhoFeatures = [
+      'dashboard',
+      'comunidade',
+      'pecuaria',
+      'rastreabilidade',
+      'consultor-ia-agro',
+      'diagnostico-pragas',
+      'previsao-ia',
+      'loja',
+      'gestao',
+    ]
+    const completoFeatures = [
+      ...lavouraFeatures,
+      ...rebanhoFeatures,
+      'dashboard-consolidado',
+      'calculadora-carbono',
+      'crm',
+      'faturamento',
+      'meus-calculos',
+      'checkout',
       'consultores',
       'analise-compartilhada',
     ]
-    const familiaFeatures = [...completoFeatures, 'multi_propriedade', 'relatorios']
+    const familiaFeatures = [...completoFeatures, 'multi_propriedade', 'relatorios', 'api']
 
-    if (userPlanName === 'Básico') {
-      return basicoFeatures.includes(feature)
-    }
-    if (userPlanName === 'Plantio Solo') {
-      return plantioSoloFeatures.includes(feature)
-    }
-    if (userPlanName === 'Pecuário Solo') {
-      return pecuarioSoloFeatures.includes(feature)
-    }
-    if (userPlanName === 'Completo') {
-      return completoFeatures.includes(feature)
-    }
-    if (userPlanName === 'Família Coop') {
-      return familiaFeatures.includes(feature)
-    }
+    if (userPlanName === 'Explorador') return exploradorFeatures.includes(feature)
+    if (userPlanName === 'Lavoura') return lavouraFeatures.includes(feature)
+    if (userPlanName === 'Rebanho') return rebanhoFeatures.includes(feature)
+    if (userPlanName === 'Fazendeiro Completo') return completoFeatures.includes(feature)
+    if (userPlanName === 'Cooperativa') return familiaFeatures.includes(feature)
 
     return false
   }
