@@ -9,8 +9,8 @@ export function Hero() {
     <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden bg-[#0A0F0D]">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,200,83,0.15)_0%,transparent_50%)] pointer-events-none"></div>
 
-      <div className="container mx-auto px-4 z-10 relative">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8">
+      <div className="container mx-auto px-4 z-10 relative ![background:transparent]">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8 ![background:transparent]">
           <div className="w-full lg:w-[60%] space-y-8 text-center lg:text-left">
             <ScrollReveal>
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1B5E20]/40 border border-[#00C853]/20 text-white text-sm font-medium">
@@ -63,16 +63,16 @@ export function Hero() {
             </ScrollReveal>
           </div>
 
-          <div className="w-full lg:w-[40%] flex justify-center relative mt-10 lg:mt-0 ![background:none] ![background-color:transparent] ![background-image:none]">
+          <div className="w-full lg:w-[40%] flex justify-center relative mt-10 lg:mt-0 ![background:transparent] ![background-color:transparent] ![background-image:none]">
             <ScrollReveal
               delay={400}
-              className="relative w-full flex justify-center ![background:none] ![background-color:transparent] ![background-image:none]"
+              className="relative w-full flex justify-center ![background:transparent] ![background-color:transparent] ![background-image:none]"
             >
               <img
                 id="hero-image"
                 src={heroMockup}
                 alt="AgroIA Dashboard Mockup"
-                className="relative z-10 w-full max-w-[300px] lg:max-w-[420px] mx-auto animate-float-mockup object-contain block ![background:transparent]"
+                className="relative z-10 w-full max-w-[300px] lg:max-w-[420px] mx-auto animate-float-mockup object-contain block ![background:transparent] mix-blend-screen"
               />
             </ScrollReveal>
           </div>
