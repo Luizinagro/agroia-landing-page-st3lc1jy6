@@ -43,44 +43,57 @@ export function useSubscription() {
       plan?.plan_name || user?.plan_type || user?.plan_active || user?.plano_ativo || 'Explorador'
 
     // Normalize old plans
-    if (userPlanName === 'Básico') userPlanName = 'Explorador'
-    if (userPlanName === 'Plantio Solo') userPlanName = 'Lavoura'
-    if (userPlanName === 'Pecuário Solo' || userPlanName === 'Pecuária Solo')
+    if (userPlanName === 'Básico' || userPlanName === 'explorador') userPlanName = 'Explorador'
+    if (userPlanName === 'Plantio Solo' || userPlanName === 'lavoura') userPlanName = 'Lavoura'
+    if (
+      userPlanName === 'Pecuário Solo' ||
+      userPlanName === 'Pecuária Solo' ||
+      userPlanName === 'rebanho'
+    )
       userPlanName = 'Rebanho'
-    if (userPlanName === 'Completo') userPlanName = 'Fazendeiro Completo'
-    if (userPlanName === 'Família Coop') userPlanName = 'Cooperativa'
+    if (userPlanName === 'Completo' || userPlanName === 'fazendeiro_completo')
+      userPlanName = 'Fazendeiro Completo'
+    if (userPlanName === 'Família Coop' || userPlanName === 'cooperativa')
+      userPlanName = 'Cooperativa'
 
-    const exploradorFeatures = ['dashboard', 'comunidade']
-    const lavouraFeatures = [
+    const exploradorFeatures = [
       'dashboard',
       'comunidade',
-      'analise-satelite',
       'consultor-ia-agro',
-      'diagnostico-pragas',
+      'analise-satelite',
       'calendario-agricola',
+      'precos-tempo-real',
+      'previsao-ia',
+    ]
+    const lavouraFeatures = [
+      ...exploradorFeatures,
+      'diagnostico-pragas',
       'irrigacao',
       'roi',
-      'previsao-ia',
+      'resumo-semanal',
       'loja',
       'gestao',
+      'gestao-financeira',
+      'insumos',
+      'maquinario',
     ]
     const rebanhoFeatures = [
-      'dashboard',
-      'comunidade',
+      ...exploradorFeatures,
+      'calculadora-carbono',
+      'whatsapp-alertas',
+      'maquinario',
       'pecuaria',
       'rastreabilidade',
-      'consultor-ia-agro',
-      'diagnostico-pragas',
-      'previsao-ia',
       'loja',
       'gestao',
+      'gestao-financeira',
     ]
     const completoFeatures = [
-      ...lavouraFeatures,
-      ...rebanhoFeatures,
-      'dashboard-consolidado',
-      'calculadora-carbono',
+      ...new Set([...lavouraFeatures, ...rebanhoFeatures]),
+      'gestao-insumos',
+      'gestao-rh',
       'crm',
+      'dashboard-consolidado',
       'faturamento',
       'meus-calculos',
       'checkout',
@@ -98,5 +111,62 @@ export function useSubscription() {
     return false
   }
 
-  return { plan, loading, hasFeature }
+  const getMinimumPlan = (feature: string) => {
+    const exploradorFeatures = [
+      'dashboard',
+      'comunidade',
+      'consultor-ia-agro',
+      'analise-satelite',
+      'calendario-agricola',
+      'precos-tempo-real',
+      'previsao-ia',
+    ]
+    const lavouraFeatures = [
+      'diagnostico-pragas',
+      'irrigacao',
+      'roi',
+      'resumo-semanal',
+      'loja',
+      'gestao',
+      'gestao-financeira',
+      'insumos',
+      'maquinario',
+    ]
+    const rebanhoFeatures = [
+      'calculadora-carbono',
+      'whatsapp-alertas',
+      'pecuaria',
+      'rastreabilidade',
+    ]
+    const completoFeatures = [
+      'gestao-insumos',
+      'gestao-rh',
+      'crm',
+      'dashboard-consolidado',
+      'faturamento',
+      'meus-calculos',
+      'checkout',
+      'consultores',
+      'analise-compartilhada',
+    ]
+
+    if (exploradorFeatures.includes(feature)) return 'Explorador'
+    if (lavouraFeatures.includes(feature)) return 'Lavoura'
+    if (rebanhoFeatures.includes(feature)) return 'Rebanho'
+    if (completoFeatures.includes(feature)) return 'Fazendeiro Completo'
+    return 'Explorador'
+  }
+
+  const normalizedPlanName = () => {
+    let name =
+      plan?.plan_name || user?.plan_type || user?.plan_active || user?.plano_ativo || 'Explorador'
+    if (name === 'Básico' || name === 'explorador') return 'Explorador'
+    if (name === 'Plantio Solo' || name === 'lavoura') return 'Lavoura'
+    if (name === 'Pecuário Solo' || name === 'Pecuária Solo' || name === 'rebanho') return 'Rebanho'
+    if (name === 'Completo' || name === 'fazendeiro_completo') return 'Fazendeiro Completo'
+    if (name === 'Família Coop' || name === 'cooperativa') return 'Cooperativa'
+    return name
+  }
+
+  return { plan, loading, hasFeature, getMinimumPlan, currentPlanName: normalizedPlanName() }
 }

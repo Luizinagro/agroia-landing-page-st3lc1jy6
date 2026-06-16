@@ -37,7 +37,7 @@ const Dashboard = () => {
   const { user } = useAuth() as any
   const navigate = useNavigate()
   const location = useLocation()
-  const { plan: userPlan } = useSubscription()
+  const { plan: userPlan, currentPlanName } = useSubscription()
   const [blockedOpen, setBlockedOpen] = useState(false)
   const [promoOpen, setPromoOpen] = useState(false)
 
@@ -149,8 +149,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const hasSeenPromo = sessionStorage.getItem('hasSeenPlanPromo')
-    const currentPlan = user?.plan_active || user?.plano_ativo || 'Básico'
-    if (!hasSeenPromo && currentPlan === 'Básico') {
+    if (!hasSeenPromo && currentPlanName === 'Explorador') {
       setPromoOpen(true)
       sessionStorage.setItem('hasSeenPlanPromo', 'true')
     }
@@ -168,21 +167,22 @@ const Dashboard = () => {
   const isAdmin = user?.user_type === 'admin' || user?.tipo_usuario === 'admin'
 
   return (
-    <div className="min-h-screen bg-[#000000] flex flex-col font-sans selection:bg-primary/30 w-full">
+    <div className="min-h-screen bg-[#070F07] flex flex-col font-sans selection:bg-[#6DBF4A]/30 w-full">
       <main className="flex-1 container py-8 mx-auto space-y-8 max-w-7xl animate-fade-in">
         <SEO
           title="Dashboard"
           description="Painel central de controle. Visão geral da propriedade, métricas de inteligência artificial e monitoramento de ativos."
         />
 
-        <div className="flex flex-col md:flex-row items-start justify-between gap-4 glass-panel p-6 rounded-2xl">
+        <div className="flex flex-col md:flex-row items-start justify-between gap-4 bg-[#0D1F0D] border border-[#1E3A1E] p-6 rounded-[10px]">
           <div className="space-y-4">
             <div>
-              <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
-                Visão Geral
+              <h1 className="text-3xl font-extrabold tracking-tight text-[#F5F0E8] flex items-center gap-3">
+                Dashboard
               </h1>
-              <p className="text-[#A0A0A0] mt-2 text-lg font-medium">
-                Acompanhe as principais métricas da sua operação.
+              <p className="text-[#A8B8A0] mt-2 text-lg font-medium">
+                Bom dia, {(user?.name || user?.nome || 'Usuário').split(' ')[0]}. Aqui está sua
+                fazenda hoje.
               </p>
             </div>
           </div>
@@ -256,66 +256,65 @@ const Dashboard = () => {
         )}
 
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-black border border-primary/60 hover:border-primary transition-colors duration-300 rounded-2xl p-6 flex flex-col gap-4 shadow-[0_0_15px_rgba(29,185,84,0.1)]">
-            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-              <TrendingUp className="w-6 h-6 text-primary" />
+          <div className="bg-[#0D1F0D] border border-[#1E3A1E] hover:border-[#2E5A1A] transition-colors duration-300 rounded-[10px] p-6 flex flex-col gap-4">
+            <div className="w-12 h-12 rounded-xl bg-[#1A3A0A] flex items-center justify-center shrink-0">
+              <TrendingUp className="w-6 h-6 text-[#6DBF4A]" />
             </div>
             <div>
-              <p className="text-sm text-[#A0A0A0] font-semibold mb-1">Produtividade</p>
+              <p className="text-sm text-[#A8B8A0] font-semibold mb-1">Produtividade</p>
               <div className="flex items-baseline gap-2">
-                <p className="text-3xl font-black text-white">
+                <p className="text-3xl font-black text-[#F5F0E8]">
                   {dashboardKpis?.produtividade || '0'}%
                 </p>
-                <span className="text-xs text-primary font-bold">+5%</span>
+                <span className="text-xs text-[#6DBF4A] font-bold">+5%</span>
               </div>
             </div>
           </div>
 
-          <div className="bg-black border border-primary/60 hover:border-primary transition-colors duration-300 rounded-2xl p-6 flex flex-col gap-4 shadow-[0_0_15px_rgba(29,185,84,0.1)]">
-            <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0">
-              <Activity className="w-6 h-6 text-blue-400" />
+          <div className="bg-[#0D1F0D] border border-[#1E3A1E] hover:border-[#2E5A1A] transition-colors duration-300 rounded-[10px] p-6 flex flex-col gap-4">
+            <div className="w-12 h-12 rounded-xl bg-[#1A3A0A] flex items-center justify-center shrink-0">
+              <Activity className="w-6 h-6 text-[#6DBF4A]" />
             </div>
             <div>
-              <p className="text-sm text-[#A0A0A0] font-semibold mb-1">Status Sensores</p>
+              <p className="text-sm text-[#A8B8A0] font-semibold mb-1">Status Sensores</p>
               <div className="flex items-baseline gap-2">
-                <p className="text-3xl font-black text-white">
+                <p className="text-3xl font-black text-[#F5F0E8]">
                   {dashboardKpis?.sensores_ativos ? 'Ativos' : 'Sem dados'}
                 </p>
-                <span className="text-xs text-blue-400 font-bold">
+                <span className="text-xs text-[#6DBF4A] font-bold">
                   {dashboardKpis?.sensores_ativos || '0/0'}
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="bg-black border border-primary/60 hover:border-primary transition-colors duration-300 rounded-2xl p-6 flex flex-col gap-4 shadow-[0_0_15px_rgba(29,185,84,0.1)]">
-            <div className="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center shrink-0">
-              <Leaf className="w-6 h-6 text-yellow-400" />
+          <div className="bg-[#0D1F0D] border border-[#1E3A1E] hover:border-[#2E5A1A] transition-colors duration-300 rounded-[10px] p-6 flex flex-col gap-4">
+            <div className="w-12 h-12 rounded-xl bg-[#1A3A0A] flex items-center justify-center shrink-0">
+              <Leaf className="w-6 h-6 text-[#6DBF4A]" />
             </div>
             <div>
-              <p className="text-sm text-[#A0A0A0] font-semibold mb-1">Saúde Safra</p>
+              <p className="text-sm text-[#A8B8A0] font-semibold mb-1">Saúde Safra</p>
               <div className="flex items-baseline gap-2">
                 {dashboardKpis?.saude_safra?.hasData ? (
-                  <p className="text-[1.1rem] md:text-xl font-bold text-white truncate">
+                  <p className="text-[1.1rem] md:text-xl font-bold text-[#F5F0E8] truncate">
                     NDVI: {dashboardKpis.saude_safra.ndvi.toFixed(2)} —{' '}
                     <span
                       className={
                         dashboardKpis.saude_safra.ndvi > 0.65
-                          ? 'text-green-400'
+                          ? 'text-[#6DBF4A]'
                           : dashboardKpis.saude_safra.ndvi > 0.45
-                            ? 'text-yellow-400'
-                            : 'text-red-400'
+                            ? 'text-yellow-500'
+                            : 'text-[#C62828]'
                       }
                     >
                       {dashboardKpis.saude_safra.label}
-                    </span>{' '}
-                    {dashboardKpis.saude_safra.emoji}
+                    </span>
                   </p>
                 ) : (
                   <Button
                     onClick={() => navigate('/analise-satelite')}
                     variant="outline"
-                    className="mt-1 h-8 rounded-full border-primary/50 text-primary hover:bg-primary/10 hover:text-primary text-xs w-full justify-center"
+                    className="mt-1 h-8 rounded-full border-[#2E5A1A] text-[#6DBF4A] hover:bg-[#1A3A0A] hover:text-[#6DBF4A] text-xs w-full justify-center"
                   >
                     Analisar agora →
                   </Button>
@@ -324,28 +323,28 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="bg-black border border-primary/60 hover:border-primary transition-colors duration-300 rounded-2xl p-6 flex flex-col gap-4 shadow-[0_0_15px_rgba(29,185,84,0.1)]">
-            <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center shrink-0">
-              <DollarSign className="w-6 h-6 text-purple-400" />
+          <div className="bg-[#0D1F0D] border border-[#1E3A1E] hover:border-[#2E5A1A] transition-colors duration-300 rounded-[10px] p-6 flex flex-col gap-4">
+            <div className="w-12 h-12 rounded-xl bg-[#1A3A0A] flex items-center justify-center shrink-0">
+              <DollarSign className="w-6 h-6 text-[#6DBF4A]" />
             </div>
             <div>
-              <p className="text-sm text-[#A0A0A0] font-semibold mb-1">Receita Estimada</p>
+              <p className="text-sm text-[#A8B8A0] font-semibold mb-1">Receita Estimada</p>
               <div className="flex items-baseline gap-2">
                 {dashboardKpis?.receita_estimada?.hasData ? (
                   <>
-                    <p className="text-2xl md:text-3xl font-black text-white truncate">
+                    <p className="text-2xl md:text-3xl font-black text-[#F5F0E8] truncate">
                       {new Intl.NumberFormat('pt-BR', {
                         style: 'currency',
                         currency: 'BRL',
                       }).format(dashboardKpis.receita_estimada.valor)}
                     </p>
-                    <span className="text-xs text-purple-400 font-bold shrink-0">ROI</span>
+                    <span className="text-xs text-[#6DBF4A] font-bold shrink-0">ROI</span>
                   </>
                 ) : (
                   <Button
                     onClick={() => navigate('/roi')}
                     variant="outline"
-                    className="mt-1 h-8 rounded-full border-primary/50 text-primary hover:bg-primary/10 hover:text-primary text-xs w-full justify-center"
+                    className="mt-1 h-8 rounded-full border-[#2E5A1A] text-[#6DBF4A] hover:bg-[#1A3A0A] hover:text-[#6DBF4A] text-xs w-full justify-center"
                   >
                     Calcular agora →
                   </Button>
@@ -360,21 +359,17 @@ const Dashboard = () => {
             {tickerData.map((item, idx) => (
               <div
                 key={idx}
-                className="flex items-center gap-3 bg-zinc-900/50 border border-white/5 rounded-2xl px-5 py-3 shrink-0 backdrop-blur-md"
+                className="flex items-center gap-3 bg-[#0D1F0D] border border-[#1E3A1E] rounded-[10px] px-5 py-3 shrink-0"
               >
-                <span className="text-sm font-medium text-zinc-400">
-                  {item.name.toLowerCase().includes('boi')
-                    ? '🐄'
-                    : item.name.toLowerCase().includes('milho')
-                      ? '🌽'
-                      : '🌾'}{' '}
+                <span className="text-sm font-medium text-[#A8B8A0] flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-[#6A8A5A]" />
                   {item.name}
                 </span>
-                <span className="text-lg font-bold text-white">
+                <span className="text-lg font-bold text-[#F5F0E8]">
                   R$ {item.price.toFixed(2).replace('.', ',')}
                 </span>
                 <span
-                  className={`text-sm font-bold ${item.variation >= 0 ? 'text-green-400' : 'text-red-400'}`}
+                  className={`text-sm font-bold ${item.variation >= 0 ? 'text-[#6DBF4A]' : 'text-[#C62828]'}`}
                 >
                   {item.variation >= 0 ? '+' : ''}
                   {item.variation.toFixed(2).replace('.', ',')}%
@@ -427,7 +422,7 @@ const Dashboard = () => {
           </div>
 
           <div className="xl:col-span-1">
-            <section className="bg-black border border-primary/50 rounded-3xl p-6 h-full flex flex-col shadow-[0_0_15px_rgba(29,185,84,0.1)]">
+            <section className="bg-[#0D1F0D] border border-[#1E3A1E] rounded-[10px] p-6 h-full flex flex-col">
               <AlertsSection />
             </section>
           </div>
