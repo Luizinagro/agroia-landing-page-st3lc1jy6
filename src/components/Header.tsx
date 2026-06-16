@@ -24,16 +24,16 @@ export function Header() {
     return (
       <header
         className={cn(
-          'fixed top-0 w-full z-[1000] transition-all duration-300 flex items-center',
+          'sticky top-0 w-full z-[1000] transition-all duration-300 flex items-center',
           scrolled
-            ? 'h-[56px] md:h-[64px] bg-[#0A0F0D] shadow-[0_2px_20px_rgba(0,200,83,0.1)] border-b border-[#00C853]/10'
-            : 'h-[56px] md:h-[64px] bg-transparent border-transparent',
+            ? 'h-[56px] md:h-[64px] bg-[#0A0F0D] shadow-[0_2px_20px_rgba(0,200,83,0.1)]'
+            : 'h-[56px] md:h-[64px] bg-transparent',
         )}
       >
         <div className="container mx-auto px-4 flex items-center justify-between">
           <Link
             to="/"
-            className="flex items-center gap-2 transition-transform hover:scale-105"
+            className="flex items-center gap-2 transition-transform hover:scale-105 cursor-pointer"
             onClick={(e) => {
               if (location.pathname === '/') {
                 e.preventDefault()
@@ -59,6 +59,12 @@ export function Header() {
             >
               Planos
             </a>
+            <a
+              href="#faq"
+              className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
+            >
+              FAQ
+            </a>
             <Link
               to="/sicredi"
               className="text-sm font-medium text-[#00C853] hover:text-[#009959] transition-colors flex items-center gap-1.5 bg-[#00C853]/10 px-4 py-2 rounded-full"
@@ -71,13 +77,13 @@ export function Header() {
             <Link to="/login">
               <Button
                 variant="outline"
-                className="border-white text-white hover:bg-white hover:text-black font-medium px-6 rounded-full bg-transparent transition-colors"
+                className="border border-white text-white hover:bg-white hover:text-black font-medium px-[20px] py-[8px] h-auto rounded-[8px] bg-transparent transition-colors"
               >
                 Entrar
               </Button>
             </Link>
             <Link to="/cadastro">
-              <Button className="bg-[#00C853] text-black hover:bg-[#00E676] font-bold px-6 rounded-full transition-colors">
+              <Button className="bg-[#00C853] text-black hover:bg-[#00E676] font-bold px-[20px] py-[8px] h-auto rounded-[8px] transition-colors">
                 Cadastrar-se
               </Button>
             </Link>
@@ -92,7 +98,7 @@ export function Header() {
               </SheetTrigger>
               <SheetContent
                 side="right"
-                className="bg-[#0A0F0D] border-l border-[#00C853]/20 p-0 w-[280px]"
+                className="bg-[#0A0F0D] border-l border-[#00C853]/20 p-0 w-[280px] z-[1001]"
               >
                 <SheetTitle className="sr-only">Menu de Navegação</SheetTitle>
                 <div className="p-4 border-b border-[#00C853]/10">
@@ -114,6 +120,12 @@ export function Header() {
                     >
                       Planos
                     </a>
+                    <a
+                      href="#faq"
+                      className="text-base font-medium text-white hover:text-[#00C853] transition-colors py-3 border-b border-white/5"
+                    >
+                      FAQ
+                    </a>
                     <Link
                       to="/sicredi"
                       className="text-base font-medium text-[#00C853] hover:text-[#009959] transition-colors py-3 border-b border-white/5 flex items-center gap-2"
@@ -126,13 +138,13 @@ export function Header() {
                     <Link to="/login" className="w-full">
                       <Button
                         variant="outline"
-                        className="w-full border-white text-white hover:bg-white hover:text-black font-medium rounded-full bg-transparent transition-colors"
+                        className="w-full border border-white text-white hover:bg-white hover:text-black font-medium px-[20px] py-[8px] h-auto rounded-[8px] bg-transparent transition-colors"
                       >
                         Entrar
                       </Button>
                     </Link>
                     <Link to="/cadastro" className="w-full">
-                      <Button className="w-full bg-[#00C853] text-black hover:bg-[#00E676] font-bold rounded-full transition-colors">
+                      <Button className="w-full bg-[#00C853] text-black hover:bg-[#00E676] font-bold px-[20px] py-[8px] h-auto rounded-[8px] transition-colors">
                         Cadastrar-se
                       </Button>
                     </Link>
