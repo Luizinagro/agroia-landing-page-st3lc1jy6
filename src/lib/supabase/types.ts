@@ -1,11 +1,17 @@
 // AVOID UPDATING THIS FILE DIRECTLY. It is automatically generated.
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: '14.4'
+    PostgrestVersion: "14.4"
   }
   public: {
     Tables: {
@@ -99,11 +105,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'alertas_cio_animal_id_fkey'
-            columns: ['animal_id']
+            foreignKeyName: "alertas_cio_animal_id_fkey"
+            columns: ["animal_id"]
             isOneToOne: false
-            referencedRelation: 'animais'
-            referencedColumns: ['id']
+            referencedRelation: "animais"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -266,11 +272,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'carrinho_produto_id_fkey'
-            columns: ['produto_id']
+            foreignKeyName: "carrinho_produto_id_fkey"
+            columns: ["produto_id"]
             isOneToOne: false
-            referencedRelation: 'products'
-            referencedColumns: ['id']
+            referencedRelation: "products"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -307,11 +313,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'clima_propriedade_id_fkey'
-            columns: ['propriedade_id']
+            foreignKeyName: "clima_propriedade_id_fkey"
+            columns: ["propriedade_id"]
             isOneToOne: false
-            referencedRelation: 'propriedades'
-            referencedColumns: ['id']
+            referencedRelation: "propriedades"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -690,11 +696,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'insumos_movimentacoes_insumo_id_fkey'
-            columns: ['insumo_id']
+            foreignKeyName: "insumos_movimentacoes_insumo_id_fkey"
+            columns: ["insumo_id"]
             isOneToOne: false
-            referencedRelation: 'insumos_cadastro'
-            referencedColumns: ['id']
+            referencedRelation: "insumos_cadastro"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -809,11 +815,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'maquinas_despesas_maquina_id_fkey'
-            columns: ['maquina_id']
+            foreignKeyName: "maquinas_despesas_maquina_id_fkey"
+            columns: ["maquina_id"]
             isOneToOne: false
-            referencedRelation: 'maquinas'
-            referencedColumns: ['id']
+            referencedRelation: "maquinas"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -853,11 +859,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'maquinas_documentos_maquina_id_fkey'
-            columns: ['maquina_id']
+            foreignKeyName: "maquinas_documentos_maquina_id_fkey"
+            columns: ["maquina_id"]
             isOneToOne: false
-            referencedRelation: 'maquinas'
-            referencedColumns: ['id']
+            referencedRelation: "maquinas"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -888,11 +894,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'maquinas_horimetro_maquina_id_fkey'
-            columns: ['maquina_id']
+            foreignKeyName: "maquinas_horimetro_maquina_id_fkey"
+            columns: ["maquina_id"]
             isOneToOne: false
-            referencedRelation: 'maquinas'
-            referencedColumns: ['id']
+            referencedRelation: "maquinas"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -941,11 +947,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'maquinas_manutencao_maquina_id_fkey'
-            columns: ['maquina_id']
+            foreignKeyName: "maquinas_manutencao_maquina_id_fkey"
+            columns: ["maquina_id"]
             isOneToOne: false
-            referencedRelation: 'maquinas'
-            referencedColumns: ['id']
+            referencedRelation: "maquinas"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1051,18 +1057,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'order_items_order_id_fkey'
-            columns: ['order_id']
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
             isOneToOne: false
-            referencedRelation: 'orders'
-            referencedColumns: ['id']
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: 'order_items_product_id_fkey'
-            columns: ['product_id']
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
             isOneToOne: false
-            referencedRelation: 'products'
-            referencedColumns: ['id']
+            referencedRelation: "products"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1123,6 +1129,33 @@ export type Database = {
           racao_recomendada?: string
           tipo?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      plan_permissions: {
+        Row: {
+          created_at: string | null
+          id: number
+          limite: number | null
+          modulo: string
+          permitido: boolean | null
+          plano: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          limite?: number | null
+          modulo: string
+          permitido?: boolean | null
+          plano: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          limite?: number | null
+          modulo?: string
+          permitido?: boolean | null
+          plano?: string
         }
         Relationships: []
       }
@@ -1423,11 +1456,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'rh_atividades_funcionario_id_fkey'
-            columns: ['funcionario_id']
+            foreignKeyName: "rh_atividades_funcionario_id_fkey"
+            columns: ["funcionario_id"]
             isOneToOne: false
-            referencedRelation: 'rh_funcionarios'
-            referencedColumns: ['id']
+            referencedRelation: "rh_funcionarios"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1515,11 +1548,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'rh_ponto_funcionario_id_fkey'
-            columns: ['funcionario_id']
+            foreignKeyName: "rh_ponto_funcionario_id_fkey"
+            columns: ["funcionario_id"]
             isOneToOne: false
-            referencedRelation: 'rh_funcionarios'
-            referencedColumns: ['id']
+            referencedRelation: "rh_funcionarios"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1685,6 +1718,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_subscriptions: {
+        Row: {
+          created_at: string | null
+          data_inicio: string | null
+          data_renovacao: string | null
+          id: string
+          periodo: string
+          plano: string
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          data_inicio?: string | null
+          data_renovacao?: string | null
+          id?: string
+          periodo?: string
+          plano?: string
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          data_inicio?: string | null
+          data_renovacao?: string | null
+          id?: string
+          periodo?: string
+          plano?: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           address: string | null
@@ -1780,6 +1849,30 @@ export type Database = {
       }
     }
     Views: {
+      meu_plano: {
+        Row: {
+          data_renovacao: string | null
+          periodo: string | null
+          plano: string | null
+          plano_display: string | null
+          status: string | null
+        }
+        Insert: {
+          data_renovacao?: string | null
+          periodo?: string | null
+          plano?: string | null
+          plano_display?: never
+          status?: string | null
+        }
+        Update: {
+          data_renovacao?: string | null
+          periodo?: string | null
+          plano?: string | null
+          plano_display?: never
+          status?: string | null
+        }
+        Relationships: []
+      }
       usuarios: {
         Row: {
           email: string | null
@@ -1803,6 +1896,10 @@ export type Database = {
       }
     }
     Functions: {
+      check_user_permission: {
+        Args: { p_modulo: string; p_user_id: string }
+        Returns: boolean
+      }
       increment_satellite_views: {
         Args: { row_id: string }
         Returns: undefined
@@ -1818,31 +1915,33 @@ export type Database = {
   }
 }
 
-type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, 'public'>]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
-    ? (DefaultSchema['Tables'] & DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -1851,23 +1950,23 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -1876,23 +1975,23 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -1901,36 +2000,36 @@ export type TablesUpdate<
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema['Enums']
+    | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums'][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema['Enums']
-    ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema['CompositeTypes']
+    | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
-    ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
 export const Constants = {
@@ -1938,6 +2037,7 @@ export const Constants = {
     Enums: {},
   },
 } as const
+
 
 // ====== DATABASE EXTENDED CONTEXT (auto-generated) ======
 // This section contains actual PostgreSQL column types, constraints, RLS policies,
@@ -2215,6 +2315,12 @@ export const Constants = {
 //   estoque: numeric (not null, default: 0)
 //   image: text (not null)
 //   created_at: timestamp with time zone (not null, default: now())
+// Table: meu_plano
+//   plano: text (nullable)
+//   status: text (nullable)
+//   periodo: text (nullable)
+//   data_renovacao: timestamp with time zone (nullable)
+//   plano_display: text (nullable)
 // Table: order_items
 //   id: uuid (not null, default: gen_random_uuid())
 //   order_id: uuid (not null)
@@ -2237,6 +2343,13 @@ export const Constants = {
 //   racao_recomendada: text (not null)
 //   custo_mensal: numeric (not null)
 //   created_at: timestamp with time zone (not null, default: now())
+// Table: plan_permissions
+//   id: integer (not null, default: nextval('plan_permissions_id_seq'::regclass))
+//   plano: text (not null)
+//   modulo: text (not null)
+//   permitido: boolean (nullable, default: false)
+//   limite: integer (nullable)
+//   created_at: timestamp with time zone (nullable, default: now())
 // Table: planos
 //   id: uuid (not null, default: gen_random_uuid())
 //   nome: text (not null)
@@ -2386,6 +2499,16 @@ export const Constants = {
 //   plan_features: jsonb (nullable, default: '[]'::jsonb)
 //   expires_at: timestamp with time zone (nullable)
 //   created_at: timestamp with time zone (not null, default: now())
+// Table: user_subscriptions
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   plano: text (not null, default: 'explorador'::text)
+//   status: text (not null, default: 'active'::text)
+//   periodo: text (not null, default: 'mensal'::text)
+//   data_inicio: timestamp with time zone (nullable, default: now())
+//   data_renovacao: timestamp with time zone (nullable)
+//   created_at: timestamp with time zone (nullable, default: now())
+//   updated_at: timestamp with time zone (nullable, default: now())
 // Table: users
 //   id: uuid (not null)
 //   email: text (not null)
@@ -2510,6 +2633,9 @@ export const Constants = {
 // Table: pecuaria_animais
 //   PRIMARY KEY pecuaria_animais_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY pecuaria_animais_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: plan_permissions
+//   PRIMARY KEY plan_permissions_pkey: PRIMARY KEY (id)
+//   UNIQUE plan_permissions_plano_modulo_key: UNIQUE (plano, modulo)
 // Table: planos
 //   UNIQUE planos_nome_key: UNIQUE (nome)
 //   PRIMARY KEY planos_pkey: PRIMARY KEY (id)
@@ -2557,6 +2683,11 @@ export const Constants = {
 // Table: user_plans
 //   PRIMARY KEY user_plans_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY user_plans_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: user_subscriptions
+//   CHECK plano_valido: CHECK ((plano = ANY (ARRAY['explorador'::text, 'lavoura'::text, 'rebanho'::text, 'fazendeiro_completo'::text, 'cooperativa'::text])))
+//   PRIMARY KEY user_subscriptions_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY user_subscriptions_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+//   UNIQUE user_subscriptions_user_id_key: UNIQUE (user_id)
 // Table: users
 //   FOREIGN KEY users_id_fkey: FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE
 //   PRIMARY KEY users_pkey: PRIMARY KEY (id)
@@ -2693,6 +2824,11 @@ export const Constants = {
 //   Policy "Users can manage own pecuaria_animais" (ALL, PERMISSIVE) roles={authenticated}
 //     USING: (auth.uid() = user_id)
 //     WITH CHECK: (auth.uid() = user_id)
+// Table: plan_permissions
+//   Policy "plan_permissions_public_read" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: true
+//   Policy "service_role_full_access_permissions" (ALL, PERMISSIVE) roles={service_role}
+//     USING: true
 // Table: planos
 //   Policy "Anyone can read planos" (SELECT, PERMISSIVE) roles={public}
 //     USING: true
@@ -2780,6 +2916,11 @@ export const Constants = {
 //   Policy "user_plans_update" (UPDATE, PERMISSIVE) roles={authenticated}
 //     USING: (user_id = auth.uid())
 //     WITH CHECK: (user_id = auth.uid())
+// Table: user_subscriptions
+//   Policy "service_role_full_access_subscriptions" (ALL, PERMISSIVE) roles={service_role}
+//     USING: true
+//   Policy "user_can_read_own_subscription" (SELECT, PERMISSIVE) roles={public}
+//     USING: (auth.uid() = user_id)
 // Table: users
 //   Policy "Users can read all users" (SELECT, PERMISSIVE) roles={authenticated}
 //     USING: true
@@ -2799,6 +2940,35 @@ export const Constants = {
 //     USING: (auth.uid() = user_id)
 
 // --- DATABASE FUNCTIONS ---
+// FUNCTION check_user_permission(uuid, text)
+//   CREATE OR REPLACE FUNCTION public.check_user_permission(p_user_id uuid, p_modulo text)
+//    RETURNS boolean
+//    LANGUAGE plpgsql
+//    SECURITY DEFINER
+//   AS $function$
+//   DECLARE
+//     v_plano TEXT;
+//     v_permitido BOOLEAN;
+//   BEGIN
+//     -- Pegar plano do usuário (default explorador se não tiver assinatura)
+//     SELECT plano INTO v_plano
+//     FROM user_subscriptions
+//     WHERE user_id = p_user_id AND status = 'active'
+//     LIMIT 1;
+//   
+//     IF v_plano IS NULL THEN
+//       v_plano := 'explorador';
+//     END IF;
+//   
+//     -- Verificar permissão
+//     SELECT permitido INTO v_permitido
+//     FROM plan_permissions
+//     WHERE plano = v_plano AND modulo = p_modulo;
+//   
+//     RETURN COALESCE(v_permitido, FALSE);
+//   END;
+//   $function$
+//   
 // FUNCTION handle_new_user()
 //   CREATE OR REPLACE FUNCTION public.handle_new_user()
 //    RETURNS trigger
@@ -2808,13 +2978,13 @@ export const Constants = {
 //   AS $function$
 //   BEGIN
 //     INSERT INTO public.users (
-//       id,
-//       email,
-//       name,
-//       user_type,
-//       status,
-//       plan_active,
-//       created_at,
+//       id, 
+//       email, 
+//       name, 
+//       user_type, 
+//       status, 
+//       plan_active, 
+//       created_at, 
 //       trial_expires_at,
 //       phone,
 //       cpf,
@@ -2840,13 +3010,13 @@ export const Constants = {
 //       NULLIF(NEW.raw_user_meta_data->>'terms_accepted_at', '')::timestamptz
 //     )
 //     ON CONFLICT (id) DO NOTHING;
-//
+//     
 //     RETURN NEW;
 //   EXCEPTION WHEN OTHERS THEN
 //     RETURN NEW;
 //   END;
 //   $function$
-//
+//   
 // FUNCTION increment_satellite_views(uuid)
 //   CREATE OR REPLACE FUNCTION public.increment_satellite_views(row_id uuid)
 //    RETURNS void
@@ -2859,7 +3029,7 @@ export const Constants = {
 //     WHERE id = row_id;
 //   END;
 //   $function$
-//
+//   
 // FUNCTION user_has_satellite_access()
 //   CREATE OR REPLACE FUNCTION public.user_has_satellite_access()
 //    RETURNS boolean
@@ -2873,7 +3043,7 @@ export const Constants = {
 //     RETURN user_plan IN ('Completo', 'Família Coop');
 //   END;
 //   $function$
-//
+//   
 
 // --- INDEXES ---
 // Table: alertas_cio
@@ -2885,6 +3055,8 @@ export const Constants = {
 //   CREATE UNIQUE INDEX dashboard_kpis_user_id_key ON public.dashboard_kpis USING btree (user_id)
 // Table: diagnosticos_pragas
 //   CREATE INDEX idx_diagnosticos_user ON public.diagnosticos_pragas USING btree (user_id)
+// Table: plan_permissions
+//   CREATE UNIQUE INDEX plan_permissions_plano_modulo_key ON public.plan_permissions USING btree (plano, modulo)
 // Table: planos
 //   CREATE UNIQUE INDEX planos_nome_key ON public.planos USING btree (nome)
 // Table: precos_cache
@@ -2894,3 +3066,6 @@ export const Constants = {
 //   CREATE INDEX propriedades_user_id_idx ON public.propriedades USING btree (user_id)
 // Table: rh_ponto
 //   CREATE UNIQUE INDEX rh_ponto_funcionario_id_data_key ON public.rh_ponto USING btree (funcionario_id, data)
+// Table: user_subscriptions
+//   CREATE UNIQUE INDEX user_subscriptions_user_id_key ON public.user_subscriptions USING btree (user_id)
+
