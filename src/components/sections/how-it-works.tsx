@@ -1,5 +1,5 @@
 import { ScrollReveal } from '@/components/ScrollReveal'
-import { Map, Zap, LineChart } from 'lucide-react'
+import { Map, Database, LineChart } from 'lucide-react'
 
 export function HowItWorks() {
   const steps = [
@@ -9,7 +9,7 @@ export function HowItWorks() {
       desc: 'Informe o tamanho da sua propriedade, as culturas que planta e a localização. Leva menos de 5 minutos.',
     },
     {
-      icon: Zap,
+      icon: Database,
       title: 'Conecte o que você já usa',
       desc: 'Tire fotos de pragas, insira dados manualmente ou integre sensores. A AgroIA processa tudo e entrega a análise.',
     },

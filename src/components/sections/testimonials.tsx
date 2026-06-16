@@ -60,14 +60,12 @@ export function Testimonials() {
                     alt={t.name}
                     className="w-14 h-14 rounded-full object-cover border-2 border-[#4A8A1A]"
                   />
-                  <div>
-                    <p className="text-[#F5F0E8] font-bold flex items-center gap-2">
-                      {t.name}
-                      <span className="bg-[#4A8A1A]/20 text-[#6DBF4A] text-[10px] px-1.5 py-0.5 rounded font-bold">
-                        {t.state}
-                      </span>
-                    </p>
-                    <p className="text-[#4A8A1A] text-sm font-medium">{t.role}</p>
+                  <div className="flex flex-col">
+                    <p className="text-[#F5F0E8] font-bold">{t.name}</p>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <p className="text-[#A8B8A0] text-sm font-medium">{t.role}</p>
+                      <span className="text-[#6DBF4A] font-bold text-sm">• {t.state}</span>
+                    </div>
                   </div>
                 </div>
               </div>

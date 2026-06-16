@@ -16,63 +16,63 @@ export function Modules() {
     {
       icon: Brain,
       title: 'Consultor IA',
-      desc: 'Tire dúvidas técnicas, peça sugestões de manejo e receba respostas imediatas da IA treinada com dados agronômicos.',
+      desc: 'Tire dúvidas agronômicas 24h por dia. É como ter um técnico sempre ao lado.',
       badge: 'TODOS OS PLANOS',
       badgeColor: 'bg-[#1A3A0A] text-[#8BC34A]',
     },
     {
       icon: Satellite,
       title: 'Análise Satelital',
-      desc: 'Monitore índices NDVI, saúde da vegetação e umidade do solo com imagens atualizadas frequentemente.',
+      desc: 'Veja a saúde de cada talhão por imagem de satélite. Índices NDVI atualizados toda semana.',
       badge: 'A PARTIR DE LAVOURA',
       badgeColor: 'bg-[#1A2A3A] text-[#64B5F6]',
     },
     {
       icon: Bug,
       title: 'Diagnóstico de Pragas',
-      desc: 'Fotografe a folha ou inseto na lavoura e receba o diagnóstico e a melhor forma de controle na hora.',
+      desc: 'Tire uma foto da planta. A IA identifica a praga ou doença e já sugere o tratamento correto.',
       badge: 'A PARTIR DE LAVOURA',
       badgeColor: 'bg-[#1A2A3A] text-[#64B5F6]',
     },
     {
       icon: CalendarDays,
       title: 'Calendário Agrícola',
-      desc: 'Saiba o melhor período para plantio e colheita cruzando dados climáticos locais e características da cultivar.',
+      desc: 'Planejamento de plantio e colheita baseado no clima local e nos dados da sua propriedade.',
       badge: 'A PARTIR DE LAVOURA',
       badgeColor: 'bg-[#1A2A3A] text-[#64B5F6]',
     },
     {
       icon: Droplets,
       title: 'Irrigação Inteligente',
-      desc: 'Aplique a lâmina exata de água de acordo com a evapotranspiração e a necessidade diária da cultura.',
+      desc: 'Calcula milímetro a milímetro o que cada área da fazenda precisa. Sem desperdício de água.',
       badge: 'A PARTIR DE LAVOURA',
       badgeColor: 'bg-[#1A2A3A] text-[#64B5F6]',
     },
     {
       icon: LineChart,
       title: 'Preços em Tempo Real',
-      desc: 'Acompanhe as cotações do Cepea, preveja tendências de alta ou baixa e decida a melhor hora de vender.',
+      desc: 'Cotações de soja, milho, boi e outras commodities com análise de tendência para vender na hora certa.',
       badge: 'TODOS OS PLANOS',
       badgeColor: 'bg-[#1A3A0A] text-[#8BC34A]',
     },
     {
       icon: Leaf,
       title: 'Cálculo de Carbono',
-      desc: 'Estime as emissões e sequestro de carbono da sua operação e prepare-se para oportunidades do mercado verde.',
+      desc: 'Estime a pegada de carbono da sua produção e acesse créditos do mercado verde.',
       badge: 'FAZENDEIRO COMPLETO',
       badgeColor: 'bg-[#2A1A0A] text-[#FFB74D]',
     },
     {
       icon: Calculator,
       title: 'Análise de ROI',
-      desc: 'Insira os custos de produção e estimativas de safra para ver rapidamente qual cultura trará mais lucro.',
+      desc: 'Veja o retorno exato de cada cultura e tome decisões baseadas em número, não em chute.',
       badge: 'TODOS OS PLANOS',
       badgeColor: 'bg-[#1A3A0A] text-[#8BC34A]',
     },
     {
       icon: BarChart3,
       title: 'Resumo Semanal',
-      desc: 'Relatório automático em texto apontando os destaques da sua fazenda para focar no que realmente importa.',
+      desc: 'Todo domingo, um relatório gerado por IA com os principais alertas e oportunidades da semana.',
       badge: 'TODOS OS PLANOS',
       badgeColor: 'bg-[#1A3A0A] text-[#8BC34A]',
     },
@@ -86,8 +86,7 @@ export function Modules() {
             9 módulos para cada fase da sua produção
           </h2>
           <p className="text-[#A8B8A0] max-w-2xl mx-auto text-lg">
-            Um ecossistema completo de Inteligência Artificial para cada etapa do seu ciclo
-            produtivo.
+            Da análise do solo à venda da safra — tudo centralizado no seu celular.
           </p>
         </ScrollReveal>
 

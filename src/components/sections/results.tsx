@@ -29,13 +29,13 @@ export function Results() {
 
       <div className="container mx-auto px-4 relative z-10 max-w-[1200px]">
         <ScrollReveal className="text-center mb-12 md:mb-16">
-          <div className="inline-block px-4 py-1.5 bg-[#4A7A2A]/20 border border-[#6DBF4A]/50 text-[#6DBF4A] rounded-full text-sm font-bold mb-4 uppercase tracking-wider">
+          <div className="inline-block px-4 py-1.5 bg-[#4A7A2A] border border-[#6DBF4A] text-[#F5F0E8] rounded-full text-sm font-bold mb-4 uppercase tracking-wider">
             RESULTADOS COMPROVADOS
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-[#F5F0E8] mb-4">
             O que muda na sua lavoura
           </h2>
-          <p className="text-[#A8B8A0] max-w-2xl mx-auto">
+          <p className="text-[#A8B8A0] max-w-2xl mx-auto text-lg">
             Baseado em médias da Embrapa e dados de produtores AgroIA.
           </p>
         </ScrollReveal>

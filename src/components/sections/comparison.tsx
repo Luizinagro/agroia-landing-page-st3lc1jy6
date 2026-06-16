@@ -26,7 +26,7 @@ export function Comparison() {
             Antes e depois da AgroIA
           </h2>
           <p className="text-[#A8B8A0] max-w-2xl mx-auto text-lg">
-            Veja o impacto direto de implementar tecnologia na sua rotina.
+            Veja o que muda quando você para de trabalhar no escuro.
           </p>
         </ScrollReveal>
 

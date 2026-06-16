@@ -29,7 +29,7 @@ const faqs = [
   },
   {
     q: 'Funciona em área rural com internet fraca?',
-    a: 'Sim! Nosso aplicativo é otimizado para redes 3G/4G instáveis. Ele armazena os dados no seu celular (modo offline parcial) e só envia as informações quando a conexão estabiliza, sem que você perca nada.',
+    a: 'Sim. A AgroIA foi desenvolvida para funcionar em áreas rurais com sinal de 3G ou 4G. As análises mais pesadas são feitas em nuvem e você recebe os resultados de forma simples, mesmo com conexão lenta. Offline parcial também está disponível para consulta de dados já sincronizados.',
   },
 ]
 
@@ -38,7 +38,9 @@ export function FAQ() {
     <section className="py-12 md:py-20 bg-[#070F07]">
       <div className="container mx-auto px-4 max-w-[800px]">
         <ScrollReveal className="text-center mb-12 md:mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#F5F0E8] mb-4">Dúvidas Frequentes</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-[#F5F0E8] mb-4">
+            Dúvidas que todo produtor tem
+          </h2>
           <p className="text-[#A8B8A0] text-lg">
             Tudo o que você precisa saber antes de embarcar na agricultura digital.
           </p>
