@@ -1,54 +1,145 @@
 import { Link, useLocation } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Bell, Menu, Search, UserCircle, Handshake } from 'lucide-react'
 import { Logo, LogoText } from '@/components/ui/logo'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
+import { cn } from '@/lib/utils'
 
 export function Header() {
   const location = useLocation()
   const isApp = !['/', '/login', '/cadastro', '/sicredi'].includes(location.pathname)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50)
+    }
+    window.addEventListener('scroll', handleScroll)
+    handleScroll()
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   if (!isApp) {
     return (
-      <header className="fixed top-0 w-full z-50 border-b border-primary/20 bg-black/50 backdrop-blur-md">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 transition-transform hover:scale-105">
-            <Logo />
+      <header
+        className={cn(
+          'fixed top-0 w-full z-[1000] transition-all duration-300 flex items-center',
+          scrolled
+            ? 'h-[56px] md:h-[64px] bg-[#0A0F0D] shadow-[0_2px_20px_rgba(0,200,83,0.1)] border-b border-[#00C853]/10'
+            : 'h-[56px] md:h-[64px] bg-transparent border-transparent',
+        )}
+      >
+        <div className="container mx-auto px-4 flex items-center justify-between">
+          <Link
+            to="/"
+            className="flex items-center gap-2 transition-transform hover:scale-105"
+            onClick={(e) => {
+              if (location.pathname === '/') {
+                e.preventDefault()
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }
+            }}
+          >
+            <span className="text-2xl font-black text-white tracking-tighter">
+              AGRO<span className="text-[#00C853]">IA</span>
+            </span>
           </Link>
-          <nav className="hidden md:flex items-center gap-6">
+
+          <nav className="hidden md:flex items-center gap-8">
             <a
               href="#solucoes"
-              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+              className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
             >
-              Recursos
+              Soluções
             </a>
             <a
               href="#planos"
-              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+              className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
             >
               Planos
             </a>
             <Link
               to="/sicredi"
-              className="text-sm font-medium text-[#00C853] hover:text-[#009959] transition-colors flex items-center gap-1.5 bg-[#00C853]/10 px-3 py-1.5 rounded-full"
+              className="text-sm font-medium text-[#00C853] hover:text-[#009959] transition-colors flex items-center gap-1.5 bg-[#00C853]/10 px-4 py-2 rounded-full"
             >
               Parceria Sicredi <Handshake className="w-4 h-4" />
             </Link>
           </nav>
-          <div className="flex items-center gap-1 sm:gap-2">
+
+          <div className="hidden md:flex items-center gap-3">
             <Link to="/login">
               <Button
-                variant="ghost"
-                className="text-primary hover:text-primary hover:bg-primary/10 px-2 sm:px-4"
+                variant="outline"
+                className="border-white text-white hover:bg-white hover:text-black font-medium px-6 rounded-full bg-transparent transition-colors"
               >
                 Entrar
               </Button>
             </Link>
             <Link to="/cadastro">
-              <Button className="bg-primary text-black hover:bg-primary/90 font-medium px-3 sm:px-4">
-                Começar
+              <Button className="bg-[#00C853] text-black hover:bg-[#00E676] font-bold px-6 rounded-full transition-colors">
+                Cadastrar-se
               </Button>
             </Link>
+          </div>
+
+          <div className="md:hidden flex items-center">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-white hover:bg-white/10">
+                  <Menu className="w-6 h-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                side="right"
+                className="bg-[#0A0F0D] border-l border-[#00C853]/20 p-0 w-[280px]"
+              >
+                <SheetTitle className="sr-only">Menu de Navegação</SheetTitle>
+                <div className="p-4 border-b border-[#00C853]/10">
+                  <span className="text-xl font-black text-white tracking-tighter">
+                    AGRO<span className="text-[#00C853]">IA</span>
+                  </span>
+                </div>
+                <div className="p-4 flex flex-col h-[calc(100vh-65px)] justify-between">
+                  <nav className="flex flex-col gap-2">
+                    <a
+                      href="#solucoes"
+                      className="text-base font-medium text-white hover:text-[#00C853] transition-colors py-3 border-b border-white/5"
+                    >
+                      Soluções
+                    </a>
+                    <a
+                      href="#planos"
+                      className="text-base font-medium text-white hover:text-[#00C853] transition-colors py-3 border-b border-white/5"
+                    >
+                      Planos
+                    </a>
+                    <Link
+                      to="/sicredi"
+                      className="text-base font-medium text-[#00C853] hover:text-[#009959] transition-colors py-3 border-b border-white/5 flex items-center gap-2"
+                    >
+                      Parceria Sicredi <Handshake className="w-4 h-4" />
+                    </Link>
+                  </nav>
+
+                  <div className="flex flex-col gap-3 pb-6">
+                    <Link to="/login" className="w-full">
+                      <Button
+                        variant="outline"
+                        className="w-full border-white text-white hover:bg-white hover:text-black font-medium rounded-full bg-transparent transition-colors"
+                      >
+                        Entrar
+                      </Button>
+                    </Link>
+                    <Link to="/cadastro" className="w-full">
+                      <Button className="w-full bg-[#00C853] text-black hover:bg-[#00E676] font-bold rounded-full transition-colors">
+                        Cadastrar-se
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </header>
