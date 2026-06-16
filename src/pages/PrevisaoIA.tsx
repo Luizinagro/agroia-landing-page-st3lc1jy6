@@ -103,14 +103,19 @@ export default function PrevisaoIA() {
           },
           recommendation: data.data.recommendation,
         })
+        toast({
+          title: 'Sucesso',
+          description: 'Previsão gerada com sucesso!',
+          className: 'bg-primary text-primary-foreground border-primary',
+        })
       } else {
         throw new Error('Dados inválidos retornados pela IA')
       }
     } catch (error: any) {
       console.error(error)
       toast({
-        title: 'Erro ao buscar previsão',
-        description: 'Não foi possível gerar a previsão com IA no momento.',
+        title: 'Erro',
+        description: 'Serviço temporariamente indisponível. Tente novamente.',
         variant: 'destructive',
       })
     } finally {

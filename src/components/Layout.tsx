@@ -19,6 +19,7 @@ import {
 import {
   Home,
   Tractor,
+  DollarSign,
   Users,
   Settings,
   LogOut,
@@ -36,6 +37,7 @@ import {
   CalendarDays,
   Leaf,
   Droplet,
+  Briefcase,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -121,10 +123,23 @@ export default function Layout() {
       ],
     },
     {
+      label: 'Financeiro',
+      items: [
+        {
+          title: 'Gestão Financeira 💰',
+          icon: DollarSign,
+          path: '/financeiro',
+          feature: 'gestao-financeira',
+        },
+      ],
+    },
+    {
       label: 'Gestão e Operação',
       items: [
         { title: 'Pecuária', icon: Tractor, path: '/pecuaria', feature: 'pecuaria' },
         { title: 'Irrigação Inteligente', icon: Droplet, path: '/irrigacao', feature: 'irrigacao' },
+        { title: 'Insumos e Estoque', icon: Leaf, path: '/insumos', feature: 'gestao-insumos' },
+        { title: 'RH Rural 👷', icon: Briefcase, path: '/rh', feature: 'gestao-rh' },
         {
           title: 'Rastreabilidade',
           icon: Search,
@@ -138,6 +153,7 @@ export default function Layout() {
           feature: 'analise-compartilhada',
         },
         ...(isAdmin ? [{ title: 'CRM', icon: BookOpen, path: '/crm', feature: 'crm' }] : []),
+        { title: 'Maquinário', icon: Tractor, path: '/maquinario', feature: 'maquinario' },
         { title: 'Faturamento', icon: CreditCard, path: '/faturamento', feature: 'faturamento' },
       ],
     },

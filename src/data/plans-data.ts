@@ -20,7 +20,7 @@ export const PLANS = [
       'Diagnóstico de Pragas',
       'Calculadora ROI',
     ],
-    btnText: 'Começar Grátis — sem cartão',
+    btnText: 'Começar Grátis',
   },
   {
     name: 'Lavoura',
@@ -54,7 +54,7 @@ export const PLANS = [
       'Calculadora ROI',
     ],
     permissionsDenied: ['Gestão de Rebanho', 'Calculadora de Carbono'],
-    btnText: 'Assinar Lavoura',
+    btnText: 'Assinar Agora',
   },
   {
     name: 'Rebanho',
@@ -85,7 +85,7 @@ export const PLANS = [
       'Doenças por foto (10/mês)',
     ],
     permissionsDenied: ['Análise de Satélite', 'Calculadora de Carbono'],
-    btnText: 'Assinar Rebanho',
+    btnText: 'Assinar Agora',
   },
   {
     name: 'Fazendeiro Completo',
@@ -95,7 +95,7 @@ export const PLANS = [
     period: '/mês',
     level: 2,
     highlighted: true,
-    badge: 'MAIS ESCOLHIDO 🏆',
+    badge: 'MAIS POPULAR 🏆',
     description: 'Visão total e ferramentas avançadas.',
     features: [
       'dashboard',
@@ -130,7 +130,7 @@ export const PLANS = [
       'Histórico Ilimitado',
     ],
     permissionsDenied: ['Múltiplos usuários', 'Acesso à API'],
-    btnText: '🚀 Quero o Completo',
+    btnText: 'Assinar Agora',
   },
   {
     name: 'Cooperativa',
@@ -176,7 +176,7 @@ export const PLANS = [
       'Treinamento dedicado',
     ],
     permissionsDenied: [],
-    btnText: 'Falar com Consultor',
+    btnText: 'Assinar Agora',
   },
 ]
 
@@ -197,27 +197,23 @@ export const COMPARISON_FEATURES = [
 
 export const FAQS = [
   {
-    q: 'Posso mudar de plano a qualquer momento?',
+    q: 'Posso mudar de plano?',
     a: 'Sim, você pode fazer upgrade ou downgrade a qualquer momento direto pelo painel. O valor será ajustado proporcionalmente no próximo ciclo.',
   },
   {
-    q: 'Como funciona o período grátis?',
+    q: 'Como funciona o trial?',
     a: 'O plano Explorador oferece 7 dias de acesso básico para você conhecer a interface. Não exigimos cartão de crédito para o cadastro inicial.',
   },
   {
-    q: 'Quais são as formas de pagamento?',
-    a: 'Aceitamos PIX, boleto e cartão de crédito. Pagamentos anuais podem ser parcelados em até 12x no cartão.',
+    q: 'Aceita cartão de crédito?',
+    a: 'Sim. Aceitamos PIX, boleto e cartão de crédito. Pagamentos anuais podem ser parcelados em até 12x no cartão.',
   },
   {
-    q: 'Meus dados estão seguros?',
-    a: 'Absolutamente. Usamos criptografia de ponta a ponta (AES-256) e backups regulares. Seus dados agronômicos e financeiros pertencem 100% a você.',
+    q: 'Tem contrato de fidelidade?',
+    a: 'Não. Cancele quando quiser. Sem multas ou taxas ocultas nos planos mensais.',
   },
   {
-    q: 'O AgroIA funciona no celular?',
-    a: 'Sim! Nossa plataforma é responsiva (mobile-first), o que significa que funciona perfeitamente no navegador do seu smartphone, mesmo no campo.',
-  },
-  {
-    q: 'O Consultor IA substitui o agrônomo?',
-    a: 'Não. A Inteligência Artificial serve para apoiar a tomada de decisão rápida e monitoramento constante. Recomendamos sempre a validação final com seu engenheiro agrônomo de confiança.',
+    q: 'Como funciona o suporte?',
+    a: 'Oferecemos suporte via email para os planos iniciais e suporte VIP 24/7 ou dedicado para os planos Completo e Cooperativa.',
   },
 ]

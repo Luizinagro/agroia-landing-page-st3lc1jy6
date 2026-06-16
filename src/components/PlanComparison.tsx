@@ -33,9 +33,9 @@ export function PlanComparison() {
                 >
                   {typeof val === 'boolean' ? (
                     val ? (
-                      <Check className="w-5 h-5 text-primary mx-auto" />
+                      <span className="text-lg">✅</span>
                     ) : (
-                      <X className="w-5 h-5 text-zinc-700 mx-auto" />
+                      <span className="text-lg opacity-50">❌</span>
                     )
                   ) : (
                     <span className={j === 3 ? 'font-medium text-primary' : ''}>{val}</span>

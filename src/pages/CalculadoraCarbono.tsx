@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase/client'
 import { Leaf, Loader2, CheckCircle2, TrendingUp, Info, DollarSign } from 'lucide-react'
 import { useSubscription } from '@/hooks/useSubscription'
 import { Link } from 'react-router-dom'
+import { toast } from 'sonner'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Slider } from '@/components/ui/slider'
 
@@ -73,10 +74,12 @@ export default function CalculadoraCarbono() {
           estado,
         },
       })
-      if (error) throw error
+      if (error || !res.success) throw new Error(res?.error || error?.message)
       setData(res.data)
+      toast.success('Simulação de carbono concluída!')
     } catch (e) {
       console.error(e)
+      toast.error('Serviço temporariamente indisponível. Tente novamente.')
     } finally {
       setLoading(false)
     }

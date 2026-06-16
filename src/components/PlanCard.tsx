@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils'
 
 export function PlanCard({ plan, isAnnual, isCurrent, updating, onUpgrade }: any) {
   const price = isAnnual ? plan.priceAnnual : plan.priceMonthly
+  const originalPrice = isAnnual && plan.priceMonthly > 0 ? plan.priceMonthly : null
   const priceLabel = price === 0 ? plan.priceLabel : `R$ ${price}`
   const btnText = isCurrent ? 'Seu Plano Atual' : plan.btnText
 
@@ -12,7 +13,7 @@ export function PlanCard({ plan, isAnnual, isCurrent, updating, onUpgrade }: any
       className={cn(
         'relative flex flex-col p-6 md:p-8 rounded-[2rem] transition-all duration-300',
         plan.highlighted
-          ? 'bg-zinc-900 border-2 border-primary shadow-[0_0_30px_-10px_rgba(34,197,94,0.3)] z-10 scale-[1.02]'
+          ? 'bg-zinc-900 border-2 border-primary shadow-[0_0_40px_-10px_rgba(34,197,94,0.4)] z-10 scale-[1.02]'
           : 'bg-black border border-white/10 hover:border-white/20',
       )}
     >
@@ -25,7 +26,10 @@ export function PlanCard({ plan, isAnnual, isCurrent, updating, onUpgrade }: any
       <h3 className="text-2xl font-bold mb-2 text-white">{plan.name}</h3>
       <p className="text-zinc-400 text-sm font-medium mb-6 min-h-[40px]">{plan.description}</p>
 
-      <div className="flex items-baseline gap-1 mb-8 text-primary">
+      <div className="flex items-baseline gap-2 mb-8 text-primary">
+        {originalPrice && (
+          <span className="text-xl text-zinc-500 line-through">R$ {originalPrice}</span>
+        )}
         <span className="text-4xl font-black tracking-tighter drop-shadow-[0_0_15px_rgba(34,197,94,0.3)]">
           {priceLabel}
         </span>
@@ -51,13 +55,14 @@ export function PlanCard({ plan, isAnnual, isCurrent, updating, onUpgrade }: any
 
       <Button
         size="lg"
+        variant={plan.highlighted ? 'default' : 'secondary'}
         className={cn(
           'w-full font-bold shadow-lg transition-all rounded-full',
           isCurrent
             ? 'bg-zinc-800 text-zinc-400 hover:bg-zinc-800 cursor-not-allowed'
             : plan.highlighted
               ? 'bg-primary text-black hover:bg-primary/90 hover:scale-105 hover:shadow-[0_0_20px_rgba(34,197,94,0.4)]'
-              : 'bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 hover:scale-105',
+              : 'bg-zinc-800 text-white hover:bg-zinc-700 hover:scale-105',
         )}
         disabled={isCurrent || updating !== null}
         onClick={() => onUpgrade(plan)}

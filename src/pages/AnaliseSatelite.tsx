@@ -40,7 +40,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 import { useSubscription } from '@/hooks/useSubscription'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 interface AnalysisData {
   id?: string
@@ -65,6 +65,7 @@ export default function AnaliseSatelite() {
   const [alertMessage, setAlertMessage] = useState<string>('')
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   const [propriedades, setPropriedades] = useState<any[]>([])
+  const [hasLoadedProps, setHasLoadedProps] = useState(false)
   const [zoom, setZoom] = useState(15)
 
   useEffect(() => {
@@ -75,6 +76,7 @@ export default function AnaliseSatelite() {
       if (user) {
         const { data } = await supabase.from('propriedades').select('*').eq('user_id', user.id)
         if (data) setPropriedades(data)
+        setHasLoadedProps(true)
       }
     }
     fetchProps()
@@ -279,6 +281,24 @@ export default function AnaliseSatelite() {
           showUpgradeModal && 'pointer-events-none opacity-50 blur-sm select-none',
         )}
       >
+        {hasLoadedProps && propriedades.length === 0 && (
+          <div className="bg-primary/10 border border-primary/30 p-5 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in-down shadow-lg mb-6 print:hidden">
+            <div className="flex items-center">
+              <MapPin className="h-6 w-6 text-primary mr-3 shrink-0" />
+              <p className="text-white font-medium text-sm">
+                Cadastre sua propriedade para ver dados precisos da sua região de forma automática
+                📍
+              </p>
+            </div>
+            <Button
+              asChild
+              className="whitespace-nowrap w-full sm:w-auto rounded-full bg-primary hover:bg-primary/90 text-black font-bold shadow-[0_0_15px_rgba(29,185,84,0.3)]"
+            >
+              <Link to="/perfil">Cadastrar Propriedade →</Link>
+            </Button>
+          </div>
+        )}
+
         {/* Cabeçalho do Relatório (Apenas Visível na Impressão) */}
         <div className="hidden print:block mb-8 border-b-2 border-green-700 pb-4">
           <div className="flex items-center justify-between">

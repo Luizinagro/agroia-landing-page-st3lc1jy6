@@ -29,6 +29,7 @@ import Profile from './pages/Profile'
 import PrevisaoIA from './pages/PrevisaoIA'
 import Rastreabilidade from './pages/Rastreabilidade'
 import CRM from './pages/CRM'
+import GestaoFinanceira from './pages/financeiro/GestaoFinanceira'
 import AnaliseSatelite from './pages/AnaliseSatelite'
 import SharedAnalysis from './pages/SharedAnalysis'
 import ConsultorPerformance from './pages/ConsultorPerformance'
@@ -38,6 +39,9 @@ import DiagnosticoPragas from './pages/DiagnosticoPragas'
 import CalendarioAgricola from './pages/CalendarioAgricola'
 import CalculadoraCarbono from './pages/CalculadoraCarbono'
 import Irrigacao from './pages/Irrigacao'
+import MaquinarioPage from './pages/Maquinario'
+import GestaoInsumos from './pages/GestaoInsumos'
+import GestaoRH from './pages/GestaoRH'
 import { FeatureGuard } from './components/FeatureGuard'
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
@@ -151,6 +155,14 @@ const App = () => {
                     <Route path="/planos" element={<Planos />} />
                     <Route path="/perfil" element={<Profile />} />
                     <Route
+                      path="/financeiro"
+                      element={
+                        <FeatureGuard feature="gestao-financeira" requiredPlan="Lavoura">
+                          <GestaoFinanceira />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
                       path="/crm"
                       element={
                         <FeatureGuard feature="crm" requiredPlan="Completo">
@@ -211,6 +223,30 @@ const App = () => {
                       element={
                         <FeatureGuard feature="irrigacao" requiredPlan="Lavoura">
                           <Irrigacao />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/maquinario"
+                      element={
+                        <FeatureGuard feature="maquinario" requiredPlan="Lavoura">
+                          <MaquinarioPage />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/insumos"
+                      element={
+                        <FeatureGuard feature="gestao-insumos" requiredPlan="Lavoura">
+                          <GestaoInsumos />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/rh"
+                      element={
+                        <FeatureGuard feature="gestao-rh" requiredPlan="Fazendeiro Completo">
+                          <GestaoRH />
                         </FeatureGuard>
                       }
                     />

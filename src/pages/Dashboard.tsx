@@ -29,7 +29,9 @@ import { FarmForecastWidget } from '@/components/dashboard/farm-forecast-widget'
 import { FarmClimateWidget } from '@/components/dashboard/farm-climate-widget'
 import { IntelligentRecommendationsWidget } from '@/components/dashboard/intelligent-recommendations-widget'
 import { RealTimeAlertsWidget } from '@/components/dashboard/real-time-alerts-widget'
-import { Users } from 'lucide-react'
+import { FleetAlertsWidget } from '@/components/dashboard/fleet-alerts-widget'
+import { Users, RefreshCw } from 'lucide-react'
+import { toast } from 'sonner'
 
 const Dashboard = () => {
   const { user } = useAuth() as any
@@ -47,90 +49,103 @@ const Dashboard = () => {
     receita_estimada: { hasData: boolean; valor: number }
   } | null>(null)
   const [tickerData, setTickerData] = useState<any[]>([])
+  const [isRefreshing, setIsRefreshing] = useState(false)
+
+  async function fetchKpis() {
+    if (!user) return
+    import('@/lib/supabase/client').then(async ({ supabase }) => {
+      // Obter dados reais das propriedades do usuário
+      const { data: props } = await supabase
+        .from('propriedades')
+        .select('id, cultura_principal')
+        .eq('user_id', user.id)
+      const propIds = props?.map((p: any) => p.id) || []
+      setHasPropriedades(props && props.length > 0)
+
+      let sensoresAtivos = '0/0'
+      if (propIds.length > 0) {
+        const { data: climas } = await supabase
+          .from('clima')
+          .select('id')
+          .in('propriedade_id', propIds)
+        sensoresAtivos = climas && climas.length > 0 ? `${climas.length} Ativos` : 'Sem dados'
+      }
+
+      const { data: rois } = await supabase
+        .from('calculos_roi')
+        .select('lucro_liquido')
+        .eq('user_id', user.id)
+        .order('data_criacao', { ascending: false })
+        .limit(1)
+
+      const receita = rois?.[0]?.lucro_liquido
+
+      const { data: satData } = await supabase
+        .from('satellite_analyses')
+        .select('ndvi_value')
+        .eq('user_id', user.id)
+        .order('analysis_date', { ascending: false })
+        .limit(1)
+
+      const ndvi = satData?.[0]?.ndvi_value
+      const saudeSafra =
+        ndvi !== undefined
+          ? {
+              hasData: true,
+              ndvi,
+              label: ndvi > 0.65 ? 'Saudável' : ndvi > 0.45 ? 'Atenção' : 'Crítico',
+              emoji: ndvi > 0.65 ? '✅' : ndvi > 0.45 ? '⚠️' : '🔴',
+            }
+          : { hasData: false, ndvi: 0, label: '', emoji: '' }
+
+      const produtividadeBase = props && props.length > 0 ? 88 + props.length * 2 : 0
+
+      setDashboardKpis({
+        produtividade: produtividadeBase,
+        sensores_ativos: sensoresAtivos,
+        saude_safra: saudeSafra,
+        receita_estimada:
+          receita !== undefined ? { hasData: true, valor: receita } : { hasData: false, valor: 0 },
+      })
+    })
+  }
 
   useEffect(() => {
-    async function fetchKpis() {
-      if (!user) return
-      import('@/lib/supabase/client').then(async ({ supabase }) => {
-        // Obter dados reais das propriedades do usuário
-        const { data: props } = await supabase
-          .from('propriedades')
-          .select('id, cultura_principal')
-          .eq('user_id', user.id)
-        const propIds = props?.map((p: any) => p.id) || []
-        setHasPropriedades(props && props.length > 0)
-
-        let sensoresAtivos = '0/0'
-        if (propIds.length > 0) {
-          const { data: climas } = await supabase
-            .from('clima')
-            .select('id')
-            .in('propriedade_id', propIds)
-          sensoresAtivos = climas && climas.length > 0 ? `${climas.length} Ativos` : 'Sem dados'
-        }
-
-        const { data: rois } = await supabase
-          .from('calculos_roi')
-          .select('lucro_liquido')
-          .eq('user_id', user.id)
-          .order('data_criacao', { ascending: false })
-          .limit(1)
-
-        const receita = rois?.[0]?.lucro_liquido
-
-        const { data: satData } = await supabase
-          .from('satellite_analyses')
-          .select('ndvi_value')
-          .eq('user_id', user.id)
-          .order('analysis_date', { ascending: false })
-          .limit(1)
-
-        const ndvi = satData?.[0]?.ndvi_value
-        const saudeSafra =
-          ndvi !== undefined
-            ? {
-                hasData: true,
-                ndvi,
-                label: ndvi > 0.65 ? 'Saudável' : ndvi > 0.45 ? 'Atenção' : 'Crítico',
-                emoji: ndvi > 0.65 ? '✅' : ndvi > 0.45 ? '⚠️' : '🔴',
-              }
-            : { hasData: false, ndvi: 0, label: '', emoji: '' }
-
-        const produtividadeBase = props && props.length > 0 ? 88 + props.length * 2 : 0
-
-        setDashboardKpis({
-          produtividade: produtividadeBase,
-          sensores_ativos: sensoresAtivos,
-          saude_safra: saudeSafra,
-          receita_estimada:
-            receita !== undefined
-              ? { hasData: true, valor: receita }
-              : { hasData: false, valor: 0 },
-        })
-      })
-    }
     fetchKpis()
   }, [user])
 
+  async function fetchTicker() {
+    import('@/lib/supabase/client').then(async ({ supabase }) => {
+      const { data } = await supabase.functions.invoke('cepea-prices')
+      if (data && data.prices) {
+        const commodities = ['Soja', 'Milho', 'Boi Gordo']
+        const formatted = commodities.map((c) => ({
+          name: c,
+          price: data.prices[c]?.atual || 0,
+          variation: data.prices[c]?.variacao || 0,
+        }))
+        setTickerData(formatted)
+      }
+    })
+  }
+
   useEffect(() => {
-    async function fetchTicker() {
-      import('@/lib/supabase/client').then(async ({ supabase }) => {
-        const { data } = await supabase.functions.invoke('cepea-prices')
-        if (data && data.prices) {
-          const commodities = ['Soja', 'Milho', 'Boi Gordo']
-          const formatted = commodities.map((c) => ({
-            name: c,
-            price: data.prices[c]?.atual || 0,
-            variation: data.prices[c]?.variacao || 0,
-          }))
-          setTickerData(formatted)
-        }
-      })
-    }
     fetchTicker()
     const interval = setInterval(fetchTicker, 30 * 60 * 1000)
     return () => clearInterval(interval)
   }, [])
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true)
+    try {
+      await Promise.all([fetchKpis(), fetchTicker()])
+      toast.success('Dados atualizados com sucesso!', { position: 'top-center' })
+    } catch (error) {
+      toast.error('Erro ao atualizar dados.')
+    } finally {
+      setIsRefreshing(false)
+    }
+  }
 
   useEffect(() => {
     const hasSeenPromo = sessionStorage.getItem('hasSeenPlanPromo')
@@ -172,6 +187,15 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="flex gap-3 flex-wrap sm:flex-nowrap">
+            <Button
+              onClick={handleRefresh}
+              variant="outline"
+              disabled={isRefreshing}
+              className="border-primary/50 text-white hover:bg-primary/10 rounded-full"
+            >
+              <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+              Atualizar dados
+            </Button>
             <Button
               onClick={() => navigate('/analises-compartilhadas')}
               variant="outline"
@@ -369,6 +393,10 @@ const Dashboard = () => {
         </section>
 
         <section className="animate-fade-in-up mt-8">
+          <FleetAlertsWidget />
+        </section>
+
+        <section className="animate-fade-in-up mt-8">
           <FarmForecastWidget />
         </section>
 
@@ -454,6 +482,28 @@ const Dashboard = () => {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Dashboard Footer */}
+        <footer className="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-zinc-500 text-sm animate-fade-in-up">
+          <div className="flex items-center gap-4">
+            <span className="font-semibold text-zinc-400">AgroIA v1.2.0</span>
+            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20">
+              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+              <span className="text-green-500 font-medium">Status: Online</span>
+            </div>
+          </div>
+          <div className="flex gap-6">
+            <a href="mailto:suporte@agroia.com.br" className="hover:text-primary transition-colors">
+              Suporte
+            </a>
+            <a href="#" className="hover:text-primary transition-colors">
+              Termos de Uso
+            </a>
+            <a href="#" className="hover:text-primary transition-colors">
+              Privacidade
+            </a>
+          </div>
+        </footer>
       </main>
     </div>
   )

@@ -32,6 +32,7 @@ import {
   CheckCircle2,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
+import { useNavigate } from 'react-router-dom'
 
 const CULTURAS = ['Soja', 'Milho', 'Trigo', 'Algodão', 'Café', 'Cana-de-açúcar']
 
@@ -47,6 +48,8 @@ export default function DiagnosticoPragas() {
   const [history, setHistory] = useState<any[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
   const cameraInputRef = useRef<HTMLInputElement>(null)
+  const navigate = useNavigate()
+  const [isSaved, setIsSaved] = useState(false)
 
   useEffect(() => {
     if (user?.id) {
@@ -74,6 +77,7 @@ export default function DiagnosticoPragas() {
       setFile(selectedFile)
       setPreview(URL.createObjectURL(selectedFile))
       setResult(null)
+      setIsSaved(false)
     }
   }
 
@@ -148,16 +152,45 @@ export default function DiagnosticoPragas() {
       if (data.success) {
         setResult(data.data)
         toast.success('Análise concluída com sucesso!')
-        fetchHistory()
       } else {
-        throw new Error(data.error || 'Erro desconhecido')
+        throw new Error(data.error || 'Serviço temporariamente indisponível. Tente novamente.')
       }
     } catch (err: any) {
       console.error(err)
-      toast.error(`Falha ao realizar diagnóstico: ${err.message}`)
+      toast.error(err.message || 'Serviço temporariamente indisponível. Tente novamente.')
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleSaveDiagnosis = async () => {
+    if (!result) return
+    try {
+      setLoading(true)
+      await supabase.from('diagnosticos_pragas').insert({
+        user_id: user.id,
+        cultura: cultura || 'não informada',
+        praga_identificada: result.diagnostico?.identificado,
+        severidade: result.severidade?.nivel,
+        confianca: result.diagnostico?.confianca,
+        latitude: location?.lat || null,
+        longitude: location?.lng || null,
+        analise_completa: result,
+      })
+      toast.success('Diagnóstico salvo no histórico com sucesso!')
+      setIsSaved(true)
+      fetchHistory()
+    } catch (error) {
+      console.error(error)
+      toast.error('Erro ao salvar diagnóstico.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleConsultIA = () => {
+    const question = `Minha lavoura de ${cultura} foi diagnosticada com ${result.diagnostico?.identificado}. Quais as melhores estratégias de manejo integrado considerando esse problema de severidade ${result.severidade?.nivel}?`
+    navigate(`/consultor-ia-agro?q=${encodeURIComponent(question)}`)
   }
 
   const getSeverityColor = (severity?: string | null) => {
@@ -186,8 +219,8 @@ export default function DiagnosticoPragas() {
         <Card className="bg-zinc-950/50 border-primary/20 h-fit">
           <CardHeader>
             <CardTitle className="text-xl">Nova Análise</CardTitle>
-            <CardDescription>
-              Preencha os dados e anexe uma imagem nítida da planta afetada.
+            <CardDescription className="text-primary font-medium mt-1">
+              Tire uma foto da planta afetada ou faça upload
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -377,15 +410,31 @@ export default function DiagnosticoPragas() {
                   </div>
                 )}
               </CardContent>
-              <CardFooter className="border-t border-white/5 pt-4">
+              <CardFooter className="border-t border-white/5 pt-4 flex-col gap-3">
+                <div className="flex w-full gap-3">
+                  <Button
+                    className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white"
+                    onClick={handleSaveDiagnosis}
+                    disabled={isSaved || loading}
+                  >
+                    {isSaved ? 'Salvo no Histórico ✅' : 'Salvar diagnóstico'}
+                  </Button>
+                  <Button
+                    className="flex-1 bg-primary hover:bg-primary/90 text-black font-bold"
+                    onClick={handleConsultIA}
+                  >
+                    Consultar Agrônomo IA
+                  </Button>
+                </div>
                 <Button
-                  variant="outline"
-                  className="w-full border-zinc-800 text-zinc-300 hover:text-white"
+                  variant="ghost"
+                  className="w-full text-zinc-400 hover:text-white"
                   onClick={() => {
                     setResult(null)
                     setFile(null)
                     setPreview(null)
                     setDescricao('')
+                    setIsSaved(false)
                   }}
                 >
                   Fazer Nova Análise

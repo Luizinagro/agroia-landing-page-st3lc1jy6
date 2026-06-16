@@ -12,6 +12,8 @@ import {
   Info,
 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
+import { toast } from 'sonner'
+import { Link } from 'react-router-dom'
 
 export default function Irrigacao() {
   const { user } = useAuth() as any
@@ -21,6 +23,7 @@ export default function Irrigacao() {
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<any>(null)
   const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(null)
+  const [hasProps, setHasProps] = useState<boolean | null>(null)
 
   useEffect(() => {
     async function loadProp() {
@@ -33,6 +36,9 @@ export default function Irrigacao() {
       if (props && props.length > 0) {
         setCultura(props[0].cultura_principal)
         setCoords({ lat: props[0].latitude, lon: props[0].longitude })
+        setHasProps(true)
+      } else {
+        setHasProps(false)
       }
     }
     loadProp()
@@ -50,10 +56,12 @@ export default function Irrigacao() {
           sistema_irrigacao: sistema,
         },
       })
-      if (error) throw error
+      if (error || !res.success) throw new Error(res?.error || error?.message)
       setData(res.data)
+      toast.success('Análise de irrigação concluída!')
     } catch (e) {
       console.error(e)
+      toast.error('Serviço temporariamente indisponível. Tente novamente.')
     } finally {
       setLoading(false)
     }
@@ -82,6 +90,24 @@ export default function Irrigacao() {
           </p>
         </div>
       </div>
+
+      {hasProps === false && (
+        <div className="bg-primary/10 border border-primary/30 p-5 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in-down shadow-lg">
+          <div className="flex items-center">
+            <Info className="h-6 w-6 text-primary mr-3 shrink-0" />
+            <p className="text-white font-medium text-sm">
+              Cadastre sua propriedade para ver dados precisos de irrigação da sua região de forma
+              automática 📍
+            </p>
+          </div>
+          <Button
+            asChild
+            className="whitespace-nowrap w-full sm:w-auto rounded-full bg-primary hover:bg-primary/90 text-black font-bold shadow-[0_0_15px_rgba(29,185,84,0.3)]"
+          >
+            <Link to="/perfil">Cadastrar Propriedade →</Link>
+          </Button>
+        </div>
+      )}
 
       <div className="glass-panel p-6 rounded-[2rem] flex flex-col md:flex-row gap-4 items-end border border-primary/20">
         <div className="w-full">

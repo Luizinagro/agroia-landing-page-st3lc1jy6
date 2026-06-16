@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
+import { useToast } from '@/hooks/use-toast'
 import { supabase } from '@/lib/supabase/client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -61,10 +63,39 @@ export default function ConsultorIAAgro() {
   const [errorMsg, setErrorMsg] = useState('')
   const [currentResponse, setCurrentResponse] = useState<Consulta | null>(null)
   const [history, setHistory] = useState<Consulta[]>([])
+  const { toast } = useToast()
+  const [searchParams] = useSearchParams()
+  const [monthQueries, setMonthQueries] = useState(0)
+  const [queryLimit, setQueryLimit] = useState<number | 'unlimited'>(15)
 
   useEffect(() => {
+    const q = searchParams.get('q')
+    if (q) {
+      setQuestion(q)
+    }
+
     loadHistory()
-  }, [])
+
+    // Determine limit
+    const planName = user?.plan_active || 'Explorador'
+    if (
+      planName === 'Completo' ||
+      planName === 'Cooperativa' ||
+      planName === 'Fazendeiro Completo' ||
+      planName === 'Família Coop'
+    ) {
+      setQueryLimit('unlimited')
+    } else if (
+      planName === 'Lavoura' ||
+      planName === 'Rebanho' ||
+      planName === 'Plantio Solo' ||
+      planName === 'Pecuário Solo'
+    ) {
+      setQueryLimit(15)
+    } else {
+      setQueryLimit(0) // Básico
+    }
+  }, [user])
 
   const loadHistory = async () => {
     if (!user?.id) return
@@ -76,11 +107,27 @@ export default function ConsultorIAAgro() {
 
     if (data) {
       setHistory(data as Consulta[])
+
+      // Count current month
+      const now = new Date()
+      const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
+      const currentMonthCount = data.filter(
+        (item: Consulta) => item.created_at >= firstDayOfMonth,
+      ).length
+      setMonthQueries(currentMonthCount)
     }
   }
 
   const handleAsk = async () => {
     if (!region || !question.trim()) return
+    if (queryLimit !== 'unlimited' && monthQueries >= queryLimit) {
+      toast({
+        title: 'Limite atingido',
+        description: 'Você atingiu o limite de consultas deste mês. Faça upgrade do seu plano.',
+        variant: 'destructive',
+      })
+      return
+    }
 
     setStatus('loading')
     try {
@@ -92,7 +139,7 @@ export default function ConsultorIAAgro() {
         throw new Error(
           response.error?.message ||
             response.data?.error ||
-            'Erro ao processar consulta. Tente novamente.',
+            'Serviço temporariamente indisponível. Tente novamente.',
         )
       }
 
@@ -190,9 +237,17 @@ export default function ConsultorIAAgro() {
       <main className="flex-1 container py-8 mx-auto space-y-8 animate-in fade-in duration-500 max-w-7xl">
         <div className="flex flex-col md:flex-row items-start justify-between gap-4 glass-panel p-6 rounded-2xl">
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
-              Consultor IA Agro
-            </h1>
+            <div className="flex items-center gap-4">
+              <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
+                Consultor IA Agro
+              </h1>
+              <div className="bg-[#1DB954]/10 border border-[#1DB954]/20 rounded-full px-3 py-1 text-sm font-bold text-[#1DB954] flex items-center gap-2 shadow-sm">
+                <Bot className="w-4 h-4" />
+                {queryLimit === 'unlimited'
+                  ? 'Consultas Ilimitadas'
+                  : `${monthQueries}/${queryLimit} consultas usadas`}
+              </div>
+            </div>
             <p className="text-[#A0A0A0] mt-2 text-lg font-medium">
               Assistente virtual com dados regionais em tempo real.
             </p>

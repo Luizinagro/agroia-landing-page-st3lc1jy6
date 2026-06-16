@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabase/client'
 import { CalendarDays, MapPin, Loader2, AlertCircle, Sprout, DollarSign, Clock } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
+import { toast } from 'sonner'
 
 const ESTADOS = [
   'Acre',
@@ -69,10 +70,12 @@ export default function CalendarioAgricola() {
       const { data: result, error } = await supabase.functions.invoke('calendario-agricola', {
         body: { cultura, estado, latitude: coords?.lat, longitude: coords?.lon },
       })
-      if (error) throw error
+      if (error || !result.success) throw new Error(result?.error || error?.message)
       setData(result.data)
+      toast.success('Calendário gerado com sucesso!')
     } catch (e) {
       console.error(e)
+      toast.error('Serviço temporariamente indisponível. Tente novamente.')
     } finally {
       setLoading(false)
     }

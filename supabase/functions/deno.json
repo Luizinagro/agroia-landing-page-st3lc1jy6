@@ -11,11 +11,15 @@
     "gerar-alertas-cio": 5,
     "buscar-preco-saca": 7,
     "analyze-satellite": 8,
-    "consultor-ia-agro": 9,
+    "consultor-ia-agro": 11,
     "resumo-semanal": 2,
-    "diagnostico-praga": 1,
+    "diagnostico-praga": 2,
     "calendario-agricola": 1,
     "calculadora-carbono": 1,
-    "calcular-irrigacao": 1
+    "calcular-irrigacao": 1,
+    "gestao-maquinario": 1,
+    "gestao-financeira": 1,
+    "gestao-insumos": 1,
+    "gestao-rh": 1
   }
 }

@@ -1,11 +1,17 @@
 // AVOID UPDATING THIS FILE DIRECTLY. It is automatically generated.
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: '14.4'
+    PostgrestVersion: "14.4"
   }
   public: {
     Tables: {
@@ -99,11 +105,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'alertas_cio_animal_id_fkey'
-            columns: ['animal_id']
+            foreignKeyName: "alertas_cio_animal_id_fkey"
+            columns: ["animal_id"]
             isOneToOne: false
-            referencedRelation: 'animais'
-            referencedColumns: ['id']
+            referencedRelation: "animais"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -266,11 +272,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'carrinho_produto_id_fkey'
-            columns: ['produto_id']
+            foreignKeyName: "carrinho_produto_id_fkey"
+            columns: ["produto_id"]
             isOneToOne: false
-            referencedRelation: 'products'
-            referencedColumns: ['id']
+            referencedRelation: "products"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -307,11 +313,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'clima_propriedade_id_fkey'
-            columns: ['propriedade_id']
+            foreignKeyName: "clima_propriedade_id_fkey"
+            columns: ["propriedade_id"]
             isOneToOne: false
-            referencedRelation: 'propriedades'
-            referencedColumns: ['id']
+            referencedRelation: "propriedades"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -546,6 +552,158 @@ export type Database = {
         }
         Relationships: []
       }
+      financeiro_lancamentos: {
+        Row: {
+          categoria: string
+          created_at: string | null
+          cultura: string | null
+          data_pagamento: string | null
+          descricao: string
+          id: string
+          observacao: string | null
+          safra: string | null
+          status: string
+          tipo: string
+          user_id: string
+          valor: number
+          vencimento: string | null
+        }
+        Insert: {
+          categoria?: string
+          created_at?: string | null
+          cultura?: string | null
+          data_pagamento?: string | null
+          descricao: string
+          id?: string
+          observacao?: string | null
+          safra?: string | null
+          status?: string
+          tipo: string
+          user_id: string
+          valor: number
+          vencimento?: string | null
+        }
+        Update: {
+          categoria?: string
+          created_at?: string | null
+          cultura?: string | null
+          data_pagamento?: string | null
+          descricao?: string
+          id?: string
+          observacao?: string | null
+          safra?: string | null
+          status?: string
+          tipo?: string
+          user_id?: string
+          valor?: number
+          vencimento?: string | null
+        }
+        Relationships: []
+      }
+      insumos_cadastro: {
+        Row: {
+          categoria: string
+          created_at: string | null
+          estoque_atual: number | null
+          estoque_minimo: number | null
+          fornecedor: string | null
+          id: string
+          nome: string
+          preco_unitario: number | null
+          unidade: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          categoria: string
+          created_at?: string | null
+          estoque_atual?: number | null
+          estoque_minimo?: number | null
+          fornecedor?: string | null
+          id?: string
+          nome: string
+          preco_unitario?: number | null
+          unidade?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          categoria?: string
+          created_at?: string | null
+          estoque_atual?: number | null
+          estoque_minimo?: number | null
+          fornecedor?: string | null
+          id?: string
+          nome?: string
+          preco_unitario?: number | null
+          unidade?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      insumos_movimentacoes: {
+        Row: {
+          created_at: string | null
+          cultura: string | null
+          data: string
+          fornecedor: string | null
+          id: string
+          insumo_id: string
+          nota_fiscal: string | null
+          observacao: string | null
+          preco_unitario: number | null
+          quantidade: number
+          safra: string | null
+          talhao: string | null
+          tipo: string
+          tipo_aplicacao: string | null
+          valor_total: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          cultura?: string | null
+          data?: string
+          fornecedor?: string | null
+          id?: string
+          insumo_id: string
+          nota_fiscal?: string | null
+          observacao?: string | null
+          preco_unitario?: number | null
+          quantidade: number
+          safra?: string | null
+          talhao?: string | null
+          tipo: string
+          tipo_aplicacao?: string | null
+          valor_total?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          cultura?: string | null
+          data?: string
+          fornecedor?: string | null
+          id?: string
+          insumo_id?: string
+          nota_fiscal?: string | null
+          observacao?: string | null
+          preco_unitario?: number | null
+          quantidade?: number
+          safra?: string | null
+          talhao?: string | null
+          tipo?: string
+          tipo_aplicacao?: string | null
+          valor_total?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "insumos_movimentacoes_insumo_id_fkey"
+            columns: ["insumo_id"]
+            isOneToOne: false
+            referencedRelation: "insumos_cadastro"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       maquinario: {
         Row: {
           created_at: string
@@ -578,6 +736,224 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      maquinas: {
+        Row: {
+          ano: number | null
+          created_at: string | null
+          foto_url: string | null
+          horimetro_atual: number | null
+          id: string
+          marca: string | null
+          modelo: string | null
+          nome: string
+          placa: string | null
+          tipo: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          ano?: number | null
+          created_at?: string | null
+          foto_url?: string | null
+          horimetro_atual?: number | null
+          id?: string
+          marca?: string | null
+          modelo?: string | null
+          nome: string
+          placa?: string | null
+          tipo?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          ano?: number | null
+          created_at?: string | null
+          foto_url?: string | null
+          horimetro_atual?: number | null
+          id?: string
+          marca?: string | null
+          modelo?: string | null
+          nome?: string
+          placa?: string | null
+          tipo?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      maquinas_despesas: {
+        Row: {
+          categoria: string
+          created_at: string | null
+          data: string
+          descricao: string | null
+          horas_maquina: number | null
+          id: string
+          maquina_id: string
+          valor: number
+        }
+        Insert: {
+          categoria: string
+          created_at?: string | null
+          data?: string
+          descricao?: string | null
+          horas_maquina?: number | null
+          id?: string
+          maquina_id: string
+          valor: number
+        }
+        Update: {
+          categoria?: string
+          created_at?: string | null
+          data?: string
+          descricao?: string | null
+          horas_maquina?: number | null
+          id?: string
+          maquina_id?: string
+          valor?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "maquinas_despesas_maquina_id_fkey"
+            columns: ["maquina_id"]
+            isOneToOne: false
+            referencedRelation: "maquinas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      maquinas_documentos: {
+        Row: {
+          created_at: string | null
+          descricao: string | null
+          id: string
+          maquina_id: string
+          numero_apolice: string | null
+          seguradora: string | null
+          tipo: string
+          valor_seguro: number | null
+          vencimento: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          descricao?: string | null
+          id?: string
+          maquina_id: string
+          numero_apolice?: string | null
+          seguradora?: string | null
+          tipo: string
+          valor_seguro?: number | null
+          vencimento?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          descricao?: string | null
+          id?: string
+          maquina_id?: string
+          numero_apolice?: string | null
+          seguradora?: string | null
+          tipo?: string
+          valor_seguro?: number | null
+          vencimento?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "maquinas_documentos_maquina_id_fkey"
+            columns: ["maquina_id"]
+            isOneToOne: false
+            referencedRelation: "maquinas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      maquinas_horimetro: {
+        Row: {
+          created_at: string | null
+          data: string
+          horas: number
+          id: string
+          maquina_id: string
+          observacao: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          data?: string
+          horas: number
+          id?: string
+          maquina_id: string
+          observacao?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          data?: string
+          horas?: number
+          id?: string
+          maquina_id?: string
+          observacao?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "maquinas_horimetro_maquina_id_fkey"
+            columns: ["maquina_id"]
+            isOneToOne: false
+            referencedRelation: "maquinas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      maquinas_manutencao: {
+        Row: {
+          created_at: string | null
+          custo_realizado: number | null
+          data_gatilho: string | null
+          data_realizada: string | null
+          descricao: string
+          horas_gatilho: number | null
+          id: string
+          intervalo_horas: number | null
+          maquina_id: string
+          observacao: string | null
+          status: string
+          tipo_gatilho: string
+        }
+        Insert: {
+          created_at?: string | null
+          custo_realizado?: number | null
+          data_gatilho?: string | null
+          data_realizada?: string | null
+          descricao: string
+          horas_gatilho?: number | null
+          id?: string
+          intervalo_horas?: number | null
+          maquina_id: string
+          observacao?: string | null
+          status?: string
+          tipo_gatilho?: string
+        }
+        Update: {
+          created_at?: string | null
+          custo_realizado?: number | null
+          data_gatilho?: string | null
+          data_realizada?: string | null
+          descricao?: string
+          horas_gatilho?: number | null
+          id?: string
+          intervalo_horas?: number | null
+          maquina_id?: string
+          observacao?: string | null
+          status?: string
+          tipo_gatilho?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "maquinas_manutencao_maquina_id_fkey"
+            columns: ["maquina_id"]
+            isOneToOne: false
+            referencedRelation: "maquinas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       marketplace_pedidos: {
         Row: {
@@ -681,18 +1057,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'order_items_order_id_fkey'
-            columns: ['order_id']
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
             isOneToOne: false
-            referencedRelation: 'orders'
-            referencedColumns: ['id']
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: 'order_items_product_id_fkey'
-            columns: ['product_id']
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
             isOneToOne: false
-            referencedRelation: 'products'
-            referencedColumns: ['id']
+            referencedRelation: "products"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1014,6 +1390,145 @@ export type Database = {
         }
         Relationships: []
       }
+      rh_atividades: {
+        Row: {
+          created_at: string | null
+          cultura: string | null
+          data: string
+          descricao: string
+          equipamento: string | null
+          funcionario_id: string
+          horas: number | null
+          id: string
+          observacao: string | null
+          talhao: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          cultura?: string | null
+          data?: string
+          descricao: string
+          equipamento?: string | null
+          funcionario_id: string
+          horas?: number | null
+          id?: string
+          observacao?: string | null
+          talhao?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          cultura?: string | null
+          data?: string
+          descricao?: string
+          equipamento?: string | null
+          funcionario_id?: string
+          horas?: number | null
+          id?: string
+          observacao?: string | null
+          talhao?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rh_atividades_funcionario_id_fkey"
+            columns: ["funcionario_id"]
+            isOneToOne: false
+            referencedRelation: "rh_funcionarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rh_funcionarios: {
+        Row: {
+          ativo: boolean | null
+          cpf: string | null
+          created_at: string | null
+          data_admissao: string | null
+          data_desligamento: string | null
+          funcao: string
+          id: string
+          motivo_desligamento: string | null
+          nome: string
+          observacao: string | null
+          salario_base: number | null
+          telefone: string | null
+          user_id: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          cpf?: string | null
+          created_at?: string | null
+          data_admissao?: string | null
+          data_desligamento?: string | null
+          funcao: string
+          id?: string
+          motivo_desligamento?: string | null
+          nome: string
+          observacao?: string | null
+          salario_base?: number | null
+          telefone?: string | null
+          user_id: string
+        }
+        Update: {
+          ativo?: boolean | null
+          cpf?: string | null
+          created_at?: string | null
+          data_admissao?: string | null
+          data_desligamento?: string | null
+          funcao?: string
+          id?: string
+          motivo_desligamento?: string | null
+          nome?: string
+          observacao?: string | null
+          salario_base?: number | null
+          telefone?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rh_ponto: {
+        Row: {
+          created_at: string | null
+          data: string
+          funcionario_id: string
+          hora_entrada: string | null
+          hora_saida: string | null
+          horas_extras: number | null
+          horas_trabalhadas: number | null
+          id: string
+          observacao: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          data: string
+          funcionario_id: string
+          hora_entrada?: string | null
+          hora_saida?: string | null
+          horas_extras?: number | null
+          horas_trabalhadas?: number | null
+          id?: string
+          observacao?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          data?: string
+          funcionario_id?: string
+          hora_entrada?: string | null
+          hora_saida?: string | null
+          horas_extras?: number | null
+          horas_trabalhadas?: number | null
+          id?: string
+          observacao?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rh_ponto_funcionario_id_fkey"
+            columns: ["funcionario_id"]
+            isOneToOne: false
+            referencedRelation: "rh_funcionarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       safras_benchmarking: {
         Row: {
           ano: string
@@ -1309,31 +1824,33 @@ export type Database = {
   }
 }
 
-type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, 'public'>]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
-    ? (DefaultSchema['Tables'] & DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -1342,23 +1859,23 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -1367,23 +1884,23 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -1392,36 +1909,36 @@ export type TablesUpdate<
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema['Enums']
+    | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums'][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema['Enums']
-    ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema['CompositeTypes']
+    | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
-    ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
 export const Constants = {
@@ -1429,6 +1946,7 @@ export const Constants = {
     Enums: {},
   },
 } as const
+
 
 // ====== DATABASE EXTENDED CONTEXT (auto-generated) ======
 // This section contains actual PostgreSQL column types, constraints, RLS policies,
@@ -1581,6 +2099,48 @@ export const Constants = {
 //   longitude: numeric (nullable)
 //   analise_completa: jsonb (nullable)
 //   created_at: timestamp with time zone (nullable, default: now())
+// Table: financeiro_lancamentos
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   descricao: text (not null)
+//   tipo: text (not null)
+//   categoria: text (not null, default: 'outros'::text)
+//   valor: numeric (not null)
+//   vencimento: date (nullable)
+//   data_pagamento: date (nullable)
+//   status: text (not null, default: 'pendente'::text)
+//   safra: text (nullable)
+//   cultura: text (nullable)
+//   observacao: text (nullable)
+//   created_at: timestamp with time zone (nullable, default: now())
+// Table: insumos_cadastro
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   nome: text (not null)
+//   categoria: text (not null)
+//   unidade: text (not null, default: 'L'::text)
+//   estoque_atual: numeric (nullable, default: 0)
+//   estoque_minimo: numeric (nullable, default: 0)
+//   preco_unitario: numeric (nullable, default: 0)
+//   fornecedor: text (nullable)
+//   created_at: timestamp with time zone (nullable, default: now())
+//   updated_at: timestamp with time zone (nullable, default: now())
+// Table: insumos_movimentacoes
+//   id: uuid (not null, default: gen_random_uuid())
+//   insumo_id: uuid (not null)
+//   tipo: text (not null)
+//   quantidade: numeric (not null)
+//   data: date (not null, default: CURRENT_DATE)
+//   fornecedor: text (nullable)
+//   nota_fiscal: text (nullable)
+//   preco_unitario: numeric (nullable, default: 0)
+//   valor_total: numeric (nullable, default: 0)
+//   talhao: text (nullable)
+//   cultura: text (nullable)
+//   safra: text (nullable)
+//   tipo_aplicacao: text (nullable)
+//   observacao: text (nullable)
+//   created_at: timestamp with time zone (nullable, default: now())
 // Table: maquinario
 //   id: uuid (not null, default: gen_random_uuid())
 //   user_id: uuid (not null)
@@ -1590,6 +2150,58 @@ export const Constants = {
 //   proxima_manutencao_horas: numeric (nullable)
 //   status: text (nullable, default: 'Operacional'::text)
 //   created_at: timestamp with time zone (not null, default: now())
+// Table: maquinas
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   nome: text (not null)
+//   tipo: text (not null, default: 'trator'::text)
+//   marca: text (nullable)
+//   modelo: text (nullable)
+//   ano: integer (nullable)
+//   placa: text (nullable)
+//   foto_url: text (nullable)
+//   horimetro_atual: numeric (nullable, default: 0)
+//   created_at: timestamp with time zone (nullable, default: now())
+//   updated_at: timestamp with time zone (nullable, default: now())
+// Table: maquinas_despesas
+//   id: uuid (not null, default: gen_random_uuid())
+//   maquina_id: uuid (not null)
+//   data: date (not null, default: CURRENT_DATE)
+//   categoria: text (not null)
+//   descricao: text (nullable)
+//   valor: numeric (not null)
+//   horas_maquina: numeric (nullable)
+//   created_at: timestamp with time zone (nullable, default: now())
+// Table: maquinas_documentos
+//   id: uuid (not null, default: gen_random_uuid())
+//   maquina_id: uuid (not null)
+//   tipo: text (not null)
+//   descricao: text (nullable)
+//   vencimento: date (nullable)
+//   valor_seguro: numeric (nullable)
+//   seguradora: text (nullable)
+//   numero_apolice: text (nullable)
+//   created_at: timestamp with time zone (nullable, default: now())
+// Table: maquinas_horimetro
+//   id: uuid (not null, default: gen_random_uuid())
+//   maquina_id: uuid (not null)
+//   data: date (not null, default: CURRENT_DATE)
+//   horas: numeric (not null)
+//   observacao: text (nullable)
+//   created_at: timestamp with time zone (nullable, default: now())
+// Table: maquinas_manutencao
+//   id: uuid (not null, default: gen_random_uuid())
+//   maquina_id: uuid (not null)
+//   descricao: text (not null)
+//   tipo_gatilho: text (not null, default: 'data'::text)
+//   horas_gatilho: numeric (nullable)
+//   data_gatilho: date (nullable)
+//   intervalo_horas: numeric (nullable)
+//   status: text (not null, default: 'agendado'::text)
+//   data_realizada: date (nullable)
+//   custo_realizado: numeric (nullable)
+//   observacao: text (nullable)
+//   created_at: timestamp with time zone (nullable, default: now())
 // Table: marketplace_pedidos
 //   id: uuid (not null, default: gen_random_uuid())
 //   user_id: uuid (not null)
@@ -1704,6 +2316,41 @@ export const Constants = {
 //   data_entrada: timestamp with time zone (not null, default: now())
 //   status: text (nullable)
 //   created_at: timestamp with time zone (not null, default: now())
+// Table: rh_atividades
+//   id: uuid (not null, default: gen_random_uuid())
+//   funcionario_id: uuid (not null)
+//   data: date (not null, default: CURRENT_DATE)
+//   descricao: text (not null)
+//   talhao: text (nullable)
+//   cultura: text (nullable)
+//   horas: numeric (nullable, default: 0)
+//   equipamento: text (nullable)
+//   observacao: text (nullable)
+//   created_at: timestamp with time zone (nullable, default: now())
+// Table: rh_funcionarios
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   nome: text (not null)
+//   cpf: text (nullable)
+//   funcao: text (not null)
+//   data_admissao: date (nullable)
+//   data_desligamento: date (nullable)
+//   motivo_desligamento: text (nullable)
+//   salario_base: numeric (nullable, default: 0)
+//   telefone: text (nullable)
+//   observacao: text (nullable)
+//   ativo: boolean (nullable, default: true)
+//   created_at: timestamp with time zone (nullable, default: now())
+// Table: rh_ponto
+//   id: uuid (not null, default: gen_random_uuid())
+//   funcionario_id: uuid (not null)
+//   data: date (not null)
+//   hora_entrada: text (nullable)
+//   hora_saida: text (nullable)
+//   horas_trabalhadas: numeric (nullable, default: 0)
+//   horas_extras: numeric (nullable, default: 0)
+//   observacao: text (nullable)
+//   created_at: timestamp with time zone (nullable, default: now())
 // Table: safras_benchmarking
 //   id: uuid (not null, default: gen_random_uuid())
 //   user_id: uuid (not null)
@@ -1829,9 +2476,32 @@ export const Constants = {
 // Table: diagnosticos_pragas
 //   PRIMARY KEY diagnosticos_pragas_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY diagnosticos_pragas_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id)
+// Table: financeiro_lancamentos
+//   PRIMARY KEY financeiro_lancamentos_pkey: PRIMARY KEY (id)
+//   CHECK financeiro_lancamentos_tipo_check: CHECK ((tipo = ANY (ARRAY['receita'::text, 'despesa'::text])))
+// Table: insumos_cadastro
+//   PRIMARY KEY insumos_cadastro_pkey: PRIMARY KEY (id)
+// Table: insumos_movimentacoes
+//   FOREIGN KEY insumos_movimentacoes_insumo_id_fkey: FOREIGN KEY (insumo_id) REFERENCES insumos_cadastro(id) ON DELETE CASCADE
+//   PRIMARY KEY insumos_movimentacoes_pkey: PRIMARY KEY (id)
+//   CHECK insumos_movimentacoes_tipo_check: CHECK ((tipo = ANY (ARRAY['entrada'::text, 'saida'::text])))
 // Table: maquinario
 //   PRIMARY KEY maquinario_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY maquinario_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: maquinas
+//   PRIMARY KEY maquinas_pkey: PRIMARY KEY (id)
+// Table: maquinas_despesas
+//   FOREIGN KEY maquinas_despesas_maquina_id_fkey: FOREIGN KEY (maquina_id) REFERENCES maquinas(id) ON DELETE CASCADE
+//   PRIMARY KEY maquinas_despesas_pkey: PRIMARY KEY (id)
+// Table: maquinas_documentos
+//   FOREIGN KEY maquinas_documentos_maquina_id_fkey: FOREIGN KEY (maquina_id) REFERENCES maquinas(id) ON DELETE CASCADE
+//   PRIMARY KEY maquinas_documentos_pkey: PRIMARY KEY (id)
+// Table: maquinas_horimetro
+//   FOREIGN KEY maquinas_horimetro_maquina_id_fkey: FOREIGN KEY (maquina_id) REFERENCES maquinas(id) ON DELETE CASCADE
+//   PRIMARY KEY maquinas_horimetro_pkey: PRIMARY KEY (id)
+// Table: maquinas_manutencao
+//   FOREIGN KEY maquinas_manutencao_maquina_id_fkey: FOREIGN KEY (maquina_id) REFERENCES maquinas(id) ON DELETE CASCADE
+//   PRIMARY KEY maquinas_manutencao_pkey: PRIMARY KEY (id)
 // Table: marketplace_pedidos
 //   PRIMARY KEY marketplace_pedidos_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY marketplace_pedidos_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
@@ -1872,6 +2542,15 @@ export const Constants = {
 // Table: rebanho
 //   PRIMARY KEY rebanho_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY rebanho_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+// Table: rh_atividades
+//   FOREIGN KEY rh_atividades_funcionario_id_fkey: FOREIGN KEY (funcionario_id) REFERENCES rh_funcionarios(id) ON DELETE CASCADE
+//   PRIMARY KEY rh_atividades_pkey: PRIMARY KEY (id)
+// Table: rh_funcionarios
+//   PRIMARY KEY rh_funcionarios_pkey: PRIMARY KEY (id)
+// Table: rh_ponto
+//   UNIQUE rh_ponto_funcionario_id_data_key: UNIQUE (funcionario_id, data)
+//   FOREIGN KEY rh_ponto_funcionario_id_fkey: FOREIGN KEY (funcionario_id) REFERENCES rh_funcionarios(id) ON DELETE CASCADE
+//   PRIMARY KEY rh_ponto_pkey: PRIMARY KEY (id)
 // Table: safras_benchmarking
 //   PRIMARY KEY safras_benchmarking_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY safras_benchmarking_user_id_fkey: FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
@@ -1977,6 +2656,15 @@ export const Constants = {
 //     USING: (auth.uid() = user_id)
 //   Policy "Users can view own diagnosticos" (SELECT, PERMISSIVE) roles={authenticated}
 //     USING: (auth.uid() = user_id)
+// Table: financeiro_lancamentos
+//   Policy "financeiro_lancamentos_delete" (DELETE, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//   Policy "financeiro_lancamentos_insert" (INSERT, PERMISSIVE) roles={authenticated}
+//     WITH CHECK: (user_id = auth.uid())
+//   Policy "financeiro_lancamentos_select" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
+//   Policy "financeiro_lancamentos_update" (UPDATE, PERMISSIVE) roles={authenticated}
+//     USING: (user_id = auth.uid())
 // Table: maquinario
 //   Policy "maquinario_all" (ALL, PERMISSIVE) roles={authenticated}
 //     USING: (auth.uid() = user_id)
@@ -2129,13 +2817,13 @@ export const Constants = {
 //   AS $function$
 //   BEGIN
 //     INSERT INTO public.users (
-//       id,
-//       email,
-//       name,
-//       user_type,
-//       status,
-//       plan_active,
-//       created_at,
+//       id, 
+//       email, 
+//       name, 
+//       user_type, 
+//       status, 
+//       plan_active, 
+//       created_at, 
 //       trial_expires_at,
 //       phone,
 //       cpf,
@@ -2161,13 +2849,13 @@ export const Constants = {
 //       NULLIF(NEW.raw_user_meta_data->>'terms_accepted_at', '')::timestamptz
 //     )
 //     ON CONFLICT (id) DO NOTHING;
-//
+//     
 //     RETURN NEW;
 //   EXCEPTION WHEN OTHERS THEN
 //     RETURN NEW;
 //   END;
 //   $function$
-//
+//   
 // FUNCTION increment_satellite_views(uuid)
 //   CREATE OR REPLACE FUNCTION public.increment_satellite_views(row_id uuid)
 //    RETURNS void
@@ -2180,7 +2868,7 @@ export const Constants = {
 //     WHERE id = row_id;
 //   END;
 //   $function$
-//
+//   
 // FUNCTION user_has_satellite_access()
 //   CREATE OR REPLACE FUNCTION public.user_has_satellite_access()
 //    RETURNS boolean
@@ -2194,7 +2882,7 @@ export const Constants = {
 //     RETURN user_plan IN ('Completo', 'Família Coop');
 //   END;
 //   $function$
-//
+//   
 
 // --- INDEXES ---
 // Table: alertas_cio
@@ -2213,3 +2901,6 @@ export const Constants = {
 //   CREATE INDEX idx_precos_cache_created ON public.precos_cache USING btree (created_at DESC)
 // Table: propriedades
 //   CREATE INDEX propriedades_user_id_idx ON public.propriedades USING btree (user_id)
+// Table: rh_ponto
+//   CREATE UNIQUE INDEX rh_ponto_funcionario_id_data_key ON public.rh_ponto USING btree (funcionario_id, data)
+
