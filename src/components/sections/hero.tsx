@@ -63,13 +63,16 @@ export function Hero() {
             </ScrollReveal>
           </div>
 
-          <div className="w-full lg:w-[40%] flex justify-center relative mt-10 lg:mt-0">
-            <ScrollReveal delay={400} className="relative w-full flex justify-center">
+          <div className="w-full lg:w-[40%] flex justify-center relative mt-10 lg:mt-0 ![background:none] ![background-color:transparent] ![background-image:none]">
+            <ScrollReveal
+              delay={400}
+              className="relative w-full flex justify-center ![background:none] ![background-color:transparent] ![background-image:none]"
+            >
               <img
                 id="hero-image"
                 src={heroMockup}
                 alt="AgroIA Dashboard Mockup"
-                className="relative z-10 w-full max-w-[300px] lg:max-w-[420px] mx-auto animate-float-mockup object-contain"
+                className="relative z-10 w-full max-w-[300px] lg:max-w-[420px] mx-auto animate-float-mockup object-contain block ![background:transparent]"
               />
             </ScrollReveal>
           </div>
