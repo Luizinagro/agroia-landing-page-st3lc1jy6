@@ -58,9 +58,7 @@ export default function Layout() {
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false)
   const [lockedItem, setLockedItem] = useState<any>(null)
 
-  const isPublicPage = ['/', '/login', '/cadastro', '/forgot-password', '/sicredi'].includes(
-    location.pathname,
-  )
+  const isPublicPage = ['/', '/login', '/cadastro', '/forgot-password'].includes(location.pathname)
 
   if (isPublicPage || !user) {
     return <Outlet />
