@@ -1,41 +1,51 @@
-import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
+import 'jsr:@supabase/functions-js/edge-runtime.d.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type'
-};
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
 
 async function buscarClimaRegiao(lat: number, lon: number) {
   try {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto&forecast_days=16`;
-    const res = await fetch(url);
-    if (!res.ok) return null;
-    const data = await res.json();
-    const tempMedia = (((data.daily?.temperature_2m_max?.[0] ?? 28) + (data.daily?.temperature_2m_min?.[0] ?? 18)) / 2).toFixed(1);
-    const chuva16d = (data.daily?.precipitation_sum ?? []).reduce((a: number, b: number) => a + (b ?? 0), 0).toFixed(1);
-    return { tempMedia, chuva16d };
-  } catch { return null; }
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto&forecast_days=16`
+    const res = await fetch(url)
+    if (!res.ok) return null
+    const data = await res.json()
+    const tempMedia = (
+      ((data.daily?.temperature_2m_max?.[0] ?? 28) + (data.daily?.temperature_2m_min?.[0] ?? 18)) /
+      2
+    ).toFixed(1)
+    const chuva16d = (data.daily?.precipitation_sum ?? [])
+      .reduce((a: number, b: number) => a + (b ?? 0), 0)
+      .toFixed(1)
+    return { tempMedia, chuva16d }
+  } catch {
+    return null
+  }
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
   try {
-    const body = await req.json();
-    const { cultura, estado, latitude, longitude } = body;
-    if (!cultura) throw new Error('"cultura" é obrigatório.');
+    const body = await req.json()
+    const { cultura, estado, latitude, longitude } = body
+    if (!cultura) throw new Error('"cultura" é obrigatório.')
 
-    const geminiKey = Deno.env.get('GEMINI_API_KEY') || '';
-    if (!geminiKey) throw new Error('Chave Gemini não configurada.');
+    const geminiKey = Deno.env.get('GEMINI_API_KEY') || ''
+    if (!geminiKey) throw new Error('Chave Gemini não configurada.')
 
-    const clima = (latitude && longitude)
-      ? await buscarClimaRegiao(parseFloat(latitude), parseFloat(longitude))
-      : null;
+    const clima =
+      latitude && longitude
+        ? await buscarClimaRegiao(parseFloat(latitude), parseFloat(longitude))
+        : null
 
-    const hoje = new Date();
-    const mesAtual = hoje.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
-    const diaAno = Math.floor((hoje.getTime() - new Date(hoje.getFullYear(), 0, 0).getTime()) / 86400000);
+    const hoje = new Date()
+    const mesAtual = hoje.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
+    const diaAno = Math.floor(
+      (hoje.getTime() - new Date(hoje.getFullYear(), 0, 0).getTime()) / 86400000,
+    )
 
     const prompt = `Você é um agrônomo especialista em calendário agrícola brasileiro.
 Hoje é ${hoje.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}.
@@ -81,7 +91,7 @@ Responda APENAS com JSON válido (sem markdown):
   "produtividade_media_regiao": "X sacas/ha ou toneladas/ha",
   "custo_estimado_ha": "R$ X.XXX a R$ X.XXX",
   "receita_estimada_ha": "R$ X.XXX a R$ X.XXX"
-}`;
+}`
 
     const res = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`,
@@ -90,28 +100,31 @@ Responda APENAS com JSON válido (sem markdown):
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { response_mime_type: 'application/json', temperature: 0.2 }
-        })
-      }
-    );
+          generationConfig: { response_mime_type: 'application/json', temperature: 0.2 },
+        }),
+      },
+    )
 
-    if (!res.ok) throw new Error('Gemini indisponível');
-    const data = await res.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    const match = text.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error('Resposta inválida');
-    const calendario = JSON.parse(match[0]);
+    if (!res.ok) throw new Error('Gemini indisponível')
+    const data = await res.json()
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || ''
+    const match = text.match(/\{[\s\S]*\}/)
+    if (!match) throw new Error('Resposta inválida')
+    const calendario = JSON.parse(match[0])
 
-    return new Response(JSON.stringify({
-      success: true,
-      data: calendario,
-      clima_atual: clima,
-      gerado_em: new Date().toISOString()
-    }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 });
-
+    return new Response(
+      JSON.stringify({
+        success: true,
+        data: calendario,
+        clima_atual: clima,
+        gerado_em: new Date().toISOString(),
+      }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 },
+    )
   } catch (error) {
     return new Response(JSON.stringify({ success: false, error: error.message }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400
-    });
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 400,
+    })
   }
-});
+})

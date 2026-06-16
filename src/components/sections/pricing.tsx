@@ -1,27 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Check, X, Info, Loader2 } from 'lucide-react'
+import { Check, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { supabase } from '@/lib/supabase/client'
+import { ScrollReveal } from '@/components/ScrollReveal'
+import { Switch } from '@/components/ui/switch'
 
-interface Plan {
-  id: string
-  nome: string
-  preco: string
-  periodo: string | null
-  descricao: string
-  features: string[]
-  botao: string
-  destaque: boolean
-  ordem: number
-}
-
-const fallbackPlans: Plan[] = [
+const plans = [
   {
-    id: '1',
     nome: 'Explorador',
-    preco: 'Grátis',
-    periodo: ' (7 dias)',
+    precoMensal: 0,
+    precoAnual: 0,
     descricao: 'Ideal para quem quer descobrir o poder da plataforma.',
     features: [
       '✅ Dashboard básico',
@@ -30,222 +18,205 @@ const fallbackPlans: Plan[] = [
       '✅ Comunidade (Leitura)',
       '❌ AI Avançada',
       '❌ Análise de Satélite',
-      '❌ Diagnóstico de Pragas',
       '❌ Calculadora ROI',
     ],
     botao: 'Começar Grátis',
     destaque: false,
-    ordem: 1,
   },
   {
-    id: '2',
     nome: 'Lavoura',
-    preco: 'R$ 149',
-    periodo: '/mês',
-    descricao: 'Para o produtor focado na lavoura',
+    precoMensal: 149,
+    precoAnual: 124,
+    descricao: 'Para o produtor focado na lavoura e na terra.',
     features: [
       '✅ Tudo do Explorador +',
       '✅ Satélite (NDVI + umidade)',
       '✅ Consultor IA (15/mês)',
-      '✅ Pragas (10/mês)',
-      '✅ Previsão commodities',
+      '✅ Pragas e Doenças',
       '✅ Calendário e Irrigação',
       '✅ Calculadora ROI',
       '❌ Gestão de Rebanho',
-      '❌ Calculadora de Carbono',
     ],
-    botao: 'Assinar',
+    botao: 'Assinar Lavoura',
     destaque: false,
-    ordem: 2,
   },
   {
-    id: '3',
     nome: 'Rebanho',
-    preco: 'R$ 199',
-    periodo: '/mês',
-    descricao: 'Para quem cria com inteligência',
+    precoMensal: 199,
+    precoAnual: 165,
+    descricao: 'Para quem cria gado com inteligência.',
     features: [
       '✅ Tudo do Explorador +',
       '✅ Gestão de rebanho',
       '✅ Rastreamento individual',
       '✅ Alertas de Cio',
       '✅ Nutrição e saúde',
-      '✅ Consultor IA (15/mês)',
-      '✅ Doenças por foto (10/mês)',
+      '✅ Doenças por foto',
       '❌ Análise de Satélite',
-      '❌ Calculadora de Carbono',
     ],
-    botao: 'Assinar',
+    botao: 'Assinar Rebanho',
     destaque: false,
-    ordem: 3,
   },
   {
-    id: '4',
     nome: 'Fazendeiro Completo',
-    preco: 'R$ 349',
-    periodo: '/mês',
-    descricao: 'Visão total e ferramentas avançadas',
+    precoMensal: 349,
+    precoAnual: 290,
+    descricao: 'Visão total e ferramentas avançadas unificadas.',
     features: [
       '✅ TUDO ILIMITADO',
       '✅ Calculadora de Carbono 🌱',
       '✅ CRM de Vendas',
       '✅ Dashboard Consolidado',
-      '✅ Relatórios avançados PDF/Excel',
-      '✅ Consultoria mensal',
+      '✅ Consultoria mensal VIP',
       '✅ Histórico ilimitado',
       '❌ Múltiplos usuários',
-      '❌ Acesso à API',
     ],
-    botao: 'Escolher plano',
+    botao: 'Escolher Completo',
     destaque: true,
-    ordem: 4,
   },
   {
-    id: '5',
     nome: 'Cooperativa',
-    preco: 'R$ 799',
-    periodo: '/mês',
-    descricao: 'Famílias, grupos e operações maiores',
+    precoMensal: 799,
+    precoAnual: 663,
+    descricao: 'Famílias, grupos e grandes operações.',
     features: [
       '✅ Tudo do Completo +',
       '✅ Até 5 usuários',
       '✅ Até 10 propriedades',
       '✅ Acesso API customizada',
-      '✅ Backup automático real-time',
+      '✅ Backup real-time',
       '✅ Gestão de permissões',
       '✅ Treinamento dedicado',
     ],
     botao: 'Falar com Consultor',
     destaque: false,
-    ordem: 5,
   },
 ]
 
 export function Pricing() {
-  const [plans, setPlans] = useState<Plan[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    async function fetchPlans() {
-      try {
-        const { data, error } = await supabase
-          .from('planos' as any)
-          .select('*')
-          .order('ordem', { ascending: true })
-
-        if (error) throw error
-
-        if (data && data.length > 0) {
-          setPlans(data as Plan[])
-        } else {
-          setPlans(fallbackPlans)
-        }
-      } catch (err) {
-        console.error('Erro ao buscar planos:', err)
-        setPlans(fallbackPlans)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchPlans()
-  }, [])
-
-  if (loading) {
-    return (
-      <section
-        id="planos"
-        className="py-24 bg-black flex justify-center items-center min-h-[500px]"
-      >
-        <Loader2 className="w-10 h-10 text-green-500 animate-spin" />
-      </section>
-    )
-  }
+  const [isAnnual, setIsAnnual] = useState(false)
 
   return (
-    <section id="planos" className="py-24 bg-black">
+    <section id="planos" className="py-24 bg-[#111A13] border-t border-white/5">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Escolha seu Plano</h2>
-          <p className="text-zinc-400 max-w-2xl mx-auto">
-            Planos flexíveis que crescem junto com a sua produção e capacidade de investimento.
+        <ScrollReveal className="text-center mb-12">
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
+            Planos simples e justos
+          </h2>
+          <p className="text-[#A0AFA3] max-w-2xl mx-auto text-lg mb-8">
+            Comece grátis e evolua conforme a sua operação cresce.
           </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-[1400px] mx-auto">
-          {plans.map((plan) => (
-            <div
-              key={plan.id || plan.nome}
-              className={`bg-zinc-950 border ${
-                plan.destaque
-                  ? 'border-green-500 shadow-[0_0_30px_rgba(34,197,94,0.3)] md:scale-105 z-10'
-                  : 'border-white/10'
-              } relative flex flex-col rounded-2xl p-6 transition-transform hover:scale-[1.02]`}
+
+          <div className="flex items-center justify-center gap-4 bg-[#0A0F0D] inline-flex p-2 rounded-full border border-white/5">
+            <span className={`text-sm font-medium ${!isAnnual ? 'text-white' : 'text-[#A0AFA3]'}`}>
+              Mensal
+            </span>
+            <Switch
+              checked={isAnnual}
+              onCheckedChange={setIsAnnual}
+              className="data-[state=checked]:bg-[#00C853]"
+            />
+            <span
+              className={`text-sm font-medium flex items-center gap-2 ${isAnnual ? 'text-white' : 'text-[#A0AFA3]'}`}
             >
-              {plan.destaque && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-black px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap shadow-[0_0_15px_rgba(34,197,94,0.5)]">
-                  Mais Escolhido
-                </div>
-              )}
-              <div className="mb-6">
-                <h3 className="text-xl font-bold text-white mb-2">{plan.nome}</h3>
-                <p className="text-zinc-400 text-sm min-h-[60px]">{plan.descricao}</p>
-                <div className="mt-4 flex items-baseline text-green-400">
-                  <span className="text-4xl font-extrabold drop-shadow-[0_0_15px_rgba(34,197,94,0.6)]">
-                    {plan.preco}
-                  </span>
-                  {plan.periodo && (
-                    <span className="text-green-500/70 ml-1 font-medium text-sm">
-                      {plan.periodo}
-                    </span>
+              Anual{' '}
+              <span className="bg-[#00C853]/20 text-[#00C853] text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">
+                2 meses grátis
+              </span>
+            </span>
+          </div>
+        </ScrollReveal>
+
+        <div className="flex overflow-x-auto pb-8 snap-x snap-mandatory hide-scrollbar md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-[1400px] mx-auto">
+          {plans.map((plan, idx) => {
+            const price = isAnnual ? plan.precoAnual : plan.precoMensal
+            return (
+              <ScrollReveal
+                key={plan.nome}
+                delay={idx * 100}
+                className="min-w-[300px] snap-center shrink-0"
+              >
+                <div
+                  className={`bg-[#0A0F0D] border ${
+                    plan.destaque
+                      ? 'border-[#00C853] shadow-[0_0_30px_rgba(0,200,83,0.15)] md:scale-105 z-10 relative'
+                      : 'border-white/5'
+                  } flex flex-col rounded-3xl p-8 h-full transition-transform hover:-translate-y-1`}
+                >
+                  {plan.destaque && (
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#00C853] text-[#0A0F0D] px-6 py-1.5 rounded-full text-xs font-black uppercase tracking-wider whitespace-nowrap shadow-lg">
+                      Mais Escolhido
+                    </div>
                   )}
-                </div>
-              </div>
-              <div className="flex-1 mb-8">
-                <ul className="space-y-3">
-                  {plan.features.map((feature, j) => {
-                    const isNegative =
-                      feature.startsWith('❌') || feature.toLowerCase().includes('não pode')
-                    const isInfo =
-                      feature.startsWith('ℹ️') ||
-                      feature.toLowerCase().includes('limite') ||
-                      feature.toLowerCase().includes('suporte')
-                    const cleanFeature = feature.replace(/^[✅❌ℹ️]\s*/, '')
-                    return (
-                      <li
-                        key={j}
-                        className={`flex items-start ${isNegative ? 'text-zinc-500' : 'text-zinc-300'}`}
+                  <div className="mb-6">
+                    <h3 className="text-xl font-bold text-white mb-2">{plan.nome}</h3>
+                    <p className="text-[#A0AFA3] text-sm min-h-[40px] leading-relaxed">
+                      {plan.descricao}
+                    </p>
+                    <div className="mt-6 flex flex-col">
+                      <div className="flex items-baseline text-white">
+                        <span className="text-lg font-medium mr-1 text-[#A0AFA3]">R$</span>
+                        <span className="text-5xl font-extrabold tracking-tight">
+                          {price === 0 ? '0' : price}
+                        </span>
+                        <span className="text-[#A0AFA3] ml-2 font-medium text-sm">/mês</span>
+                      </div>
+                      {isAnnual && price > 0 && (
+                        <div className="text-[#00C853] text-sm font-medium mt-1">
+                          Faturado anualmente
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex-1 mb-8">
+                    <ul className="space-y-4">
+                      {plan.features.map((feature, j) => {
+                        const isNegative = feature.startsWith('❌')
+                        const cleanFeature = feature.replace(/^[✅❌]\s*/, '')
+                        return (
+                          <li
+                            key={j}
+                            className={`flex items-start ${isNegative ? 'text-zinc-600' : 'text-zinc-300'}`}
+                          >
+                            {isNegative ? (
+                              <X className="w-5 h-5 text-red-500/50 mr-3 shrink-0" />
+                            ) : (
+                              <Check className="w-5 h-5 text-[#00C853] mr-3 shrink-0" />
+                            )}
+                            <span className="text-sm font-medium">{cleanFeature}</span>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  </div>
+                  <div className="mt-auto pt-6 border-t border-white/5">
+                    <Link to="/cadastro" className="w-full block">
+                      <Button
+                        size="lg"
+                        className={`w-full font-bold h-12 rounded-xl transition-all ${
+                          plan.destaque
+                            ? 'bg-[#00C853] text-[#0A0F0D] hover:bg-[#00C853]/90 shadow-lg'
+                            : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'
+                        }`}
                       >
-                        {isNegative ? (
-                          <X className="w-4 h-4 text-red-500 mr-2 shrink-0 mt-0.5" />
-                        ) : isInfo ? (
-                          <Info className="w-4 h-4 text-blue-400 mr-2 shrink-0 mt-0.5" />
-                        ) : (
-                          <Check className="w-4 h-4 text-green-500 mr-2 shrink-0 mt-0.5" />
-                        )}
-                        <span className="text-sm leading-relaxed">{cleanFeature}</span>
-                      </li>
-                    )
-                  })}
-                </ul>
-              </div>
-              <div className="mt-auto">
-                <Link to="/cadastro" className="w-full block">
-                  <Button
-                    size="lg"
-                    className={`w-full font-bold shadow-lg transition-all ${
-                      plan.destaque
-                        ? 'bg-green-500 text-black hover:bg-green-400 hover:shadow-[0_0_25px_rgba(34,197,94,0.6)]'
-                        : 'bg-green-500/10 text-green-400 hover:bg-green-500/20 border border-green-500/30 hover:shadow-[0_0_15px_rgba(34,197,94,0.3)]'
-                    }`}
-                  >
-                    {plan.botao}
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          ))}
+                        {plan.botao}
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </ScrollReveal>
+            )
+          })}
         </div>
       </div>
+      <style
+        dangerouslySetInlineStyle={{
+          __html: `
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `,
+        }}
+      />
     </section>
   )
 }

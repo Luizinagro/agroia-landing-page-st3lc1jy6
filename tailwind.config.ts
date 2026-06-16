@@ -26,38 +26,25 @@ export default {
       },
     },
     extend: {
+      keyframes: {
+        'fade-in-up': {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'pulse-glow': {
+          '0%, 100%': { opacity: '1', transform: 'scale(1)' },
+          '50%': { opacity: '0.6', transform: 'scale(1.05)' },
+        },
+      },
+      animation: {
+        'fade-in-up': 'fade-in-up 0.7s ease-out forwards',
+        'pulse-glow': 'pulse-glow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        display: ['Inter', 'sans-serif'],
-        mono: ['Inter', 'sans-serif'],
+        sans: ['Inter var', 'SF Pro Display', 'system-ui', 'sans-serif'],
+        display: ['SF Pro Display', 'Inter var', 'system-ui', 'sans-serif'],
       },
       colors: {
-        agro: {
-          green: 'var(--agro-green)',
-          'green-hover': 'var(--agro-green-hover)',
-        },
-        neon: {
-          purple: 'var(--neon-purple)',
-          'purple-hover': 'var(--neon-purple-hover)',
-        },
-        premium: {
-          gold: 'var(--premium-gold)',
-          'gold-hover': 'var(--premium-gold-hover)',
-        },
-        organic: {
-          earth: 'var(--organic-earth)',
-          'earth-hover': 'var(--organic-earth-hover)',
-        },
-        bg: {
-          dark: 'var(--bg-dark)',
-          overlay: '#000000',
-          light: 'var(--bg-light)',
-        },
-        status: {
-          error: 'var(--error)',
-          success: 'var(--success)',
-          warning: 'var(--warning)',
-        },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
@@ -109,32 +96,21 @@ export default {
           5: 'hsl(var(--chart-5))',
         },
       },
-      backgroundImage: {
-        'gradient-hero': 'var(--gradient-hero)',
-        'gradient-cards': 'var(--gradient-cards)',
-      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
-        xl: '16px',
       },
       transitionProperty: {
         width: 'width',
         height: 'height',
       },
-      transitionDuration: {
-        '300': '300ms',
-        '400': '400ms',
-      },
       boxShadow: {
         subtle: '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03)',
         elevation: '0 4px 20px rgba(0, 0, 0, 0.05)',
-        'glow-ia': '0 0 20px var(--glow-ia)',
       },
       transitionTimingFunction: {
         apple: 'cubic-bezier(0.42, 0, 0.58, 1)',
-        bounce: 'ease-out',
       },
     },
   },

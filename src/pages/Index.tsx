@@ -1,18 +1,35 @@
 import { Hero } from '@/components/sections/hero'
-import { Features } from '@/components/sections/features'
-import { Pricing } from '@/components/sections/pricing'
+import { SocialProof } from '@/components/sections/social-proof'
+import { HowItWorks } from '@/components/sections/how-it-works'
+import { Results } from '@/components/sections/results'
+import { Modules } from '@/components/sections/modules'
+import { Comparison } from '@/components/sections/comparison'
 import { Testimonials } from '@/components/sections/testimonials'
+import { Pricing } from '@/components/sections/pricing'
+import { FAQ } from '@/components/sections/faq'
 import { Footer } from '@/components/sections/footer'
+import { WhatsAppButton } from '@/components/WhatsAppButton'
+import { SEO } from '@/components/SEO'
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-primary/30 flex flex-col">
+    <div className="min-h-screen bg-[#0A0F0D] text-white selection:bg-[#00C853]/30 flex flex-col font-sans overflow-x-hidden">
+      <SEO
+        title="AgroIA — Inteligência Artificial para o Agronegócio Brasileiro"
+        description="Diagnóstico de pragas em 30 segundos, irrigação inteligente, preços em tempo real e muito mais. Teste grátis por 7 dias, sem cartão."
+      />
       <main className="flex-1">
         <Hero />
-        <Features />
-        <Pricing />
+        <SocialProof />
+        <HowItWorks />
+        <Results />
+        <Modules />
+        <Comparison />
         <Testimonials />
+        <Pricing />
+        <FAQ />
       </main>
+      <WhatsAppButton />
       <Footer />
     </div>
   )
