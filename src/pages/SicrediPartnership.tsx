@@ -1,43 +1,62 @@
-import { MessageCircle } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { SEO } from '@/components/SEO'
+import { HeroSection } from '@/components/sicredi/HeroSection'
+import { ComparisonSection } from '@/components/sicredi/ComparisonSection'
+import { PracticalFlowSection } from '@/components/sicredi/PracticalFlowSection'
+import { DiscountSection } from '@/components/sicredi/DiscountSection'
+import { GridsSection } from '@/components/sicredi/GridsSection'
+import { ExecutiveSection } from '@/components/sicredi/ExecutiveSection'
+import { SocialProofSection } from '@/components/sicredi/SocialProofSection'
 
 export default function SicrediPartnership() {
-  const WHATSAPP_NUMBER = '5511999999999'
-  const MSG = encodeURIComponent('Olá! Vi a parceria AgroIA × Sicredi e quero saber mais.')
-
   return (
     <>
       <SEO
         title="AgroIA × Sicredi — Parceria Estratégica"
-        description="Crédito rural inteligente integrado à gestão da sua propriedade"
+        description="Crédito rural inteligente integrado à gestão da sua propriedade. Conheça as vantagens exclusivas."
       />
-      <div
-        className="flex flex-col items-center justify-center min-h-[calc(100vh-8rem)] rounded-2xl p-6 shadow-inner"
-        style={{ backgroundColor: '#0D1F0D', color: '#F5F0E8' }}
-      >
-        <div className="text-center max-w-3xl">
-          <h1 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight">
-            AgroIA × Sicredi — Parceria Estratégica
-          </h1>
-          <h2 className="text-xl md:text-2xl mb-8 font-medium opacity-90">
-            Crédito rural inteligente integrado à gestão da sua propriedade
-          </h2>
-          <p className="text-lg md:text-xl mb-12 opacity-80">
-            Em breve: benefícios exclusivos para cooperados Sicredi que usam a AgroIA.
-          </p>
-          <a
-            href={`https://wa.me/${WHATSAPP_NUMBER}?text=${MSG}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block"
-          >
-            <Button className="bg-[#00C853] hover:bg-[#009959] text-black font-bold px-8 py-6 text-lg rounded-full shadow-lg transition-all hover:scale-105">
-              <MessageCircle className="mr-2 w-6 h-6" />
-              Falar com nosso time via WhatsApp
-            </Button>
-          </a>
-        </div>
+      <div className="w-full bg-[#0A1A0A] font-sans sm:rounded-2xl overflow-hidden shadow-2xl">
+        <HeroSection />
+        <ComparisonSection />
+        <PracticalFlowSection />
+        <DiscountSection />
+        <GridsSection />
+        <ExecutiveSection />
+        <SocialProofSection />
+
+        <footer className="bg-[#070F07] py-12 border-t border-[#1A3A0A] mt-10">
+          <div className="max-w-[1200px] mx-auto px-6 text-center flex flex-col items-center">
+            <div className="flex items-center gap-4 mb-6">
+              <span className="text-xl font-bold tracking-tight text-white">
+                AGRO<span className="text-[#6DBF4A]">IA</span>
+              </span>
+              <span className="text-[#F9A825] font-bold">×</span>
+              <span className="text-xl font-bold tracking-tight text-[#009959]">Sicredi</span>
+            </div>
+            <p className="text-[#A8B8A0] italic mb-8 max-w-md">
+              "Juntos, cultivamos o futuro do seu agronegócio."
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link to="/dashboard">
+                <Button
+                  variant="ghost"
+                  className="text-[#A8B8A0] hover:text-white hover:bg-[#1A3A0A]"
+                >
+                  Acessar Sistema
+                </Button>
+              </Link>
+              <Link to="/planos">
+                <Button
+                  variant="ghost"
+                  className="text-[#A8B8A0] hover:text-white hover:bg-[#1A3A0A]"
+                >
+                  Ver Planos
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </footer>
       </div>
     </>
   )
