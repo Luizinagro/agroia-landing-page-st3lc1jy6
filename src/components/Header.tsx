@@ -1,12 +1,12 @@
 import { Link, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { Bell, Menu, Search, UserCircle } from 'lucide-react'
+import { Bell, Menu, Search, UserCircle, Handshake } from 'lucide-react'
 import { Logo, LogoText } from '@/components/ui/logo'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 
 export function Header() {
   const location = useLocation()
-  const isApp = !['/', '/login', '/cadastro'].includes(location.pathname)
+  const isApp = !['/', '/login', '/cadastro', '/sicredi'].includes(location.pathname)
 
   if (!isApp) {
     return (
@@ -28,6 +28,12 @@ export function Header() {
             >
               Planos
             </a>
+            <Link
+              to="/sicredi"
+              className="text-sm font-medium text-[#00C853] hover:text-[#009959] transition-colors flex items-center gap-1.5 bg-[#00C853]/10 px-3 py-1.5 rounded-full"
+            >
+              Parceria Sicredi <Handshake className="w-4 h-4" />
+            </Link>
           </nav>
           <div className="flex items-center gap-1 sm:gap-2">
             <Link to="/login">

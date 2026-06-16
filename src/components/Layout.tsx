@@ -38,6 +38,7 @@ import {
   Leaf,
   Droplet,
   Briefcase,
+  Handshake,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -57,7 +58,9 @@ export default function Layout() {
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false)
   const [lockedItem, setLockedItem] = useState<any>(null)
 
-  const isPublicPage = ['/', '/login', '/cadastro', '/forgot-password'].includes(location.pathname)
+  const isPublicPage = ['/', '/login', '/cadastro', '/forgot-password', '/sicredi'].includes(
+    location.pathname,
+  )
 
   if (isPublicPage || !user) {
     return <Outlet />
@@ -162,6 +165,7 @@ export default function Layout() {
       items: [
         { title: 'Loja', icon: Package, path: '/loja', feature: 'loja' },
         { title: 'Comunidade', icon: Users, path: '/comunidade', feature: 'comunidade' },
+        { title: 'Parceria Sicredi 🤝', icon: Handshake, path: '/sicredi', feature: null },
       ],
     },
     {

@@ -30,6 +30,7 @@ import PrevisaoIA from './pages/PrevisaoIA'
 import Rastreabilidade from './pages/Rastreabilidade'
 import CRM from './pages/CRM'
 import GestaoFinanceira from './pages/financeiro/GestaoFinanceira'
+import SicrediPartnership from './pages/SicrediPartnership'
 import AnaliseSatelite from './pages/AnaliseSatelite'
 import SharedAnalysis from './pages/SharedAnalysis'
 import ConsultorPerformance from './pages/ConsultorPerformance'
@@ -258,6 +259,7 @@ const App = () => {
                   </Route>
 
                   <Route path="/analise-compartilhada/:id" element={<SharedAnalysis />} />
+                  <Route path="/sicredi" element={<SicrediPartnership />} />
 
                   {/* ADD ALL CUSTOM ROUTES MUST BE ADDED HERE */}
                 </Route>
