@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Bell, Menu, Search, UserCircle, Handshake } from 'lucide-react'
 import { Logo, LogoText } from '@/components/ui/logo'
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetClose } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
 
 export function Header() {
@@ -98,7 +98,7 @@ export function Header() {
               </SheetTrigger>
               <SheetContent
                 side="right"
-                className="bg-[#0A0F0D] border-l border-[#00C853]/20 p-0 w-[280px] z-[1001]"
+                className="bg-[#0A0F0D] border-l border-[#00C853]/20 p-0 w-[280px] z-[1001] text-white"
               >
                 <SheetTitle className="sr-only">Menu de Navegação</SheetTitle>
                 <div className="p-4 border-b border-[#00C853]/10">
@@ -108,46 +108,58 @@ export function Header() {
                 </div>
                 <div className="p-4 flex flex-col h-[calc(100vh-65px)] justify-between">
                   <nav className="flex flex-col gap-2">
-                    <a
-                      href="#solucoes"
-                      className="text-base font-medium text-white hover:text-[#00C853] transition-colors py-3 border-b border-white/5"
-                    >
-                      Soluções
-                    </a>
-                    <a
-                      href="#planos"
-                      className="text-base font-medium text-white hover:text-[#00C853] transition-colors py-3 border-b border-white/5"
-                    >
-                      Planos
-                    </a>
-                    <a
-                      href="#faq"
-                      className="text-base font-medium text-white hover:text-[#00C853] transition-colors py-3 border-b border-white/5"
-                    >
-                      FAQ
-                    </a>
-                    <Link
-                      to="/sicredi"
-                      className="text-base font-medium text-[#00C853] hover:text-[#009959] transition-colors py-3 border-b border-white/5 flex items-center gap-2"
-                    >
-                      Parceria Sicredi <Handshake className="w-4 h-4" />
-                    </Link>
+                    <SheetClose asChild>
+                      <a
+                        href="#solucoes"
+                        className="text-base font-medium text-white hover:text-[#00C853] transition-colors py-3 border-b border-white/5"
+                      >
+                        Soluções
+                      </a>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <a
+                        href="#planos"
+                        className="text-base font-medium text-white hover:text-[#00C853] transition-colors py-3 border-b border-white/5"
+                      >
+                        Planos
+                      </a>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <a
+                        href="#faq"
+                        className="text-base font-medium text-white hover:text-[#00C853] transition-colors py-3 border-b border-white/5"
+                      >
+                        FAQ
+                      </a>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Link
+                        to="/sicredi"
+                        className="text-base font-medium text-[#00C853] hover:text-[#009959] transition-colors py-3 border-b border-white/5 flex items-center gap-2"
+                      >
+                        Parceria Sicredi <Handshake className="w-4 h-4" />
+                      </Link>
+                    </SheetClose>
                   </nav>
 
                   <div className="flex flex-col gap-3 pb-6">
-                    <Link to="/login" className="w-full">
-                      <Button
-                        variant="outline"
-                        className="w-full border border-white text-white hover:bg-white hover:text-black font-medium px-[20px] py-[8px] h-auto rounded-[8px] bg-transparent transition-colors"
-                      >
-                        Entrar
-                      </Button>
-                    </Link>
-                    <Link to="/cadastro" className="w-full">
-                      <Button className="w-full bg-[#00C853] text-black hover:bg-[#00E676] font-bold px-[20px] py-[8px] h-auto rounded-[8px] transition-colors">
-                        Cadastrar-se
-                      </Button>
-                    </Link>
+                    <SheetClose asChild>
+                      <Link to="/login" className="w-full">
+                        <Button
+                          variant="outline"
+                          className="w-full border border-white text-white hover:bg-white hover:text-black font-medium px-[20px] py-[8px] h-auto rounded-[8px] bg-transparent transition-colors"
+                        >
+                          Entrar
+                        </Button>
+                      </Link>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Link to="/cadastro" className="w-full">
+                        <Button className="w-full bg-[#00C853] text-black hover:bg-[#00E676] font-bold px-[20px] py-[8px] h-auto rounded-[8px] transition-colors">
+                          Cadastrar-se
+                        </Button>
+                      </Link>
+                    </SheetClose>
                   </div>
                 </div>
               </SheetContent>
