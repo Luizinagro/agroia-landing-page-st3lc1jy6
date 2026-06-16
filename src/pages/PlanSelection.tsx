@@ -2,42 +2,59 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase/client'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Check, Loader2, Sparkles, Tractor, ArrowRight, X } from 'lucide-react'
+import { Check, X as XIcon, Loader2 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 
 const PLANS = [
   {
-    name: 'Básico',
-    price: 'Grátis',
+    name: 'Explorador',
+    monthlyPrice: 'Grátis',
+    annualPrice: 'Grátis',
     period: '',
-    level: 0,
+    savings: '',
+    icon: '🌱',
     features: ['dashboard', 'comunidade'],
-    featureLabels: ['Dashboard Básico', 'Suporte Básico', 'Acesso à Comunidade'],
+    includedLabels: ['Dashboard Básico', 'Acesso à Comunidade', 'Suporte Básico'],
+    excludedLabels: ['Previsão IA', 'Gestão Financeira', 'Análise de Satélite'],
+    btnLabel: 'Começar Grátis',
+    btnStyle: 'border-white text-white hover:bg-white/10 border bg-transparent',
+    belowBtn: 'Não precisa de cartão de crédito',
+    belowBtnStyle: 'text-[#A8B8A0]',
   },
   {
-    name: 'Plantio Solo',
-    price: 'R$ 147',
+    name: 'Lavoura',
+    monthlyPrice: 'R$ 149',
+    annualPrice: 'R$ 124',
     period: '/mês',
-    level: 1,
+    savings: 'Você economiza R$ 300/ano',
+    icon: '🌾',
     features: ['dashboard', 'comunidade', 'roi', 'loja', 'previsao-ia'],
-    featureLabels: ['Previsão IA', 'Calculadora de ROI', 'Loja de Insumos'],
+    includedLabels: ['Previsão IA', 'Calculadora de ROI', 'Loja de Insumos', 'Gestão Financeira'],
+    excludedLabels: ['Rastreabilidade (Pecuária)', 'Análise de Satélite'],
+    btnLabel: 'Assinar Lavoura',
+    btnStyle: 'bg-[#4A8A1A] text-white hover:bg-[#3d7214]',
   },
   {
-    name: 'Pecuário Solo',
-    price: 'R$ 147',
+    name: 'Rebanho',
+    monthlyPrice: 'R$ 199',
+    annualPrice: 'R$ 166',
     period: '/mês',
-    level: 1,
+    savings: 'Você economiza R$ 396/ano',
+    icon: '🐄',
     features: ['dashboard', 'comunidade', 'pecuaria', 'rastreabilidade', 'loja'],
-    featureLabels: ['Rastreabilidade', 'Loja de Insumos', 'Gestão Pecuária'],
+    includedLabels: ['Gestão Pecuária', 'Rastreabilidade', 'Loja de Insumos'],
+    excludedLabels: ['Gestão de Lavoura', 'Análise de Satélite', 'CRM'],
+    btnLabel: 'Assinar Rebanho',
+    btnStyle: 'bg-[#4A8A1A] text-white hover:bg-[#3d7214]',
   },
   {
-    name: 'Completo',
-    price: 'R$ 347',
+    name: 'Fazendeiro Completo',
+    monthlyPrice: 'R$ 349',
+    annualPrice: 'R$ 291',
     period: '/mês',
-    level: 2,
+    savings: 'Você economiza R$ 696/ano',
+    icon: '🚜',
     features: [
       'dashboard',
       'comunidade',
@@ -52,20 +69,27 @@ const PLANS = [
       'meus-calculos',
       'checkout',
     ],
-    featureLabels: [
-      'Previsão IA',
-      'Rastreabilidade',
-      'Calculadora de ROI',
-      'Loja de Insumos',
+    includedLabels: [
+      'Tudo de Lavoura e Rebanho',
       'Análise de Satélite',
-      'CRM',
+      'CRM e Faturamento',
+      'Gestão de RH',
+      'IA Avançada',
     ],
+    excludedLabels: ['Múltiplas Propriedades'],
+    btnLabel: 'Quero o Fazendeiro Completo',
+    btnStyle: 'bg-[#6DBF4A] text-[#070F07] hover:bg-[#5aa83b] font-bold',
+    belowBtn: '🏆 Plano mais escolhido pelos produtores',
+    belowBtnStyle: 'text-[#FFB74D]',
+    featured: true,
   },
   {
-    name: 'Família Coop',
-    price: 'R$ 747',
+    name: 'Cooperativa',
+    monthlyPrice: 'R$ 799',
+    annualPrice: 'R$ 666',
     period: '/mês',
-    level: 3,
+    savings: 'Você economiza R$ 1.596/ano',
+    icon: '🤝',
     features: [
       'dashboard',
       'comunidade',
@@ -81,14 +105,15 @@ const PLANS = [
       'meus-calculos',
       'checkout',
     ],
-    featureLabels: [
-      'Previsão IA',
-      'Rastreabilidade',
-      'Calculadora de ROI',
-      'Loja de Insumos',
+    includedLabels: [
       'Até 5 propriedades',
-      'Análise de Satélite',
+      'Painel Consolidado',
+      'Relatórios Customizados',
+      'Suporte Prioritário',
     ],
+    excludedLabels: [],
+    btnLabel: 'Falar com Consultor',
+    btnStyle: 'border-white text-white hover:bg-white/10 border bg-transparent',
   },
 ]
 
@@ -98,19 +123,21 @@ export default function PlanSelection() {
   const location = useLocation()
   const { toast } = useToast()
   const [updating, setUpdating] = useState<string | null>(null)
+  const [isAnnual, setIsAnnual] = useState(false)
 
-  // Redirecionamento automático se o usuário já tem um plano (e não veio intencionalmente pelo menu)
+  const currentPlan = user?.plan_active || user?.plan_type || user?.plano_ativo || 'Explorador'
+
   useEffect(() => {
     if (user) {
-      const currentPlan = user.plan_active || user.plan_type || user.plano_ativo || 'Básico'
-      const isPremium = currentPlan !== 'Básico' && currentPlan !== 'Nenhum'
+      const isPremium =
+        currentPlan !== 'Básico' && currentPlan !== 'Explorador' && currentPlan !== 'Nenhum'
       const fromMenu = location.state?.fromMenu
 
       if (isPremium && !fromMenu) {
         navigate('/dashboard', { replace: true })
       }
     }
-  }, [user, navigate, location.state])
+  }, [user, navigate, location.state, currentPlan])
 
   const handleSelectPlan = async (selectedPlan: (typeof PLANS)[0]) => {
     if (!user?.id) return
@@ -161,7 +188,7 @@ export default function PlanSelection() {
       toast({
         title: 'Plano selecionado com sucesso!',
         description: `Bem-vindo ao plano ${selectedPlan.name}.`,
-        className: 'bg-[#1a3c34] text-white border-[#f4d03f]',
+        className: 'bg-[#0D1F0D] text-white border-[#6DBF4A]',
       })
 
       navigate('/dashboard')
@@ -182,117 +209,151 @@ export default function PlanSelection() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8 relative isolate">
-      {/* Botão de Fechar muito visível e acessível */}
+    <div className="min-h-screen bg-[#070F07] flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8 relative isolate font-sans">
       <div className="fixed top-4 right-4 md:top-8 md:right-8 z-[9999]">
-        <Button
-          variant="outline"
-          size="icon"
+        <button
           onClick={handleClose}
-          className="text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-100 shadow-md rounded-full w-12 h-12 border-2 border-slate-200 transition-all"
+          className="text-[#A8B8A0] hover:text-white bg-[#0D1F0D] hover:bg-[#1E3A1E] rounded-full w-12 h-12 flex items-center justify-center border border-[#1E3A1E] transition-all"
           title="Fechar e ir para o Dashboard"
         >
-          <X className="w-6 h-6" />
-        </Button>
+          <XIcon className="w-5 h-5" />
+        </button>
       </div>
 
-      <div className="w-full max-w-7xl mx-auto space-y-12 animate-in fade-in duration-500 z-10 pt-8">
+      <div className="w-full max-w-[1200px] mx-auto space-y-12 animate-in fade-in duration-500 z-10 pt-8">
         <div className="text-center space-y-4">
-          <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-[#1a3c34] rounded-2xl flex items-center justify-center shadow-lg transform -rotate-6">
-              <Tractor className="w-8 h-8 text-[#f4d03f] transform rotate-6" />
-            </div>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-[#1a3c34] tracking-tight">
-            Escolha seu Plano AgroIA
+          <h1 className="text-4xl md:text-5xl font-bold text-[#F5F0E8] tracking-tight">
+            Escolha seu Plano
           </h1>
-          <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto">
-            Selecione o plano ideal para iniciar sua jornada e destravar o poder da inteligência
-            artificial na sua propriedade.
+          <p className="text-lg text-[#A8B8A0] max-w-2xl mx-auto">
+            Comece grátis. Faça upgrade quando precisar de mais.
           </p>
 
-          {user?.plan_active && user.plan_active !== 'Básico' && user.plan_active !== 'Nenhum' && (
-            <div className="pt-2">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800">
-                Seu plano atual: {user.plan_active}
-              </span>
+          <div className="pt-6 pb-2">
+            <div className="flex items-center justify-center gap-2 bg-[#0D1F0D] p-1.5 rounded-full border border-[#1E3A1E] mx-auto w-fit shadow-lg shadow-black/20">
+              <button
+                onClick={() => setIsAnnual(false)}
+                className={cn(
+                  'px-5 py-2.5 rounded-full text-sm font-semibold transition-all',
+                  !isAnnual
+                    ? 'bg-[#1E3A1E] text-white shadow-sm'
+                    : 'text-[#A8B8A0] hover:text-white',
+                )}
+              >
+                Mensal
+              </button>
+              <button
+                onClick={() => setIsAnnual(true)}
+                className={cn(
+                  'px-5 py-2.5 rounded-full text-sm font-semibold transition-all flex items-center gap-2',
+                  isAnnual
+                    ? 'bg-[#1E3A1E] text-white shadow-sm'
+                    : 'text-[#A8B8A0] hover:text-white',
+                )}
+              >
+                Anual
+                <span className="bg-[#6DBF4A]/20 text-[#6DBF4A] text-[10px] font-bold px-2.5 py-0.5 rounded-full">
+                  2 MESES GRÁTIS
+                </span>
+              </button>
             </div>
-          )}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6 items-stretch pb-10">
-          {PLANS.map((plan) => (
-            <Card
-              key={plan.name}
-              className={cn(
-                'relative flex flex-col h-full bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-slate-200',
-                plan.name === 'Completo'
-                  ? 'border-[#f4d03f] border-2 shadow-lg scale-105 z-10'
-                  : '',
-              )}
-            >
-              {plan.name === 'Completo' && (
-                <div className="absolute top-0 inset-x-0 bg-[#f4d03f] text-[#1a3c34] text-center py-1.5 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5" /> Mais Recomendado
+        <div className="grid grid-cols-1 xl:grid-cols-5 gap-6 items-stretch pb-10">
+          {PLANS.map((plan) => {
+            const isCurrentPlan = currentPlan === plan.name
+
+            return (
+              <div
+                key={plan.name}
+                className={cn(
+                  'relative flex flex-col h-full bg-[#0D1F0D] rounded-[12px] p-7 transition-all duration-300 border',
+                  plan.featured
+                    ? 'border-[#6DBF4A] border-2 shadow-xl shadow-[#6DBF4A]/10 xl:scale-105 z-10'
+                    : 'border-[#1E3A1E] hover:border-[#4A8A1A]/50',
+                )}
+              >
+                {plan.featured && !isCurrentPlan && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#1A3A0A] text-[#6DBF4A] text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-[#6DBF4A]/30 whitespace-nowrap">
+                    MAIS ESCOLHIDO
+                  </div>
+                )}
+
+                {isCurrentPlan && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#1A3A0A] text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-[#6DBF4A] whitespace-nowrap">
+                    SEU PLANO ATUAL
+                  </div>
+                )}
+
+                <div className="mb-6">
+                  <div className="text-3xl mb-3">{plan.icon}</div>
+                  <h3 className="text-xl font-bold text-[#F5F0E8]">{plan.name}</h3>
+                  <div className="mt-4 min-h-[80px]">
+                    <div className="flex items-baseline text-3xl font-bold text-white">
+                      {isAnnual ? plan.annualPrice : plan.monthlyPrice}
+                      <span className="ml-1 text-sm font-normal text-[#A8B8A0]">{plan.period}</span>
+                    </div>
+                    {isAnnual && plan.savings && (
+                      <div className="text-sm font-medium text-[#6DBF4A] mt-1.5">
+                        {plan.savings}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              )}
 
-              <CardHeader className={cn('pb-4', plan.name === 'Completo' ? 'pt-10' : 'pt-6')}>
-                <CardTitle className="text-xl font-bold text-[#1a3c34]">{plan.name}</CardTitle>
-                <div className="mt-4 flex items-baseline text-4xl font-extrabold text-[#1a3c34]">
-                  {plan.price}
-                  <span className="ml-1 text-sm font-semibold text-slate-500">{plan.period}</span>
+                <div className="flex-1">
+                  <ul className="space-y-4">
+                    {plan.includedLabels.map((feat, i) => (
+                      <li key={`inc-${i}`} className="flex items-start">
+                        <Check className="h-5 w-5 text-[#6DBF4A] shrink-0 mr-3 mt-0.5" />
+                        <span className="text-sm text-[#F5F0E8]">{feat}</span>
+                      </li>
+                    ))}
+                    {plan.excludedLabels.map((feat, i) => (
+                      <li key={`exc-${i}`} className="flex items-start opacity-60">
+                        <XIcon className="h-5 w-5 text-[#5A3030] shrink-0 mr-3 mt-0.5" />
+                        <span className="text-sm text-[#A8B8A0]">{feat}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              </CardHeader>
 
-              <CardContent className="flex-1 pb-6">
-                <ul className="space-y-4">
-                  {plan.featureLabels.map((feat, i) => (
-                    <li key={i} className="flex items-start">
-                      <Check className="h-5 w-5 text-[#4ade80] shrink-0 mr-3 mt-0.5" />
-                      <span className="text-sm font-medium text-slate-700">{feat}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
+                <div className="pt-8 mt-auto flex flex-col items-center gap-3">
+                  <button
+                    disabled={updating !== null || isCurrentPlan}
+                    className={cn(
+                      'w-full h-12 rounded-lg text-sm font-semibold transition-all flex items-center justify-center',
+                      isCurrentPlan
+                        ? 'bg-[#1E3A1E] text-[#A8B8A0] cursor-not-allowed border border-[#2a4d2a]'
+                        : plan.btnStyle,
+                    )}
+                    onClick={() => handleSelectPlan(plan)}
+                  >
+                    {updating === plan.name ? (
+                      <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                    ) : null}
+                    {isCurrentPlan ? 'Plano Atual' : plan.btnLabel}
+                  </button>
 
-              <CardFooter className="pt-0">
-                <Button
-                  className={cn(
-                    'w-full h-12 text-sm font-bold transition-all',
-                    plan.name === 'Completo'
-                      ? 'bg-[#f4d03f] text-[#1a3c34] hover:bg-[#e3c02f] hover:shadow-md'
-                      : 'bg-[#1a3c34] text-white hover:bg-[#2c5c50]',
+                  {plan.belowBtn && !isCurrentPlan && (
+                    <span className={cn('text-xs text-center', plan.belowBtnStyle)}>
+                      {plan.belowBtn}
+                    </span>
                   )}
-                  disabled={updating !== null}
-                  onClick={() => handleSelectPlan(plan)}
-                >
-                  {updating === plan.name ? (
-                    <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                  ) : null}
-                  Selecionar Plano <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
+                </div>
+              </div>
+            )
+          })}
         </div>
 
-        {/* Área de pular altamente visível para quem não quer escolher o plano agora */}
         <div className="text-center pb-12 flex flex-col gap-4 items-center">
-          <Button
-            variant="outline"
-            className="text-slate-700 hover:text-[#1a3c34] border-slate-300 w-full max-w-xs h-12 text-base font-bold shadow-sm"
-            onClick={handleClose}
-          >
-            Ir para o Dashboard (Pular)
-          </Button>
-          <Button
-            variant="ghost"
-            className="text-slate-500 hover:text-[#1a3c34]"
+          <button
+            className="text-[#A8B8A0] hover:text-white transition-colors text-sm font-medium underline underline-offset-4"
             onClick={() => navigate('/login')}
           >
             Voltar para o Login
-          </Button>
+          </button>
         </div>
       </div>
     </div>

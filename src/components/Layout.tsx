@@ -181,7 +181,7 @@ export default function Layout() {
   }
 
   const firstName = (user?.name || user?.nome || 'Usuário').split(' ')[0]
-  const plan = user?.plan_active || user?.plano_ativo || 'Básico'
+  const plan = user?.plan_active || user?.plano_ativo || 'Explorador'
   const initial = firstName[0].toUpperCase()
 
   return (

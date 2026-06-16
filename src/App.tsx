@@ -91,7 +91,7 @@ const App = () => {
                     <Route
                       path="/faturamento"
                       element={
-                        <FeatureGuard feature="faturamento" requiredPlan="Completo">
+                        <FeatureGuard feature="faturamento" requiredPlan="Fazendeiro Completo">
                           <Billing />
                         </FeatureGuard>
                       }
@@ -99,7 +99,7 @@ const App = () => {
                     <Route
                       path="/pecuaria"
                       element={
-                        <FeatureGuard feature="pecuaria" requiredPlan="Pecuário Solo">
+                        <FeatureGuard feature="pecuaria" requiredPlan="Rebanho">
                           <Pecuaria />
                         </FeatureGuard>
                       }
@@ -107,7 +107,7 @@ const App = () => {
                     <Route
                       path="/rastreabilidade"
                       element={
-                        <FeatureGuard feature="rastreabilidade" requiredPlan="Pecuário Solo">
+                        <FeatureGuard feature="rastreabilidade" requiredPlan="Rebanho">
                           <Rastreabilidade />
                         </FeatureGuard>
                       }
@@ -115,7 +115,7 @@ const App = () => {
                     <Route
                       path="/loja"
                       element={
-                        <FeatureGuard feature="loja" requiredPlan="Plantio Solo">
+                        <FeatureGuard feature="loja" requiredPlan="Lavoura">
                           <Store />
                         </FeatureGuard>
                       }
@@ -123,7 +123,7 @@ const App = () => {
                     <Route
                       path="/checkout"
                       element={
-                        <FeatureGuard feature="checkout" requiredPlan="Completo">
+                        <FeatureGuard feature="checkout" requiredPlan="Fazendeiro Completo">
                           <Checkout />
                         </FeatureGuard>
                       }
@@ -131,7 +131,7 @@ const App = () => {
                     <Route
                       path="/roi"
                       element={
-                        <FeatureGuard feature="roi" requiredPlan="Plantio Solo">
+                        <FeatureGuard feature="roi" requiredPlan="Lavoura">
                           <CalculadoraRoi />
                         </FeatureGuard>
                       }
@@ -139,7 +139,7 @@ const App = () => {
                     <Route
                       path="/meus-calculos"
                       element={
-                        <FeatureGuard feature="meus-calculos" requiredPlan="Completo">
+                        <FeatureGuard feature="meus-calculos" requiredPlan="Fazendeiro Completo">
                           <MeusCalculos />
                         </FeatureGuard>
                       }
@@ -147,7 +147,7 @@ const App = () => {
                     <Route
                       path="/previsao-ia"
                       element={
-                        <FeatureGuard feature="previsao-ia" requiredPlan="Plantio Solo">
+                        <FeatureGuard feature="previsao-ia" requiredPlan="Lavoura">
                           <PrevisaoIA />
                         </FeatureGuard>
                       }
@@ -166,7 +166,7 @@ const App = () => {
                     <Route
                       path="/crm"
                       element={
-                        <FeatureGuard feature="crm" requiredPlan="Completo">
+                        <FeatureGuard feature="crm" requiredPlan="Fazendeiro Completo">
                           <CRM />
                         </FeatureGuard>
                       }
@@ -174,7 +174,7 @@ const App = () => {
                     <Route
                       path="/analise-satelite"
                       element={
-                        <FeatureGuard feature="analise-satelite" requiredPlan="Completo">
+                        <FeatureGuard feature="analise-satelite" requiredPlan="Fazendeiro Completo">
                           <AnaliseSatelite />
                         </FeatureGuard>
                       }
@@ -182,7 +182,10 @@ const App = () => {
                     <Route
                       path="/analises-compartilhadas"
                       element={
-                        <FeatureGuard feature="analise-compartilhada" requiredPlan="Completo">
+                        <FeatureGuard
+                          feature="analise-compartilhada"
+                          requiredPlan="Fazendeiro Completo"
+                        >
                           <ConsultorPerformance />
                         </FeatureGuard>
                       }
@@ -190,7 +193,10 @@ const App = () => {
                     <Route
                       path="/consultor-ia-agro"
                       element={
-                        <FeatureGuard feature="consultor-ia-agro" requiredPlan="Completo">
+                        <FeatureGuard
+                          feature="consultor-ia-agro"
+                          requiredPlan="Fazendeiro Completo"
+                        >
                           <ConsultorIAAgro />
                         </FeatureGuard>
                       }
@@ -198,7 +204,7 @@ const App = () => {
                     <Route
                       path="/gestao"
                       element={
-                        <FeatureGuard feature="gestao" requiredPlan="Plantio Solo">
+                        <FeatureGuard feature="gestao" requiredPlan="Lavoura">
                           <Gestao />
                         </FeatureGuard>
                       }
@@ -206,7 +212,7 @@ const App = () => {
                     <Route
                       path="/diagnostico-pragas"
                       element={
-                        <FeatureGuard feature="diagnostico-pragas" requiredPlan="Plantio Solo">
+                        <FeatureGuard feature="diagnostico-pragas" requiredPlan="Lavoura">
                           <DiagnosticoPragas />
                         </FeatureGuard>
                       }
