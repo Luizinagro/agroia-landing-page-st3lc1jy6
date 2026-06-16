@@ -27,15 +27,19 @@ const faqs = [
     q: 'Posso cancelar a qualquer momento?',
     a: 'Com certeza. Os planos mensais não possuem fidelidade nem multa de cancelamento. Você tem controle total.',
   },
+  {
+    q: 'Funciona em área rural com internet fraca?',
+    a: 'Sim! Nosso aplicativo é otimizado para redes 3G/4G instáveis. Ele armazena os dados no seu celular (modo offline parcial) e só envia as informações quando a conexão estabiliza, sem que você perca nada.',
+  },
 ]
 
 export function FAQ() {
   return (
-    <section className="py-24 bg-[#0A0F0D]">
-      <div className="container mx-auto px-4 max-w-3xl">
-        <ScrollReveal className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Dúvidas Frequentes</h2>
-          <p className="text-[#A0AFA3] text-lg">
+    <section className="py-12 md:py-20 bg-[#070F07]">
+      <div className="container mx-auto px-4 max-w-[800px]">
+        <ScrollReveal className="text-center mb-12 md:mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#F5F0E8] mb-4">Dúvidas Frequentes</h2>
+          <p className="text-[#A8B8A0] text-lg">
             Tudo o que você precisa saber antes de embarcar na agricultura digital.
           </p>
         </ScrollReveal>
@@ -46,12 +50,12 @@ export function FAQ() {
               <AccordionItem
                 key={i}
                 value={`item-${i}`}
-                className="border border-white/5 bg-[#111A13] rounded-xl px-6 data-[state=open]:border-[#00C853]/30 transition-colors"
+                className="border border-[#1E3A1E] bg-[#0D1F0D] rounded-xl px-6 data-[state=open]:border-[#6DBF4A]/30 transition-colors"
               >
-                <AccordionTrigger className="text-left text-white hover:text-[#00C853] hover:no-underline font-semibold py-5 text-base md:text-lg">
+                <AccordionTrigger className="text-left text-[#F5F0E8] hover:text-[#6DBF4A] hover:no-underline font-semibold py-5 text-base md:text-lg">
                   {faq.q}
                 </AccordionTrigger>
-                <AccordionContent className="text-[#A0AFA3] leading-relaxed pb-6 text-base">
+                <AccordionContent className="text-[#A8B8A0] leading-relaxed pb-6 text-base">
                   {faq.a}
                 </AccordionContent>
               </AccordionItem>
