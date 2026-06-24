@@ -131,7 +131,17 @@ export default function CalendarioAgricola() {
           disabled={loading}
           className="w-full md:w-auto h-[50px] bg-primary text-black font-bold px-8 rounded-xl shadow-[0_0_15px_rgba(29,185,84,0.3)]"
         >
-          {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Gerar Calendário'}
+          {loading ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin mr-2" />
+              <span className="hidden sm:inline">
+                Gerando análise com IA, pode levar até 15 segundos...
+              </span>
+              <span className="sm:hidden">Gerando análise...</span>
+            </>
+          ) : (
+            'Gerar Calendário'
+          )}
         </Button>
       </div>
 

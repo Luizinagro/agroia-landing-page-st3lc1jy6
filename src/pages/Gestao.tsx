@@ -75,8 +75,8 @@ export default function Gestao() {
     const lat = parseFloat(newProp.latitude)
     const lng = parseFloat(newProp.longitude)
 
-    if (isNaN(lat) || isNaN(lng)) {
-      toast.error('Latitude e Longitude devem ser números válidos')
+    if (isNaN(lat) || lat < -90 || lat > 90 || isNaN(lng) || lng < -180 || lng > 180) {
+      toast.error('Coordenada inválida')
       setIsSubmitting(false)
       return
     }
@@ -273,7 +273,15 @@ export default function Gestao() {
                 <div className="flex items-center gap-2 text-sm text-muted-foreground bg-white/5 p-3 rounded-xl border border-white/5">
                   <MapPin className="w-4 h-4 text-primary shrink-0" />
                   <span className="truncate">
-                    Lat: {prop.latitude} <br /> Lng: {prop.longitude}
+                    {prop.latitude && prop.longitude ? (
+                      <>
+                        Lat: {prop.latitude} <br /> Lng: {prop.longitude}
+                      </>
+                    ) : (
+                      <span className="text-red-400 font-medium">
+                        Coordenadas pendentes. Por favor, atualize.
+                      </span>
+                    )}
                   </span>
                 </div>
               </CardContent>

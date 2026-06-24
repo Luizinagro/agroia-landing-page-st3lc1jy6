@@ -13,13 +13,13 @@ import {
 } from 'recharts'
 import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart'
 import { Loader2 } from 'lucide-react'
+import { supabase } from '@/lib/supabase/client'
 
 export default function FluxoCaixaTab({ refreshKey }: { refreshKey: number }) {
   const [data, setData] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    setLoading(true)
+  const fetchData = () => {
     financeiroApi
       .invoke('fluxo_caixa')
       .then((d) => {
@@ -30,7 +30,29 @@ export default function FluxoCaixaTab({ refreshKey }: { refreshKey: number }) {
         setData(chartData)
       })
       .finally(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    setLoading(true)
+    fetchData()
   }, [refreshKey])
+
+  useEffect(() => {
+    const channel = supabase
+      .channel('fluxo-caixa-updates')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'financeiro_lancamentos' },
+        () => {
+          fetchData()
+        },
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [])
 
   const config = {
     receitas: { label: 'Receitas', color: 'hsl(var(--primary))' },

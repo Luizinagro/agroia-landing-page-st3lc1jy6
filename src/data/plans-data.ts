@@ -58,9 +58,9 @@ export const PLANS = [
   },
   {
     name: 'Rebanho',
-    priceMonthly: 199,
-    priceAnnual: 165,
-    priceLabel: 'R$ 199',
+    priceMonthly: 149,
+    priceAnnual: 124,
+    priceLabel: 'R$ 149',
     period: '/mês',
     level: 1,
     description: 'Para quem cria com inteligência.',
@@ -95,7 +95,7 @@ export const PLANS = [
     period: '/mês',
     level: 2,
     highlighted: true,
-    badge: 'MAIS POPULAR 🏆',
+    badge: 'Mais Popular',
     description: 'Visão total e ferramentas avançadas.',
     features: [
       'dashboard',
@@ -122,7 +122,7 @@ export const PLANS = [
     ],
     permissionsAllowed: [
       'TUDO ILIMITADO',
-      'Calculadora de Carbono 🌱',
+      'Calculadora de Carbono',
       'CRM de Vendas',
       'Dashboard Consolidado',
       'Consultoria mensal',

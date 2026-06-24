@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Activity, AlertTriangle, Syringe, Users, Loader2, Plus } from 'lucide-react'
+import { Activity, AlertTriangle, Syringe, Users, Loader2, Plus, Trash2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import {
@@ -22,8 +22,17 @@ import {
 } from '@/components/ui/select'
 import { useToast } from '@/hooks/use-toast'
 
+interface RebanhoItem {
+  id: string
+  tipo_animal: string
+  quantidade: number
+  status: string
+  data_entrada: string
+}
+
 export function Rebanho() {
   const [loading, setLoading] = useState(true)
+  const [rebanhoList, setRebanhoList] = useState<RebanhoItem[]>([])
   const [stats, setStats] = useState({
     total: 0,
     atencao: 0,
@@ -40,15 +49,18 @@ export function Rebanho() {
   const { toast } = useToast()
 
   const fetchRebanho = async () => {
+    setLoading(true)
     const { data: userData } = await supabase.auth.getUser()
     if (!userData.user) return
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('rebanho')
-      .select('tipo_animal, quantidade, status')
+      .select('id, tipo_animal, quantidade, status, data_entrada')
       .eq('user_id', userData.user.id)
+      .order('created_at', { ascending: false })
 
     if (data) {
+      setRebanhoList(data)
       let total = 0
       let atencao = 0
       const agrupado: Record<string, number> = {}
@@ -67,6 +79,8 @@ export function Rebanho() {
         .sort((a, b) => b.quantidade - a.quantidade)
 
       setStats({ total, atencao, lotes })
+    } else if (error) {
+      toast({ title: 'Erro ao carregar rebanho', variant: 'destructive' })
     }
     setLoading(false)
   }
@@ -104,9 +118,22 @@ export function Rebanho() {
     setSubmitting(false)
   }
 
-  if (loading) {
+  const handleDelete = async (id: string) => {
+    if (!confirm('Tem certeza que deseja excluir este lote?')) return
+    setLoading(true)
+    const { error } = await supabase.from('rebanho').delete().eq('id', id)
+    if (error) {
+      toast({ title: 'Erro ao excluir lote', variant: 'destructive' })
+      setLoading(false)
+    } else {
+      toast({ title: 'Lote excluído com sucesso' })
+      fetchRebanho()
+    }
+  }
+
+  if (loading && rebanhoList.length === 0) {
     return (
-      <div className="h-[300px] flex flex-col items-center justify-center bg-black/40 rounded-xl border border-primary/10">
+      <div className="h-[300px] flex flex-col items-center justify-center bg-black/40 rounded-xl border border-primary/10 animate-fade-in-up">
         <Loader2 className="w-8 h-8 animate-spin text-primary mb-4" />
         <p className="text-sm text-muted-foreground">Carregando rebanho...</p>
       </div>
@@ -122,19 +149,19 @@ export function Rebanho() {
           <DialogTrigger asChild>
             <Button className="bg-primary text-black hover:bg-primary/90 font-bold w-full sm:w-auto shadow-[0_0_15px_rgba(29,185,84,0.2)]">
               <Plus className="w-4 h-4 mr-2" />
-              Adicionar Rebanho
+              Adicionar Lote
             </Button>
           </DialogTrigger>
           <DialogContent className="bg-zinc-950 border border-primary/20 text-white sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Novo Lote / Animal</DialogTitle>
+              <DialogTitle>Novo Lote de Animais</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label>Tipo de Animal (Ex: Bezerros Nelore)</Label>
                 <Input
                   placeholder="Ex: Bezerros Nelore"
-                  className="bg-black/50 border-primary/20"
+                  className="bg-black/50 border-primary/20 text-white"
                   value={novoRebanho.tipo_animal}
                   onChange={(e) => setNovoRebanho({ ...novoRebanho, tipo_animal: e.target.value })}
                 />
@@ -144,7 +171,7 @@ export function Rebanho() {
                 <Input
                   type="number"
                   placeholder="Ex: 50"
-                  className="bg-black/50 border-primary/20"
+                  className="bg-black/50 border-primary/20 text-white"
                   value={novoRebanho.quantidade}
                   onChange={(e) => setNovoRebanho({ ...novoRebanho, quantidade: e.target.value })}
                 />
@@ -241,32 +268,86 @@ export function Rebanho() {
         </Card>
       </div>
 
-      <Card className="glass-panel border-primary/20">
-        <CardHeader>
-          <CardTitle className="text-white">Distribuição por Lote / Tipo</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {stats.lotes.length === 0 ? (
-            <div className="text-center py-6 text-muted-foreground">
-              Nenhum animal cadastrado no rebanho.
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {stats.lotes.map((lote, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between p-3 rounded-lg bg-black/60 border border-primary/10 hover:border-primary/30 transition-colors"
-                >
-                  <span className="font-medium text-foreground capitalize">{lote.tipo}</span>
-                  <span className="text-muted-foreground font-semibold">
-                    {lote.quantidade} cabeças
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="glass-panel border-primary/20 lg:col-span-1 h-fit">
+          <CardHeader>
+            <CardTitle className="text-white">Resumo por Lote</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {stats.lotes.length === 0 ? (
+              <div className="text-center py-6 text-muted-foreground">
+                Nenhum animal cadastrado.
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {stats.lotes.map((lote, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center justify-between p-3 rounded-lg bg-black/60 border border-primary/10 hover:border-primary/30 transition-colors"
+                  >
+                    <span className="font-medium text-foreground capitalize">{lote.tipo}</span>
+                    <span className="text-muted-foreground font-semibold">
+                      {lote.quantidade} cabeças
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="glass-panel border-primary/20 lg:col-span-2">
+          <CardHeader>
+            <CardTitle className="text-white">Lotes Cadastrados</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {rebanhoList.length === 0 ? (
+              <div className="text-center py-10 text-muted-foreground">
+                Adicione seu primeiro lote de animais.
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {rebanhoList.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between p-4 rounded-xl bg-black/40 border border-white/5 hover:bg-black/60 transition-colors"
+                  >
+                    <div>
+                      <h4 className="font-bold text-white text-lg">{item.tipo_animal}</h4>
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-1 text-sm text-zinc-400">
+                        <span className="font-medium text-white">{item.quantidade} cabeças</span>
+                        <span className="hidden sm:inline">•</span>
+                        <span
+                          className={
+                            item.status === 'Saudável'
+                              ? 'text-primary font-medium'
+                              : 'text-yellow-500 font-medium'
+                          }
+                        >
+                          {item.status}
+                        </span>
+                        <span className="hidden sm:inline">•</span>
+                        <span className="w-full sm:w-auto">
+                          Entrada: {new Date(item.data_entrada).toLocaleDateString('pt-BR')}
+                        </span>
+                      </div>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-red-400 hover:text-red-300 hover:bg-red-400/10 h-8 w-8 shrink-0"
+                      onClick={() => handleDelete(item.id)}
+                      disabled={loading}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

@@ -28,13 +28,19 @@ export default function CustoProducaoTab() {
     }
   }
 
-  const chartData = result
-    ? Object.entries(result.por_categoria).map(([name, value], i) => ({
-        name,
-        value,
-        fill: COLORS[i % COLORS.length],
-      }))
-    : []
+  let chartData: any[] = []
+  try {
+    chartData =
+      result && result.por_categoria
+        ? Object.entries(result.por_categoria).map(([name, value], i) => ({
+            name,
+            value,
+            fill: COLORS[i % COLORS.length],
+          }))
+        : []
+  } catch (err) {
+    console.error('Erro ao formatar dados do gráfico', err)
+  }
 
   return (
     <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">

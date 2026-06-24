@@ -19,14 +19,18 @@ export function MercadoCepea() {
       try {
         const { data: res, error } = await supabase.functions.invoke('cepea-prices')
         if (res?.prices) {
-          const indicators = ['Boi Gordo (Arroba)', 'Bezerro (Cabeça)']
+          const indicators = [
+            { key: 'Boi Gordo', label: 'Boi Gordo (Arroba)' },
+            { key: 'Bezerro', label: 'Bezerro (Cabeça)' },
+          ]
 
           const mapped = indicators.map((ind) => {
-            const priceInfo = res.prices[ind] || { atual: 0, media: 0 }
+            const priceInfo = res.prices[ind.key] || { atual: 0, media: 0, variacao: 0 }
             return {
-              indicator: ind,
+              indicator: ind.label,
               atual: priceInfo.atual || 0,
-              media: priceInfo.media || 0,
+              media: priceInfo.media || (priceInfo.atual ? priceInfo.atual * 0.98 : 0),
+              variacao: priceInfo.variacao || 0,
               date: new Date().toLocaleDateString('pt-BR'),
             }
           })
@@ -85,16 +89,12 @@ export function MercadoCepea() {
               </div>
               <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-white/10">
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-muted-foreground">Média do Período:</span>
-                  <span className="font-bold text-white text-base">R$ {item.media.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-muted-foreground">Variação vs Média:</span>
+                  <span className="text-muted-foreground">Variação Diária:</span>
                   <span
-                    className={`font-bold ${isUp ? 'text-primary' : isDown ? 'text-destructive' : 'text-muted-foreground'}`}
+                    className={`font-bold ${(item.variacao || 0) >= 0 ? 'text-primary' : 'text-destructive'}`}
                   >
-                    {isUp ? '+' : isDown ? '-' : ''}
-                    {diffPercent.toFixed(1)}%
+                    {(item.variacao || 0) >= 0 ? '+' : ''}
+                    {(item.variacao || 0).toFixed(2)}%
                   </span>
                 </div>
               </div>

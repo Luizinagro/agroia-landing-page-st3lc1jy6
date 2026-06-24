@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { invokeMaquinario } from '@/services/maquinario'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Plus, Tractor, AlertTriangle, CheckCircle, MapPin, Wrench } from 'lucide-react'
+import { Plus, Tractor, AlertTriangle, CheckCircle, MapPin, Wrench, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { SEO } from '@/components/SEO'
 import { MachineRegistrationModal } from '@/components/maquinario/MachineRegistrationModal'
@@ -51,6 +51,28 @@ export default function MaquinarioPage() {
   const openDetail = (id: string, nome: string) => {
     setDetailId(id)
     setDetailName(nome)
+  }
+
+  const handleDeleteMaquina = async (id: string, event: React.MouseEvent) => {
+    event.stopPropagation()
+    if (
+      !confirm(
+        'Tem certeza que deseja excluir esta máquina? Todos os dados associados poderão ser afetados.',
+      )
+    )
+      return
+
+    setLoading(true)
+    import('@/lib/supabase/client').then(async ({ supabase }) => {
+      const { error } = await supabase.from('maquinas').delete().eq('id', id)
+      if (error) {
+        toast.error('Erro ao excluir máquina')
+      } else {
+        toast.success('Máquina excluída com sucesso')
+        fetchFrota()
+      }
+      setLoading(false)
+    })
   }
 
   return (
@@ -123,9 +145,19 @@ export default function MaquinarioPage() {
                 <CardHeader className="bg-zinc-900/50 border-b border-white/5 pb-4">
                   <CardTitle className="text-xl flex items-center justify-between">
                     <span className="font-bold truncate pr-2">{m.nome}</span>
-                    <span className="text-xs bg-primary/20 text-primary border border-primary/20 px-2.5 py-1 rounded-full whitespace-nowrap shrink-0">
-                      {m.tipo}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs bg-primary/20 text-primary border border-primary/20 px-2.5 py-1 rounded-full whitespace-nowrap shrink-0">
+                        {m.tipo}
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 text-red-400 hover:text-red-300 hover:bg-red-400/10 shrink-0"
+                        onClick={(e) => handleDeleteMaquina(m.id, e)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-5 space-y-5">

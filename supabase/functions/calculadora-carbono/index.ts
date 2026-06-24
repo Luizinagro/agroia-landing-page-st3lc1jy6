@@ -1,45 +1,55 @@
-import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
-import { createClient } from 'jsr:@supabase/supabase-js@2';
+import 'jsr:@supabase/functions-js/edge-runtime.d.ts'
+import { createClient } from 'jsr:@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type'
-};
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
 
 async function buscarCotacaoCarbon(): Promise<number> {
   try {
-    const res = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL');
-    if (!res.ok) return 93.60;
-    const data = await res.json();
-    const usdBrl = parseFloat(data['USDBRL']?.bid || '5.20');
-    return Number((18 * usdBrl).toFixed(2));
-  } catch { return 93.60; }
+    const res = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL')
+    if (!res.ok) return 93.6
+    const data = await res.json()
+    const usdBrl = parseFloat(data['USDBRL']?.bid || '5.20')
+    return Number((18 * usdBrl).toFixed(2))
+  } catch {
+    return 93.6
+  }
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
   try {
-    const authHeader = req.headers.get('Authorization') || '';
-    const body = await req.json();
-    const { area_hectares, cultura, praticas_sustentaveis, anos_pratica, bioma, estado } = body;
-    if (!area_hectares) throw new Error('"area_hectares" é obrigatório.');
+    const authHeader = req.headers.get('Authorization') || ''
+    const body = await req.json()
+    const { area_hectares, cultura, praticas_sustentaveis, anos_pratica, bioma, estado } = body
+    if (!area_hectares) throw new Error('"area_hectares" é obrigatório.')
 
-    const geminiKey = Deno.env.get('GEMINI_API_KEY') || '';
-    const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') || '';
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+    const geminiKey = Deno.env.get('GEMINI_API_KEY') || ''
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') || ''
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') || ''
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || ''
 
-    const adminCheck = createClient(supabaseUrl, supabaseServiceKey);
-    const rateLimitKey = authHeader || req.headers.get('x-forwarded-for') || 'anon';
+    const adminCheck = createClient(supabaseUrl, supabaseServiceKey)
+    const rateLimitKey = authHeader || req.headers.get('x-forwarded-for') || 'anon'
     const { data: dentroDoLimite } = await adminCheck.rpc('check_rate_limit', {
-      p_user_id: rateLimitKey, p_function: 'calculadora-carbono', p_max_requests: 10, p_window_minutes: 10
-    });
-    if (dentroDoLimite === false) throw new Error('Limite de cálculos atingido. Tente novamente em alguns minutos.');
+      p_user_id: rateLimitKey,
+      p_function: 'calculadora-carbono',
+      p_max_requests: 10,
+      p_window_minutes: 10,
+    })
+    if (dentroDoLimite === false)
+      throw new Error('Limite de cálculos atingido. Tente novamente em alguns minutos.')
 
-    const cotacaoBRL = await buscarCotacaoCarbon();
-    const hoje = new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
+    const cotacaoBRL = await buscarCotacaoCarbon()
+    const hoje = new Date().toLocaleDateString('pt-BR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    })
 
     const prompt = `Você é um especialista em mercado de carbono agrícola e regenerativo no Brasil.
 Data: ${hoje}
@@ -95,7 +105,7 @@ Responda APENAS com JSON válido (sem markdown):
   "score_sustentabilidade": 72,
   "nivel_prontidao": "Em desenvolvimento",
   "resumo": "Texto com oportunidade e próximo passo mais importante"
-}`;
+}`
 
     const res = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`,
@@ -104,27 +114,29 @@ Responda APENAS com JSON válido (sem markdown):
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { response_mime_type: 'application/json', temperature: 0.2 }
-        })
-      }
-    );
+          generationConfig: { response_mime_type: 'application/json', temperature: 0.2 },
+        }),
+      },
+    )
 
-    if (!res.ok) throw new Error('Gemini indisponível');
-    const geminiData = await res.json();
-    const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    const match = text.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error('Resposta inválida');
-    const resultado = JSON.parse(match[0]);
+    if (!res.ok) throw new Error('Gemini indisponível')
+    const geminiData = await res.json()
+    const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || ''
+    const match = text.match(/\{[\s\S]*\}/)
+    if (!match) throw new Error('Resposta inválida')
+    const resultado = JSON.parse(match[0])
 
     // Salva histórico se autenticado
     if (authHeader) {
       try {
         const userClient = createClient(supabaseUrl, supabaseAnonKey, {
-          global: { headers: { Authorization: authHeader } }
-        });
-        const { data: { user } } = await userClient.auth.getUser();
+          global: { headers: { Authorization: authHeader } },
+        })
+        const {
+          data: { user },
+        } = await userClient.auth.getUser()
         if (user) {
-          const admin = createClient(supabaseUrl, supabaseServiceKey);
+          const admin = createClient(supabaseUrl, supabaseServiceKey)
           await admin.from('calculos_carbono').insert({
             user_id: user.id,
             area_hectares: Number(area_hectares),
@@ -134,23 +146,29 @@ Responda APENAS com JSON válido (sem markdown):
             toneladas_co2_ano: resultado.potencial_sequestro?.toneladas_co2_ano,
             receita_anual: resultado.receita_carbono?.receita_anual_brl,
             score_sustentabilidade: resultado.score_sustentabilidade,
-            resultado_completo: resultado
-          });
+            resultado_completo: resultado,
+          })
         }
-      } catch (e) { console.warn('Histórico não salvo:', e); }
+      } catch (e) {
+        console.warn('Histórico não salvo:', e)
+      }
     }
 
-    return new Response(JSON.stringify({
-      success: true,
-      data: resultado,
-      cotacao_carbono_brl: cotacaoBRL,
-      gerado_em: new Date().toISOString(),
-      aviso: 'Estimativa baseada em médias de mercado voluntário. Consulte especialista certificado para valores exatos.'
-    }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 });
-
+    return new Response(
+      JSON.stringify({
+        success: true,
+        data: resultado,
+        cotacao_carbono_brl: cotacaoBRL,
+        gerado_em: new Date().toISOString(),
+        aviso:
+          'Estimativa baseada em médias de mercado voluntário. Consulte especialista certificado para valores exatos.',
+      }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 },
+    )
   } catch (error) {
     return new Response(JSON.stringify({ success: false, error: error.message }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400
-    });
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 400,
+    })
   }
-});
+})

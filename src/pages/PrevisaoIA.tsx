@@ -189,7 +189,8 @@ export default function PrevisaoIA() {
                 >
                   {isLoadingSaca || isLoadingIA ? (
                     <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Calculando Previsões...
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Gerando análise com IA, pode
+                      levar até 15 segundos...
                     </>
                   ) : (
                     'Buscar Preço'

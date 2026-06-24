@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase/client'
-import { Plus, Search, Loader2 } from 'lucide-react'
+import { Plus, Search, Loader2, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/hooks/use-toast'
@@ -47,6 +47,26 @@ export function ListaInsumos({
   const filteredInsumos = insumos.filter((i) =>
     i.nome.toLowerCase().includes(searchTerm.toLowerCase()),
   )
+
+  const handleDeleteInsumo = async (id: string, event: React.MouseEvent) => {
+    event.stopPropagation()
+    if (
+      !confirm(
+        'Tem certeza que deseja excluir este insumo? Todos os dados associados poderão ser afetados.',
+      )
+    )
+      return
+
+    setLoading(true)
+    const { error } = await supabase.from('insumos_cadastro').delete().eq('id', id)
+    if (error) {
+      toast({ title: 'Erro ao excluir insumo', variant: 'destructive' })
+    } else {
+      toast({ title: 'Insumo excluído com sucesso' })
+      onRefresh()
+    }
+    setLoading(false)
+  }
 
   const getStatus = (estoque: number, minimo: number) => {
     if (estoque === 0) return { label: 'Zerado 🔴', color: 'text-red-400 bg-red-400/10' }
@@ -101,11 +121,21 @@ export function ListaInsumos({
               >
                 <div className="flex justify-between items-start gap-2">
                   <h3 className="font-semibold text-white truncate">{insumo.nome}</h3>
-                  <span
-                    className={`text-[10px] px-2 py-0.5 rounded-full font-medium whitespace-nowrap ${status.color}`}
-                  >
-                    {status.label}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`text-[10px] px-2 py-0.5 rounded-full font-medium whitespace-nowrap ${status.color}`}
+                    >
+                      {status.label}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6 text-red-400 hover:text-red-300 hover:bg-red-400/10 shrink-0"
+                      onClick={(e) => handleDeleteInsumo(insumo.id, e)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
                 <div className="text-sm text-zinc-400">{insumo.categoria}</div>
                 <div className="mt-2 flex justify-between items-end">
