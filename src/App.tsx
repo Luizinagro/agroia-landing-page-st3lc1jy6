@@ -43,6 +43,7 @@ import Irrigacao from './pages/Irrigacao'
 import MaquinarioPage from './pages/Maquinario'
 import GestaoInsumos from './pages/GestaoInsumos'
 import GestaoRH from './pages/GestaoRH'
+import Reproducao from './pages/Reproducao'
 import { FeatureGuard } from './components/FeatureGuard'
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
@@ -101,6 +102,14 @@ const App = () => {
                       element={
                         <FeatureGuard feature="pecuaria" requiredPlan="Rebanho">
                           <Pecuaria />
+                        </FeatureGuard>
+                      }
+                    />
+                    <Route
+                      path="/reproducao"
+                      element={
+                        <FeatureGuard feature="pecuaria" requiredPlan="Rebanho">
+                          <Reproducao />
                         </FeatureGuard>
                       }
                     />

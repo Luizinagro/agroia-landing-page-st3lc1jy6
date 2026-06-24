@@ -10,37 +10,28 @@ export function SocialProofSection() {
         <h2 className="text-3xl font-bold text-white mb-4">Quem Usa, Recomenda</h2>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6 mb-20">
-        <div className="bg-[#1A3A0A]/30 border border-[#2E5A1A] p-8 rounded-2xl">
-          <p className="text-[#E8F0E4] mb-6 italic">
-            "O relatório gerado pela AgroIA acelerou em semanas a aprovação do meu custeio no
-            Sicredi. O gerente adorou o detalhamento."
-          </p>
-          <div>
-            <p className="text-white font-bold">Carlos Mendonça</p>
-            <p className="text-[#A8B8A0] text-sm">Produtor de Soja • Sorriso, MT</p>
+      <div className="mb-20">
+        <div className="text-center mb-10">
+          <h3 className="text-2xl font-bold text-white">AgroIA em números reais</h3>
+        </div>
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-[#1A3A0A]/30 border border-[#2E5A1A] p-8 rounded-2xl text-center flex flex-col justify-center">
+            <span className="text-5xl font-extrabold text-[#6DBF4A] mb-2">9</span>
+            <p className="text-[#E8F0E4] font-medium">Produtores já usando a plataforma</p>
+          </div>
+          <div className="bg-[#1A3A0A]/30 border border-[#2E5A1A] p-8 rounded-2xl text-center flex flex-col justify-center">
+            <span className="text-5xl font-extrabold text-[#6DBF4A] mb-2">28</span>
+            <p className="text-[#E8F0E4] font-medium">Análises de satélite realizadas</p>
+          </div>
+          <div className="bg-[#1A3A0A]/30 border border-[#2E5A1A] p-8 rounded-2xl text-center flex flex-col justify-center">
+            <span className="text-5xl font-extrabold text-[#6DBF4A] mb-2">6</span>
+            <p className="text-[#E8F0E4] font-medium">Propriedades monitoradas em tempo real</p>
           </div>
         </div>
-        <div className="bg-[#1A3A0A]/30 border border-[#2E5A1A] p-8 rounded-2xl">
-          <p className="text-[#E8F0E4] mb-6 italic">
-            "Ter os dados na palma da mão e ainda conseguir 25% de desconto por ser associado
-            Sicredi foi o melhor negócio do ano."
-          </p>
-          <div>
-            <p className="text-white font-bold">João Batista Ramos</p>
-            <p className="text-[#A8B8A0] text-sm">Pecuarista • Rio Verde, GO</p>
-          </div>
-        </div>
-        <div className="bg-[#1A3A0A]/30 border border-[#2E5A1A] p-8 rounded-2xl">
-          <p className="text-[#E8F0E4] mb-6 italic">
-            "Uso a IA para decidir quando plantar. Com a integração do seguro Sicredi, me sinto
-            muito mais protegida contra o clima."
-          </p>
-          <div>
-            <p className="text-white font-bold">Ana Paula Ferreira</p>
-            <p className="text-[#A8B8A0] text-sm">Produtora de Milho • Cascavel, PR</p>
-          </div>
-        </div>
+        <p className="text-center text-[#A8B8A0] text-sm max-w-2xl mx-auto italic">
+          Estamos em fase inicial de validação com produtores reais. Cada número aqui é uso genuíno
+          da plataforma, não projeção.
+        </p>
       </div>
 
       <div className="grid md:grid-cols-3 gap-6 mb-12">

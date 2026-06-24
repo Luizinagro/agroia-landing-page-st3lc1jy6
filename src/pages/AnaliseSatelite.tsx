@@ -41,6 +41,7 @@ import {
 } from '@/components/ui/dialog'
 import { useSubscription } from '@/hooks/useSubscription'
 import { useNavigate, Link } from 'react-router-dom'
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip'
 
 interface AnalysisData {
   id?: string
@@ -51,6 +52,7 @@ interface AnalysisData {
   thumbnail: string
   lat?: string
   lng?: string
+  fonteDados?: string
 }
 
 export default function AnaliseSatelite() {
@@ -111,8 +113,30 @@ export default function AnaliseSatelite() {
         body: { latitude: parseFloat(lat), longitude: parseFloat(lng) },
       })
 
-      if (error) throw error
-      if (!data?.success) throw new Error(data?.error || 'Erro desconhecido ao analisar imagem.')
+      if (error) {
+        if (error.message?.toLowerCase().includes('limite')) {
+          toast({
+            title: 'Aviso de Limite',
+            description: error.message,
+            className: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
+          })
+          setStatus('empty')
+          return
+        }
+        throw error
+      }
+      if (!data?.success) {
+        if (data?.error?.toLowerCase().includes('limite')) {
+          toast({
+            title: 'Aviso de Limite',
+            description: data.error,
+            className: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
+          })
+          setStatus('empty')
+          return
+        }
+        throw new Error(data?.error || 'Erro desconhecido ao analisar imagem.')
+      }
 
       setAnalysisData({
         id: data.data.id,
@@ -123,10 +147,10 @@ export default function AnaliseSatelite() {
         thumbnail: data.data.image_url,
         lat,
         lng,
+        fonteDados: data.data.fonte_dados || 'Sentinel Hub',
       })
 
       setAlertMessage('Análise concluída com sucesso via satélite para as coordenadas fornecidas.')
-
       setStatus('success')
     } catch (error) {
       console.error(error)
@@ -174,7 +198,6 @@ export default function AnaliseSatelite() {
           mensagem: `Alerta configurado para NDVI < 0.40 na área ${analysisData.lat}, ${analysisData.lng}`,
         })
 
-        // Trigger WhatsApp immediately if NDVI is already low, to demonstrate functionality
         if (analysisData.ndvi < 0.4) {
           await supabase.functions.invoke('whatsapp-notifications', {
             body: {
@@ -299,7 +322,6 @@ export default function AnaliseSatelite() {
           </div>
         )}
 
-        {/* Cabeçalho do Relatório (Apenas Visível na Impressão) */}
         <div className="hidden print:block mb-8 border-b-2 border-green-700 pb-4">
           <div className="flex items-center justify-between">
             <div>
@@ -392,7 +414,6 @@ export default function AnaliseSatelite() {
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Painel do Mapa */}
           <Card className="lg:col-span-2 bg-black border-white/10 shadow-[0_0_15px_rgba(29,185,84,0.05)] print:hidden">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
@@ -468,7 +489,6 @@ export default function AnaliseSatelite() {
                 </div>
               </div>
 
-              {/* Mapa Interativo Real */}
               <div className="relative w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden cursor-crosshair border border-white/10 bg-zinc-900 group shadow-inner">
                 <div className="absolute inset-0 z-0 pointer-events-none transition-all duration-500">
                   <iframe
@@ -484,7 +504,6 @@ export default function AnaliseSatelite() {
                   onClick={handleMapClick}
                 />
 
-                {/* Pino */}
                 <div
                   className="absolute w-6 h-6 -ml-3 -mt-6 text-primary transition-all duration-300 drop-shadow-[0_0_8px_rgba(29,185,84,0.8)] z-20 pointer-events-none"
                   style={{ left: `${pinPos.x}%`, top: `${pinPos.y}%` }}
@@ -518,7 +537,6 @@ export default function AnaliseSatelite() {
             </CardContent>
           </Card>
 
-          {/* Painel de Resultados */}
           <div className="space-y-6">
             {status === 'empty' && (
               <Card className="bg-black/50 border-white/5 border-dashed h-full min-h-[400px] flex flex-col items-center justify-center text-center p-6 transition-all duration-500 animate-fade-in print:hidden">
@@ -581,7 +599,6 @@ export default function AnaliseSatelite() {
 
             {status === 'success' && analysisData && (
               <div className="space-y-4 animate-slide-up print:w-full print:max-w-full">
-                {/* Alerta de Saúde NDVI */}
                 <Alert
                   className={cn(
                     'print:hidden border',
@@ -605,13 +622,33 @@ export default function AnaliseSatelite() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="pt-6 space-y-6">
-                    {/* NDVI */}
                     <div className="space-y-2">
                       <div className="flex justify-between items-end">
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-col gap-1">
                           <span className="text-sm font-medium text-zinc-300 print:text-gray-700">
                             Índice NDVI (Saúde Vegetal)
                           </span>
+                          {analysisData.fonteDados?.includes('Estimativa') ? (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <div className="inline-flex w-fit items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-yellow-500/20 text-yellow-500 border border-yellow-500/50 cursor-help">
+                                    🌦️ Estimativa climática
+                                  </div>
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-[250px] bg-zinc-900 border-zinc-800 text-white">
+                                  <p>
+                                    Calculado a partir de dados de chuva, temperatura e umidade do
+                                    solo. Imagem de satélite real em breve.
+                                  </p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          ) : (
+                            <div className="inline-flex w-fit items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-green-500/20 text-green-500 border border-green-500/50">
+                              📡 Satélite real
+                            </div>
+                          )}
                         </div>
                         <span
                           className={cn(
@@ -638,7 +675,6 @@ export default function AnaliseSatelite() {
                       </div>
                     </div>
 
-                    {/* Cards de Métricas */}
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-zinc-900/50 p-4 rounded-xl border border-white/5 hover:border-white/10 transition-colors print:bg-white print:border-gray-200">
                         <div className="flex items-center gap-2 text-blue-400 print:text-blue-600 mb-2">
@@ -660,7 +696,6 @@ export default function AnaliseSatelite() {
                       </div>
                     </div>
 
-                    {/* Previsão de Irrigação e Geofencing */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 print:hidden">
                       <div className="bg-zinc-900/50 p-4 rounded-xl border border-white/5">
                         <div className="flex items-center gap-2 text-blue-400 mb-2">
@@ -701,7 +736,6 @@ export default function AnaliseSatelite() {
                       </div>
                     </div>
 
-                    {/* Thumbnail */}
                     <div className="space-y-3">
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-zinc-400 print:text-gray-600 flex items-center gap-1.5">
@@ -730,7 +764,6 @@ export default function AnaliseSatelite() {
           </div>
         </div>
 
-        {/* Assinatura no final da página para impressão */}
         <div className="hidden print:block mt-12 pt-8 border-t border-gray-300 text-center">
           <p className="text-gray-500 text-sm font-medium">
             Este relatório foi gerado automaticamente pelo sistema AgroIA.

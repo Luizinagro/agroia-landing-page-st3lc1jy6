@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
-import { supabase } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Plus, Tractor, Wrench, Loader2, Trash2 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/contexts/AuthContext'
+import { invokeMaquinario } from '@/services/maquinario'
 
 export function Maquinario() {
-  const { user } = useAuth()
+  const { user } = useAuth() as any
   const { toast } = useToast()
   const [items, setItems] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -21,14 +21,14 @@ export function Maquinario() {
 
   const fetchItems = async () => {
     setLoading(true)
-    const { data, error } = await supabase
-      .from('maquinario' as any)
-      .select('*')
-      .eq('user_id', user?.id)
-      .order('created_at', { ascending: false })
-
-    if (data) setItems(data)
-    setLoading(false)
+    try {
+      const data = await invokeMaquinario({ action: 'listar' })
+      if (data) setItems(data)
+    } catch (e: any) {
+      console.error(e)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const addItem = async (e: React.FormEvent) => {
@@ -36,41 +36,41 @@ export function Maquinario() {
     if (!nome || !horas) return
 
     const horasUso = Number(horas)
-    const proxManut = horasUso + 250 // Estimativa base de 250h
 
-    const { error } = await supabase.from('maquinario' as any).insert({
-      user_id: user?.id,
-      nome,
-      horas_uso: horasUso,
-      proxima_manutencao_horas: proxManut,
-    })
-
-    if (!error) {
-      setNome('')
-      setHoras('')
-      fetchItems()
-      toast({ title: 'Equipamento registrado com sucesso!' })
+    try {
+      const result = await invokeMaquinario({
+        action: 'inserir',
+        nome,
+        horas_uso: horasUso,
+      })
+      if (result) {
+        setNome('')
+        setHoras('')
+        fetchItems()
+        toast({ title: 'Equipamento registrado com sucesso!' })
+      }
+    } catch (e: any) {
+      toast({ title: 'Erro', description: e.message, variant: 'destructive' })
     }
   }
 
   const deleteItem = async (id: string) => {
-    await supabase
-      .from('maquinario' as any)
-      .delete()
-      .eq('id', id)
-    fetchItems()
+    try {
+      await invokeMaquinario({ action: 'deletar', id })
+      fetchItems()
+    } catch (e: any) {
+      toast({ title: 'Erro ao excluir', description: e.message, variant: 'destructive' })
+    }
   }
 
   const registrarManutencao = async (id: string, horasAtuais: number) => {
-    await supabase
-      .from('maquinario' as any)
-      .update({
-        horas_uso: horasAtuais,
-        proxima_manutencao_horas: horasAtuais + 250,
-      })
-      .eq('id', id)
-    toast({ title: 'Manutenção registrada!' })
-    fetchItems()
+    try {
+      await invokeMaquinario({ action: 'manutencao', id, horas_uso: horasAtuais })
+      toast({ title: 'Manutenção registrada!' })
+      fetchItems()
+    } catch (e: any) {
+      toast({ title: 'Erro ao registrar', description: e.message, variant: 'destructive' })
+    }
   }
 
   return (
@@ -82,18 +82,18 @@ export function Maquinario() {
           placeholder="Nome do trator / equipamento"
           value={nome}
           onChange={(e) => setNome(e.target.value)}
-          className="flex-1 bg-black/50"
+          className="flex-1 bg-black/50 border-white/10 text-white"
         />
         <Input
           type="number"
           placeholder="Horas de Uso"
           value={horas}
           onChange={(e) => setHoras(e.target.value)}
-          className="w-40 bg-black/50"
+          className="w-40 bg-black/50 border-white/10 text-white"
         />
         <Button
           type="submit"
-          className="bg-primary hover:bg-primary/90 text-black w-full md:w-auto"
+          className="bg-primary hover:bg-primary/90 text-black font-bold w-full md:w-auto"
         >
           <Plus className="w-4 h-4 mr-2" /> Inserir
         </Button>
@@ -127,7 +127,7 @@ export function Maquinario() {
                     variant="ghost"
                     size="icon"
                     onClick={() => deleteItem(item.id)}
-                    className="h-8 w-8 text-zinc-500 hover:text-red-400"
+                    className="h-8 w-8 text-zinc-500 hover:text-red-400 hover:bg-red-500/10"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -150,7 +150,7 @@ export function Maquinario() {
                 <Button
                   variant="outline"
                   onClick={() => registrarManutencao(item.id, item.horas_uso)}
-                  className="w-full bg-transparent border-white/20 hover:bg-white/10"
+                  className="w-full bg-transparent border-white/20 text-white hover:bg-white/10 hover:text-white"
                 >
                   <Wrench className="w-4 h-4 mr-2" /> Registrar Manutenção
                 </Button>

@@ -1,47 +1,58 @@
-import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
-import { createClient } from 'jsr:@supabase/supabase-js@2';
+import 'jsr:@supabase/functions-js/edge-runtime.d.ts'
+import { createClient } from 'jsr:@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type'
-};
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
   try {
-    if (req.method !== 'POST') throw new Error('Use POST.');
+    if (req.method !== 'POST') throw new Error('Use POST.')
 
-    const authHeader = req.headers.get('Authorization') || '';
-    if (!authHeader) throw new Error('Não autenticado');
+    const authHeader = req.headers.get('Authorization') || ''
+    if (!authHeader) throw new Error('Não autenticado')
 
-    const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') || '';
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
-    const geminiKey = Deno.env.get('GEMINI_API_KEY') || '';
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') || ''
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') || ''
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || ''
+    const geminiKey = Deno.env.get('GEMINI_API_KEY') || ''
 
-    if (!geminiKey) throw new Error('Chave Gemini não configurada.');
+    if (!geminiKey) throw new Error('Chave Gemini não configurada.')
 
     const userClient = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: authHeader } }
-    });
-    const { data: { user }, error: userError } = await userClient.auth.getUser();
-    if (userError || !user) throw new Error('Não autenticado');
+      global: { headers: { Authorization: authHeader } },
+    })
+    const {
+      data: { user },
+      error: userError,
+    } = await userClient.auth.getUser()
+    if (userError || !user) throw new Error('Não autenticado')
 
-    const adminCheck = createClient(supabaseUrl, supabaseServiceKey);
+    const adminCheck = createClient(supabaseUrl, supabaseServiceKey)
     const { data: dentroDoLimite } = await adminCheck.rpc('check_rate_limit', {
-      p_user_id: user.id, p_function: 'diagnostico-praga', p_max_requests: 10, p_window_minutes: 10
-    });
-    if (dentroDoLimite === false) throw new Error('Limite de diagnósticos atingido. Tente novamente em alguns minutos.');
+      p_user_id: user.id,
+      p_function: 'diagnostico-praga',
+      p_max_requests: 10,
+      p_window_minutes: 10,
+    })
+    if (dentroDoLimite === false)
+      throw new Error('Limite de diagnósticos atingido. Tente novamente em alguns minutos.')
 
-    const body = await req.json();
-    const { imagem_base64, mime_type, cultura, descricao, latitude, longitude } = body;
+    const body = await req.json()
+    const { imagem_base64, mime_type, cultura, descricao, latitude, longitude } = body
 
-    if (!imagem_base64) throw new Error('imagem_base64 é obrigatório.');
+    if (!imagem_base64) throw new Error('imagem_base64 é obrigatório.')
 
     // Monta prompt especializado para diagnóstico agrícola
-    const hoje = new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
+    const hoje = new Date().toLocaleDateString('pt-BR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    })
     const prompt = `Você é um fitopatologista e entomologista especialista em agricultura tropical brasileira.
 Data de hoje: ${hoje}
 ${cultura ? `Cultura: ${cultura}` : ''}
@@ -84,7 +95,7 @@ Responda APENAS com JSON válido (sem markdown):
 }
 
 Se a imagem não mostrar problemas visíveis, retorne tipo "sem problema" e oriente sobre prevenção.
-Se a imagem não for de uma planta/lavoura, retorne um erro explicativo no campo "diagnostico.identificado".`;
+Se a imagem não for de uma planta/lavoura, retorne um erro explicativo no campo "diagnostico.identificado".`
 
     // Chama Gemini Vision
     const geminiRes = await fetch(
@@ -93,40 +104,42 @@ Se a imagem não for de uma planta/lavoura, retorne um erro explicativo no campo
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{
-            parts: [
-              {
-                inline_data: {
-                  mime_type: mime_type || 'image/jpeg',
-                  data: imagem_base64
-                }
-              },
-              { text: prompt }
-            ]
-          }],
+          contents: [
+            {
+              parts: [
+                {
+                  inline_data: {
+                    mime_type: mime_type || 'image/jpeg',
+                    data: imagem_base64,
+                  },
+                },
+                { text: prompt },
+              ],
+            },
+          ],
           generationConfig: {
             response_mime_type: 'application/json',
-            temperature: 0.2
-          }
-        })
-      }
-    );
+            temperature: 0.2,
+          },
+        }),
+      },
+    )
 
     if (!geminiRes.ok) {
-      const errText = await geminiRes.text();
-      throw new Error(`Gemini Vision falhou: ${errText}`);
+      const errText = await geminiRes.text()
+      throw new Error(`Gemini Vision falhou: ${errText}`)
     }
 
-    const geminiData = await geminiRes.json();
-    const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    const match = text.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error('Resposta inválida do Gemini Vision');
+    const geminiData = await geminiRes.json()
+    const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || ''
+    const match = text.match(/\{[\s\S]*\}/)
+    if (!match) throw new Error('Resposta inválida do Gemini Vision')
 
-    const diagnostico = JSON.parse(match[0]);
-    const analiseDate = new Date().toISOString();
+    const diagnostico = JSON.parse(match[0])
+    const analiseDate = new Date().toISOString()
 
     // Salva no banco para histórico
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const supabase = createClient(supabaseUrl, supabaseServiceKey)
     try {
       await supabase.from('diagnosticos_pragas').insert({
         user_id: user.id,
@@ -137,24 +150,26 @@ Se a imagem não for de uma planta/lavoura, retorne um erro explicativo no campo
         latitude: latitude ? parseFloat(latitude) : null,
         longitude: longitude ? parseFloat(longitude) : null,
         analise_completa: diagnostico,
-        created_at: analiseDate
-      });
+        created_at: analiseDate,
+      })
     } catch (dbErr) {
-      console.warn('Tabela diagnosticos_pragas não existe ainda:', dbErr);
+      console.warn('Tabela diagnosticos_pragas não existe ainda:', dbErr)
       // Tenta criar na tabela genérica de análises
     }
 
-    return new Response(JSON.stringify({
-      success: true,
-      data: diagnostico,
-      analise_date: analiseDate,
-      message: `✅ Diagnóstico concluído: ${diagnostico.diagnostico?.identificado || 'análise realizada'}`
-    }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 });
-
+    return new Response(
+      JSON.stringify({
+        success: true,
+        data: diagnostico,
+        analise_date: analiseDate,
+        message: `✅ Diagnóstico concluído: ${diagnostico.diagnostico?.identificado || 'análise realizada'}`,
+      }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 },
+    )
   } catch (error) {
     return new Response(JSON.stringify({ success: false, error: error.message }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 400
-    });
+      status: 400,
+    })
   }
-});
+})

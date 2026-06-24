@@ -39,6 +39,7 @@ import {
   Users,
   Truck,
   Layers,
+  Heart,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
@@ -130,6 +131,7 @@ export default function Layout() {
       label: 'Gestão e Operação',
       items: [
         { title: 'Pecuária', icon: Truck, path: '/pecuaria', feature: 'pecuaria' },
+        { title: 'Reprodução', icon: Heart, path: '/reproducao', feature: 'pecuaria' },
         { title: 'Irrigação Inteligente', icon: Droplet, path: '/irrigacao', feature: 'irrigacao' },
         { title: 'Insumos e Estoque', icon: Leaf, path: '/insumos', feature: 'gestao-insumos' },
         { title: 'RH Rural', icon: Briefcase, path: '/rh', feature: 'gestao-rh' },
